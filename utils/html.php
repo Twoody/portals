@@ -13,7 +13,7 @@ Purpose:
 
 ******************************************************************************/
 echo "<!-- /utils/html.php imported -->";
-function makeP( $s, $args=null ){
+function make_par( $s, $args=null ){
 	//Take string `s` and be sure string is properly encapsulated as HTML paragraph
 	/*
 	if ($args === null)
@@ -28,11 +28,31 @@ function makeP( $s, $args=null ){
 	$ret .= ">\n";
 	$ret .= $s."</p>\n";
 	return $ret;
-}//end makeP()
+}
+function make_css($REL, $LINK, $INTEGRITY="", $ORIGIN=""){
+	/* Make a CSS stylesheet to be imported into HTML page */
+	$css .= "\t<link";
+	$css .= "\n\t\trel=\"".$REL."\"";
+	$css .= "\n\t\thref=\"".$LINK."\"";
+	$css .= "\n\t\tintegrity=\"".$INTEGRITY."\"";
+	$css .= "\n\t\tcrossorigin=\"".$ORIGIN."\">";
+	$css .= "\n\t</link>";
+	return css;
+}
+function make_script($src, $integrity, $origin){
+	/* Make a JS script to be imported into HTML page */
+	$s = "";
+	$s .= "\t<script";
+	$s .= "\n\t\tsrc=\"".$src."\"";
+	$s .= "\n\t\tintegrity=\"".$integrity."\"";
+	$s .= "\n\t\tcrossorigin=\"".$origin."\">";
+	$s .= "\n\t</script>";
+	return $s;
+}
 function tab(){
 	//Return HTML tab; TODO: param for length of tab;
 	return "&nbsp;&nbsp;&nbsp;&nbsp;";
-}//end tab()
+}
 
 ?>
 
