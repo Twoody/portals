@@ -1,7 +1,7 @@
 <?
-require('./config/imports.php');
+require_once('./config/imports.php');
 
-function get_css(){
+function get_bootstrap_css(){
 	$bootstrap_css = "";
 	if ($HAS_BOOTSTRAP){
 		$bootstrap_css .= "\n\t<!-- BOOTSTRAP CSS -->";
