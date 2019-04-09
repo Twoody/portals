@@ -12,7 +12,7 @@ Purpose:
     General Util Library to ensure we have minimal errors while outputting HTML.
 
 ******************************************************************************/
-echo "<!-- /utils/html.php imported -->";
+echo "\n\t<!-- /utils/html.php imported -->\n";
 function make_par( $s, $args=null ){
 	//Take string `s` and be sure string is properly encapsulated as HTML paragraph
 	/*
