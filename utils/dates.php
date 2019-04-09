@@ -6,7 +6,7 @@ Author:
 Purpose:
 	Do some arithmetic, math, and general processing to avoid rewriting code;
 ********************************************************************************/
-echo "<!-- /utils/dates.php imported -->";
+echo "\n\t<!-- /utils/dates.php imported -->\n";
 function dateToText($d){
 	//Input any format of YYYYMMDD; Does not support time;
 	//return date in years, months, days;
