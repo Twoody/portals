@@ -13,6 +13,52 @@ Purpose:
 
 ******************************************************************************/
 echo "\n\t<!-- /utils/html.php imported -->\n";
+function get_css(){
+	$s = "";
+	if($HAS_BOOTSTRAP || $HAS_POPPER || $HAS_JQUERY )
+		$s .= get_bootstrap_css();
+	if($HAS_DATATABLES || $HAS_DATATABLES_JQUERY )
+		$s .= get_datatables_css();
+	return $s;
+}
+
+function get_footer(){
+	$s = "";
+	$s .= "</body>";
+	$s .= "</html>";
+	return $s;
+}
+
+function get_header(){
+	$s = "";
+	$s .= "\n<html lang=\"".$LANG."\">";
+	$s .=	"\n<head>";
+	$s .=	"\n\t<!-- Required meta tags -->";
+	$s .=	"\n\t<meta charset=\"".$CHAR_SET."\">";
+	$s .=	"\n\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">";
+	$s .= get_css(); //<link> elements
+	$s .=
+	$s .=	"\n\t<title>".$TITLE."</title>";
+	$s .=	"\n</head>";
+}
+function get_js(){
+	$s = "";
+	if($HAS_BOOTSTRAP || $HAS_POPPER || $HAS_JQUERY )
+		$s .= get_bootstrap_js();
+	if($HAS_DATATABLES || $HAS_DATATABLES_JQUERY )
+		$s .= get_datatables_js();
+	return $s;
+}
+function make_css($REL, $LINK, $INTEGRITY="", $ORIGIN=""){
+	/* Make a CSS stylesheet to be imported into HTML page */
+	$css .= "\t<link";
+	$css .= "\n\t\trel=\"".$REL."\"";
+	$css .= "\n\t\thref=\"".$LINK."\"";
+	$css .= "\n\t\tintegrity=\"".$INTEGRITY."\"";
+	$css .= "\n\t\tcrossorigin=\"".$ORIGIN."\">";
+	$css .= "\n\t</link>";
+	return css;
+}
 function make_par( $s, $args=null ){
 	//Take string `s` and be sure string is properly encapsulated as HTML paragraph
 	/*
@@ -29,16 +75,7 @@ function make_par( $s, $args=null ){
 	$ret .= $s."</p>\n";
 	return $ret;
 }
-function make_css($REL, $LINK, $INTEGRITY="", $ORIGIN=""){
-	/* Make a CSS stylesheet to be imported into HTML page */
-	$css .= "\t<link";
-	$css .= "\n\t\trel=\"".$REL."\"";
-	$css .= "\n\t\thref=\"".$LINK."\"";
-	$css .= "\n\t\tintegrity=\"".$INTEGRITY."\"";
-	$css .= "\n\t\tcrossorigin=\"".$ORIGIN."\">";
-	$css .= "\n\t</link>";
-	return css;
-}
+
 function make_script($src, $integrity, $origin){
 	/* Make a JS script to be imported into HTML page */
 	$s = "";
