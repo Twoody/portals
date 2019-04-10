@@ -12,9 +12,12 @@ Purpose:
     General Util Library to ensure we have minimal errors while outputting HTML.
 
 ******************************************************************************/
-require_once('./config/settings.php');
+require_once('./config/paths.php');
+$PATHS = get_paths();
+require_once($PATHS['SETTINGS_PATH']);
 
-echo "\n\t<!-- /utils/html.php imported -->\n";
+echo "\n<!-- /utils/html.php imported -->\n";
+
 function get_css($CONFIG=Null){
 	if($CONFIG === Null)
 		$CONFIG	= get_config();
@@ -44,7 +47,7 @@ function get_header($CONFIG=Null){
 	$s .=	"\n\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">";
 	$s .= get_css($CONFIG); //<link> elements
 	$s .= "";
-	$s .=	"\n\t<title>".$TITLE."</title>";
+	$s .=	"\n\t<title>".$CONFIG['TITLE']."</title>";
 	$s .=	"\n</head>\n";
 	return $s;
 }
