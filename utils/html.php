@@ -12,34 +12,41 @@ Purpose:
     General Util Library to ensure we have minimal errors while outputting HTML.
 
 ******************************************************************************/
+require_once('./config/settings.php');
+
 echo "\n\t<!-- /utils/html.php imported -->\n";
-function get_css(){
+function get_css($CONFIG=Null){
+	if($CONFIG === Null)
+		$CONFIG	= get_config();
 	$s = "";
-	if($HAS_BOOTSTRAP || $HAS_POPPER || $HAS_JQUERY )
-		$s .= get_bootstrap_css();
-	if($HAS_DATATABLES || $HAS_DATATABLES_JQUERY )
-		$s .= get_datatables_css();
+	if($CONFIG['HAS_BOOTSTRAP'] || $CONFIG['HAS_POPPER'] || $CONFIG['HAS_JQUERY'] )
+		$s .= get_bootstrap_css($CONFIG);
+	if($CONFIG['HAS_DATATABLES'] || $CONFIG['HAS_DATATABLES_JQUERY'] )
+		$s .= get_datatables_css($CONFIG);
 	return $s;
 }
 
 function get_footer(){
 	$s = "";
-	$s .= "</body>";
-	$s .= "</html>";
+	$s .= "\n</body>";
+	$s .= "\n</html>";
 	return $s;
 }
 
-function get_header(){
+function get_header($CONFIG=Null){
+	if($CONFIG === Null)
+		$CONFIG	= get_config();
 	$s = "";
-	$s .= "\n<html lang=\"".$LANG."\">";
+	$s .= "\n<html lang=\"".$CONFIG['LANG']."\">";
 	$s .=	"\n<head>";
 	$s .=	"\n\t<!-- Required meta tags -->";
-	$s .=	"\n\t<meta charset=\"".$CHAR_SET."\">";
+	$s .=	"\n\t<meta charset=\"".$CONFIG['CHAR_SET']."\">";
 	$s .=	"\n\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">";
-	$s .= get_css(); //<link> elements
-	$s .=
+	$s .= get_css($CONFIG); //<link> elements
+	$s .= "";
 	$s .=	"\n\t<title>".$TITLE."</title>";
-	$s .=	"\n</head>";
+	$s .=	"\n</head>\n";
+	return $s;
 }
 function get_js(){
 	$s = "";
@@ -51,13 +58,13 @@ function get_js(){
 }
 function make_css($REL, $LINK, $INTEGRITY="", $ORIGIN=""){
 	/* Make a CSS stylesheet to be imported into HTML page */
-	$css .= "\t<link";
+	$css .= "\n\t<link";
 	$css .= "\n\t\trel=\"".$REL."\"";
 	$css .= "\n\t\thref=\"".$LINK."\"";
 	$css .= "\n\t\tintegrity=\"".$INTEGRITY."\"";
 	$css .= "\n\t\tcrossorigin=\"".$ORIGIN."\">";
 	$css .= "\n\t</link>";
-	return css;
+	return $css;
 }
 function make_par( $s, $args=null ){
 	//Take string `s` and be sure string is properly encapsulated as HTML paragraph
