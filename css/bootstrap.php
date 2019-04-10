@@ -1,6 +1,7 @@
 <?
 require_once('./config/imports.php');
 
+echo "\n<!-- css/bootstrap.php imported -->\n";
 function get_bootstrap_css($CONFIG=Null){
 	if($CONFIG === Null)
 		$CONFIG	= get_config();
@@ -15,5 +16,6 @@ function get_bootstrap_css($CONFIG=Null){
 	return $bootstrap_css;
 }
 
+/***** Just for testing *****/
 //echo get_bootstrap_css() . "\n";
 ?>
