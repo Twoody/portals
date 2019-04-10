@@ -6,6 +6,7 @@
 	$ACTIVE_PAGE="./";
 	$LANG="en";
 	$CHAR_SET="utf-8";
+	$TITLE = ""; 			//Surely overwritten;
 	/* ----- ----- GENERAL OPTIONS ----- ----- */
 
 
