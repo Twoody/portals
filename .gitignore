@@ -15,3 +15,6 @@ __pycache__/
 .DS_Store?
 .*.swp*
 ._*
+
+#Sandboxing
+tests/sandbox/
