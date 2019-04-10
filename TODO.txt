@@ -1,0 +1,5 @@
+Database Items:
+	1. Move over db items from /testdir/html/bootstrap/forms/login5.php
+	2. Think about a pages.db and integration into pages that can be made and can be added to it;
+	3. Design more templates...; LOW PRIORITY;
+	4. .gitignore file needs made...
