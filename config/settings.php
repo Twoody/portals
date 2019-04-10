@@ -1,4 +1,5 @@
 <?
+echo "\n<!-- settings.php imported -->\n";
 function get_config(){
 	return Array(
 		/* ----- ----- GENERAL OPTIONS ----- ----- */
