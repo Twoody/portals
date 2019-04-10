@@ -1,6 +1,7 @@
 <?
 require_once('./config/imports.php');
 
+echo "\n<!-- js/bootstrap.php imported -->\n";
 function get_bootstrap_scripts($CONFIG=Null){
 	if($CONFIG === Null)
 		$CONFIG	= get_config();
@@ -27,5 +28,6 @@ function get_bootstrap_scripts($CONFIG=Null){
 	return $ret;
 }
 
+/***** Just for testing *****/
 //echo get_bootstrap_scripts() . "\n";
 ?>
