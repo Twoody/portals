@@ -1,16 +1,24 @@
 <?
 require_once('./config/imports.php');
 
-function get_datatables_css(){
+echo "\n<!-- css/datatables.php imported -->\n";
+function get_datatables_css($CONFIG=Null){
+	if($CONFIG === Null)
+		$CONFIG	= get_config();
 	$datatables_css = "";
-	if ($HAS_DATATABLES){
+	if ($CONFIG['HAS_DATATABLES']){
 		$datatables_css .= "\n\t<!-- DATATABLES CSS -->";
-		$boostrap_css .= make_css($DATATABLES_CSS_REL, $DATATABLES_CSS_LINK, $DATATABLES_CSS_INTEGRITY, $DATATABLES_CSS_ORIGIN);
+		$datatables_css .= make_css($CONFIG['DATATABLES_CSS_REL'], $CONFIG['DATATABLES_CSS_LINK'], $CONFIG['DATATABLES_CSS_INTEGRITY'], $CONFIG['DATATABLES_CSS_ORIGIN']);
 	}
 	else{ //TODO: Maybe if isVerbose?
 		$datatables_css .= "\n\t<!-- PAGE HAS NO DATATABLES-->";
 	}
 	return $datatables_css;
 }
+
+/***** Just for testing *****/
+//$CONFIG	= get_config();
+//$CONFIG['HAS_DATATABLES'] = TRUE;
+//echo get_datatables_css($CONFIG) . "\n";
 ?>
 
