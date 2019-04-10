@@ -1,3 +1,12 @@
+
+
+Tanner.L.Woody@gmail.com
+2019-04-09
+	Everything appears to be compiling accurately in the new get_* for config options;
+	Template A is outputting as exepected;
+	Need to update HAS_DATATABLES corresponding modules to represent new configs;
+		This inlcudes the files in /js/ and /css/.
+
 Tanner.L.Woody@gmail.com
 2019-04-09
 	Currently working on importing css to header and building a template via config;
