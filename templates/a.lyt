@@ -1,7 +1,0 @@
-<!doctype html>
-<?
-require_once('./config/imports.php');
-$TITLE = ""; //TODO: Store title in a pages db;
-
-
-?>
