@@ -1,15 +1,19 @@
 <?
 require_once('./config/imports.php');
 
-function get_bootstrap_css(){
+function get_bootstrap_css($CONFIG=Null){
+	if($CONFIG === Null)
+		$CONFIG	= get_config();
 	$bootstrap_css = "";
-	if ($HAS_BOOTSTRAP){
+	if ($CONFIG['HAS_BOOTSTRAP']) {
 		$bootstrap_css .= "\n\t<!-- BOOTSTRAP CSS -->";
-		$boostrap_css .= make_css($BOOTSTRAP_CSS_REL, $BOOTSTRAP_CSS_LINK, $BOOTSTRAP_CSS_INTEGRITY, $BOOTSTRAP_CSS_ORIGIN);
+		$bootstrap_css .= make_css($CONFIG['BOOTSTRAP_CSS_REL'], $CONFIG['BOOTSTRAP_CSS_LINK'], $CONFIG['BOOTSTRAP_CSS_INTEGRITY'], $CONFIG['BOOTSTRAP_CSS_ORIGIN']);
 	}
-	else{ //TODO: Maybe if isVerbose?
-		$bootstrap_css .= "\n\t<!-- PAGE HAS NO BOOTSTRAP-->";
+	else{
+		$bootstrap_css .= "\n\t<!-- PAGE HAS NO BOOTSTRAP CSS-->";
 	}
 	return $bootstrap_css;
 }
+
+//echo get_bootstrap_css() . "\n";
 ?>
