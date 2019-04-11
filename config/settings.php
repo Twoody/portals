@@ -1,4 +1,7 @@
 <?
+require_once('./config/paths.php');
+$PATHS = get_paths();
+
 echo "\n<!-- settings.php imported -->\n";
 function get_config(){
 	return Array(
@@ -10,11 +13,9 @@ function get_config(){
 		'LANG'=>"en",
 		'CHAR_SET'=>"utf-8",
 		'TITLE '=> "", 			//Surely overwritten,
-		/* ----- ----- GENERAL OPTIONS ----- ----- */
-	
 	
 		/* ----- ----- DATABASE MANAGEMENT ----- ----- */
-		'DBPATH_USERS'=>"./resources/dbs/users.db",
+		'DBPATH_USERS'=> $PATH['DB_USERS'],
 		'USERS_VERSION'=>1.00,
 		
 		/* ----- ----- BOOTSTRAP REQUIRED PARAMETERS AND CONFIGURATION ----- ----- */
@@ -58,6 +59,10 @@ function get_config(){
 		'DATATABLES_JS_JQUERY_SRC'=>"https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js",
 		'DATATABLES_JS_JQUERY_INTEGRITY'=>"",
 		'DATATABLES_JS_JQUERY_ORIGIN'=>"anonymous",
+
+		/* ----- ----- AUTHENTIFICATION CONFIGURATION ----- ----- */
+		'SALT_CHARSET'=>'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/\\][{}\'";:?.>,<!@#$%^&*()-_=+|',
+		'SALT_LENGTH'=>64,
 	);
 }
 ?>
