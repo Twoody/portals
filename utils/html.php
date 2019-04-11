@@ -65,12 +65,14 @@ function get_header($CONFIG=Null){
 	$s .=	"\n</head>\n";
 	return $s;
 }
-function get_js(){
+function get_js($CONFIG=Null){
+	if($CONFIG === Null)
+		$CONFIG	= get_config();
 	$s = "";
-	if($HAS_BOOTSTRAP || $HAS_POPPER || $HAS_JQUERY )
-		$s .= get_bootstrap_js();
-	if($HAS_DATATABLES || $HAS_DATATABLES_JQUERY )
-		$s .= get_datatables_js();
+	if($CONFIG['HAS_BOOTSTRAP'] || $CONFIG['HAS_POPPER'] || $CONFIG['HAS_JQUERY'] )
+		$s .= get_bootstrap_scripts($CONFIG);
+	if($CONFIG['HAS_DATATABLES'] || $CONFIG['HAS_DATATABLES_JQUERY'] )
+		$s .= get_datatables_scripts($CONFIG);
 	return $s;
 }
 function make_css($REL, $LINK, $INTEGRITY="", $ORIGIN=""){
@@ -103,7 +105,7 @@ function make_par( $s, $args=null ){
 function make_script($src, $integrity, $origin){
 	/* Make a JS script to be imported into HTML page */
 	$s = "";
-	$s .= "\t<script";
+	$s .= "\n\t<script";
 	$s .= "\n\t\tsrc=\"".$src."\"";
 	$s .= "\n\t\tintegrity=\"".$integrity."\"";
 	$s .= "\n\t\tcrossorigin=\"".$origin."\">";
