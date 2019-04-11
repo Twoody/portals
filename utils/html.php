@@ -75,6 +75,46 @@ function get_js($CONFIG=Null){
 		$s .= get_datatables_scripts($CONFIG);
 	return $s;
 }
+function get_nav($CONFIG=Null){
+	if($CONFIG === Null)
+		$CONFIG	= get_config();
+	$html = "";
+	$html .= "\n\t\t<nav class=\"navbar navbar-expand-sm navbar-light bg-light\">";
+	$html .= "\n\t\t\t<a class=\"navbar-brand\" href=\"#\">Portals</a>";
+	$html .= "\n\t\t\t<button ";
+	$html .= "\n\t\t\t\tclass=\"navbar-toggler\"";
+	$html .= "\n\t\t\t\ttype=\"button\"";
+	$html .= "\n\t\t\t\tdata-toggle=\"collapse\"";
+	$html .= "\n\t\t\t\tdata-target=\"#navbarText\"";
+	$html .= "\n\t\t\t\taria-controls=\"navbarText\"";
+	$html .= "\n\t\t\t\taria-expanded=\"false\"";
+	$html .= "\n\t\t\t\taria-label=\"Toggle navigation\"";
+	$html .= "\n\t\t\t>";
+	$html .= "\n\t\t\t\t<span class=\"navbar-toggler-icon\"></span>";
+	$html .= "\n\t\t\t</button>";
+	$html .= "\n\t\t\t<div class=\"collapse navbar-collapse\" id=\"navbarText\">";
+	//TODO: Build list of nav elements from $CONFIG;
+	$html .= "\n\t\t\t\t<ul class=\"navbar-nav mr-auto\">";
+	//TODO: Get current page from $CONFIG or $SESSIONS;
+	$html .= "\n\t\t\t\t\t<li class=\"nav-item active\">";
+	$html .= "\n\t\t\t\t\t\t<a class=\"nav-link\" href=\"#\">Home <span class=\"sr-only\">(current)</span></a>";
+	$html .= "\n\t\t\t\t\t</li>";
+	$html .= "\n\t\t\t\t\t<li class=\"nav-item\">";
+	$html .= "\n\t\t\t\t\t\t<a class=\"nav-link\" href=\"#\">Features</a>";
+	$html .= "\n\t\t\t\t\t</li>";
+	$html .= "\n\t\t\t\t\t<li class=\"nav-item\">";
+	$html .= "\n\t\t\t\t\t\t<a class=\"nav-link\" href=\"#\">Pricing</a>";
+	$html .= "\n\t\t\t\t\t</li>";
+	$html .= "\n\t\t\t\t</ul>";
+	$html .= "\n\t\t\t\t<span class=\"navbar-text\">";
+	//$html .= "\n\t\t\tWelcome ".$fname; //Maybe pull from $SESSIONS?
+	$html .= "\n\t\t\t\t\tWelcome back";
+	$html .= "\n\t\t\t\t</span>";
+	$html .= "\n\t\t\t</div>";
+	$html .= "\n\t\t</nav>";
+	$html .= "\n";
+	return $html;
+}
 function make_css($REL, $LINK, $INTEGRITY="", $ORIGIN=""){
 	/* Make a CSS stylesheet to be imported into HTML page */
 	$css .= "\n\t<link";
