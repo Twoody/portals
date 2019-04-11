@@ -11,27 +11,18 @@ require_once($PATHS['LIBPATH_DB_HELPER']);
 $CONFIG = get_config();
 
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
-//TODO: Store title in a pages db;
-$CONFIG['TITLE'] = "TEMPLATE LOGIN";
+$CONFIG['TITLE'] = "TEMPLATE LOGIN";	// TODO: Store title in a pages db;
 $CONFIG['HAS_DATATABLES'] = TRUE;
 
-$html			= '';
+$dbpath		= $PATHS['DB_USERS'];
 $show_login	= true;
-
+$html			= '';
 $html .= get_header($CONFIG);
 $html .= "\n";
 $html .= "\n<body>";
 $html .= get_js($CONFIG);
 $html .=	"\n\t<!-- Optional JavaScript -->\n";
 
-/*
-	TODO:
-		PHP this;
-			Verify if db;
-			Verify if tables;
-			Verify if users;
-*/
-$dbpath	= $PATHS['DB_USERS'];
 if(!is_db($dbpath)){
 	//TODO: Alert site is in maintenance;
 	echo clog('"No DB"');	//TODO: Error messages from .../strings/errors.json
