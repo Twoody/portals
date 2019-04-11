@@ -2,7 +2,7 @@
 require_once('./config/paths.php');
 $PATHS = get_paths();
 require_once($PATHS['SETTINGS_PATH']);
-require_once($PATHS['HTML_LIB_PATH']);
+require_once($PATHS['LIBPATH_HTML']);
 
 echo "\n<!-- /forms/login.php imported -->\n";
 
