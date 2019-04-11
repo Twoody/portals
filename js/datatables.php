@@ -15,6 +15,7 @@ function get_datatables_scripts($CONFIG=Null){
 		$ret .= "\n\t<!-- jQuery first -->"; 
 		$ret .= make_script($CONFIG['DATATABLES_JS_JQUERY_SRC'],	$CONFIG['DATATABLES_JS_JQUERY_INTEGRITY'],	$CONFIG['DATATABLES_JS_JQUERY_ORIGIN']);
 	}
+	else
 		$ret .= " \n\t<!-- NO DATATABLES MODULES IMPORTED-->\n";
 	return $ret;
 }
