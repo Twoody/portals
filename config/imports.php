@@ -8,8 +8,8 @@
 	require_once($PATHS['BOOTSTRAP_JS_PATH']);
 
 	/** ** ** ** ** ** ** UTILS ** ** ** ** ** ** **/
-	require_once($PATHS['HTML_LIB_PATH']);
-	require_once($PATHS['DATES_LIB_PATH']);
+	require_once($PATHS['LIBPATH_HTML']);
+	require_once($PATHS['LIBPATH_DATES']);
 
 
 if (!function_exists("get_imports")){
@@ -23,8 +23,8 @@ if (!function_exists("get_imports")){
 			$PATHS['BOOTSTRAP_JS_PATH'],
 	
 			/** ** ** ** ** ** ** UTILS ** ** ** ** ** ** **/
-			$PATHS['HTML_LIB_PATH'],
-			$PATHS['DATES_LIB_PATH'],
+			$PATHS['LIBPATH_HTML'],
+			$PATHS['LIBPATH_DATES'],
 		);
 	}
 }
