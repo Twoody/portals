@@ -6,10 +6,12 @@ require_once($PATHS['LIBPATH_HTML']);
 
 echo "\n<!-- /forms/login.php imported -->\n";
 
-function get_login_form($CONFIG=Null){
+function get_login_form($CONFIG=Null, $PATHS=Null){
 	if($CONFIG === Null)
 		$CONFIG	= get_config();
-	$html  = "\n\t<form action=\"login4.php\" method=\"post\">";
+	if($PATHS === Null)
+		$PATHS	= get_paths();
+	$html  = "\n\t<form action=\"".$PATHS['TEMPLATES_LOGIN']."\" method=\"post\">";
 	$html .= "\n\t\t<div class=\"form-group row justify-content-center\">";
 	$html .= "\n\t\t\t<label for=\"inputEmail\"class=\"col-sm-2 col-form-label\">Email</label>";
 	$html .= "\n\t\t\t<div class=\"col-sm-4\">";
@@ -69,4 +71,7 @@ function get_login_form($CONFIG=Null){
 	$html .= "\n\t</form>\n";
 	return $html;
 }
+
+/***** Just for testing *****/
+//echo get_login_form() . "\n";
 ?>
