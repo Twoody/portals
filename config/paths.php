@@ -17,13 +17,15 @@ Purpose:
 function get_paths(){
 	$ROOT = "/Users/tannerleewoody/Workspace/testdir/php/bootstrap";
 	return Array(
-
 		'BOOTSTRAP_CSS_PATH'	=> $ROOT.'/css/bootstrap.php',
 		'BOOTSTRAP_JS_PATH'	=> $ROOT.'/js/bootstrap.php',
 		'DATATABLES_CSS_PATH'=> $ROOT.'/css/datatables.php',
 		'DATATABLES_JS_PATH'	=> $ROOT.'/js/datatables.php',
 		'DATES_LIB_PATH'		=> $ROOT.'/utils/dates.php',
+		'DB_USERS'				=> $ROOT."/resources/dbs/users.db",
+		'FORMS_LOGIN'			=> $ROOT."/resources/forms/login.php",
 		'HTML_LIB_PATH'		=> $ROOT.'/utils/html.php',
+		'ROOT'					=> $ROOT,
 		'SETTINGS_PATH'		=> $ROOT.'/config/settings.php',
 	);
 }
