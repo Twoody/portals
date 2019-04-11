@@ -18,6 +18,20 @@ require_once($PATHS['SETTINGS_PATH']);
 
 echo "\n<!-- /utils/html.php imported -->\n";
 
+function alert($msg){
+	$html =  "\n\t\t<script>";
+	$html .= "\n\t\t\talert(JSON.stringify(".$msg."));";
+	$html .= "\n\t\t</script>";
+	return $html;
+}
+function clog($msg){
+	$html =  "\n\t\t<script>";
+	$html .= "\n\t\t\tconsole.log(";
+	$html .= "JSON.stringify(";
+	$html .= $msg."));";
+	$html .= "\n\t\t</script>";
+	return $html;
+}
 function get_css($CONFIG=Null){
 	if($CONFIG === Null)
 		$CONFIG	= get_config();
