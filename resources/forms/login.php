@@ -4,8 +4,7 @@ $PATHS = get_paths();
 require_once($PATHS['SETTINGS_PATH']);
 require_once($PATHS['LIBPATH_HTML']);
 
-echo "\n<!-- /forms/login.php imported -->\n";
-
+echo "\n<!-- ".$PATHS['FORMS_LOGIN']." -->\n";
 function get_login_form($CONFIG=Null, $PATHS=Null){
 	if($CONFIG === Null)
 		$CONFIG	= get_config();
