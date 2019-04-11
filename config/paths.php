@@ -34,6 +34,7 @@ function get_paths(){
 		'SETTINGS_PATH'			=> $ROOT.'/config/settings.php',
 		'STRINGS_ERRORS'     	=> $ROOT."/resources/strings/errors.json",
 		'TEMPLATES_LOGIN'			=> $ROOT."/templates/login.php",
+		'TEMPLATES_FOOTER'		=> $ROOT."/templates/footer.php",
 	);
 }
 ?>
