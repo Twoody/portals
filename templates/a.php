@@ -11,12 +11,10 @@ $CONFIG = get_config();
 //TODO: Store title in a pages db;
 $CONFIG['TITLE'] = "TEMPLATE A";
 
-//WARNING: DATATABLES not configured for new get_* config functions;
 $CONFIG['HAS_DATATABLES'] = TRUE;
 
+$html = '';
+$html .= get_header($CONFIG);
 
-/* ----- ----- SECOND IMPORT ----- ----- */
-//echo get_bootstrap_scripts($CONFIG) . "\n";
-//echo get_css($CONFIG) . "\n";
-echo get_header($CONFIG);
+echo $html."\n";
 ?>
