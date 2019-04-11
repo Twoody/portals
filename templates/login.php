@@ -6,6 +6,7 @@ $PATHS = get_paths();
 require_once($PATHS['DATATABLES_CSS_PATH']);
 require_once($PATHS['DATATABLES_JS_PATH']);
 require_once($PATHS['FORMS_LOGIN']);
+require_once($PATHS['LIBPATH_AUTH_USER']);
 $CONFIG = get_config();
 
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
@@ -15,13 +16,13 @@ $CONFIG['TITLE'] = "TEMPLATE A";
 $CONFIG['HAS_DATATABLES'] = TRUE;
 
 $html			= '';
-$showLogin	= true;
+$show_login	= true;
 
 $html .= get_header($CONFIG);
 $html .= "\n";
 
 $html .= "\n<body>";
-
+$html .= get_js($CONFIG);
 /*
 	TODO:
 		Php this at this spot:
@@ -54,22 +55,20 @@ $html .= "\n<body>";
 				integrity="" 
 				crossorigin="anonymous">
 			</script>
-			<!-- Optional JavaScript -->
-
-
 */
+
+$html .=	"\n\t<!-- Optional JavaScript -->\n";
 
 if(isset($_POST['form_submit'])){
 	//TODO: Authenticate user...
-	$showLogin = false;
-	$email  = $_POST["inputEmail3"];
+	$show_login = false;
+	$email  = $_POST["inputEmail"];
 	$user   = strstr($email, '@', true); //strip everything after `@`
-	$pw     = $_POST["inputPassword3"];
+	$pw     = $_POST["inputPassword"];
 	$access = $_POST["userLevel"];
 	//TODO: Pull dbpath from config file...
-	$dbpath = "/Users/tannerleewoody/Workspace/testdir/html/bootstrap/resources/dbs/users.db";	//RUNNING FROM ROOT `./forms/login4.php`
-	$dbpath = "./resources/dbs/users.db";	//RUNNING FROM ROOT `./forms/login4.php`
-	$isValidEmail = isValidEmail($email);
+	$dbpath = $PATHS['DB_USERS'];
+	$is_valid_email = is_valid_email($email);
 	if ($access === "isMember")
 		$access = "member";
 	else if ($access === "isOwner")
@@ -78,35 +77,33 @@ if(isset($_POST['form_submit'])){
 		$access = "admin";
 	else{
 		$access = "error";
-		echo "<script>console.log(\"ERROR 234234: BAD ACCESS LEVEL\");</script>";
-		$showLogin = True;
+		//TODO: Get error pulled from $ERRORS parsed obj of errors.json file;
+		$html.= clog("ERROR 234234: BAD ACCESS LEVEL");
+		$show_login = True;
 	}
-	if ($access !== 'error' && $isValidEmail === TRUE){
+	if ($access !== 'error' && $is_valid_email){
 		$db			= new SQLite3($dbpath);
-		$salt			= getSalt($email);
-		$user_hash	= getHash($email);
-		$isValidPW	= password_verify($pw.$salt, $user_hash);
-		$isUser		= isValidAccess($email, $access);
-		$db->close();
-		if ($isUser === FALSE || $isValidPW !== TRUE){
-			if ($isValidPW !== true){
-				echo "<script>alert(\"Bad Password;\");</script>";
-			}
-			else if (isValidAccess($email, $access) === FALSE){
-				echo "<script>alert(\"Bad Access Level;\");</script>";
-			}
-			else{
-				echo "<script>alert(\"Bad Login;\");</script>";
-			}
-			$showLogin = TRUE;
+		$salt			= getS_salt($email);
+		$user_hash	= get_hash($email);
+		$is_validPW	= password_verify($pw.$salt, $user_hash);
+		$has_access	= is_valid_access($email, $access);
+		$db->close();														// CLOSING DB;
+		if (!$has_access || !$is_valid_pw){
+			if (!$is_valid_pw)
+				echo alert("Bad Password");
+			else if (!$has_access)
+				echo alert("Bad Access Level");
+			else
+				echo alert("Bad Login");
+			$show_login = TRUE;
 		}
 	}
 	else{
-		echo "<script>alert(\"Bad Email;\");</script>";
-		$showLogin = TRUE;
+		echo alert("Bad Email");
+		$show_login = TRUE;
 	}
 }
-if ($showLogin === TRUE){
+if ($show_login){
 	$html .= get_login_form($CONFIG);
 }
 else{
