@@ -1,5 +1,25 @@
+/******************************************************************************
+*
+* Log Stuff
+*
+*
+******************************************************************************/
 
 
+
+Tanner.L.Woody@gmail.com
+2019-04-10
+	Form submission is up for logins;
+	We are currently `under maintenace` as we have not configured the db;
+	That being said, everything works even if the DB is compromised;
+	TODO:
+		add `tables` param to config to set cols;
+		init tables via db_helper;
+		do a verification if users exist in `users` table;
+		init users via db_helper if no users found;
+		Test Login!
+	And once logins are up and running, consider next part of task.
+		Either (A) Do Json parser or (B) Work on the design of the site via navbar and the such;
 
 Tanner.L.Woody@gmail.com
 2019-04-10
