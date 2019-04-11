@@ -1,5 +1,16 @@
 
 
+
+Tanner.L.Woody@gmail.com
+2019-04-10
+	Have everything in place to start initializing the db;
+	Still working in /templates/login.php:
+		Do a verification if the DB exists;
+		Do a verification if the TABLES exist;
+		Do a verification if USERS exist;
+	After verification, act accordingly in making the db, making tables, or updating db;
+	Once this is done, we should be in place for a navbar template;
+		
 Tanner.L.Woody@gmail.com
 2019-04-09
 	Everything appears to be compiling accurately in the new get_* for config options;
