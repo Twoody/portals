@@ -1,7 +1,7 @@
 Author:
 	Tanner.L.Woody@gmail.com 20181118
 Date:	
-	2019-04-19
+	2019-04-09
 
 Dependencies:
 	1. SQLite3
@@ -23,8 +23,13 @@ Project Navigation:
 	3. All strings for error messages and html should be imported
 		in order to keep a single place for translation services;
 	
-
 To Run:
 	Open browser to localhost:8000;
 	Execute command from shell:
 		clear & php -S localhost:8000 index.php
+
+Naming Conventions and Styling:
+	snake_case naming convention;
+	tabs, not spaces;
+	tabstop = 3;
+
