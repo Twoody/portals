@@ -1,8 +1,16 @@
-Database Items:
-	1. 	Move over db items from /testdir/html/bootstrap/forms/login5.php
-	2. 	Think about a pages.db and integration into pages that can be made and can be added to it;
-	3. 	JSON parser
-	4. 	Error handling via errors.json
-	5. 	Design: Navbar, crumbles, media, SESSION;
+A. Main:
+	1. 	Design: Navbar, crumbles, media, SESSION;
+	2. 	JSON parser
+	3. 	Error handling via errors.json
 	N-1.	Set all `import` html comments to use $PAGES path;
 	N. 	Design more templates...; LOW PRIORITY;
+
+B. Database Items:
+	1. 	Move over db items from /testdir/html/bootstrap/forms/login5.php
+	2. 	Think about a pages.db and integration into pages that can be made and can be added to it;
+	N. 	Store $CONFIG['TITLE'] in a pages db;
+
+C. Navigation:
+	1.		Build list of nav elements for get_nav()
+	2.		get current page from $config or $sessions;
+	3.		Plug any strings into /resources/strings/ and parse out...
