@@ -19,6 +19,7 @@ Purpose:
 require_once('./config/imports.php');
 $PATHS = get_paths();
 require_once($PATHS['FONT_AWESOME_CSS_PATH']);
+require_once($PATHS['LIBPATH_FA']);
 
 $CONFIG = get_config();
 $CONFIG['META_CONTENT'] = "width=device-width, initial-scale=1";
@@ -26,7 +27,7 @@ $CONFIG['TITLE'] = "TEMPLATE SOCIAL MEDIA";
 //$CONFIG['HAS_BOOTSTRAP'] = FALSE;
 $CONFIG['HAS_FONT_AWESOME'] = TRUE;
 $CONFIG['CUSTOM_STYLES'] .= get_font_awesome_style_guide();
-$CONFIG['CUSTOM_SCRIPTS'] .= "<script src=\"https://use.fontawesome.com/18fb4b0697.js\"></script>";
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t<script src=\"https://use.fontawesome.com/18fb4b0697.js\"></script>";
 
 echo "\n<!-- RUNNING: " . $PATHS['TEMPLATES_SOCIAL_MEDIA'] . "-->\n";
 $CONFIG['FA_STACK_SIZE'] = 'fa-3x';
@@ -127,7 +128,6 @@ $html .= "\n\t<h1>Social Media Template</h1>";
 	$html .= "\n\t\t</div>";
 
 $html .= get_js($CONFIG);
-$html .=	"\n\t<!-- Optional JavaScript -->\n";
 $html .= "\n</body>";
 $html .= "\n</html>\n";
 echo $html;
