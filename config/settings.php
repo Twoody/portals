@@ -12,8 +12,13 @@ function get_config(){
 		'ACTIVE_PAGE'=>"./",
 		'LANG'=>"en",
 		'CHAR_SET'=>"utf-8",
+		'META_CONTENT'=>"width=device-width, initial-scale=1, shrink-to-fit=no",
 		'TITLE '=> "", 			//Surely overwritten,
 	
+		/* ----- ----- CUSTOM JS and CSS ----- ----- */
+		'CUSTOM_STYLES'=>"",
+		'CUSTOM_SCRIPTS'=>"",
+
 		/* ----- ----- DATABASE MANAGEMENT ----- ----- */
 		'DBPATH_USERS'=> $PATH['DB_USERS'],
 		'USERS_VERSION'=>1.00,
@@ -59,6 +64,14 @@ function get_config(){
 		'DATATABLES_JS_JQUERY_SRC'=>"https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js",
 		'DATATABLES_JS_JQUERY_INTEGRITY'=>"",
 		'DATATABLES_JS_JQUERY_ORIGIN'=>"anonymous",
+
+		/* ----- ----- FONT AWESOME REQUIRED PARAMETERS AND CONFIGURATION ----- ----- */
+		'HAS_FONT_AWESOME'=>FALSE,
+		'FONT_AWESOME_CSS_REL'=>"stylesheet",
+		'FONT_AWESOME_CSS_LINK'=>"https://use.fontawesome.com/releases/v5.8.1/css/all.css",
+		'FONT_AWESOME_CSS_INTEGRITY'=>"sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf",
+		'FONT_AWESOME_CSS_ORIGIN'=>"anonymous",
+
 
 		/* ----- ----- AUTHENTIFICATION CONFIGURATION ----- ----- */
 		'SALT_CHARSET'=>'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/\\][{}\'";:?.>,<!@#$%^&*()-_=+|',
