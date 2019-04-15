@@ -29,6 +29,7 @@ function get_paths(){
 		'LIBPATH_AUTH_USER'			=> $ROOT.'/utils/auth.php',
 		'LIBPATH_DATES'				=> $ROOT.'/utils/dates.php',
 		'LIBPATH_DB_HELPER'			=> $ROOT.'/utils/db_helper.php',
+		'LIBPATH_FA'					=> $ROOT.'/utils/font_awesome.php',
 		'LIBPATH_HTML'					=> $ROOT.'/utils/html.php',
 		'LIBPATH_JSON'					=> $ROOT.'/utils/json_helper.php',
 		'ROOT'							=> $ROOT,
