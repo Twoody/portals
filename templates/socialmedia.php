@@ -14,6 +14,8 @@ Purpose:
     Build up to displaying the general layout expected of a websites footer;
 	 Certain elements are an area for RSS feeds, social media plugins,
 	 	disclosures, contact information, etc.;
+Links:
+	https://www.w3schools.com/howto/howto_css_social_media_buttons.asp
 
 ******************************************************************************/
 require_once('./config/imports.php');
