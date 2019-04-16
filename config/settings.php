@@ -14,6 +14,7 @@ function get_config(){
 		'CHAR_SET'=>"utf-8",
 		'META_CONTENT'=>"width=device-width, initial-scale=1, shrink-to-fit=no",
 		'TITLE '=> "", 			//Surely overwritten,
+		'FOOTER_IS_STICKY'=>TRUE,
 	
 		/* ----- ----- LINKS ----- ----- */
 		/* WILL PROBABLY BE OWN FUNCTION IN THE FUTURE */
@@ -85,7 +86,6 @@ function get_config(){
 		'FONT_AWESOME_CSS_LINK'=>"https://use.fontawesome.com/releases/v5.8.1/css/all.css",
 		'FONT_AWESOME_CSS_INTEGRITY'=>"sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf",
 		'FONT_AWESOME_CSS_ORIGIN'=>"anonymous",
-
 
 		/* ----- ----- AUTHENTIFICATION CONFIGURATION ----- ----- */
 		'SALT_CHARSET'=>'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/\\][{}\'";:?.>,<!@#$%^&*()-_=+|',
