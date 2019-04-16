@@ -6,6 +6,7 @@
 	require_once($PATHS['SETTINGS_PATH']);
 	require_once($PATHS['BOOTSTRAP_CSS_PATH']);
 	require_once($PATHS['BOOTSTRAP_JS_PATH']);
+	require_once($PATHS['FONT_AWESOME_CSS_PATH']);
 
 	/** ** ** ** ** ** ** UTILS ** ** ** ** ** ** **/
 	require_once($PATHS['LIBPATH_HTML']);
