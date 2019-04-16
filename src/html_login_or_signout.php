@@ -2,7 +2,6 @@
 require_once('./config/imports.php');
 $PATHS = get_paths();
 require_once($PATHS['FORMS_LOGIN']);
-require_once($PATHS['FORMS_LOGIN']);
 require_once($PATHS['LIBPATH_AUTH_USER']);
 require_once($PATHS['LIBPATH_DB_HELPER']);
 
