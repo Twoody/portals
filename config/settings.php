@@ -15,6 +15,20 @@ function get_config(){
 		'META_CONTENT'=>"width=device-width, initial-scale=1, shrink-to-fit=no",
 		'TITLE '=> "", 			//Surely overwritten,
 	
+		/* ----- ----- LINKS ----- ----- */
+		/* WILL PROBABLY BE OWN FUNCTION IN THE FUTURE */
+		'LINK_ANDROID' => 'https://play.google.com/store/apps/details?id=com.beWoody.tanner.KISS_List',
+		'LINK_TWITTER' => 'https://twitter.com/woody_tanner',
+		'LINK_FACEBOOK' => 'https://www.facebook.com/tanner.woody.9',
+		'LINK_GMAIL' => 'mailto:Tanner.L.Woody@gmail.com',
+		'LINK_LINKEDIN' => 'ihttps://www.linkedin.com/in/tanner-woody-113208b7/',
+		'LINK_INSTA' => 'https://www.instagram.com/thatguywoody/',
+		'LINK_STRAVA' => 'https://www.strava.com/athletes/9502204',
+		'LINK_STACKOVERFLOW' => 'https://stackoverflow.com/users/2957890/t-woody',
+		'LINK_GITHUB' => 'https://github.com/TWoody',
+		//TODO: Client links and page...
+		//'LINK_CLIENT1' => '',
+
 		/* ----- ----- CUSTOM JS and CSS ----- ----- */
 		'CUSTOM_STYLES'=>"",
 		'CUSTOM_SCRIPTS'=>"",
