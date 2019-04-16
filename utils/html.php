@@ -45,11 +45,194 @@ function get_css($CONFIG=Null){
 	$s .= $CONFIG['CUSTOM_STYLES'];
 	return $s;
 }
-function get_footer(){
-	$s = "";
-	$s .= "\n</body>";
-	$s .= "\n</html>";
-	return $s;
+function get_footer($CONFIG=Null){
+	if ($CONFIG === Null)
+		$CONFIG = get_config();
+	$CONFIG['FA_STACK_SIZE'] = 'fa-md';
+	$col1 = Array(
+		Array(	'href'=>$CONFIG['LINK_GMAIL'],
+					'icon'=>make_font_awesome_stack(Array(
+						'backdrop-google fas fa-circle',
+						'fab fa-fw fa-google'
+					),$CONFIG),
+		),
+		Array(	'href'=>$CONFIG['LINK_STACKOVERFLOW'],
+					'icon'=>make_font_awesome_stack(Array(
+						'backdrop-stack-overflow fas fa-circle',
+						'fab fa-tw fa-stack-overflow'
+					),$CONFIG),
+		),
+		Array(	'href'=>$CONFIG['LINK_ANDROID'],
+					'icon'=>make_font_awesome_stack(Array(
+						'backdrop-android fas fa-circle',
+						'fab fa-tw fa-android'
+					),$CONFIG),
+		),
+	);
+	$col2 = Array(
+		Array(	'href' => $CONFIG['LINK_INSTA'],
+					'icon' => make_font_awesome_stack(Array(
+						'backdrop-instagram fas fa-circle',
+						'fab fa-fw fa-instagram'
+					),$CONFIG),
+		),
+		Array(	'href' => $CONFIG['LINK_STRAVA'] ,
+					'icon' => make_font_awesome_stack(Array(
+						'backdrop-strava fas fa-circle',
+						'fab fa-tw fa-strava'
+					),$CONFIG),
+		),
+		Array(	'href' => $CONFIG['LINK_GITHUB'],
+					'icon' => make_font_awesome_stack(Array(
+						'backdrop-github fas fa-circle',
+						'fab fa-tw fa-github'
+					),$CONFIG),
+		),
+	);
+	$col3 = Array(
+		Array(	'href' => $CONFIG['LINK_FACEBOOK'] ,
+					'icon' => make_font_awesome_stack(Array(
+						'backdrop-facebook fas fa-circle',
+						'fab fa-fw fa-facebook'
+					),$CONFIG),
+		),
+		Array(	'href'=> $CONFIG['LINK_TWITTER'] ,
+					'icon'=> make_font_awesome_stack(Array(
+						'backdrop-twitter fas fa-circle',
+						'fab fa-tw fa-twitter'
+					),$CONFIG),
+		),
+		Array(	'href' => $CONFIG['LINK_LINKEDIN'],
+					'icon' => make_font_awesome_stack(Array(
+						'backdrop-linkedin fas fa-circle',
+						'fab fa-tw fa-linkedin'
+					),$CONFIG),
+		),
+	);
+	$CONFIG['FA_STACK_SIZE'] = 'fa-2x';
+
+	$html = "";
+	$html .= "\n\t\t<footer class=\"mt-5 ";
+	if ($CONFIG['FOOTER_IS_STICKY'] === TRUE)
+		$html .= " fixed-bottom ";
+	$html .= "\">";
+	if ($CONFIG['FOOTER_IS_STICKY'] === False){
+		$html .= "\n\t\t\t<div class=\"container-fluid bg-faded mt-5\">";
+		$html .= "\n\t\t\t\t<div class=\"container\">";
+		$html .= "\n\t\t\t\t\t<div class=\"row py-3 justify-content-between align-items-center\">";
+		$html .= "\n\t\t\t\t\t<!-- footer column 1 start -->";
+		$html .= "\n\t\t\t\t\t\t<div class=\"col-md-4\">";
+		$html .= "\n\t\t\t\t\t\t<!-- row start -->";
+		$html .= "\n\t\t\t\t\t\t\t<div class=\"row py-3  d-none d-md-block\">";
+		$html .= "\n\t\t\t\t\t\t\t\t<div class=\"col-md-12 text-center\">";
+		$html .= "\n\t\t\t\t\t\t\t\t\t<a href=\"" . $CONFIG['LINK_TWITTER'] . "\">";
+		$html .= "\n\t\t\t\t\t\t\t\t\t\t";
+		$html .= make_font_awesome_stack(Array(
+					'backdrop-footer fas fa-circle',
+					'fab fa-footer fa-twitter'
+					),$CONFIG);
+		$html .= "\n\t\t\t\t\t\t\t\t\t</a>";
+		$html .= "\n\t\t\t\t\t\t\t\t</div>";
+		$html .= "\n\t\t\t\t\t\t\t\t<div class=\"col-md-12 text-center\">";
+		$html .= "\n\t\t\t\t\t\t\t\t\t<h4>Tweets</h4>";
+		$html .= "\n\t\t\t\t\t\t\t\t\tEmbed here";
+		$html .= "\n\t\t\t\t\t\t\t\t</div>";
+		$html .= "\n\t\t\t\t\t\t\t</div>";
+		$html .= "\n\t\t\t\t\t\t\t<!-- row end -->";
+		$html .= "\n\t\t\t\t\t\t</div>";
+		$html .= "\n\t\t\t\t\t\t<!-- footer column 1 end -->";			//End footer col 1
+		$html .= "\n\t\t\t\t\t\t<!-- footer column 2 start -->";
+		$html .= "\n\t\t\t\t\t\t<div class=\"col-md-4\">";
+		$html .= "\n\t\t\t\t\t\t<!-- row start -->";
+		$html .= "\n\t\t\t\t\t\t\t<div class=\"row py-2  d-none d-md-block\">";
+		$html .= "\n\t\t\t\t\t\t\t\t<div class=\"col-md-12 text-center\">";
+		$html .= "\n\t\t\t\t\t\t\t\t\t<a href=\"#\">";
+		$html .= "\n\t\t\t\t\t\t\t\t\t";
+		$html .= make_font_awesome_stack(Array(
+					'backdrop-footer fas fa-circle',
+					'fas fa-fw fa-footer fa-address-card',
+					),$CONFIG);
+		$html .= "\n\t\t\t\t\t\t\t\t</a>";
+		$html .= "\n\t\t\t\t\t\t\t</div>";
+		$html .= "\n\t\t\t\t\t\t\t<div class=\"col-md-12 text-center\">";
+		$html .= "\n\t\t\t\t\t\t\t\t<h4>Contact us</h4>";
+		$html .= "\n\t\t\t\t\t\t\t\t<p>Why not?</p>";
+		$html .= "\n\t\t\t\t\t\t\t</div>";
+		$html .= "\n\t\t\t\t\t\t</div>";
+		$html .= "\n\t\t\t\t\t\t<!-- row end -->";
+		$html .= "\n\t\t\t\t\t\t<!-- row start -->";
+		$html .= "\n\t\t\t\t\t\t<div class=\"row py-2 d-none d-md-block\">";
+		$html .= "\n\t\t\t\t\t\t\t<div class=\"col text-center\">";
+		$html .= "\n\t\t\t\t\t\t\t\t<a href=\"#\">";
+		$html .= "\n\t\t\t\t\t\t\t\t\t";
+		$html .= make_font_awesome_stack(Array(
+					'backdrop-footer fas fa-circle',
+					'fas fa-fw fa-footer fa-laptop',
+					),$CONFIG);
+		$html .= "\n\t\t\t\t\t\t\t\t</a>";
+		$html .= "\n\t\t\t\t\t\t\t</div>";
+		$html .= "\n\t\t\t\t\t\t\t<div class=\"col-md-12 text-center\">";
+		$html .= "\n\t\t\t\t\t\t\t\t<h4>Cookie policy</h4>";
+		$html .= "\n\t\t\t\t\t\t\t\t<p class=\" \">We use <a class=\" \" href=\"/# \">cookies </a></p>";
+		$html .= "\n\t\t\t\t\t\t\t</div>";
+		$html .= "\n\t\t\t\t\t\t</div>";
+		$html .= "\n\t\t\t\t\t\t<!-- row end -->";
+		$html .= "\n\t\t\t\t\t</div>";
+		$html .= "\n\t\t\t\t\t<!-- footer column 2 end -->";
+		$html .= "\n\t\t\t\t\t<!-- footer column 3 start -->";
+		$html .= "\n\t\t\t\t\t<div class=\"col-md-4\">";
+		$html .= "\n\t\t\t\t\t\t<!-- row starting  -->";
+		$html .= "\n\t\t\t\t\t\t<div class=\"row py-2 d-none d-md-block\">";
+		$html .= "\n\t\t\t\t\t\t\t<div class=\"col-md-12 text-center\">";
+		$html .= "\n\t\t\t\t\t\t\t\t<a href=\"# \">";
+		$html .= make_font_awesome_stack(Array(
+					'backdrop-footer fas fa-circle',
+					'fas fa-fw fa-footer fa-file-pdf-o',
+					),$CONFIG);
+		$html .= "\n\t\t\t\t\t\t\t\t</a>";
+		$html .= "\n\t\t\t\t\t\t\t</div>";
+		$html .= "\n\t\t\t\t\t\t\t<div class=\"col-md-12 text-center\">";
+		$html .= "\n\t\t\t\t\t\t\t\t<h4>Download pdf</h4>";
+		$html .= "\n\t\t\t\t\t\t\t\t<p> You like print?</a></p>";
+		$html .= "\n\t\t\t\t\t\t\t</div>";
+		$html .= "\n\t\t\t\t\t\t</div>";
+		$html .= "\n\t\t\t\t\t\t<!-- row ended -->";
+		$html .= "\n\t\t\t\t\t\t<!-- row starting  -->";
+		$html .= "\n\t\t\t\t\t\t<div class=\"row py-2 d-none d-md-block\">";
+		$html .= "\n\t\t\t\t\t\t\t<div class=\"col-md-12 text-center\">";
+		$html .= "\n\t\t\t\t\t\t\t\t<a href=\"". $CONFIG['LINK_TWITTER'] . "\">";
+		$html .= make_font_awesome_stack(Array(
+					'backdrop-footer fas fa-circle',
+					'fas fa-fw fa-footer fa-info',
+					),$CONFIG);
+		$html .= "\n\t\t\t\t\t\t\t\t</a>";
+		$html .= "\n\t\t\t\t\t\t\t</div>";
+		$html .= "\n\t\t\t\t\t\t\t<div class=\"col-md-12 text-center\">";
+		$html .= "\n\t\t\t\t\t\t\t\t<h4>Info</h4>";
+		$html .= "\n\t\t\t\t\t\t\t\tAbout us.";
+		$html .= "\n\t\t\t\t\t\t\t</div>";
+		$html .= "\n\t\t\t\t\t\t</div>";
+		$html .= "\n\t\t\t\t\t\t<!-- row ended -->";
+		$html .= "\n\t\t\t\t\t</div>";
+		$html .= "\n\t\t\t\t\t<!-- footer column 3 end -->";
+		$html .= "\n\t\t\t\t</div>";
+		$html .= "\n\t\t\t</div>";
+		$html .= "\n\t\t</div>";
+	}
+	$html .= "\n\t\t\t<div class=\"container-fluid bg-primary py-3\">";
+	$html .= "\n\t\t\t\t<div class=\"container\">";
+	$html .= "\n\t\t\t\t\t<div class=\"row py-3 justify-content-between\">";
+	$html .= make_footer_bottom_cols($col1);
+	$html .= "\n\t\t\t\t\t\t<!-- End Col 1 -->";
+	$html .= make_footer_bottom_cols($col2);
+	$html .= "\n\t\t\t\t\t\t<!-- End Col 2 -->";
+	$html .= make_footer_bottom_cols($col3);
+	$html .= "\n\t\t\t\t\t\t<!-- End Col 3 -->";
+	$html .= "\n\t\t\t\t\t</div>";
+	$html .= "\n\t\t\t\t</div>";
+	$html .= "\n\t\t\t</div>";
+	$html .= "\n\t\t</footer>";
+	return $html;
 }
 function get_header($CONFIG=Null){
 	if($CONFIG === Null)
