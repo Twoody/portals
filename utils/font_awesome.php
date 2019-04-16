@@ -26,6 +26,14 @@ function get_font_awesome_style_guide($CONFIG=Null){
 		$CONFIG	= get_config();
 	$html = "";
 	$html .= "\n\t\t<style>";
+	$html .= "\n\t\t.html {";
+	$html .= "\n\t\tposition: relative;";
+	$html .= "\n\t\tmin-height: 100%;";
+	$html .= "\n\t\t}";
+	$html .= "\n\t\tbody {";
+	$html .= "\n\t\tmargin-bottom: 60px; /* Margin bottom by footer height */";
+	$html .= "\n\t\t}";
+
 	$html .= "\n\t\t.fab {";
 	$html .= "\n\t\t  display: inline-block";
 	$html .= "\n\t\t  width: 30px;";
@@ -103,8 +111,27 @@ function get_font_awesome_style_guide($CONFIG=Null){
 	$html .= "\n\t\t</style>";
 	return $html;
 }
-
-
+function make_footer_bottom_cols($entries, $CONFIG=Null){
+	//TODO: Make this customizable to make the icons bigger from xs to md screens;
+	if($CONFIG === Null)
+		$CONFIG = get_config();
+	$html = "";
+	$html .= "\n\t\t\t\t\t\t<div class=\"col-xs-4\">";
+	$html .= "\n\t\t\t\t\t\t\t<div class=\"d-inline-block\">";
+	foreach($entries as $entry){
+		$href = $entry['href'];
+		$icon = $entry['icon'];
+		$html .= "\n\t\t\t\t\t\t\t\t<div class=\"d-inline-block text-center\">";
+		$html .= "\n\t\t\t\t\t\t\t\t\t<a href=\"". $href . "\" class=\"text-white\">";
+		$html .= "\n\t\t\t\t\t\t\t\t\t\t";
+		$html .= $icon;
+		$html .= "\n\t\t\t\t\t\t\t\t\t</a>";
+		$html .= "\n\t\t\t\t\t\t\t\t</div>";
+	}
+	$html .= "\n\t\t\t\t\t\t</div>";
+	$html .= "\n\t\t\t\t\t</div>";
+	return $html;
+}
 function make_font_awesome_stack($icons, $CONFIG=Null){
 	/* FA util function to easier init a stack of icons */
 	if($CONFIG === Null)
@@ -123,5 +150,4 @@ function make_font_awesome_stack($icons, $CONFIG=Null){
 	$html .= "\n\t\t</span>";
 	return $html;
 }
-
 ?>
