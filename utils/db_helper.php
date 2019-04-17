@@ -50,7 +50,7 @@ function has_table($table, $dbpath=Null, $CONFIG=Null, $PATHS=Null){
 	if($PATHS === Null)
 		$PATHS = get_paths();
 	if ($dbpath === Null)
-		$dbpath = $PATHS['DBPATH_USERS'];
+		$dbpath = $PATHS['DB_USERS'];
 	$FLAGS	= $CONFIG['FLAGS'];
 	$ret		= TRUE;
 	try{
@@ -62,8 +62,9 @@ function has_table($table, $dbpath=Null, $CONFIG=Null, $PATHS=Null){
 		$rows = $result->fetchArray();
 		if (!$rows)
 			$ret = FALSE;
-		else if ($rows->numRows() <= 0)
+		else if ($rows && count($rows) <= 0)
 			$ret = FALSE;
+		$db->close();
 	}
 	catch(Exception $exception){
 		if (!$FLAGS['is_quite'])
