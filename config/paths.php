@@ -25,6 +25,7 @@ function get_paths(){
 		'DB_USERS'						=> $ROOT."/resources/dbs/users.db",
 		'FONT_AWESOME_CSS_PATH'		=> $ROOT.'/css/font_awesome.php',
 		'FORMS_LOGIN'					=> $ROOT."/resources/forms/login.php",
+		'FORMS_USER_REGISTRATION'	=> $ROOT."/resources/forms/user_registration.php",
 		'HTML_LOGIN_OR_SIGNOUT'		=> $ROOT."/src/html_login_or_signout.php",
 		'LIBPATH_AUTH_USER'			=> $ROOT.'/utils/auth.php',
 		'LIBPATH_DATES'				=> $ROOT.'/utils/dates.php',
