@@ -68,7 +68,7 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 			}
 		}
 		else{
-			echo alert("Bad Email");
+			echo alert("\"Bad Email\"");
 			$show_login = TRUE;
 		}
 	}
