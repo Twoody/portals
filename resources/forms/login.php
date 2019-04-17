@@ -43,7 +43,8 @@ function get_login_form($CONFIG=Null, $PATHS=Null){
 	$html .= "\n\t\t\t\t\t\t</label>";
 	$html .= "\n\t\t\t\t\t</div>";
 	$html .= "\n\t\t\t\t\t<div class=\"form-check disabled\">";
-	$html .= "\n\t\t\t\t\t\t<input class=\"form-check-input\" type=\"radio\" name=\"userLevel\" id=\"userLevel3\" value=\"isAdmin\" disabled>";
+	//$html .= "\n\t\t\t\t\t\t<input class=\"form-check-input\" type=\"radio\" name=\"userLevel\" id=\"userLevel3\" value=\"isAdmin\" disabled>";
+	$html .= "\n\t\t\t\t\t\t<input class=\"form-check-input\" type=\"radio\" name=\"userLevel\" id=\"userLevel3\" value=\"isAdmin\">";
 	$html .= "\n\t\t\t\t\t\t<label class=\"form-check-label\" for=\"userLevel3\">";
 	$html .= "\n\t\t\t\t\t\t\tAdministrator";
 	$html .= "\n\t\t\t\t\t\t</label>";
@@ -51,22 +52,34 @@ function get_login_form($CONFIG=Null, $PATHS=Null){
 	$html .= "\n\t\t\t\t</div>";
 	$html .= "\n\t\t\t</div>";
 	$html .= "\n\t\t</fieldset>";
+
 	$html .= "\n\t\t<div class=\"form-group row justify-content-center\">";
 	$html .= "\n\t\t\t<div class=\"col-sm-2\"></div>";
-	$html .= "\n\t\t\t\t<div class=\"col-sm-8 ml-5\">";
-	$html .= "\n\t\t\t\t\t<div class=\"form-check\">";
-	$html .= "\n\t\t\t\t\t\t<input class=\"form-check-input\" type=\"checkbox\" id=\"isRemembered\">";
-	$html .= "\n\t\t\t\t\t\t<label class=\"form-check-label\" for=\"gridCheck1\">";
-	$html .= "\n\t\t\t\t\t\t\tRemember Me";
-	$html .= "\n\t\t\t\t\t\t</label>";
-	$html .= "\n\t\t\t\t\t</div>";
+	$html .= "\n\t\t\t<div class=\"col-sm-8 ml-5\">";
+	$html .= "\n\t\t\t\t<div class=\"form-check\">";
+	$html .= "\n\t\t\t\t\t<input class=\"form-check-input\" type=\"checkbox\" id=\"isRemembered\">";
+	$html .= "\n\t\t\t\t\t<label class=\"form-check-label\" for=\"gridCheck1\">";
+	$html .= "\n\t\t\t\t\t\tRemember Me";
+	$html .= "\n\t\t\t\t\t</label>";
 	$html .= "\n\t\t\t\t</div>";
 	$html .= "\n\t\t\t</div>";
+	$html .= "\n\t\t</div>";
+
+	$html .= "\n\t\t<div class=\"row justify-content-center\">";
 	$html .= "\n\t\t\t<div class=\"form-group row justify-content-center\">";
-	$html .= "\n\t\t\t\t<div class=\"col-sm-6 ml-4\">";
+	$html .= "\n\t\t\t\t<div class=\"col-sm-6 ml-4 mb-5\">";
 	$html .= "\n\t\t\t\t\t<button type=\"submit\" class=\"btn btn-primary\" name=\"form_submit\">Sign in</button>";
 	$html .= "\n\t\t\t\t</div>";
 	$html .= "\n\t\t\t</div>";
+	$html .= "\n\t\t</div>";
+
+	$html .= "\n\t\t<div class=\"row justify-content-center\">";
+	$html .= "\n\t\t\t<div class=\"col-sm-2\"></div>";
+	$html .= "\n\t\t\t<div class=\"col-sm-8 ml-5 mb-5\">";
+	$html .= "\n\t\t\t\tNew User? <a href=\"".$PATHS["FORMS_USER_REGISTRATION"]."\">Sign up here.</a>";
+	$html .= "\n\t\t\t</div>";
+	$html .= "\n\t\t</div>";
+
 	$html .= "\n\t</form>\n";
 	return $html;
 }
