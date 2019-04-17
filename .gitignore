@@ -5,6 +5,7 @@ __pycache__/
 
 # Logs and databases #
 ######################
+*.db
 *.log
 *.sql
 *.sqlite
