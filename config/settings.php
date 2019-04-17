@@ -4,6 +4,7 @@ $PATHS = get_paths();
 
 echo "\n<!-- settings.php imported -->\n";
 function get_config(){
+	$PATHS = get_paths();
 	return Array(
 		/* ----- ----- GENERAL OPTIONS ----- ----- */
 		'FLAGS'=>[],
@@ -35,7 +36,7 @@ function get_config(){
 		'CUSTOM_SCRIPTS'=>"",
 
 		/* ----- ----- DATABASE MANAGEMENT ----- ----- */
-		'DBPATH_USERS'=> $PATH['DB_USERS'],
+		'DBPATH_USERS'=> $PATHS['DB_USERS'],
 		'USERS_VERSION'=>1.00,
 		
 		/* ----- ----- BOOTSTRAP REQUIRED PARAMETERS AND CONFIGURATION ----- ----- */
