@@ -25,7 +25,7 @@ require_once('./config/paths.php');
 $PATHS = get_paths();
 require_once($PATHS['SETTINGS_PATH']);
 
-echo "\n<!-- /utils/auth.php imported -->\n";
+echo "\n<!-- " . $PATHS['LIBPATH_AUTH'] . " imported -->\n";
 
 function get_salt($email, $CONFIG=Null){
 	/* Get preexisting salt from users db */
@@ -103,5 +103,4 @@ function make_salt($CONFIG=Null){
 	}
 	return $randString;
 }
-
 ?>
