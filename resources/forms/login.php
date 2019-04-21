@@ -76,9 +76,24 @@ function get_login_form($CONFIG=Null, $PATHS=Null){
 	$html .= "\n\t\t<div class=\"row justify-content-center\">";
 	$html .= "\n\t\t\t<div class=\"col-sm-2\"></div>";
 	$html .= "\n\t\t\t<div class=\"col-sm-8 ml-5 mb-5\">";
-	$html .= "\n\t\t\t\tNew User? <a href=\"".$PATHS["FORMS_USER_REGISTRATION"]."\">Sign up here.</a>";
+	$html .= "\n\t\t\t\tNew User? <a href=\"".$PATHS["HTML_REGISTER_USER"]."\">Sign up here.</a>";
 	$html .= "\n\t\t\t</div>";
 	$html .= "\n\t\t</div>";
+
+//	$html .= "\n\t\t<div class=\"row justify-content-center\">";
+//	$html .= "\n\t\t\t<div class=\"col-sm-2\"></div>";
+//	$html .= "\n\t\t\t<div class=\"col-sm-8 ml-5 mb-5\">";
+//	$html .= "\n\t\t\t\tNew User? <a href=\"../foo.php\">Sign up here.</a>";
+//	$html .= "\n\t\t\t</div>";
+//	$html .= "\n\t\t</div>";
+//
+//	$html .= "\n\t\t<div class=\"row justify-content-center\">";
+//	$html .= "\n\t\t\t<div class=\"col-sm-2\"></div>";
+//	$html .= "\n\t\t\t<div class=\"col-sm-8 ml-5 mb-5\">";
+//	$html .= "\n\t\t\t\tNew User? <a href=\"https://facebook.com\">Sign up here.</a>";
+//	$html .= "\n\t\t\t</div>";
+//	$html .= "\n\t\t</div>";
+//
 
 	$html .= "\n\t</form>\n";
 	return $html;
