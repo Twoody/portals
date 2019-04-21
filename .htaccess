@@ -1,5 +1,10 @@
-ErrorDocument 400 /resources/errors/400.php	#Bad Request
-ErrorDocument 401 /resources/errors/401.php	#Unauthorized
-ErrorDocument 403 /resources/errors/403.php	#FORBIDDEN
-ErrorDocument 404 /resources/errors/404.php	#Not Found
-ErrorDocument 500 /resources/errors/500.php	#Internal Server Error
+#Bad Request
+ErrorDocument 400 /resources/errors/400.php
+#Unauthorized
+ErrorDocument 401 /resources/errors/401.php
+#FORBIDDEN
+ErrorDocument 403 /resources/errors/403.php
+#Not Found
+ErrorDocument 404 /resources/errors/404.php
+#Internal Server Error
+ErrorDocument 500 /resources/errors/500.php
