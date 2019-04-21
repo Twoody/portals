@@ -16,7 +16,7 @@ require_once('./config/paths.php');
 $PATHS = get_paths();
 require_once($PATHS['SETTINGS_PATH']);
 
-echo "\n<!-- /utils/html.php imported -->\n";
+echo "\n<!-- ".$PATHS['LIBPATH_HTML']." imported -->\n";
 
 function alert($msg){
 	$html =  "\n\t\t<script>";
@@ -264,12 +264,19 @@ function get_js($CONFIG=Null){
 	}
 	return $s;
 }
-function get_nav($CONFIG=Null){
+function get_nav($CONFIG=Null, $PATHS=Null){
 	if($CONFIG === Null)
 		$CONFIG	= get_config();
+	if($PATHS === Null)
+		$PATHS	= get_paths();
+	$home			= $PATHS['HTML_HOME'];
+	$features	= $PATHS['HTML_DISPLAY_FEATURES'];
+	$pricing		= $PATHS['HTML_DISPLAY_PRICING'];
+	$settings	= $PATHS['HTML_USER_SETTINGS'];
 	$html = "";
 	$html .= "\n\t\t<nav class=\"navbar navbar-expand-sm navbar-light bg-light\">";
-	$html .= "\n\t\t\t<a class=\"navbar-brand\" href=\"#\">Portals</a>";
+	$html .= "\n\t\t\t<a class=\"navbar-brand\" href=\"" .$home. "\">";
+	$html .= "Portals</a>";
 	$html .= "\n\t\t\t<button ";
 	$html .= "\n\t\t\t\tclass=\"navbar-toggler\"";
 	$html .= "\n\t\t\t\ttype=\"button\"";
@@ -282,20 +289,19 @@ function get_nav($CONFIG=Null){
 	$html .= "\n\t\t\t\t<span class=\"navbar-toggler-icon\"></span>";
 	$html .= "\n\t\t\t</button>";
 	$html .= "\n\t\t\t<div class=\"collapse navbar-collapse\" id=\"navbarText\">";
-	//TODO: Build list of nav elements from $CONFIG;
 	$html .= "\n\t\t\t\t<ul class=\"navbar-nav mr-auto\">";
-	//TODO: Get current page from $CONFIG or $SESSIONS;
 	$html .= "\n\t\t\t\t\t<li class=\"nav-item active\">";
-	$html .= "\n\t\t\t\t\t\t<a class=\"nav-link\" href=\"#\">Home <span class=\"sr-only\">(current)</span></a>";
+	$html .= "\n\t\t\t\t\t\t<a class=\"nav-link\" href=\"".$home."\">Home <span class=\"sr-only\">(current)</span></a>";
 	$html .= "\n\t\t\t\t\t</li>";
 	$html .= "\n\t\t\t\t\t<li class=\"nav-item\">";
-	$html .= "\n\t\t\t\t\t\t<a class=\"nav-link\" href=\"#\">Features</a>";
+	$html .= "\n\t\t\t\t\t\t<a class=\"nav-link\" href=\"".$features."\">Features</a>";
 	$html .= "\n\t\t\t\t\t</li>";
 	$html .= "\n\t\t\t\t\t<li class=\"nav-item\">";
-	$html .= "\n\t\t\t\t\t\t<a class=\"nav-link\" href=\"#\">Pricing</a>";
+	$html .= "\n\t\t\t\t\t\t<a class=\"nav-link\" href=\"".$pricing."\">Pricing</a>";
 	$html .= "\n\t\t\t\t\t</li>";
 	$html .= "\n\t\t\t\t</ul>";
 	$html .= "\n\t\t\t\t<span class=\"navbar-text\">";
+	//TODO: check login...
 	//$html .= "\n\t\t\tWelcome ".$fname; //Maybe pull from $SESSIONS?
 	$html .= "\n\t\t\t\t\tWelcome back";
 	$html .= "\n\t\t\t\t</span>";
