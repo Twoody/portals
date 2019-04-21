@@ -5,6 +5,8 @@ require_once($PATHS['FORMS_LOGIN']);
 require_once($PATHS['LIBPATH_AUTH_USER']);
 require_once($PATHS['LIBPATH_DB_HELPER']);
 
+echo "\n<!-- RUNNING: ".$PATHS['HTML_LOGIN_OR_SIGNOUT']." imported -->\n";
+
 function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 	if ($PATHS === Null)
 		$PATHS = get_paths();
