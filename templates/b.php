@@ -44,7 +44,8 @@ function template_b($body, $CONFIG=Null){
 	$CONFIG['CUSTOM_STYLES'] .= get_font_awesome_style_guide();
 	$CONFIG['CUSTOM_STYLES'] .= "<style>";
 	//TODO: Move to $CONFIG and get_css()
-	$CONFIG['CUSTOM_STYLES'] .= "\n.bg-primary { background-color: #000 !important;}";
+	$CONFIG['CUSTOM_STYLES'] .= "\n.bg-primary { background-color: #000 !important; display:flex;}";
+	$CONFIG['CUSTOM_STYLES'] .= "\n.bg-secondary { background-color: #000 !important;}";
 	$CONFIG['CUSTOM_STYLES'] .= "\n.bg-faded { background-color:#ada316  !important;}";
 	$CONFIG['CUSTOM_STYLES'] .= "</style>";
 	
@@ -56,11 +57,11 @@ function template_b($body, $CONFIG=Null){
 	$html .= "\n";
 	$html .= "\n<body>";
 	$html .= get_nav($CONFIG);
-	$html .= "\n\t<h1>Login Template</h1>";
+	$html .= "\n\t<h1>".$COFNIG['TITLE']."</h1>";
+	$html .= $body;
 	$html .= get_js($CONFIG);
 	$html .=	"\n\t<!-- Optional JavaScript -->\n";
 	
-	$html .= $body;
 	$html .= get_footer($CONFIG);
 	$html .= "\n</body>";
 	$html .= "\n</html>\n";
