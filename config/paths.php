@@ -40,6 +40,7 @@ function get_paths(){
 		'ROOT'							=> $ROOT,
 		'SETTINGS_PATH'				=> $ROOT.'/config/settings.php',
 		'STRINGS_ERRORS'     		=> $ROOT."/resources/strings/errors.json",
+		'TEMPLATES_B'					=> $ROOT."/templates/b.php",
 		'TEMPLATES_LOGIN'				=> $ROOT."/templates/login.php",
 		'TEMPLATES_FOOTER'			=> $ROOT."/templates/footer.php",
 		'TEMPLATES_SOCIAL_MEDIA'	=> $ROOT."/templates/socail_media.php",
