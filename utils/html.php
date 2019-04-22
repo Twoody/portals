@@ -117,7 +117,8 @@ function get_footer($CONFIG=Null){
 		$html .= " fixed-bottom ";
 	$html .= "\">";
 	if ($CONFIG['FOOTER_IS_STICKY'] === False){
-		$html .= "\n\t\t\t<div class=\"container-fluid bg-faded mt-5\">";
+		//$html .= "\n\t\t\t<div class=\"container-fluid bg-faded mt-5\">";
+		$html .= "\n\t\t\t<div class=\"container-fluid bg-faded\">";
 		$html .= "\n\t\t\t\t<div class=\"container\">";
 		$html .= "\n\t\t\t\t\t<div class=\"row py-3 justify-content-between align-items-center\">";
 		$html .= "\n\t\t\t\t\t<!-- footer column 1 start -->";
@@ -219,8 +220,8 @@ function get_footer($CONFIG=Null){
 		$html .= "\n\t\t\t</div>";
 		$html .= "\n\t\t</div>";
 	}
-	$html .= "\n\t\t\t<div class=\"container-fluid bg-primary py-3\">";
-	$html .= "\n\t\t\t\t<div class=\"container\">";
+	$html .= "\n\t\t\t<div class=\"container-fluid bg-primary p-0\">";
+	$html .= "\n\t\t\t\t<div class=\"container bg-secondary p-0\">";
 	$html .= "\n\t\t\t\t\t<div class=\"row py-3 justify-content-between\">";
 	$html .= make_footer_bottom_cols($col1);
 	$html .= "\n\t\t\t\t\t\t<!-- End Col 1 -->";
