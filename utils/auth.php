@@ -21,11 +21,22 @@ TODO:
 	1. Sesions...
 
 ******************************************************************************/
-require_once('./config/paths.php');
-$PATHS = get_paths();
-require_once($PATHS['SETTINGS_PATH']);
 
-echo "\n<!-- " . $PATHS['LIBPATH_AUTH'] . " imported -->\n";
+
+if (!function_exists("__init_auth_user__")){
+	function __init_auth_user__($CONFIG=Null){
+		if($CONFIG === Null){
+			$ROOT = '.';
+			require_once($ROOT . '/config/paths.php');
+			$PATHS = get_paths($ROOT);
+			require_once($PATHS['SETTINGS_PATH']);
+			$CONFIG = get_config();
+		}
+		$ROOT = $CONFIG['ROOT'];
+		echo "\n<!-- " . $PATHS['LIBPATH_AUTH_USER'] . " imported -->\n";
+	}
+	__init_auth_user__();
+}
 
 function get_salt($email, $CONFIG=Null){
 	/* Get preexisting salt from users db */
