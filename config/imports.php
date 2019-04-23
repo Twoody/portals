@@ -1,8 +1,10 @@
 <?php
+function make_imports($ROOT=Null){
 	/** ** ** ** ** ** ** GENERAL ** ** ** ** ** **/
-	require_once('./config/paths.php');
-	$PATHS = get_paths();
-
+	if ($ROOT === Null)
+		$ROOT = ".";
+	require_once($ROOT . '/config/paths.php');
+	$PATHS = get_paths($ROOT);
 	require_once($PATHS['SETTINGS_PATH']);
 	require_once($PATHS['BOOTSTRAP_CSS_PATH']);
 	require_once($PATHS['BOOTSTRAP_JS_PATH']);
@@ -10,9 +12,10 @@
 
 	/** ** ** ** ** ** ** UTILS ** ** ** ** ** ** **/
 	require_once($PATHS['LIBPATH_HTML']);
+	__init_utils_html__($ROOT);
 	require_once($PATHS['LIBPATH_DATES']);
 
-
+}
 if (!function_exists("get_imports")){
 	/* FUNCTION WRAPPED IN IF-STMNT BECAUSE MULTIPLE IMPORTS WILL LEAD TO ERRORS; */
 	//TODO: Determine if this function will be necessary or not...
