@@ -14,9 +14,11 @@ Purpose:
 
 ******************************************************************************/
 
-function get_paths(){
-	$ROOT = "/Users/tannerleewoody/Workspace/testdir/php/bootstrap";
-	$ROOT = ".";
+function get_paths($ROOT=Null){
+	if ($ROOT === Null){
+		$ROOT = "/Users/tannerleewoody/Workspace/testdir/php/bootstrap";
+		$ROOT = ".";
+	}
 	return Array(
 		'BOOTSTRAP_CSS_PATH'			=> $ROOT.'/css/bootstrap.php',
 		'BOOTSTRAP_JS_PATH'			=> $ROOT.'/js/bootstrap.php',
@@ -37,13 +39,17 @@ function get_paths(){
 		'LIBPATH_FA'					=> $ROOT.'/utils/font_awesome.php',
 		'LIBPATH_HTML'					=> $ROOT.'/utils/html.php',
 		'LIBPATH_JSON'					=> $ROOT.'/utils/json_helper.php',
+		'NAV_HOME'						=> $ROOT.'/index.php',
+		'NAV_DISPLAY_FEATURES'		=> $ROOT.'/src/display_features.php',
+		'NAV_DISPLAY_PRICING'		=> $ROOT.'/src/display_pricing.php',
+		'NAV_USER_SETTINGS'			=> $ROOT.'/src/user_settings.php',
 		'ROOT'							=> $ROOT,
 		'SETTINGS_PATH'				=> $ROOT.'/config/settings.php',
 		'STRINGS_ERRORS'     		=> $ROOT."/resources/strings/errors.json",
 		'TEMPLATES_B'					=> $ROOT."/templates/b.php",
 		'TEMPLATES_LOGIN'				=> $ROOT."/templates/login.php",
 		'TEMPLATES_FOOTER'			=> $ROOT."/templates/footer.php",
-		'TEMPLATES_SOCIAL_MEDIA'	=> $ROOT."/templates/socail_media.php",
+		'TEMPLATES_SOCIAL_MEDIA'	=> $ROOT."/templates/social_media.php",
 	);
 }
 ?>
