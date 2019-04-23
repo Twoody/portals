@@ -3,6 +3,9 @@ function get_bootstrap_css($CONFIG=Null, $ROOT=Null){
 	if($ROOT === Null && $CONFIG===Null){
 		$ROOT = '.';
 		require_once($ROOT . '/config/paths.php');
+		$PATHS = get_paths($ROOT);
+		require_once($PATHS['SETTINGS_PATH']);
+		require_once($PATHS['LIBPATH_HTML']);
 	}
 	if($CONFIG === Null)
 		$CONFIG	= get_config($ROOT);
