@@ -1,15 +1,19 @@
 <?
-require_once('./config/paths.php');
-$PATHS = get_paths();
-require_once($PATHS['SETTINGS_PATH']);
-require_once($PATHS['LIBPATH_HTML']);
-
-echo "\n<!-- ".$PATHS['FORMS_LOGIN']." -->\n";
 function get_login_form($CONFIG=Null, $PATHS=Null){
+	if ($CONFIG === Null){
+		$ROOT = ".";
+		require_once($ROOT . '/config/paths.php');
+		$PATHS	= get_paths($ROOT);
+		require_once($PATHS['SETTINGS_PATH']);
+		require_once($PATHS['LIBPATH_HTML']);
+	}
 	if($CONFIG === Null)
 		$CONFIG	= get_config();
+	$ROOT = $CONFIG['ROOT'];
 	if($PATHS === Null)
 		$PATHS	= get_paths();
+	echo "\n<!-- ".$PATHS['FORMS_LOGIN']." -->\n";
+
 	$html  = "\n\t<form action=\"".$PATHS['TEMPLATES_LOGIN']."\" method=\"post\">";
 	$html .= "\n\t\t<div class=\"form-group row justify-content-center\">";
 	$html .= "\n\t\t\t<label for=\"inputEmail\"class=\"col-sm-2 col-form-label ml-5\">Email:</label>";
