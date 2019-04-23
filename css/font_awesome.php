@@ -1,10 +1,16 @@
 <?
-require_once('./config/imports.php');
-
-echo "\n<!-- css/font_awesome.php imported -->\n";
-function get_font_awesome_css($CONFIG=Null){
+function get_font_awesome_css($CONFIG=Null, $ROOT=Null){
+	if($ROOT === Null && $CONFIG === Null){
+		$ROOT = ".";
+		require_once($ROOT . '/config/paths.php');
+	}
 	if($CONFIG === Null)
-		$CONFIG	= get_config();
+		$CONFIG	= get_config($ROOT);
+	if($ROOT === Null)
+		$ROOT = $CONFIG['ROOT'];
+	$PATHS = get_paths($ROOT);
+	echo "\n<!-- ".$PATHS['FONT_AWESOME_CSS_PATH']." imported -->\n";
+
 	$font_awesome_css = "";
 	if ($CONFIG['HAS_FONT_AWESOME']) {
 		$font_awesome_css .= "\n\t<!-- FONT AWESOME CSS -->";
