@@ -12,16 +12,34 @@ Purpose:
     General Util Library to ensure we have minimal errors while outputting HTML.
 
 ******************************************************************************/
-require_once('./config/paths.php');
-$PATHS = get_paths();
-require_once($PATHS['SETTINGS_PATH']);
 
-echo "\n<!-- ". $CONFIG['LIBPATH_FA']." imported -->\n";
+
+if (!function_exists("__init_utils_FA__")){
+	function __init_utils_FA__($CONFIG=Null){
+		if($CONFIG === Null){
+			$ROOT = ".";
+			require_once($ROOT . '/config/paths.php');
+			$PATHS = get_paths($ROOT);
+			require_once($PATHS['SETTINGS_PATH']);
+			$CONFIG = get_config();
+		}
+		$ROOT = $CONFIG['ROOT'];
+		echo "\n<!-- ". $PATHS['LIBPATH_FA']." imported-->\n";
+	}
+	if ($CONFIG === Null)
+		__init_utils_FA__();
+	else
+		__init_utils_FA__($CONFIG);
+}
 
 function get_FA_contact_us(){
 	
 }
-function get_font_awesome_style_guide($CONFIG=Null){
+function get_font_awesome_style_guide($CONFIG=Null, $ROOT=Null){
+	if ($ROOT === Null){
+		if ($CONFIG !== Null)
+			$ROOT = $CONFIG['ROOT'];
+	}
 	if($CONFIG === Null)
 		$CONFIG	= get_config();
 	$html = "";
@@ -115,6 +133,7 @@ function make_footer_bottom_cols($entries, $CONFIG=Null){
 	//TODO: Make this customizable to make the icons bigger from xs to md screens;
 	if($CONFIG === Null)
 		$CONFIG = get_config();
+	
 	$html = "";
 	$html .= "\n\t\t\t\t\t\t<div class=\"col-xs-4\">";
 	$html .= "\n\t\t\t\t\t\t\t<div class=\"d-inline-block\">";
