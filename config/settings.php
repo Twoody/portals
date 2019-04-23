@@ -1,10 +1,10 @@
 <?
-require_once('./config/paths.php');
-$PATHS = get_paths();
-
-echo "\n<!-- settings.php imported -->\n";
-function get_config(){
-	$PATHS = get_paths();
+function get_config($ROOT=Null){
+	if ($ROOT === Null)
+		$ROOT = ".";
+	require_once($ROOT . '/config/paths.php');
+	$PATHS = get_paths($ROOT);
+	echo "\n<!-- ".$PATHS['SETTINGS_PATH']." imported -->\n";
 	return Array(
 		/* ----- ----- GENERAL OPTIONS ----- ----- */
 		'FLAGS'=>[],
@@ -16,6 +16,7 @@ function get_config(){
 		'META_CONTENT'=>"width=device-width, initial-scale=1, shrink-to-fit=no",
 		'TITLE '=> "", 			//Surely overwritten,
 		'FOOTER_IS_STICKY'=>TRUE,
+		'ROOT'=>$ROOT,
 	
 		/* ----- ----- LINKS ----- ----- */
 		/* WILL PROBABLY BE OWN FUNCTION IN THE FUTURE */
