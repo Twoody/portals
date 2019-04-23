@@ -1,17 +1,20 @@
 <?
-require_once('./config/imports.php');
-$PATHS = get_paths();
-require_once($PATHS['FORMS_LOGIN']);
-require_once($PATHS['LIBPATH_AUTH_USER']);
-require_once($PATHS['LIBPATH_DB_HELPER']);
-
-echo "\n<!-- RUNNING: ".$PATHS['HTML_LOGIN_OR_SIGNOUT']." imported -->\n";
-
 function html_login_or_signout($CONFIG=Null, $PATHS=Null){
-	if ($PATHS === Null)
-		$PATHS = get_paths();
-	if ($CONFIG === Null)
-		$CONFIG = get_config();
+	if($CONFIG === Null){
+		$ROOT = ".";
+		require_once($ROOT . '/config/paths.php');
+		$PATHS	= get_paths($ROOT);
+		require_once($PATHS['SETTINGS_PATH']);
+		require_once($PATHS['LIBPATH_HTML']);
+	}
+	$ROOT = $CONFIG['ROOT'];
+	if($PATHS === Null)
+		$PATHS	= get_paths($ROOT);
+	require_once($PATHS['FORMS_LOGIN']);
+	require_once($PATHS['LIBPATH_AUTH_USER']);
+	require_once($PATHS['LIBPATH_DB_HELPER']);
+	echo "\n<!-- RUNNING: ".$PATHS['HTML_LOGIN_OR_SIGNOUT']." imported -->\n";
+
 	$html 		= '';
 	$dbpath		= $PATHS['DB_USERS'];
 	$show_login	= true;
@@ -84,4 +87,8 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 	}
 	return $html;
 }
+
+/****** FOR TESTING ******/
+//$ROOT = '.';
+//echo  html_login_or_signout()
 ?>
