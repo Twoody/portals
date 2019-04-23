@@ -1,10 +1,17 @@
 <?
-require_once('./config/imports.php');
-
-echo "\n<!-- js/datatables.php imported -->\n";
-function get_datatables_scripts($CONFIG=Null){
+function get_datatables_scripts($CONFIG=Null, $ROOT=Null){
+	if($ROOT === Null && $CONFIG===Null){
+		$ROOT = '.';	//We can also check CONFIG for `ROOT`;
+		require_once($ROOT . '/config/paths.php');
+	}
 	if($CONFIG === Null)
-		$CONFIG	= get_config();
+		$CONFIG	= get_config($ROOT);
+	if($ROOT == Null)
+		$ROOT = $CONFIG['ROOT'];
+	$PATHS = get_paths($ROOT);
+	echo "\n<!-- ".$PATHS['DATATABLES_JS_PATH']." imported -->\n";
+
+
 	$ret = "";
 	if ($CONFIG['HAS_DATATABLES']){
 		$ret .= "\n\t<!-- jQuery first,then DataTables.js -->"; 
