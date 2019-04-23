@@ -1,10 +1,16 @@
 <?
-require_once('./config/imports.php');
-
-echo "\n<!-- css/datatables.php imported -->\n";
-function get_datatables_css($CONFIG=Null){
+function get_datatables_css($CONFIG=Null, $ROOT=Null){
+	if($ROOT === Null && $CONFIG===Null){
+		$ROOT = '.';
+		require_once($ROOT . '/config/paths.php');
+	}
 	if($CONFIG === Null)
-		$CONFIG	= get_config();
+		$CONFIG	= get_config($ROOT);
+	if($ROOT == Null)
+		$ROOT = $CONFIG['ROOT'];
+	$PATHS = get_paths($ROOT);
+	echo "\n<!-- ".$PATHS['DATATABLES_CSS_PATH']." imported -->\n";
+
 	$datatables_css = "";
 	if ($CONFIG['HAS_DATATABLES']){
 		$datatables_css .= "\n\t<!-- DATATABLES CSS -->";
