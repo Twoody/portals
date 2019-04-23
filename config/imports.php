@@ -12,7 +12,6 @@ function make_imports($ROOT=Null){
 
 	/** ** ** ** ** ** ** UTILS ** ** ** ** ** ** **/
 	require_once($PATHS['LIBPATH_HTML']);
-	__init_utils_html__($ROOT);
 	require_once($PATHS['LIBPATH_DATES']);
 
 }
