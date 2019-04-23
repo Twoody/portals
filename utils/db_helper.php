@@ -14,11 +14,19 @@ TODO:
 	1. ...
 
 ******************************************************************************/
-require_once('./config/paths.php');
-$PATHS = get_paths();
-require_once($PATHS['SETTINGS_PATH']);
-
-echo "\n<!-- " . $PATHS['LIBPATH_DB_HELPER'] . " imported -->\n";
+if (!function_exists("__init_db_helper__")){
+	function __init_db_helper__($CONFIG=Null){
+		if($CONFIG === Null){
+			require_once('./config/paths.php');
+			$PATHS = get_paths();
+			require_once($PATHS['SETTINGS_PATH']);
+			$CONFIG = get_config();
+		}
+		$ROOT = $CONFIG['ROOT'];
+		echo "\n<!-- " . $PATHS['LIBPATH_DB_HELPER'] . " imported -->\n";
+	}
+	__init_db_helper__();
+}
 
 function is_db($dbpath, $CONFIG=Null){
 	$ret = TRUE;
