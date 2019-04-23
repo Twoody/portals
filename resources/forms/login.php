@@ -6,12 +6,11 @@ function get_login_form($CONFIG=Null, $PATHS=Null){
 		$PATHS	= get_paths($ROOT);
 		require_once($PATHS['SETTINGS_PATH']);
 		require_once($PATHS['LIBPATH_HTML']);
-	}
-	if($CONFIG === Null)
 		$CONFIG	= get_config();
+	}
 	$ROOT = $CONFIG['ROOT'];
 	if($PATHS === Null)
-		$PATHS	= get_paths();
+		$PATHS	= get_paths($ROOT);
 	echo "\n<!-- ".$PATHS['FORMS_LOGIN']." -->\n";
 
 	$html  = "\n\t<form action=\"".$PATHS['TEMPLATES_LOGIN']."\" method=\"post\">";
