@@ -1,6 +1,8 @@
-
+<?php
+session_start();
+?>
 <!doctype html>
-<?
+<?php
 /******************************************************************************
    Author:  Tanner.L.Woody@gmail.com
    WebLink: 
