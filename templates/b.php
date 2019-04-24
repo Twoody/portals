@@ -15,23 +15,26 @@ Purpose:
 	 Display the locations where possible params and configs can take place;
 
 ******************************************************************************/
-
-require_once('./config/imports.php');
-$PATHS = get_paths();
-
-require_once($PATHS['DATATABLES_CSS_PATH']);
-require_once($PATHS['DATATABLES_JS_PATH']);
-require_once($PATHS['HTML_LOGIN_OR_SIGNOUT']);
-require_once($PATHS['LIBPATH_FA']);
-
-
 	
-function template_b($body, $CONFIG=Null){
+function template_b($body, $CONFIG=Null, $PATHS=Null){
+	if ($PATHS === Null){
+		if ($CONFIG !== Null)
+			$ROOT = $CONFIG['ROOT'];
+		else
+			$ROOT = '.';
+		require_once($ROOT . '/config/paths.php');
+		$PATHS = get_paths($ROOT);
+	}
 	if ($CONFIG === Null)
-		$CONFIG = get_config();
-//Probably move all of config into sepearte function...
-//Until we have a better grasp of what is going on, it will
-//	get tossed around like a poor step child...
+		$CONFIG = get_config($ROOT);
+	if ($ROOT === Null)
+		$ROOT = $CONFIG['ROOT'];
+
+	require_once($PATHS['DATATABLES_CSS_PATH']);
+	require_once($PATHS['DATATABLES_JS_PATH']);
+	require_once($PATHS['LIBPATH_FA']);
+
+
 	echo "\n<!-- TEMPLATE: " . $PATHS['TEMPLATES_B'] . "-->\n";
 	if ($CONFIG['TITLE'] === "")
 		$CONFIG['TITLE'] = $PATHS['TEMPLATES_B'];
@@ -41,7 +44,7 @@ function template_b($body, $CONFIG=Null){
 	$CONFIG['FA_STACK_SIZE'] = 'fa-2x';
 	//$CONFIG['FOOTER_IS_STICKY'] = False;
 	
-	$CONFIG['CUSTOM_STYLES'] .= get_font_awesome_style_guide();
+	$CONFIG['CUSTOM_STYLES'] .= get_font_awesome_style_guide($CONFIG);
 	$CONFIG['CUSTOM_STYLES'] .= "\n<style>";
 	//TODO: Move to $CONFIG and get_css()
 	$CONFIG['CUSTOM_STYLES'] .= "\n\t.bg-primary { background-color: #000 !important; display:flex;}";
@@ -56,12 +59,11 @@ function template_b($body, $CONFIG=Null){
 	$html .= get_header($CONFIG);
 	$html .= "\n";
 	$html .= "\n<body>";
-	$html .= get_nav($CONFIG);
+	$html .= get_nav($CONFIG, $PATHS);
 	$html .= "\n\t<h1>".$CONFIG['TITLE']."</h1>";
 	$html .= $body;
 	$html .= get_js($CONFIG);
 	$html .=	"\n\t<!-- Optional JavaScript -->\n";
-	
 	$html .= get_footer($CONFIG);
 	$html .= "\n</body>";
 	$html .= "\n</html>\n";
