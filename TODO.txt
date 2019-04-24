@@ -14,3 +14,6 @@ C. Navigation:
 	1.		Build list of nav elements for get_nav()
 	2.		get current page from $config or $sessions;
 	3.		Plug any strings into /resources/strings/ and parse out...
+
+D. Random
+	1. In index.php change Your-Logo to use the utils/html.php make_img() function;
