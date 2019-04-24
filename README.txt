@@ -33,3 +33,13 @@ Naming Conventions and Styling:
 	tabs, not spaces;
 	tabstop = 3;
 
+Glossary:
+	Bootstrap:
+		mt: Margin Top
+		mb: margin bottom
+		mr: margin right
+		ml: margine left
+		p*: padding *
+		col-#: col-xs-#
+	CLI:
+		Comman Line Interface
