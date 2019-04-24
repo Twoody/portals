@@ -12,11 +12,24 @@ Purpose:
     General Util Library to ensure we have minimal errors while outputting HTML.
 
 ******************************************************************************/
-require_once('./config/paths.php');
-$PATHS = get_paths();
-require_once($PATHS['SETTINGS_PATH']);
 
-echo "\n<!-- ".$PATHS['LIBPATH_HTML']." imported -->\n";
+//if (!function_exists("__init_utils_html__")){
+//	function __init_utils_html__($CONFIG=Null){
+//		if($CONFIG === Null){
+//			if ($ROOT === Null)
+//				$ROOT = ".";
+//			require_once($ROOT . '/config/paths.php');
+//			$PATHS = get_paths($ROOT);
+//			require_once($PATHS['SETTINGS_PATH']);
+//			$CONFIG = get_config();
+//		}
+//		else
+//			$PATHS = get_paths($CONFIG['ROOT']);
+//		$ROOT = $CONFIG['ROOT'];
+//		echo "\n<!-- ".$PATHS['LIBPATH_HTML']." imported -->\n";
+//	}
+//	__init_utils_html__($CONFIG);
+//}
 
 function alert($msg){
 	$html =  "\n\t\t<script>";
@@ -35,6 +48,7 @@ function clog($msg){
 function get_css($CONFIG=Null){
 	if($CONFIG === Null)
 		$CONFIG	= get_config();
+	$ROOT = $CONFIG['ROOT'];
 	$s = "";
 	if($CONFIG['HAS_BOOTSTRAP'] || $CONFIG['HAS_POPPER'] || $CONFIG['HAS_JQUERY'] )
 		$s .= get_bootstrap_css($CONFIG);
@@ -48,6 +62,7 @@ function get_css($CONFIG=Null){
 function get_footer($CONFIG=Null){
 	if ($CONFIG === Null)
 		$CONFIG = get_config();
+	$ROOT = $CONFIG['ROOT'];
 	$CONFIG['FA_STACK_SIZE'] = 'fa-md';
 	$col1 = Array(
 		Array(	'href'=>$CONFIG['LINK_GMAIL'],
@@ -223,11 +238,11 @@ function get_footer($CONFIG=Null){
 	$html .= "\n\t\t\t<div class=\"container-fluid bg-primary p-0\">";
 	$html .= "\n\t\t\t\t<div class=\"container bg-secondary p-0\">";
 	$html .= "\n\t\t\t\t\t<div class=\"row py-3 justify-content-between\">";
-	$html .= make_footer_bottom_cols($col1);
+	$html .= make_footer_bottom_cols($col1, $CONFIG);
 	$html .= "\n\t\t\t\t\t\t<!-- End Col 1 -->";
-	$html .= make_footer_bottom_cols($col2);
+	$html .= make_footer_bottom_cols($col2, $CONFIG);
 	$html .= "\n\t\t\t\t\t\t<!-- End Col 2 -->";
-	$html .= make_footer_bottom_cols($col3);
+	$html .= make_footer_bottom_cols($col3, $CONFIG);
 	$html .= "\n\t\t\t\t\t\t<!-- End Col 3 -->";
 	$html .= "\n\t\t\t\t\t</div>";
 	$html .= "\n\t\t\t\t</div>";
@@ -238,6 +253,7 @@ function get_footer($CONFIG=Null){
 function get_header($CONFIG=Null){
 	if($CONFIG === Null)
 		$CONFIG	= get_config();
+	$ROOT = $CONFIG['ROOT'];
 	$s = "";
 	$s .= "\n<html lang=\"".$CONFIG['LANG']."\">";
 	$s .=	"\n<head>";
@@ -253,6 +269,7 @@ function get_header($CONFIG=Null){
 function get_js($CONFIG=Null){
 	if($CONFIG === Null)
 		$CONFIG	= get_config();
+	$ROOT = $CONFIG['ROOT'];
 	$s = "";
 	if($CONFIG['HAS_BOOTSTRAP'] || $CONFIG['HAS_POPPER'] || $CONFIG['HAS_JQUERY'] )
 		$s .= get_bootstrap_scripts($CONFIG);
@@ -270,12 +287,12 @@ function get_nav($CONFIG=Null, $PATHS=Null){
 		$CONFIG	= get_config();
 	if($PATHS === Null)
 		$PATHS	= get_paths();
-	$home			= $PATHS['HTML_HOME'];
-	$features	= $PATHS['HTML_DISPLAY_FEATURES'];
-	$pricing		= $PATHS['HTML_DISPLAY_PRICING'];
-	$settings	= $PATHS['HTML_USER_SETTINGS'];
+	$home			= $PATHS['NAV_HOME'];
+	$features	= $PATHS['NAV_DISPLAY_FEATURES'];
+	$pricing		= $PATHS['NAV_DISPLAY_PRICING'];
+	$settings	= $PATHS['NAV_USER_SETTINGS'];
 	$html = "";
-	$html .= "\n\t\t<nav class=\"navbar navbar-expand-sm navbar-light bg-light\">";
+	$html .= "\n\t\t<nav class=\"navbar fixed-top navbar-expand-sm navbar-light bg-light\">";
 	$html .= "\n\t\t\t<a class=\"navbar-brand\" href=\"" .$home. "\">";
 	$html .= "Portals</a>";
 	$html .= "\n\t\t\t<button ";
