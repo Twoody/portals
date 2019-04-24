@@ -68,13 +68,15 @@ function get_hash($email, $CONFIG=Null){
 	$db->close();
 	return $hash;
 }
-function is_logged_in(){
+function is_logged_in($CONFIG=Null){
+	if ($CONFIG === Null)
+		$CONFIG = get_config();
 	if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === TRUE){
-		echo "Welcome to the member's area, " . $_SESSION['username'] . "!";
+	//	echo "Welcome to the member's area, " . $_SESSION['username'] . "!";
 		return TRUE;
 	}
 	else{
-		echo "Please log in first to see this page.";
+	//	echo "Please log in first to see this page.";
 		return FALSE;
 	}
 }
