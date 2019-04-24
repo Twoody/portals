@@ -23,7 +23,7 @@ TODO:
 ******************************************************************************/
 
 
-if (!function_exists("__init_auth_user__")){
+if (php_sapi_name() === "cli"){
 	function __init_auth_user__($CONFIG=Null){
 		if($CONFIG === Null){
 			$ROOT = '.';
@@ -33,10 +33,10 @@ if (!function_exists("__init_auth_user__")){
 			$CONFIG = get_config();
 		}
 		$ROOT = $CONFIG['ROOT'];
-		echo "\n<!-- " . $PATHS['LIBPATH_AUTH_USER'] . " imported -->\n";
 	}
 	__init_auth_user__();
 }
+echo "\n<!-- " . $PATHS['LIBPATH_AUTH_USER'] . " imported -->\n";
 
 function get_salt($email, $CONFIG=Null){
 	/* Get preexisting salt from users db */
@@ -67,6 +67,16 @@ function get_hash($email, $CONFIG=Null){
 
 	$db->close();
 	return $hash;
+}
+function is_logged_in(){
+	if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === TRUE){
+		echo "Welcome to the member's area, " . $_SESSION['username'] . "!";
+		return TRUE;
+	}
+	else{
+		echo "Please log in first to see this page.";
+		return FALSE;
+	}
 }
 function is_valid_email($email, $CONFIG=Null){
 	if($CONFIG === Null)
