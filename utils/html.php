@@ -12,24 +12,21 @@ Purpose:
     General Util Library to ensure we have minimal errors while outputting HTML.
 
 ******************************************************************************/
-
-//if (!function_exists("__init_utils_html__")){
-//	function __init_utils_html__($CONFIG=Null){
-//		if($CONFIG === Null){
-//			if ($ROOT === Null)
-//				$ROOT = ".";
-//			require_once($ROOT . '/config/paths.php');
-//			$PATHS = get_paths($ROOT);
-//			require_once($PATHS['SETTINGS_PATH']);
-//			$CONFIG = get_config();
-//		}
-//		else
-//			$PATHS = get_paths($CONFIG['ROOT']);
-//		$ROOT = $CONFIG['ROOT'];
-//		echo "\n<!-- ".$PATHS['LIBPATH_HTML']." imported -->\n";
-//	}
-//	__init_utils_html__($CONFIG);
-//}
+if (php_sapi_name() === "cli"){
+	if($CONFIG === Null){
+		if ($ROOT === Null)
+			$ROOT = ".";
+		require_once($ROOT . '/config/paths.php');
+		$PATHS = get_paths($ROOT);
+		require_once($PATHS['SETTINGS_PATH']);
+		$CONFIG = get_config();
+	}
+	else
+		$PATHS = get_paths($CONFIG['ROOT']);
+	$ROOT = $CONFIG['ROOT'];
+}
+echo "\n<!-- ".$PATHS['LIBPATH_HTML']." imported -->\n";
+require_once($PATHS['LIBPATH_AUTH_USER']);
 
 function alert($msg){
 	$html =  "\n\t\t<script>";
@@ -235,7 +232,7 @@ function get_footer($CONFIG=Null){
 		$html .= "\n\t\t\t</div>";
 		$html .= "\n\t\t</div>";
 	}
-	$html .= "\n\t\t\t<div class=\"container-fluid bg-primary p-0\">";
+	$html .= "\n\t\t\t<div class=\"container-fluid bg-primary p-0 pl-3 pr-3\">";
 	$html .= "\n\t\t\t\t<div class=\"container bg-secondary p-0\">";
 	$html .= "\n\t\t\t\t\t<div class=\"row py-3 justify-content-between\">";
 	$html .= make_footer_bottom_cols($col1, $CONFIG);
