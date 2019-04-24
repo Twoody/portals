@@ -1,4 +1,19 @@
 <?
+/******************************************************************************
+   Author:  Tanner.L.Woody@gmail.com
+   WebLink: github.com/twoody/phpTests/utils/html.php
+   Date:    20190424
+
+USAGE:
+	Import, make call;
+	Testing env below;
+
+Purpose:
+    Find whether to display login form or signout form;
+
+******************************************************************************/
+
+
 function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 	if($CONFIG === Null){
 		$ROOT = ".";
