@@ -27,7 +27,7 @@ Links:
 $ROOT = "../..";
 require_once($ROOT.'/config/imports.php');
 make_imports($ROOT);
-$PATHS  = get_paths('../../');
+$PATHS  = get_paths($ROOT);
 require_once($PATHS['TEMPLATES_B']);
 
 $CONFIG = get_config($ROOT);
