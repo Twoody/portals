@@ -1,7 +1,7 @@
 <?
 /******************************************************************************
    Author:  Tanner.L.Woody@gmail.com
-   WebLink: github.com/twoody/phpTests/utils/html.php
+   WebLink: 
    Date:    2019-04-09
 
 USAGE:
@@ -13,7 +13,6 @@ Purpose:
 	upon any kind of restructure or update,
 
 ******************************************************************************/
-
 function get_paths($ROOT=Null){
 	if ($ROOT === Null){
 		$ROOT = "/Users/tannerleewoody/Workspace/testdir/php/bootstrap";
@@ -50,6 +49,8 @@ function get_paths($ROOT=Null){
 		'TEMPLATES_LOGIN'				=> $ROOT."/templates/login.php",
 		'TEMPLATES_FOOTER'			=> $ROOT."/templates/footer.php",
 		'TEMPLATES_SOCIAL_MEDIA'	=> $ROOT."/templates/social_media.php",
+		'USER_LOGIN'					=> $ROOT.'/login/index.php',
+		'USER_REGISTER'				=> $ROOT.'/register/index.php',
 	);
 }
 ?>
