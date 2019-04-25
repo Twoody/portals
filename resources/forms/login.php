@@ -13,7 +13,7 @@ function get_login_form($CONFIG=Null, $PATHS=Null){
 		$PATHS	= get_paths($ROOT);
 	echo "\n<!-- USING FORM: ".$PATHS['FORMS_LOGIN']." -->\n";
 
-	$html  = "\n\t<form action=\"".$PATHS['TEMPLATES_LOGIN']."\" method=\"post\">";
+	$html  = "\n\t<form action=\"".$CONFIG['ACTION_LOGIN']."\" method=\"post\">";
 	$html .= "\n\t\t<div class=\"form-group row justify-content-center\">";
 	$html .= "\n\t\t\t<label for=\"inputEmail\"class=\"col-sm-2 col-form-label ml-5\">Email:</label>";
 	$html .= "\n\t\t\t<div class=\"col-sm-8 ml-5\">";
