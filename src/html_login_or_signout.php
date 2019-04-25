@@ -12,14 +12,13 @@ Purpose:
     Find whether to display login form or signout form;
 
 ******************************************************************************/
-
-
 function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 	if($CONFIG === Null){
 		$ROOT = ".";
 		require_once($ROOT . '/config/paths.php');
 		$PATHS	= get_paths($ROOT);
 		require_once($PATHS['SETTINGS_PATH']);
+		$CONFIG = get_configt($ROOT);
 		require_once($PATHS['LIBPATH_HTML']);
 	}
 	$ROOT = $CONFIG['ROOT'];
@@ -28,17 +27,17 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 	require_once($PATHS['FORMS_LOGIN']);
 	require_once($PATHS['LIBPATH_AUTH_USER']);
 	require_once($PATHS['LIBPATH_DB_HELPER']);
-	echo "\n<!-- RUNNING: ".$PATHS['HTML_LOGIN_OR_SIGNOUT']." imported -->\n";
+	echo "\n<!-- RUNNING: ".$PATHS['HTML_LOGIN_OR_SIGNOUT']." -->\n";
 
 	$html 		= '';
 	$dbpath		= $PATHS['DB_USERS'];
 	$show_login	= true;
-	if(!is_db($dbpath)){
+	if(!is_db($dbpath, $CONFIG)){
 		//TODO: Alert site is in maintenance;
 		//			Make tables; Populate Users; Ask for user to refresh;
 		echo clog('"No DB"');	//TODO: Error messages from .../strings/errors.json
 	}
-	else if(!has_table("users", $dbpath)){
+	else if(!has_table("users", $dbpath, $CONFIG)){
 		//TODO: Alert site is in maintenance;
 		//			Make tables; Populate Users; Ask for user to refresh;
 		echo clog('"No tables"');	//TODO: Error messages from .../strings/errors.json
@@ -105,5 +104,9 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 
 /****** FOR TESTING ******/
 //$ROOT = '.';
-//echo  html_login_or_signout()
+//require_once($ROOT . '/config/paths.php');
+//$PATHS	= get_paths($ROOT);
+//require_once($PATHS['SETTINGS_PATH']);
+//$CONFIG = get_config($ROOT);
+//echo  html_login_or_signout($CONFIG);
 ?>
