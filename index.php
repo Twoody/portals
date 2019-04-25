@@ -69,6 +69,9 @@ $pic3 = Array(
 			"height"=>	"50",
 		);
 $pics = Array($pic1, $pic2, $pic3);
+
+echo "<!-- LANDED ON: HOME PAGE-->";
+
 $body .= "\n\t\t";
 $body .= "\n\t\t<div class=\"container fixed-width content-slider p-0\">";
 $body .= "\n\t\t\t<div class=\"row p-0 justify-content-center\">";
