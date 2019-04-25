@@ -6,6 +6,31 @@
 ******************************************************************************/
 
 
+Tanner.L.Woody@gmail.com
+2019-04-22
+	Amended all of the imports so content is loading cross directories;
+	Cleanded up some poor placed logic in regards to order of operations;
+	Compiled css/bootstrap.php s.t. it runs stand-alone:
+		clear && php css/bootstrap.php
+	**Note that running this does require the testing environemtn to be 
+		activated; Next is to get alls js/ and css/ files in a similar place;
+	Finally, working on getting SESSIONS and login screen to behave as expected;
+
+Tanner.L.Woody@gmail.com
+2019-04-22
+	Working with 404 page and nav;
+	Nav needs to be pulled from first call of $PATHS;
+
+Tanner.L.Woody@gmail.com
+2019-04-16
+	Removed get_navbar.php and get_footer.php from /utils/
+	These processes live in /utils/html.php
+
+Tanner.L.Woody@gmail.com
+2019-04-16
+	Most of footer done;
+	Need to focus on fixing the layout for the general buttons so they do
+	no lineup vertically before switch to `small` ("sm") scree.
 
 
 Tanner.L.Woody@gmail.com
