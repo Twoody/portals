@@ -14,19 +14,19 @@ TODO:
 	1. ...
 
 ******************************************************************************/
-if (!function_exists("__init_db_helper__")){
-	function __init_db_helper__($CONFIG=Null){
+if (php_sapi_name() === "cli"){
 		if($CONFIG === Null){
+			$ROOT = '.';
 			require_once('./config/paths.php');
-			$PATHS = get_paths();
+			$PATHS = get_paths($ROOT);
 			require_once($PATHS['SETTINGS_PATH']);
-			$CONFIG = get_config();
+			$CONFIG = get_config($ROOT);
 		}
 		$ROOT = $CONFIG['ROOT'];
-		echo "\n<!-- " . $PATHS['LIBPATH_DB_HELPER'] . " imported -->\n";
-	}
-	__init_db_helper__();
 }
+$PATHS = get_paths($ROOT);
+require_once($PATHS['LIBPATH_HTML']);
+echo "\n<!-- " . $PATHS['LIBPATH_DB_HELPER'] . " imported -->\n";
 
 function is_db($dbpath, $CONFIG=Null){
 	$ret = TRUE;
