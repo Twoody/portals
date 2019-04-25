@@ -22,6 +22,7 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 		require_once($PATHS['LIBPATH_HTML']);
 	}
 	$ROOT = $CONFIG['ROOT'];
+	$CONFIG['ACTION_LOGIN'] = $PATHS["USER_LOGIN"];
 	if($PATHS === Null)
 		$PATHS	= get_paths($ROOT);
 	require_once($PATHS['FORMS_LOGIN']);
@@ -49,6 +50,9 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 		//			Populate Users; Ask for user to refresh;
 	}
 	*/
+	else if($_SESSION['loggedin'] && $_SESSION['loggedin'] === TRUE){
+		$show_login = FALSE;
+	}
 	else if(isset($_POST['form_submit'])){
 		//TODO: Authenticate user...
 		$show_login			= FALSE;
@@ -56,7 +60,7 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 		$user					= strstr($email, '@', true); //strip everything after `@`
 		$pw					= $_POST["inputPassword"];
 		$access				= $_POST["userLevel"];
-		$is_valid_email	= is_valid_email($email);
+		$is_valid_email	= is_valid_email($email, $CONFIG);
 		if ($access === "isMember")
 			$access = "member";
 		else if ($access === "isOwner")
@@ -70,11 +74,11 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 			$show_login = TRUE;
 		}
 		if ($access !== 'error' && $is_valid_email){
-			$db			= new SQLite3($dbpath);
-			$salt			= get_salt($email);
-			$user_hash	= get_hash($email);
-			$is_validPW	= password_verify($pw.$salt, $user_hash);
-			$has_access	= is_valid_access($email, $access);
+			$db				= new SQLite3($dbpath);
+			$salt				= get_salt($email, $CONFIG);
+			$user_hash		= get_hash($email, $CONFIG);
+			$is_valid_pw	= password_verify($pw.$salt, $user_hash);
+			$has_access		= is_valid_access($email, $access, $CONFIG);
 			$db->close();														// CLOSING DB;
 			if (!$has_access || !$is_valid_pw){
 				if (!$is_valid_pw)
@@ -95,9 +99,13 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 		$html .= get_login_form($CONFIG);
 	}
 	else{
-		$html .= "<p>Welcome, ".$user.".</p>";
-		$html .= "<p>You are logged in as a ".$access.".</p>";
-		$html .= clog("\"USER: \" + JSON.stringify(" .$user. ")");
+		$_SESSION['username'] = $user;
+		$_SESSION['loggedin'] = TRUE;
+		$_SESSION['alevel'] = $access;
+		$_SESSION['email'] = $email;
+		$html .= "<p>Welcome, ".$_SESSION['username'].".</p>";
+		$html .= "<p>You are logged in as a ".$_SESSION['alevel'].".</p>";
+		$html .= clog("\"USER: \" + JSON.stringify(\"".$_SESSION['username']. "\")");
 	}
 	return $html;
 }
