@@ -11,7 +11,7 @@ function get_login_form($CONFIG=Null, $PATHS=Null){
 	$ROOT = $CONFIG['ROOT'];
 	if($PATHS === Null)
 		$PATHS	= get_paths($ROOT);
-	echo "\n<!-- ".$PATHS['FORMS_LOGIN']." -->\n";
+	echo "\n<!-- USING FORM: ".$PATHS['FORMS_LOGIN']." -->\n";
 
 	$html  = "\n\t<form action=\"".$PATHS['TEMPLATES_LOGIN']."\" method=\"post\">";
 	$html .= "\n\t\t<div class=\"form-group row justify-content-center\">";
