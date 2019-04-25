@@ -328,7 +328,9 @@ function get_nav($CONFIG=Null, $PATHS=Null){
 		$html .= "</a>";
 	}
 	else{
-		$html .= "\n\t\t\t\t\tWelcome back ";
+		//TODO: HREF to settings;
+		//TODO: Add logout option;
+		$html .= "\n\t\t\t\t\tWelcome, ";
 		$html .= $_SESSION['username'];;
 	}
 	$html .= "\n\t\t\t\t</span>";
