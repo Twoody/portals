@@ -318,7 +318,19 @@ function get_nav($CONFIG=Null, $PATHS=Null){
 	$html .= "\n\t\t\t\t<span class=\"navbar-text\">";
 	//TODO: check login...
 	//$html .= "\n\t\t\tWelcome ".$fname; //Maybe pull from $SESSIONS?
-	$html .= "\n\t\t\t\t\tWelcome back";
+	if (is_logged_in($CONFIG) === False){
+		$html .= "<a href=\"".$PATHS['USER_LOGIN']."\">";
+		$html .= "Sign in";
+		$html .= "</a>";
+		$html .= " or ";
+		$html .= "<a href=\"".$PATHS['USER_REGISTER']."\">";
+		$html .= "Register now";
+		$html .= "</a>";
+	}
+	else{
+		$html .= "\n\t\t\t\t\tWelcome back ";
+		$html .= $_SESSION['username'];;
+	}
 	$html .= "\n\t\t\t\t</span>";
 	$html .= "\n\t\t\t</div>";
 	$html .= "\n\t\t</nav>";
