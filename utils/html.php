@@ -130,7 +130,7 @@ function get_footer($CONFIG=Null){
 	$html .= "\">";
 	if ($CONFIG['FOOTER_IS_STICKY'] === False){
 		//$html .= "\n\t\t\t<div class=\"container-fluid bg-faded mt-5\">";
-		$html .= "\n\t\t\t<div class=\"container-fluid bg-faded\">";
+		$html .= "\n\t\t\t<div class=\"container-fluid bg-faded mt-4\">";
 		$html .= "\n\t\t\t\t<div class=\"container\">";
 		$html .= "\n\t\t\t\t\t<div class=\"row py-3 justify-content-between align-items-center\">";
 		$html .= "\n\t\t\t\t\t<!-- footer column 1 start -->";
@@ -289,7 +289,7 @@ function get_nav($CONFIG=Null, $PATHS=Null){
 	$pricing		= $PATHS['NAV_DISPLAY_PRICING'];
 	$settings	= $PATHS['NAV_USER_SETTINGS'];
 	$html = "";
-	$html .= "\n\t\t<nav class=\"navbar fixed-top navbar-expand-sm navbar-light bg-light\">";
+	$html .= "\n\t\t<nav class=\"navbar fixed-top navbar-expand-sm navbar-light bg-light pl-3 pr-3 pb-0 pt-0\">";
 	$html .= "\n\t\t\t<a class=\"navbar-brand\" href=\"" .$home. "\">";
 	$html .= "Portals</a>";
 	$html .= "\n\t\t\t<button ";
@@ -331,7 +331,8 @@ function get_nav($CONFIG=Null, $PATHS=Null){
 		//TODO: HREF to settings;
 		//TODO: Add logout option;
 		$html .= "\n\t\t\t\t\tWelcome, ";
-		$html .= $_SESSION['username'];;
+		$html .= $_SESSION['username'];
+		$html .= "\n<br/>\n<a class=\"mute\" href=\"".$PATHS['USER_LOGOUT']."\">Logout\n</a>\n";
 	}
 	$html .= "\n\t\t\t\t</span>";
 	$html .= "\n\t\t\t</div>";
