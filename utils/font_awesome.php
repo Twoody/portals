@@ -50,6 +50,7 @@ function get_font_awesome_style_guide($CONFIG=Null, $ROOT=Null){
 	$html .= "\n\t\t}";
 	$html .= "\n\t\tbody {";
 	$html .= "\n\t\tmargin-bottom: 60px; /* Margin bottom by footer height */";
+	$html .= "\n\t\tpadding-top:50px; /* fixed navbar will overlay your other content */";
 	$html .= "\n\t\t}";
 
 	$html .= "\n\t\t.fab {";
