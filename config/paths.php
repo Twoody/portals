@@ -50,6 +50,7 @@ function get_paths($ROOT=Null){
 		'TEMPLATES_FOOTER'			=> $ROOT."/templates/footer.php",
 		'TEMPLATES_SOCIAL_MEDIA'	=> $ROOT."/templates/social_media.php",
 		'USER_LOGIN'					=> $ROOT.'/login/index.php',
+		'USER_LOGOUT'					=> $ROOT.'/logout/index.php',
 		'USER_REGISTER'				=> $ROOT.'/register/index.php',
 	);
 }
