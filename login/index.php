@@ -42,6 +42,6 @@ $CONFIG['DISPLAY_HEADER'] = FALSE;
 
 $body .= "\n\t\t";
 $body .= "<h1>Better dust off that Post-It</h1>";
-$body .= html_login_or_signout($CONFIG, $PATHS);
+$body .= html_login_or_signout($CONFIG, $PATHS); //Will get ./resources/forms/foo IFF user logged in;
 echo template_b($body, $CONFIG, $PATHS) . "\n";
 ?>
