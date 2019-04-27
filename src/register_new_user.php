@@ -1,4 +1,6 @@
 <?
+//TODO:
+//	If user is logged in, do not display screen;
 //TODO: Configure to run standalone and in production;
 //$ROOT = '.';
 //require_once('./config/paths.php');
