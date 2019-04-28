@@ -13,5 +13,8 @@ C. Navigation:
 	2.		get current page from $config or $sessions;
 	3.		Plug any strings into /resources/strings/ and parse out...
 
+D. Users
+	1. Working on getting the register screen to work with sqlite3 DB
+
 D. Random
 	1. In index.php change Your-Logo to use the utils/html.php make_img() function;
