@@ -33,12 +33,15 @@ function get_users_tables(){
 		'users'=>Array(
 			'id'=>			'INTEGER PRIMARY KEY',
 			'email'=>		'TEXT',
+			'handle'=>		'TEXT',
 			'salt'=>			'TEXT',
 			'password'=>	'TEXT',
 			'accessLevel'=>'TEXT'
 		),
 		'userinfo'=> Array(
 			'id'=>						'INTEGER PRIMARY KEY',
+			'email'=>					'TEXT',
+			'handle'=>					'TEXT',
 			'fname'=>					'TEXT',
 			'lname'=>					'TEXT',
 			'joindate'=>				'INTEGER',		// Cake day
