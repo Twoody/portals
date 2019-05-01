@@ -1,7 +1,15 @@
 A. Main:
 	1. 	Design: Navbar, crumbles, media
+	1.		Everywhere there is _POST, sanitize;
+			A.	This will require making a sanitization function in utils/db_helper.php;
+			B. Everywhere might be an overstatement;
+	1.		Brain blast: start a BODY key in CONFIG that laysout within main index.php;
+				Then, within every get_body() call, we pass CONFIG, and return CONFIG;
+				This will allow us to have certain attributes rewritten within config,
+					such as TITLE, HEADER, etc.
 	2. 	JSON parser
-	3. 	Error handling via errors.json
+	n-3.	Move Logout button to fixed right of screen
+	N-2. 	Error handling via errors.json
 	N-1.	Set all `import` html comments to use $PAGES path;
 	N. 	Design more templates...; LOW PRIORITY;
 
