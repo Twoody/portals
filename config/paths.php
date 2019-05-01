@@ -45,6 +45,7 @@ function get_paths($ROOT=Null){
 		'ROOT'							=> $ROOT,
 		'SETTINGS_PATH'				=> $ROOT.'/config/settings.php',
 		'STRINGS_ERRORS'     		=> $ROOT."/resources/strings/errors.json",
+		'STRINGS_PHP'     			=> $ROOT."/resources/strings/strings.php",
 		'TEMPLATES_B'					=> $ROOT."/templates/b.php",
 		'TEMPLATES_LOGIN'				=> $ROOT."/templates/login.php",
 		'TEMPLATES_FOOTER'			=> $ROOT."/templates/footer.php",
@@ -52,6 +53,8 @@ function get_paths($ROOT=Null){
 		'USER_LOGIN'					=> $ROOT.'/login/index.php',
 		'USER_LOGOUT'					=> $ROOT.'/logout/index.php',
 		'USER_REGISTER'				=> $ROOT.'/register/index.php',
+		'USER_REGISTER_DOES_EXIST'	=> $ROOT.'/register/already_registered.php',
+		'USER_REGISTER_SUCCESS'		=> $ROOT.'/register/success.php',
 	);
 }
 ?>
