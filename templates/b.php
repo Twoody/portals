@@ -60,7 +60,14 @@ function template_b($body, $CONFIG=Null, $PATHS=Null){
 	$html .= "\n";
 	$html .= "\n<body>";
 	$html .= get_nav($CONFIG, $PATHS);
-	$html .= "\n\t<h1>".$CONFIG['TITLE']."</h1>";
+
+	$html .= "\n\t<div class=\"container-fluid pt-3\">";
+	$html .= "\n\t\t<div class=\"row justify-content-start\">";
+	$html .= "\n\t\t\t<div class=\"col-12 pl-3 \">";
+	$html .= "\n\t\t\t\t<h1>".$CONFIG['TITLE']."</h1>";
+	$html .= "\n\t\t\t</div>";
+	$html .= "\n\t\t</div>";
+	$html .= "\n\t</div>";
 	$html .= $body;
 	$html .= get_js($CONFIG);
 	$html .=	"\n\t<!-- Optional JavaScript -->\n";
