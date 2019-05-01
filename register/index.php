@@ -32,16 +32,14 @@ $CONFIG = get_config($ROOT);
 require_once($PATHS['HTML_REGISTER_USER']);
 require_once($PATHS['TEMPLATES_B']);
 
-echo "<!-- LANDED ON: LOGIN PAGE-->";
+echo "<!-- LANDED ON: REGISTRATION PAGE-->";
 
 $body   = "";
 	
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
-$CONFIG['TITLE'] = "Login";
+$CONFIG['TITLE'] = "Register";
 $CONFIG['DISPLAY_HEADER'] = FALSE;
 
-$body .= "\n\t\t";
-$body .= "<h1>Get Your Post-It's Ready</h1>";
 $body .= html_register_user($CONFIG, $PATHS);
 echo template_b($body, $CONFIG, $PATHS) . "\n";
 ?>
