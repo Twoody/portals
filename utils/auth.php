@@ -1,4 +1,4 @@
-<?
+<?php
 /******************************************************************************
    Author:  Tanner.L.Woody@gmail.com
    WebLink:
@@ -38,15 +38,16 @@ if (php_sapi_name() === "cli"){
 }
 echo "\n<!-- " . $PATHS['LIBPATH_AUTH_USER'] . " imported -->\n";
 
-function get_salt($email, $CONFIG=Null){
+function get_salt($email, $aLevel, $CONFIG=Null){
 	/* Get preexisting salt from users db */
 	/* Different from make_salt() */
 	if($CONFIG === Null)
 		$CONFIG = get_config();
 	$dbpath	= $CONFIG['DBPATH_USERS'];
 	$db = new SQLite3($dbpath);
-	$salt_sql = $db->prepare("SELECT salt FROM users WHERE email = :email");
+	$salt_sql = $db->prepare("SELECT salt FROM users WHERE email = :email and accessLevel = :accessLevel");
 	$salt_sql->bindValue(':email', $email);
+	$salt_sql->bindValue(':accessLevel', $aLevel);
 	$salt_res = $salt_sql->execute();
 	$salt_row = $salt_res->fetchArray();
 	$salt     = $salt_row["salt"];
@@ -54,13 +55,14 @@ function get_salt($email, $CONFIG=Null){
 	$db->close();
 	return $salt;
 }
-function get_hash($email, $CONFIG=Null){
+function get_hash($email, $aLevel, $CONFIG=Null){
 	if($CONFIG === Null)
 		$CONFIG = get_config();
 	$dbpath		= $CONFIG['DBPATH_USERS'];
 	$db			= new SQLite3($dbpath);
-	$hash_sql	= $db->prepare("SELECT password FROM users WHERE email = :email");
+	$hash_sql	= $db->prepare("SELECT password FROM users WHERE email = :email and accessLevel = :accessLevel");
 	$hash_sql->bindValue(':email', $email);
+	$hash_sql->bindValue(':accessLevel', $aLevel);
 	$hash_res = $hash_sql->execute();
 	$hash_row = $hash_res->fetchArray();
 	$hash     = $hash_row["password"];
@@ -72,15 +74,69 @@ function is_logged_in($CONFIG=Null){
 	if ($CONFIG === Null)
 		$CONFIG = get_config();
 	if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === TRUE){
-	//	echo "Welcome to the member's area, " . $_SESSION['username'] . "!";
 		return TRUE;
 	}
 	else{
-	//	echo "Please log in first to see this page.";
 		return FALSE;
 	}
 }
+function is_valid_access($email, $access, $CONFIG=Null){
+	if($CONFIG === Null)
+		$CONFIG = get_config();
+	$dbpath		= $CONFIG['DBPATH_USERS'];
+	$db			= new SQLite3($dbpath);
+	$sql			= 'SELECT * FROM users WHERE  email = :email and accessLevel = :access';
+	$statement	= $db->prepare($sql);
+	$statement->bindValue(':email', 			$email);
+	$statement->bindValue(':access', 		$access);
+	$result = $statement->execute();
+	$foo = $result->fetchArray();
+
+	$db->close();
+	if ($foo === false)
+		$ret = false;
+	else
+		$ret = true;
+	return $ret;
+}
 function is_valid_email($email, $CONFIG=Null){
+	/*
+	*SEE:
+	*	https://www.w3schools.com/php/filter_validate_email.asp
+	*/
+	//Remove all illegal characters from email
+	$email = filter_var($email, FILTER_SANITIZE_EMAIL);
+	
+	//Validate e-mail
+	if (filter_var($email, FILTER_VALIDATE_EMAIL)) 
+		return TRUE;
+	else
+		return FALSE;
+}
+function is_valid_handle($handle, $CONFIG=Null){
+	//TODO: Change this into a parse check on handle;
+	//			Dis-allow certain items like swear words;
+	if (!$handle)
+		return FALSE;
+	return TRUE;
+}
+function is_valid_password($pw, $CONFIG){
+	if (!$pw)
+		return FALSE;
+	return TRUE;
+}
+function make_salt($CONFIG=Null){
+	if($CONFIG === Null)
+		$CONFIG = get_config();
+	$charset       = $CONFIG['SALT_CHARSET'];
+	$randStringLen = $CONFIG['SALT_LENGTH'];
+	$randString    = "";
+	for ($i = 0; $i < $randStringLen; $i++) {
+		$randString .= $charset[mt_rand(0, strlen($charset) - 1)];
+	}
+	return $randString;
+}
+function users_has_email($email, $CONFIG=Null){
 	if($CONFIG === Null)
 		$CONFIG = get_config();
 	$dbpath		= $CONFIG['DBPATH_USERS'];
@@ -96,15 +152,16 @@ function is_valid_email($email, $CONFIG=Null){
 	$db->close();
 	return $ret;
 }
-function is_valid_access($email, $access, $CONFIG=Null){
+function users_has_handle($handle, $CONFIG=Null){
+	if (!$handle || $handle === "")
+		return FALSE;
 	if($CONFIG === Null)
 		$CONFIG = get_config();
 	$dbpath		= $CONFIG['DBPATH_USERS'];
 	$db			= new SQLite3($dbpath);
-	$sql			= 'SELECT * FROM users WHERE  email = :email and accessLevel = :access';
-	$statement	= $db->prepare('SELECT * FROM users WHERE  email = :email and accessLevel = :access');
-	$statement->bindValue(':email', 			$email);
-	$statement->bindValue(':access', 		$access);
+	$sql			= 'SELECT * FROM users WHERE  handle = :handle';
+	$statement	= $db->prepare($sql);
+	$statement->bindValue(':handle', $handle);
 	$result = $statement->execute();
 	$foo = $result->fetchArray();
 
@@ -114,16 +171,5 @@ function is_valid_access($email, $access, $CONFIG=Null){
 	else
 		$ret = true;
 	return $ret;
-}
-function make_salt($CONFIG=Null){
-	if($CONFIG === Null)
-		$CONFIG = get_config();
-	$charset       = $CONFIG['SALT_CHARSET'];
-	$randStringLen = $CONFIG['SALT_LENGTH'];
-	$randString    = "";
-	for ($i = 0; $i < $randStringLen; $i++) {
-		$randString .= $charset[mt_rand(0, strlen($charset) - 1)];
-	}
-	return $randString;
 }
 ?>
