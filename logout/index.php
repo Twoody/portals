@@ -76,7 +76,7 @@ else{
 }
 $body .= "\n\t\t</div>";
 
-$CONFIG['BODY'] = $body;
+$CONFIG['BODY'] .= $body;
 echo template_b($CONFIG, $PATHS) . "\n";
 
 ?>
