@@ -5,6 +5,15 @@
 *
 ******************************************************************************/
 
+	
+Tanner.L.Woody@gmail.com
+2019-05-01
+	Got a registration page up and running to just make new members.
+	Next is putting together a viewport difference between members and owner;
+	This viewport can use datatables and tabs between active items and 
+		inactive items.
+	There will be an option to add an item to both inactive and active.
+	
 
 Tanner.L.Woody@gmail.com
 2019-04-22
