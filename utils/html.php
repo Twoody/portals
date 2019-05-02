@@ -283,7 +283,7 @@ function get_nav($CONFIG=Null, $PATHS=Null){
 	if($CONFIG === Null)
 		$CONFIG	= get_config();
 	if($PATHS === Null)
-		$PATHS	= get_paths();
+		$PATHS	= get_paths($CONFIG['ROOT']);
 	$home			= $PATHS['NAV_HOME'];
 	$features	= $PATHS['NAV_DISPLAY_FEATURES'];
 	$pricing		= $PATHS['NAV_DISPLAY_PRICING'];
@@ -316,8 +316,6 @@ function get_nav($CONFIG=Null, $PATHS=Null){
 	$html .= "\n\t\t\t\t\t</li>";
 	$html .= "\n\t\t\t\t</ul>";
 	$html .= "\n\t\t\t\t<span class=\"navbar-text\">";
-	//TODO: check login...
-	//$html .= "\n\t\t\tWelcome ".$fname; //Maybe pull from $SESSIONS?
 	if (is_logged_in($CONFIG) === False){
 		$html .= "<a href=\"".$PATHS['USER_LOGIN']."\">";
 		$html .= "Sign in";
@@ -329,7 +327,6 @@ function get_nav($CONFIG=Null, $PATHS=Null){
 	}
 	else{
 		//TODO: HREF to settings;
-		//TODO: Add logout option;
 		$html .= "\n\t\t\t\t\tWelcome, ";
 		$html .= $_SESSION['username'];
 		$html .= "\n<br/>\n<a class=\"mute\" href=\"".$PATHS['USER_LOGOUT']."\">Logout\n</a>\n";
