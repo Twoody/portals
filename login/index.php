@@ -34,12 +34,12 @@ require_once($PATHS['TEMPLATES_B']);
 
 echo "<!-- LANDED ON: LOGIN PAGE-->";
 
-$body   = "";
+$body	= "";
 	
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
-$CONFIG['TITLE'] = "Login";
-$CONFIG['DISPLAY_HEADER'] = FALSE;
+$CONFIG['TITLE']				= "Login";
+$CONFIG['DISPLAY_HEADER']	= FALSE;
 
-$body .= html_login_or_signout($CONFIG, $PATHS); //Will get ./resources/forms/foo IFF user logged in;
-echo template_b($body, $CONFIG, $PATHS) . "\n";
+$CONFIG = html_login_or_signout($CONFIG, $PATHS); //Will get ./resources/forms/foo IFF user logged in;
+echo template_b($CONFIG, $PATHS) . "\n";
 ?>

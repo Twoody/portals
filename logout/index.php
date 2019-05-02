@@ -45,10 +45,10 @@ echo '<!-- RUNNING '.$PATHS['USER_LOGOUT'].' -->';
 
 $body .= "\n\t\t<div class=\"container fixed-width p-5 sticky\">";
 if (is_logged_in($CONFIG)){
-	$_SESSIONS['username'] = Null;
-	$_SESSIONS['loggedin'] = Null;
-	$_SESSIONS['alevel'] = Null;
-	$_SESSIONS['email'] = Null;
+	$_SESSIONS['username']	= Null;
+	$_SESSIONS['loggedin']	= Null;
+	$_SESSIONS['alevel']		= Null;
+	$_SESSIONS['email']		= Null;
 	session_destroy();
 	$body .= "\n\t\t\t<div class=\"row justify-content-center\">";
 	$body .= "\n\t\t\t\t<div class=\"col-12\">";
@@ -74,6 +74,8 @@ else{
 	$body .= "\n\t\t\t</div><!-- End row -->";
 }
 $body .= "\n\t\t</div>";
-echo template_b($body, $CONFIG, $PATHS) . "\n";
+
+$CONFIG['BODY'] = $body;
+echo template_b($CONFIG, $PATHS) . "\n";
 
 ?>

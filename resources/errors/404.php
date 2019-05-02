@@ -37,9 +37,12 @@ $body   = "";
 $CONFIG['TITLE'] = "PG-14 Not Found";
 $CONFIG['DISPLAY_HEADER'] = FALSE;
 
+//TODO: Make HEADER
 $body .= "\n\t\t";
 $body .= "<h1> page was not found, homes.</h1>";
+
+$CONFIG['BODY'] = $body;
 //echo '<!-- '.$PATHS['NAV_HOME'].' -->';
-echo template_b($body, $CONFIG, $PATHS) . "\n";
+echo template_b($CONFIG, $PATHS) . "\n";
 
 ?>

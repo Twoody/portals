@@ -40,6 +40,6 @@ $body   = "";
 $CONFIG['TITLE'] = "Register";
 $CONFIG['DISPLAY_HEADER'] = FALSE;
 
-$body .= html_register_user($CONFIG, $PATHS);
-echo template_b($body, $CONFIG, $PATHS) . "\n";
+$CONFIG = html_register_user($CONFIG, $PATHS);
+echo template_b($CONFIG, $PATHS) . "\n";
 ?>

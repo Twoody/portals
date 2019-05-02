@@ -133,7 +133,8 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 		$html .= "You are logged in as a ".$_SESSION['alevel'].".";
 		$html .= "\n\t\t</div>";
 	}
-	return $html;
+	$CONFIG['BODY'] = $html;
+	return $CONFIG;
 }
 
 /****** FOR TESTING ******/

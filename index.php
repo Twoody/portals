@@ -144,7 +144,8 @@ $body .= "\n\t\t\t\t</div>";
 
 $body .= "\n\t\t\t</div><!-- /.row -->";
 $body .= "\n\t\t</div><!-- /.container -->";
-echo template_b($body, $CONFIG) . "\n";
+$CONFIG['BODY'] = $body;
+echo template_b($CONFIG) . "\n";
 
 function get_carousel_items($items){
 	$html = "";

@@ -16,7 +16,7 @@ Purpose:
 
 ******************************************************************************/
 	
-function template_b($body, $CONFIG=Null, $PATHS=Null){
+function template_b($CONFIG=Null, $PATHS=Null){
 	if ($PATHS === Null){
 		if ($CONFIG !== Null)
 			$ROOT = $CONFIG['ROOT'];
@@ -68,7 +68,7 @@ function template_b($body, $CONFIG=Null, $PATHS=Null){
 	$html .= "\n\t\t\t</div>";
 	$html .= "\n\t\t</div>";
 	$html .= "\n\t</div>";
-	$html .= $body;
+	$html .= $CONFIG['BODY'];
 	$html .= get_js($CONFIG);
 	$html .=	"\n\t<!-- Optional JavaScript -->\n";
 	$html .= get_footer($CONFIG);

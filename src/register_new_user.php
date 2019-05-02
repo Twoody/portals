@@ -130,7 +130,8 @@ function html_register_user($CONFIG=Null, $PATHS=Null){
 	else if($display_already_registered){
 		$html .= display_already_registered($CONFIG);
 	}
-	return  $html;
+	$CONFIG['BODY'] = $html;
+	return  $CONFIG;
 }
 
 //$html .= get_registration_form($CONFIG);
