@@ -13,18 +13,21 @@ function init_users($db){
 	$users = Array(
 		Array(
 			'email'			=> 'tanner@foo.com',
+			'handle'			=> 'twoody',
 			'salt'			=> '',
 			'password'		=> '',
 			'accessLevel'	=> 'admin'
 		),
 		Array(
 			'email'			=> 'tanner@bar.com',
+			'handle'			=> 'an_owner',
 			'salt'			=> '',
 			'password'		=> '',
 			'accessLevel'	=> 'owner'
 		),
 		Array(
 			'email'			=> 'tanner@baz.com',
+			'handle'			=> 'a_member',
 			'salt'			=> '',
 			'password'		=> '',
 			'accessLevel'	=> 'member'
