@@ -22,7 +22,9 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 		require_once($PATHS['LIBPATH_HTML']);
 	}
 	$ROOT = $CONFIG['ROOT'];
-	$CONFIG['ACTION_LOGIN'] = $PATHS["USER_LOGIN"];
+	$CONFIG['ACTION_LOGIN']					= $PATHS["USER_LOGIN"];
+	$CONFIG['LOGIN_RESPONSE_CONTAINER'] = "\n<div class=\"container-fluid pr-3 pl-3 m-0\">";
+	$CONFIG['LOGIN_RESPONSE_ROW']			= "\n\t<div class=\"row pl-3 pr-3 m-0\">";
 	if($PATHS === Null)
 		$PATHS	= get_paths($ROOT);
 	require_once($PATHS['FORMS_LOGIN']);
@@ -52,6 +54,7 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 	*/
 	else if($_SESSION['loggedin'] && $_SESSION['loggedin'] === TRUE){
 		$show_login = FALSE;
+		$already_logged_in = TRUE;
 	}
 	else if(isset($_POST['form_submit'])){
 		//TODO: Authenticate user...
@@ -60,7 +63,7 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 		$user					= strstr($email, '@', true); //strip everything after `@`
 		$pw					= $_POST["inputPassword"];
 		$access				= $_POST["userLevel"];
-		$is_valid_email	= is_valid_email($email, $CONFIG);
+		$is_valid_email	= users_has_email($email, $CONFIG);
 		if ($access === "isMember")
 			$access = "member";
 		else if ($access === "isOwner")
@@ -75,8 +78,8 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 		}
 		if ($access !== 'error' && $is_valid_email){
 			$db				= new SQLite3($dbpath);
-			$salt				= get_salt($email, $CONFIG);
-			$user_hash		= get_hash($email, $CONFIG);
+			$salt				= get_salt($email, $access, $CONFIG);
+			$user_hash		= get_hash($email, $access, $CONFIG);
 			$is_valid_pw	= password_verify($pw.$salt, $user_hash);
 			$has_access		= is_valid_access($email, $access, $CONFIG);
 			$db->close();														// CLOSING DB;
@@ -98,14 +101,37 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 	if ($show_login){
 		$html .= get_login_form($CONFIG);
 	}
+	else if($already_logged_in === TRUE){
+		//TODO: Offer logout button;
+		$html .= $CONFIG['LOGIN_RESPONSE_CONTAINER'];
+		$html .= $CONFIG['LOGIN_RESPONSE_ROW'];
+		$html .= "\n\t\t<div class=\"col-12 pl-4 pr-4 pb-0 pt-0\">";
+		$html .= "\n\t\t\tWelcome, ".$_SESSION['username'].".";
+		$html .= "\n\t\t</div>";
+		$html .= "\n\t</div><!-- END ROW -->";
+		$html .= $CONFIG['LOGIN_RESPONSE_ROW'];
+		$html .= "\n\t\t<div class=\"col-12 pl-4 pr-4 pb-0 pt-0\">";
+		$html .= "You are ALREADY logged in.";
+		$html .= "\n\t\t</div>";
+		$html .= "\n\t</div><!-- END ROW -->";
+		$html .= "\n</div><!-- END CONTAINER -->";
+		$html .= clog("\"USER: \" + JSON.stringify(\"".$_SESSION['username']. "\")");
+	}
 	else{
 		$_SESSION['username'] = $user;
 		$_SESSION['loggedin'] = TRUE;
 		$_SESSION['alevel'] = $access;
 		$_SESSION['email'] = $email;
-		$html .= "<p>Welcome, ".$_SESSION['username'].".</p>";
-		$html .= "<p>You are logged in as a ".$_SESSION['alevel'].".</p>";
-		$html .= clog("\"USER: \" + JSON.stringify(\"".$_SESSION['username']. "\")");
+		$html .= $CONFIG['LOGIN_RESPONSE_CONTAINER'];
+		$html .= $CONFIG['LOGIN_RESPONSE_ROW'];
+		$html .= "\n\t\t<div class=\"col-12 pl-4 pr-4 pb-0 pt-0\">";
+		$html .= "Welcome, ".$_SESSION['username'].".";
+		$html .= "\n\t\t</div>";
+		$html .= "\n\t</div><!-- END ROW -->";
+		$html .= $CONFIG['LOGIN_RESPONSE_ROW'];
+		$html .= "\n\t\t<div class=\"col-12 pl-4 pr-4 pb-0 pt-0\">";
+		$html .= "You are logged in as a ".$_SESSION['alevel'].".";
+		$html .= "\n\t\t</div>";
 	}
 	return $html;
 }
