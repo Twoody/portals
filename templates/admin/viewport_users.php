@@ -24,7 +24,7 @@ Links:
 	https://www.w3schools.com/bootstrap4/bootstrap_carousel.asp
 ******************************************************************************/
 
-$ROOT = "../..";
+$ROOT = "..";
 require_once($ROOT.'/config/imports.php');
 make_imports($ROOT);
 $PATHS	= get_paths($ROOT);
@@ -47,10 +47,18 @@ $CONFIG['CUSTOM_STYLES'] .= "\n</style>";
 echo '<!-- RUNNING '.$PATHS['USER_LOGOUT'].' -->';
 
 if (!is_logged_in($CONFIG)){
-	$CONFIG['BODY'] = $STRINGS['USER_NOT_LOGGED_IN'];
+	$body .= $STRINGS['USER_NOT_LOGGED_IN'];
 }
-else if($_SESSIONS['alevel'] !== 'admin'){
-	$CONFIG['BODY'] = $STRINGS['USER_INVALID_PERMISSION'];
+else if($_SESSION['alevel'] !== 'admin'){
+	$body .= $STRINGS['USER_INVALID_PERMISSION'];
+	$body .= $CONFIG['RESPONSE_CONTAINER'];
+	$body .= $CONFIG['RESPONSE_ROW'];
+	$body .= "\n\t\t\t\t<div class=\"col-12 bg-info\">";
+	$body .= "You are logged in as a ".$_SESSION['alevel'].".";
+	$body .= "\n\t\t\t\t</div><!-- END COL -->";
+	$body .= "\n\t\t\t</div><!-- END ROW -->";
+	$body .= "\n\t\t</div><!-- End container -->";
+
 }
 else{
 	//Admin level access
