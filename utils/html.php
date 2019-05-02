@@ -316,7 +316,7 @@ function get_nav($CONFIG=Null, $PATHS=Null){
 	$html .= "\n\t\t\t\t\t</li>";
 	$html .= "\n\t\t\t\t</ul>";
 	$html .= "\n\t\t\t\t<span class=\"navbar-text\">";
-	if (is_logged_in($CONFIG) === False){
+	if (is_logged_in($CONFIG) === False || $CONFIG['IS_LOGGING_OUT'] === TRUE){
 		$html .= "<a href=\"".$PATHS['USER_LOGIN']."\">";
 		$html .= "Sign in";
 		$html .= "</a>";

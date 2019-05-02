@@ -49,6 +49,7 @@ if (is_logged_in($CONFIG)){
 	$_SESSIONS['loggedin']	= Null;
 	$_SESSIONS['alevel']		= Null;
 	$_SESSIONS['email']		= Null;
+	$CONFIG['IS_LOGGING_OUT'] = TRUE;
 	session_destroy();
 	$body .= "\n\t\t\t<div class=\"row justify-content-center\">";
 	$body .= "\n\t\t\t\t<div class=\"col-12\">";
