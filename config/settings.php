@@ -17,6 +17,7 @@ function get_config($ROOT=Null){
 		'TITLE '=> "", 			//Surely overwritten,
 		'FOOTER_IS_STICKY'=>TRUE,
 		'ROOT'=>$ROOT,
+		'BODY'=>"",
 	
 		/* ----- ----- LINKS ----- ----- */
 		/* WILL PROBABLY BE OWN FUNCTION IN THE FUTURE */

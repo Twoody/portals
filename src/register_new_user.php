@@ -40,7 +40,6 @@ function html_register_user($CONFIG=Null, $PATHS=Null){
 	$display_registration_form		= TRUE;
 	$display_already_registered	= FALSE;
 	$display_success_screen			= FALSE;
-	$html 	= '';
 	$dbpath	= $PATHS['DB_USERS'];
 
 	if($_SESSION['loggedin'] && $_SESSION['loggedin'] === TRUE)
@@ -56,37 +55,37 @@ function html_register_user($CONFIG=Null, $PATHS=Null){
 		$is_valid_handle	= is_valid_handle($handle, $CONFIG);
 		$is_good_register = TRUE;
 		if(users_has_email($email, $CONFIG)){
-			$html .=  alert('"Email already registered;"');
+			$CONFIG['BODY'] .=  alert('"Email already registered;"');
 			$display_registration_form		= FALSE;
 			$display_already_registered	= TRUE;
 			$is_good_register					= FALSE;
 		}
 		else if(users_has_handle($handle, $CONFIG)){
-			$html .= alert('"Username already registered;"');
+			$CONFIG['BODY'] .= alert('"Username already registered;"');
 			$CONFIG['REGISTRATION_BAD_HANDLE']	= TRUE;
 			$display_registration_form				= TRUE;
 			$is_good_register							= FALSE;
 		}
 		else if (!$is_valid_email){
-			$html .=  alert('"Email does not meet requirements."');
+			$CONFIG['BODY'] .=  alert('"Email does not meet requirements."');
 			$CONFIG['REGISTRATION_BAD_EMAIL']	= TRUE;
 			$display_registration_form				= TRUE;
 			$is_good_register							= FALSE;
 		}
 		else if (!$is_valid_handle){
-			$html .= alert('"Username does not meet requirements."');
+			$CONFIG['BODY'] .= alert('"Username does not meet requirements."');
 			$CONFIG['REGISTRATION_BAD_HANDLE']	= TRUE;
 			$display_registration_form				= TRUE;
 			$is_good_register							= FALSE;
 		}
 		else if (!$is_valid_pw){
-			$html .= alert("'Bad Password'");
+			$CONFIG['BODY'] .= alert("'Bad Password'");
 			$CONFIG['REGISTRATION_BAD_PASSWORD']	= TRUE;
 			$display_registration_form					= TRUE;
 			$is_good_register								= FALSE;
 		}
 		else if($pw !== $pw_confirmation){
-			$html .= alert("'Passwords do not match.'");
+			$CONFIG['BODY'] .= alert("'Passwords do not match.'");
 			$CONFIG['REGISTRATION_BAD_PASSWORD']	= TRUE;
 			$display_registration_form					= TRUE;
 			$is_good_register								= FALSE;
@@ -122,15 +121,14 @@ function html_register_user($CONFIG=Null, $PATHS=Null){
 		}
 	}
 	if($display_registration_form){
-		$html .= display_registration_form($CONFIG);
+		$CONFIG = display_registration_form($CONFIG);
 	}
 	else if($display_success_screen){
-		$html .= display_registration_success($CONFIG);
+		$CONFIG = display_registration_success($CONFIG);
 	}
 	else if($display_already_registered){
-		$html .= display_already_registered($CONFIG);
+		$CONFIG = display_already_registered($CONFIG);
 	}
-	$CONFIG['BODY'] = $html;
 	return  $CONFIG;
 }
 

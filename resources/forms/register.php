@@ -95,7 +95,8 @@ function display_registration_form($CONFIG=Null){
 	$html .= "\n\t\t\t</fieldset>";
 	$html .= "\n\t\t</form>";
 	$html .= "\n\t</div><!-- END CONTAINER -->\n";
-	return $html;
+	$CONFIG['BODY'] .= $html;
+	return $CONFIG;
 }
 
 /***** Just for testing *****/

@@ -61,7 +61,9 @@ function display_registration_success($CONFIG=Null){
 	$body .= "\n\t\tReturn home";
 	$body .= "\n\t</a>";
 	$body .= "\n</div><!-- END CONTAINER -->";
-	return $body;
+
+	$CONFIG['BODY'] .= $body;
+	return $CONFIG;
 }
 
 //

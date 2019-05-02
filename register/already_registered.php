@@ -61,7 +61,8 @@ function display_already_registered($CONFIG=Null){
 	$body .= "\n\t\tReturn home";
 	$body .= "\n\t</a>";
 	$body .= "\n</div><!-- END CONTAINER -->";
-	return $body;
+	$CONFIG['BODY'] .= $body;
+	return $CONFIG;
 }
 
 //
