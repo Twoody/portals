@@ -30,48 +30,84 @@ make_imports($ROOT);
 $PATHS	= get_paths($ROOT);
 $home		= $PATHS['NAV_HOME'];
 require_once($PATHS['TEMPLATES_B']);
+require_once($PATHS['FORMS_ADMIN_VIEWPORT']);
 
 $CONFIG	= get_config($ROOT);
-$STRINGS	= get_config_strings($CONFIG);
-$body   = "";
+$body		= "";
 	
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
-$CONFIG['TITLE'] = "Logout";
-$CONFIG['DISPLAY_HEADER'] = FALSE;
-$CONFIG['RESPONSE_CONTAINER'] = "\n<div class=\"container-fluid pr-3 pl-3 m-0\">";
-$CONFIG['RESPONSE_ROW']			= "\n\t<div class=\"row pl-3 pr-3 m-0\">";
+$CONFIG['DISPLAY_HEADER']			= FALSE;
+$CONFIG['TITLE']						= "SQL Experience";
+$CONFIG['ACTION_ADMIN_VIEWPORT']	= $PATHS["ADMIN_VIEWPORT"];	
+$CONFIG['RESPONSE_CONTAINER'] 	= "\n<div class=\"container-fluid pr-3 pl-3 m-0\">";
+$CONFIG['RESPONSE_ROW']				= "\n\t<div class=\"row pl-3 pr-3 m-0\">";
 $CONFIG['CUSTOM_STYLES'] .= "\n<style>";
 $CONFIG['CUSTOM_STYLES'] .= "\n\t.sticky{position: sticky; top: 0;}"; 
 $CONFIG['CUSTOM_STYLES'] .= "\n</style>";
 
-echo '<!-- RUNNING '.$PATHS['USER_LOGOUT'].' -->';
+echo '<!-- RUNNING '.$PATHS['ADMIN_VIEWPORT'].' -->';
 
 if (!is_logged_in($CONFIG)){
-	$body .= $STRINGS['USER_NOT_LOGGED_IN'];
+	$CONFIG['BODY'] .= $STRINGS['USER_NOT_LOGGED_IN'];
 }
 else if($_SESSION['alevel'] !== 'admin'){
-	$body .= $STRINGS['USER_INVALID_PERMISSION'];
-	$body .= $CONFIG['RESPONSE_CONTAINER'];
-	$body .= $CONFIG['RESPONSE_ROW'];
-	$body .= "\n\t\t\t\t<div class=\"col-12 bg-info\">";
-	$body .= "You are logged in as a ".$_SESSION['alevel'].".";
-	$body .= "\n\t\t\t\t</div><!-- END COL -->";
-	$body .= "\n\t\t\t</div><!-- END ROW -->";
-	$body .= "\n\t\t</div><!-- End container -->";
-
+	$CONFIG['BODY'] .= $STRINGS['USER_INVALID_PERMISSION'];
+	$CONFIG['BODY'] .= $CONFIG['RESPONSE_CONTAINER'];
+	$CONFIG['BODY'] .= $CONFIG['RESPONSE_ROW'];
+	$CONFIG['BODY'] .= "\n\t\t\t\t<div class=\"col-12 bg-info\">";
+	$CONFIG['BODY'] .= "You are logged in as a " . $_SESSION['alevel'] . ".";
+	$CONFIG['BODY'] .= "\n\t\t\t\t</div><!-- END COL -->";
+	$CONFIG['BODY'] .= "\n\t\t\t</div><!-- END ROW -->";
+	$CONFIG['BODY'] .= "\n\t\t</div><!-- End container -->";
 }
 else{
 	//Admin level access
-	$body .= $CONFIG['RESPONSE_CONTAINER'];
-	$body .= $CONFIG['RESPONSE_ROW'];
-	$body .= "\n\t\t\t\t<div class=\"col-12\">";
-	$body .= "\n\t\t\t\t\tHowdy, Admin";
-	$body .= "\n\t\t\t\t</div>";
-	$body .= "\n\t\t\t</div><!-- END ROW -->";
-	$body .= "\n\t\t</div><!-- End container -->";
-}
+	if(isset($_POST['form_submit'])){
+		//Parse apart query;
+		$query	= $_POST["query"];
+		$CONFIG = display_admin_viewport_form($CONFIG);
+		$CONFIG['BODY'] .= "\n<hr>";
+		$CONFIG['BODY'] .= $CONFIG['RESPONSE_CONTAINER'];
+		$CONFIG['BODY'] .= $CONFIG['RESPONSE_ROW'];
+		$CONFIG['BODY'] .= "\n\t\t\t<div class=\"col-12 bg-info\">";
+		$CONFIG['BODY'] .= "\n\t\t\t\tPrevious Query:`" . $query . "`";
+		$CONFIG['BODY'] .= "\n\t\t\t</div>";
+		$CONFIG['BODY'] .= "\n\t\t<hr>";
 
-$body .= "\n\t\t</div>";
+		//Get results of query;
+		$dbpath	= $PATHS['DB_USERS'];
+		$db		= new SQLite3($dbpath);
+		$prepare = $db->prepare($query);
+		if ($prepare){
+			$result = $prepare->execute();
+			$rows = $result->fetchArray();
+			if($rows && count($rows) >0){
+				foreach($rows as $row){
+					$CONFIG['BODY'] .= var_dump($row);
+				}
+			}
+			else{
+				$CONFIG['BODY'] .= "\n\t\t\t<div class=\"col-12 bg-warning\">";
+				$CONFIG['BODY'] .= "\n\t\t\t\tNO RESULTS;";
+				$CONFIG['BODY'] .= "\n\t</div>";
+			}
+		}
+		else{
+			$CONFIG['BODY'] .= "\n\t\t\t<div class=\"col-12 bg-warning\">";
+			$CONFIG['BODY'] .= "\n\t\t\t\tBAD QUERY;";
+			$CONFIG['BODY'] .= "\n\t</div>";
+		}
+		$db->close();												// CLOSING DB;
+
+			//TODO: Make table of results;
+		$CONFIG['BODY'] .= "\n\t\t</div><!-- END ROW -->";
+		$CONFIG['BODY'] .= "\n\t</div><!-- END CONTAINER -->";
+	}
+	else{
+		//Display regurlar query form;
+		$CONFIG = display_admin_viewport_form($CONFIG);
+	}
+}
 
 $CONFIG['BODY'] .= $body;
 echo template_b($CONFIG, $PATHS) . "\n";

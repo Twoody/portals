@@ -19,12 +19,14 @@ function get_paths($ROOT=Null){
 		$ROOT = ".";
 	}
 	return Array(
+		'ADMIN_VIEWPORT'				=> $ROOT."/a/viewport_users.php",
 		'BOOTSTRAP_CSS_PATH'			=> $ROOT.'/css/bootstrap.php',
 		'BOOTSTRAP_JS_PATH'			=> $ROOT.'/js/bootstrap.php',
 		'DATATABLES_CSS_PATH'		=> $ROOT.'/css/datatables.php',
 		'DATATABLES_JS_PATH'			=> $ROOT.'/js/datatables.php',
 		'DB_USERS'						=> $ROOT."/resources/dbs/users.db",
 		'FONT_AWESOME_CSS_PATH'		=> $ROOT.'/css/font_awesome.php',
+		'FORMS_ADMIN_VIEWPORT'		=> $ROOT."/resources/forms/admin_viewport.php",
 		'FORMS_LOGIN'					=> $ROOT."/resources/forms/login.php",
 		'FORMS_USER_REGISTRATION'	=> $ROOT."/resources/forms/register.php",
 		'HTML_DISPLAY_FEATURES'		=> $ROOT."/src/display_features.php",
