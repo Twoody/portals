@@ -14,23 +14,23 @@ Purpose:
 ******************************************************************************/
 
 
-if (!function_exists("__init_utils_FA__")){
-	function __init_utils_FA__($CONFIG=Null){
-		if($CONFIG === Null){
-			$ROOT = ".";
-			require_once($ROOT . '/config/paths.php');
-			$PATHS = get_paths($ROOT);
-			require_once($PATHS['SETTINGS_PATH']);
-			$CONFIG = get_config();
-		}
-		$ROOT = $CONFIG['ROOT'];
-		echo "\n<!-- ". $PATHS['LIBPATH_FA']." imported-->\n";
-	}
-	if ($CONFIG === Null)
-		__init_utils_FA__();
-	else
-		__init_utils_FA__($CONFIG);
-}
+//if (!function_exists("__init_utils_FA__")){
+//	function __init_utils_FA__($CONFIG=Null){
+//		if($CONFIG === Null){
+//			$ROOT = ".";
+//			require_once($ROOT . '/config/paths.php');
+//			$PATHS = get_paths($ROOT);
+//			require_once($PATHS['SETTINGS_PATH']);
+//			$CONFIG = get_config();
+//		}
+//		$ROOT = $CONFIG['ROOT'];
+//		echo "\n<!-- ". $PATHS['LIBPATH_FA']." imported-->\n";
+//	}
+//	if ($CONFIG === Null)
+//		__init_utils_FA__();
+//	else
+//		__init_utils_FA__($CONFIG);
+//}
 
 function get_FA_contact_us(){
 	
