@@ -20,6 +20,7 @@ C. Navigation:
 
 D. Users
 	1.		`Remember Me` functionality;
+	2.		In /u/settings/ let user see what owner they are affiliated with;
 
 D. Random
 	1. In index.php change Your-Logo to use the utils/html.php make_img() function;
