@@ -28,6 +28,18 @@ $PATHS = get_paths($ROOT);
 require_once($PATHS['LIBPATH_HTML']);
 echo "\n<!-- " . $PATHS['LIBPATH_DB_HELPER'] . " imported -->\n";
 
+function delete_row($table, $where, $CONFIG=Null){
+	if ($CONFIG===Null){
+		$ROOT = '.';
+		$CONFIG = get_config($ROOT);
+		$dbpath = $CONFIG['DBPATH_USERS'];
+	}
+	$dbpath = $CONFIG['CUR_DB'];
+	$db	= new SQLIte3($dbpath);
+	$sql	= "DELETE FROM ".$table. " WHERE 1=1 AND ".$where;
+	$db->exec($sql);
+	$db->close();
+}
 function get_users_tables(){
 	$TABLES = Array(
 		'users'=>Array(
@@ -152,5 +164,12 @@ function make_users_tables($CONFIG){
 		$ret +=1;
 	}
 	return $ret;
+}
+function parse_from($query){
+	/* Take in a query string and return table name if exists & is parsable */
+	/* Return empty string if table name DNE */
+	//TODO: All of it...
+	//SEE: https://stackoverflow.com/questions/3694276/what-are-valid-table-names-in-sqlite
+	return "";
 }
 ?>

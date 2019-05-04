@@ -39,9 +39,9 @@ function template_b($CONFIG=Null, $PATHS=Null){
 	if ($CONFIG['TITLE'] === "")
 		$CONFIG['TITLE'] = $PATHS['TEMPLATES_B'];
 	/* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
-	$CONFIG['HAS_DATATABLES'] = TRUE;
-	$CONFIG['HAS_FONT_AWESOME'] = TRUE;
-	$CONFIG['FA_STACK_SIZE'] = 'fa-2x';
+	$CONFIG['HAS_DATATABLES']		= TRUE;
+	$CONFIG['HAS_FONT_AWESOME']	= TRUE;
+	$CONFIG['FA_STACK_SIZE']		= 'fa-2x';
 	//$CONFIG['FOOTER_IS_STICKY'] = False;
 	
 	$CONFIG['CUSTOM_STYLES'] .= get_font_awesome_style_guide($CONFIG);
