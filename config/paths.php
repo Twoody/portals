@@ -19,7 +19,8 @@ function get_paths($ROOT=Null){
 		$ROOT = ".";
 	}
 	return Array(
-		'ADMIN_VIEWPORT'				=> $ROOT."/a/viewport_users.php",
+		'ADMIN_DASH'					=> $ROOT."/a/index.php",
+		'ADMIN_VIEWPORT'				=> $ROOT."/a/actions/viewport_users.php",
 		'BOOTSTRAP_CSS_PATH'			=> $ROOT.'/css/bootstrap.php',
 		'BOOTSTRAP_JS_PATH'			=> $ROOT.'/js/bootstrap.php',
 		'DATATABLES_CSS_PATH'		=> $ROOT.'/css/datatables.php',
@@ -40,6 +41,7 @@ function get_paths($ROOT=Null){
 		'LIBPATH_FA'					=> $ROOT.'/utils/font_awesome.php',
 		'LIBPATH_HTML'					=> $ROOT.'/utils/html.php',
 		'LIBPATH_JSON'					=> $ROOT.'/utils/json_helper.php',
+		'NAV_ADMIN_PANEL'				=> $ROOT.'/a/index.php',
 		'NAV_HOME'						=> $ROOT.'/index.php',
 		'NAV_DISPLAY_FEATURES'		=> $ROOT.'/src/display_features.php',
 		'NAV_DISPLAY_PRICING'		=> $ROOT.'/src/display_pricing.php',

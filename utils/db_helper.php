@@ -79,7 +79,107 @@ function get_create_table($TNAME, $TABLE){
 	$sql .= ')';
 	return $sql;
 }
-
+function get_table_from_query($dbpath, $query, $CONFIG){
+	/* Return a dataTable table based off of query */
+	$db			= new SQLite3($dbpath);
+	$CUR_TABLE	= parse_from($query);
+	$table   	= "";
+	$QUERY_PAGE	= $CONFIG['QUERY_PAGE'];
+	$TABLE_ID	= $CONFIG['TABLE_ID'];
+	$db->enableExceptions(true);
+	try{
+		$prepare = $db->prepare($query);
+		if(!$CUR_TABLE)
+			$CUR_TABLE = "users";
+		if ($prepare){
+			$result	= $prepare->execute();
+			$headers	= Array();
+			if($result && $result->fetchArray()){
+				$result->reset();
+				$header  = "";
+				$footer	= "";
+				$table .= "\n\t<table id=\"".$TABLE_ID."\" class=\"table table-striped table-bordered\" ";
+				$table .= "cellspacing=\"\" width=\"100%\" role=\"grid\">";
+				$table .= "\n\t\t<thead>";
+				while ($row = $result->fetchArray(SQLITE3_ASSOC)){
+					$header .= "\n\t\t\t<tr role=\"row\">";
+					$footer .= "\n\t\t\t<tr>";
+					$row_keys = array_keys($row);
+					for($i=0; $i<count($row_keys); $i++){
+						 $row_key = $row_keys[$i];;
+						array_push($headers, $row_key);
+						$header .= "\n\t\t\t\t<th class=\"sorting\">";
+						$header .= "\n\t\t\t\t\t".$row_key;
+						$header .= "\n\t\t\t\t</th>";
+						$footer .= "\n\t\t\t\t<th>";
+						$footer .= "\n\t\t\t\t\t".$row_key;
+						$footer .= "\n\t\t\t\t</th>";
+					}
+					$header .= "\n\t\t\t</tr>";
+					$footer .= "\n\t\t\t</tr>";
+					break;
+				}
+				$table .= $header;
+				$table .= "\n\t\t</thead>";
+				$result->reset();
+				$table .= "\n\t\t<tbody>";
+				$is_odd = TRUE;
+				$is_first_row = TRUE;
+				while ($row = $result->fetchArray(SQLITE3_ASSOC)){
+					$table .= "\n\t\t\t<tr role=\"row\" class=\"";
+					if ($is_odd)
+						$table .= "odd ";
+					else
+						$table .= "even ";
+					if ($is_first_row)
+						$table .= "first ";
+					$table .= "\">"; //Closing `class`
+					$row_keys = array_keys($row);
+					$is_first_col = TRUE;
+					foreach($row_keys as $row_key){
+						$table .= "\n\t\t\t\t<td>";
+						if ($is_first_col){
+							$dHref = $QUERY_PAGE."?delete_val=".$row[$row_key]."&delete_table=".$CUR_TABLE;
+							$dHref .= "&delete_key=".$row_key."&is_deleting=TRUE";
+							$table .= "\n<a href=\"".$dHref."\" title=\"Delete Entry\" style=\"color:black\">";
+							$table .= make_font_awesome_stack(Array(
+								'backdrop-google fas fa-square',
+								'fas fa-tw fa-trash'), $CONFIG);
+							$table .= "\n</a>";
+						}
+						$table .= "".$row[$row_key];
+						$table .= "</td>";
+						$is_first_col = FALSE;
+					}
+					$table .= "\n\t\t\t</tr>";
+					$is_first_row = FALSE;
+				}
+				$table .= "\n\t\t</tbody>";
+		 		$table .= "<tfoot>";
+				$table .= $footer;
+		 		$table .= "</tfoot>";
+				$table .= "\n\t</table>";
+			}
+			else{
+				$table .= "\n\t\t\t<div class=\"col-12 bg-warning\">";
+				$table .= "\n\t\t\t\tNO RESULTS;";
+				$table .= "\n\t</div>";
+			}
+		}
+		else{
+			$table .= "\n\t\t\t<div class=\"col-12 bg-warning\">";
+			$table .= "\n\t\t\t\tBAD QUERY;";
+			$table .= "\n\t</div>";
+		}
+		$db->close();
+	}
+	catch (Exception $exception) {
+		$table .= "\n\t\t\t<div class=\"col-12 bg-warning\">";
+		$table .= "\n\t\t\t\tBAD QUERY AND PREPARE;";
+		$table .= "\n\t</div>";
+	}
+	return $table;
+}
 
 function is_db($dbpath, $CONFIG=Null){
 	$ret = TRUE;

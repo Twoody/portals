@@ -44,7 +44,7 @@ $CONFIG['CUSTOM_STYLES'] .= "\n<style>";
 $CONFIG['CUSTOM_STYLES'] .= "\n\t.sticky{position: sticky; top: 0;}"; 
 $CONFIG['CUSTOM_STYLES'] .= "\n</style>";
 
-echo '<!-- RUNNING '.$PATHS['USER_LOGOUT'].' -->';
+echo '<!-- RUNNING '.$PATHS['ADMIN_DASH'].' -->';
 
 if (!is_logged_in($CONFIG)){
 	$body .= $STRINGS['USER_NOT_LOGGED_IN'];
@@ -67,7 +67,25 @@ else{
 	$body .= "\n\t\t\t\t<div class=\"col-12\">";
 	$body .= "\n\t\t\t\t\tHowdy, Admin";
 	$body .= "\n\t\t\t\t</div>";
+	$body .= "\n\t\t\t\t<div class=\"col-12\">";
+	$body .= "\n\t\t\t\t\tHere are some helpful links:";
+	$body .= "\n\t\t\t\t</div>";
 	$body .= "\n\t\t\t</div><!-- END ROW -->";
+
+	$body .= "\n<ul class=\"list-group\">";
+	$body .= "\n\t<a href=\"".$PATHS['ADMIN_DASH']."\" ";
+	$body .= "class=\"list-group-item active\">";
+	$body .= "\n\t\tDashboard";
+	$body .= "\n\t</a>";
+	$body .= "\n\t<a href=\"" . $PATHS['ADMIN_VIEWPORT'] . "\" ";
+	$body .= "class=\"list-group-item\">";
+	$body .= "\n\t\tSQL Display";
+	$body .= "\n\t</a>";
+	$body .= "\n\t<li class=\"list-group-item\">More</li>";
+	$body .= "\n\t<li class=\"list-group-item\">to</li>";
+	$body .= "\n\t<li class=\"list-group-item\">Come</li>";
+	$body .= "\n</ul>";
+
 	$body .= "\n\t\t</div><!-- End container -->";
 }
 
