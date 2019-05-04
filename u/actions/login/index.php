@@ -24,7 +24,7 @@ Links:
 	NA
 ******************************************************************************/
 
-$ROOT = "../..";
+$ROOT = "../../..";
 require_once($ROOT.'/config/imports.php');
 make_imports($ROOT);
 $PATHS  = get_paths($ROOT);

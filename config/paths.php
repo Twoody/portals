@@ -54,11 +54,11 @@ function get_paths($ROOT=Null){
 		'TEMPLATES_LOGIN'				=> $ROOT."/templates/login.php",
 		'TEMPLATES_FOOTER'			=> $ROOT."/templates/footer.php",
 		'TEMPLATES_SOCIAL_MEDIA'	=> $ROOT."/templates/social_media.php",
-		'USER_LOGIN'					=> $ROOT.'/u/login/index.php',
-		'USER_LOGOUT'					=> $ROOT.'/u/logout/index.php',
-		'USER_REGISTER'				=> $ROOT.'/u/register/index.php',
-		'USER_REGISTER_DOES_EXIST'	=> $ROOT.'/u/register/already_registered.php',
-		'USER_REGISTER_SUCCESS'		=> $ROOT.'/u/register/success.php',
+		'USER_LOGIN'					=> $ROOT.'/u/actions/login/index.php',
+		'USER_LOGOUT'					=> $ROOT.'/u/actions/logout/index.php',
+		'USER_REGISTER'				=> $ROOT.'/u/actions/register/index.php',
+		'USER_REGISTER_DOES_EXIST'	=> $ROOT.'/u/actions/register/already_registered.php',
+		'USER_REGISTER_SUCCESS'		=> $ROOT.'/u/actions/register/success.php',
 	);
 }
 ?>

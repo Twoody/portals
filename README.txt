@@ -25,11 +25,32 @@ Project Navigation:
 	2. ./config/import.php and ./config/settings.php;
 	3. All strings for error messages and html should be imported
 		in order to keep a single place for translation services;
-	
+
 To Run:
-	Open browser to localhost:8000;
-	Execute command from shell:
-		clear & php -S localhost:8000 index.php
+	1. From command line:
+		A.	Execute command from shell:
+			clear & php -S localhost:8000 index.php
+		B.	Open browser to localhost:8000;
+
+	2. As `example.com`
+		A. /etc/apache2/httpd.conf
+			a. `LoadModule php7_module` uncommented to turn on;
+			b. `Servername to www.exmaple.com:80` uncommented and turned on;
+			b. Library/Webserver/Documents/ to Users/tannerleewoody/Workspace/portals/
+				i. Did this twice; left old commented out;
+		B. /etc/hosts
+				```
+				##
+				# Host Database
+				#
+				# localhost is used to configure the loopback interface
+				# when the system is booting.  Do not change this entry.
+				##
+				#127.0.0.1	localhost
+				127.0.0.1	www.example.com
+				255.255.255.255	broadcasthost
+				::1             localhost
+		C. For more information, see ~/Diary/20190419
 
 Naming Conventions and Styling:
 	snake_case naming convention;
