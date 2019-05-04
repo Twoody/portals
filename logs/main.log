@@ -8,6 +8,18 @@
 
 
 Tanner.L.Woody@gmail.com
+2019-05-04
+	Viewport, tables, and all of that jazz look like they are good to go.
+	Next, I will be creating a modal to update an inventory when logged in
+		as an owner.
+	I will duplicate everything I have done for admin to a o/ dir.;
+	In that dir, I will focus on making a table that portrays something...
+	And we will be able to add entries to that table, just like we can
+		delete entries from the users table as an admin;
+	Finally, members will be able to see what is available based on owners
+	choosing;
+
+Tanner.L.Woody@gmail.com
 2019-05-02
 	Config + BODY attr is all setup and running;
 	Working on viewport now;
