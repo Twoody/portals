@@ -288,6 +288,7 @@ function get_nav($CONFIG=Null, $PATHS=Null){
 	$features	= $PATHS['NAV_DISPLAY_FEATURES'];
 	$pricing		= $PATHS['NAV_DISPLAY_PRICING'];
 	$settings	= $PATHS['NAV_USER_SETTINGS'];
+	$aDash		= $PATHS['NAV_ADMIN_PANEL'];
 	$html = "";
 	$html .= "\n\t\t<nav class=\"navbar fixed-top navbar-expand-sm navbar-light bg-light pl-3 pr-3 pb-0 pt-0\">";
 	$html .= "\n\t\t\t<a class=\"navbar-brand\" href=\"" .$home. "\">";
@@ -314,6 +315,12 @@ function get_nav($CONFIG=Null, $PATHS=Null){
 	$html .= "\n\t\t\t\t\t<li class=\"nav-item\">";
 	$html .= "\n\t\t\t\t\t\t<a class=\"nav-link\" href=\"".$pricing."\">Pricing</a>";
 	$html .= "\n\t\t\t\t\t</li>";
+	if(is_logged_in($CONFIG) === TRUE && $_SESSION['alevel'] === 'admin' && !$CONFIG['IS_LOGGING_OUT']){
+		//Give link to Admin dashboard
+		$html .= "\n\t\t\t\t\t<li class=\"nav-item\">";
+		$html .= "\n\t\t\t\t\t\t<a class=\"nav-link\" href=\"".$aDash."\">Admin</a>";
+		$html .= "\n\t\t\t\t\t</li>";
+	}
 	$html .= "\n\t\t\t\t</ul>";
 	$html .= "\n\t\t\t\t<span class=\"navbar-text\">";
 	if (is_logged_in($CONFIG) === False || $CONFIG['IS_LOGGING_OUT'] === TRUE){
