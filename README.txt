@@ -8,6 +8,9 @@ Dependencies:
 	2. Php 7
 	3. Bootstrap
 	4. JQuery
+	5. Data Tables
+	6. Popper JS
+	7. Font Awesome
 
 Purpose:
 	1. General Site Framework

@@ -24,7 +24,7 @@ Links:
 	https://www.w3schools.com/bootstrap4/bootstrap_carousel.asp
 ******************************************************************************/
 
-$ROOT = "..";
+$ROOT = "../..";
 require_once($ROOT.'/config/imports.php');
 make_imports($ROOT);
 $PATHS	= get_paths($ROOT);

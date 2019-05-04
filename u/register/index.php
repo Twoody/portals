@@ -24,22 +24,22 @@ Links:
 	NA
 ******************************************************************************/
 
-$ROOT = "..";
+$ROOT = "../..";
 require_once($ROOT.'/config/imports.php');
 make_imports($ROOT);
 $PATHS  = get_paths($ROOT);
 $CONFIG = get_config($ROOT);
-require_once($PATHS['HTML_LOGIN_OR_SIGNOUT']);
+require_once($PATHS['HTML_REGISTER_USER']);
 require_once($PATHS['TEMPLATES_B']);
 
-echo "<!-- LANDED ON: LOGIN PAGE-->";
+echo "<!-- LANDED ON: REGISTRATION PAGE-->";
 
-$body	= "";
+$body   = "";
 	
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
-$CONFIG['TITLE']				= "Login";
-$CONFIG['DISPLAY_HEADER']	= FALSE;
+$CONFIG['TITLE'] = "Register";
+$CONFIG['DISPLAY_HEADER'] = FALSE;
 
-$CONFIG = html_login_or_signout($CONFIG, $PATHS); //Will get ./resources/forms/foo IFF user logged in;
+$CONFIG = html_register_user($CONFIG, $PATHS);
 echo template_b($CONFIG, $PATHS) . "\n";
 ?>

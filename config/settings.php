@@ -8,7 +8,7 @@ function get_config($ROOT=Null){
 	return Array(
 		/* ----- ----- GENERAL OPTIONS ----- ----- */
 		'FLAGS'=>[],
-		'VERSION'=>1.00,
+		'VERSION'=>1.10,
 		'HAS_LOGIN'=>FALSE,
 		'ACTIVE_PAGE'=>"./",
 		'LANG'=>"en",
