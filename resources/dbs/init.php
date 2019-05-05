@@ -23,9 +23,13 @@ require_once($PATHS['LIBPATH_DB_HELPER']);
 require_once($PATHS['LIBPATH_HTML']);
 
 echo "\n\n<!-- RUNNING DATABASE INITIALIZER -->\n";
-$created_tables	= make_users_tables($CONFIG);
+$created_user_tables	= make_users_tables($CONFIG);
+$created_inv_tables	= make_inv_tables($CONFIG);
 $ret	= "\n<h1>";
-$ret	.= "\n\tMADE `".$created_tables."` TABLES";
+$ret	.= "\n\tMADE `".$created_user_tables."` USERS TABLES";
+$ret	.= "\n</h1>\n";
+$ret	= "\n<h1>";
+$ret	.= "\n\tMADE `".$created_inv_tables."` INVENTORY TABLES";
 $ret	.= "\n</h1>\n";
 echo  $ret;
 echo "\n<!-- FINISHED DATABASE INITIALIZER -->\n";

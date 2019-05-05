@@ -40,6 +40,19 @@ function delete_row($table, $where, $CONFIG=Null){
 	$db->exec($sql);
 	$db->close();
 }
+function get_inventory_tables(){
+	$TABLES = Array(
+		'inventory'=>Array(
+			'id'				=>'INTEGER PRIMARY KEY',
+			'name'			=>'TEXT',
+			'quantity'		=>'INTEGER',
+			'price'			=>'TEXT',
+			'image_id'		=>'TEXT',
+			'categories'	=>'TEXT'
+		),
+	);
+	return $TABLES;
+}
 function get_users_tables(){
 	$TABLES = Array(
 		'users'=>Array(
@@ -246,7 +259,25 @@ function make_table($sql, $dbpath=Null, $CONFIG=Null){
 	$db->exec($sql);
 	$db->close();
 }
-function make_users_tables($CONFIG){
+function make_inv_tables($CONFIG=Null){
+	if($CONFIG === Null)
+		$CONFIG = get_config();
+	$ret    = 0;
+	$TABLES = get_inventory_tables();
+	$PATHS  = get_paths($CONFIG['ROOT']);
+	$dbpath = $CONFIG['DBPATH_INVENTORY'];
+	foreach($TABLES as $TNAME=>$TABLE){
+		if (has_table($TNAME, $dbpath, $CONFIG))
+			continue;
+		echo "\n\tMAKING TABLE";
+		echo "\n\t\tDBPATH: `".$dbpath."`\n";
+		$sql = get_create_table($TNAME, $TABLE);
+		$suc = make_table($sql, $dbpath, $CONFIG);
+		$ret +=1;
+	}
+	return $ret;
+}
+function make_users_tables($CONFIG=Null){
 	if($CONFIG === Null){
 		$ROOT = '.';
 		$CONFIG = get_config($ROOT);
