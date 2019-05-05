@@ -16,7 +16,11 @@ function get_inventory($CONFIG){
 	$table .= "\n\t\t</div><!-- END ROW -->";
 	$table .= "\n\t</div><!-- END CONTAINER -->";
 
+	$table .= $CONFIG['INVENTORY_CONTAINER'];
+	$table .= $CONFIG['INVENTORY_ROW'];
 	$table .=  get_table_from_query($dbpath, $query, $CONFIG);
+	$table .= "\n\t\t</div><!-- END ROW -->";
+	$table .= "\n\t</div><!-- END CONTAINER -->";
 
 	return $table;
 }
