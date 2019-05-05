@@ -24,9 +24,9 @@ if (php_sapi_name() === "cli"){
 		}
 		$ROOT = $CONFIG['ROOT'];
 }
-$PATHS = get_paths($ROOT);
-require_once($PATHS['LIBPATH_HTML']);
-echo "\n<!-- " . $PATHS['LIBPATH_DB_HELPER'] . " imported -->\n";
+//$PATHS = get_paths($ROOT);
+//require_once($PATHS['LIBPATH_HTML']);
+//echo "\n<!-- " . $PATHS['LIBPATH_DB_HELPER'] . " imported -->\n";
 
 function delete_row($table, $where, $CONFIG=Null){
 	if ($CONFIG===Null){
