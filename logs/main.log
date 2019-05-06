@@ -6,6 +6,17 @@
 ******************************************************************************/
 
 
+commit 1abd5feca0c3f0ae53f71d65c3195a15332eedc8
+Author: twoody <tanner.l.woody@gmail.com>
+Date:   Sun May 5 23:37:21 2019 -0700
+
+    Working update for a couple of test items;
+    
+    Next step is to display test items on user screen;
+    Afterward, display same items on members screen;
+    But also provide members with modal to add;
+    But also provide members with delete like users display;
+    And finally provide members with ability to add to shopping cart;
 
 Tanner.L.Woody@gmail.com
 2019-05-04
