@@ -35,11 +35,47 @@ require_once($PATHS['TEMPLATES_B']);
 
 echo "<!-- LANDED ON: ".$PATHS['USER_GET_INVENTORY'].":INVENTORY PAGE-->";
 
+$CONFIG['TABLE_ID'] = "inventory";
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
-$CONFIG['TITLE']						= "Inventory";
+$CONFIG['TITLE']						= "Shop's Inventory";
 $CONFIG['DISPLAY_HEADER']			= FALSE;
 $CONFIG['INVENTORY_CONTAINER']	= "\n<div class=\"container-fluid pr-3 pl-3 m-0\">";
 $CONFIG['INVENTORY_ROW']			= "\n\t<div class=\"row pl-3 pr-3 m-0\">";
+
+$CONFIG['CUSTOM_STYLES'] .= "\n<style>";
+$CONFIG['CUSTOM_STYLES'] .= "\n\t.sticky{position: sticky; top: 0;}"; 
+$CONFIG['CUSTOM_STYLES'] .= "\n	table.dataTable thead .sorting:after,";
+$CONFIG['CUSTOM_STYLES'] .= "\n	table.dataTable thead .sorting:before,";
+$CONFIG['CUSTOM_STYLES'] .= "\n	table.dataTable thead .sorting_asc:after,";
+$CONFIG['CUSTOM_STYLES'] .= "\n	table.dataTable thead .sorting_asc:before,";
+$CONFIG['CUSTOM_STYLES'] .= "\n	table.dataTable thead .sorting_asc_disabled:after,";
+$CONFIG['CUSTOM_STYLES'] .= "\n	table.dataTable thead .sorting_asc_disabled:before,";
+$CONFIG['CUSTOM_STYLES'] .= "\n	table.dataTable thead .sorting_desc:after,";
+$CONFIG['CUSTOM_STYLES'] .= "\n	table.dataTable thead .sorting_desc:before,";
+$CONFIG['CUSTOM_STYLES'] .= "\n	table.dataTable thead .sorting_desc_disabled:after,";
+$CONFIG['CUSTOM_STYLES'] .= "\n	table.dataTable thead .sorting_desc_disabled:before { bottom: .5em; }";
+$CONFIG['CUSTOM_STYLES'] .= "\n</style>";
+
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n<script src=\"".$PATHS['JS_INVENTORY']."\"></script>";
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n<script>";
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t$(document).ready(function(){";
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t$('#".$CONFIG['TABLE_ID']."').DataTable({";
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\t\"order\": [[ 1, \"name\" ]]";
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t});";
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t$('.dataTables_length').addClass('bs-select');";
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t});";
+
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t$(function(){";
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t$(\".inventory-modal\").click(function(e){";
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\te.preventDefault();";
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\tvar mymodal = $(\"#inv_modal\");";
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\t$(\".modal-body #product\").val(this.id);";
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\tmymodal.modal(\"show\");";
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\t";
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t});";
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t})";
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n</script>";
+
 
 $table = get_inventory($CONFIG);
 
@@ -51,6 +87,7 @@ $html .= "Some text before the invenory list";
 $html .= "\n\t\t\t</div><!-- END COL -->";
 $html .= "\n\t\t</div><!-- END ROW -->";
 $html .= "\n\t</div><!-- END CONTAINER -->";
+$html .= "<hr>";
 
 $html .= $table;
 

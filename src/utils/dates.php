@@ -7,7 +7,7 @@ Purpose:
 	Do some arithmetic, math, and general processing to avoid rewriting code;
 ********************************************************************************/
 echo "\n<!-- /utils/dates.php imported -->\n";
-function dateToText($d){
+function date_to_text($d){
 	//Input any format of YYYYMMDD; Does not support time;
 	//return date in years, months, days;
 	$d    = (string)$d;	//`d` is `date`; Make sure we have a string;
@@ -23,5 +23,9 @@ function dateToText($d){
 	$ret .= $yyyy . " years, " . $mm . " months, and " . $dd . " days old";
 	return $ret;
 }//end dateToText()
-
+function get_todays_date(){
+	//$date = date('Y-m-d H:i:s')
+	$date = date('Y-m-d');
+	return $date;
+}
 ?>

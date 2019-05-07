@@ -5,6 +5,8 @@ A. Main:
 			B. Everywhere might be an overstatement;
 	2. 	JSON parser
 	3.		Datatable + submit form + reset_db() call for members to test sql injection;
+	4.		HTTPS verification; SEE:
+				https://stackoverflow.com/questions/3865143/what-do-i-have-to-code-to-use-https
 	n-3.	Move Logout button to fixed right of screen
 	N-2. 	Error handling via errors.json
 	N-1.	Set all `import` html comments to use $PAGES path;

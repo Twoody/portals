@@ -8,9 +8,8 @@
 	In the test case, we are going to just have a password describing the test
 	users access level: i.e. isOwner has a pw of `owner`.
 */
-function init_users($db){
-	$ret = TRUE;
-	$users = Array(
+function get_test_users(){
+	return Array(
 		Array(
 			'email'			=> 'tanner@foo.com',
 			'handle'			=> 'twoody',
@@ -33,18 +32,43 @@ function init_users($db){
 			'accessLevel'	=> 'member'
 		),
 	);
+}
+function init_users($db, $CONFIG){
+	$ret = TRUE;
+	$users = get_test_users();
 	$db->exec('BEGIN;');
 	try{
 		foreach($users as $user){
 			$email 	= $user['email'];
+			$handle 	= $user['handle'];
 			$aLevel	= $user['accessLevel'];
-			$sql 		= "INSERT INTO users(email, accessLevel) VALUES (:email, :aLevel)";
+			$sql 		= "INSERT INTO users(email, accessLevel, handle) VALUES (:email, :aLevel, :handle)";
 			$prepare	= $db->prepare($sql);
 			$prepare->bindValue(':email',  $email);
 			$prepare->bindValue(':aLevel', $aLevel);
+			$prepare->bindValue(':handle', $handle);
 			$result = $prepare->execute();
 		}
 		$db->exec('COMMIT;');
+		$db->exec('BEGIN;');
+		foreach($users as $user){	
+			$email	= $user['email'];
+			$handle	= $user['handle'];
+			$sql		= "INSERT INTO userinfo(email, handle, join_date, userid) VALUES (:email, :handle, :date, :userid)";
+			echo "\nSQL:\n\t".$sql;
+			echo "\n\tEMAIL:\n\t\t".$email;
+			echo "\n\tHANDLE:\n\t\t".$handle;
+			echo "\n\tDATE:\n\t\t".get_todays_date();
+			echo "\n\tUSER ID:\n\t\t".get_user_id($email, $CONFIG);
+			$prepare	= $db->prepare($sql);
+			$prepare->bindValue(':email',  $email);
+			$prepare->bindValue(':handle', $handle);
+			$prepare->bindValue( ':date', get_todays_date() );
+			$prepare->bindValue(':userid', get_user_id($email, $CONFIG));
+			$result = $prepare->execute();
+		}
+		$db->exec('COMMIT;');
+		$db->exec('UPDATE TABLE userinfo SET notifications=0;');
 	}
 	catch(Exception $exception){
 		if (!$FLAGS['is_quite'])
@@ -54,6 +78,39 @@ function init_users($db){
 	}
 	return $ret;
 }
+function init_userinfo($db, $CONFIG){
+	$ret = TRUE;
+	$users = get_test_users();
+	$db->exec('BEGIN;');
+	try{
+		$db->exec('BEGIN;');
+		foreach($users as $user){	
+			$email	= $user['email'];
+			$handle	= $user['handle'];
+			$sql		= "INSERT INTO userinfo(email, handle, join_date, userid) VALUES (:email, :handle, :date, :userid)";
+			echo "\nSQL:\n\t".$sql;
+			echo "\n\tEMAIL:\n\t\t".$email;
+			echo "\n\tHANDLE:\n\t\t".$handle;
+			echo "\n\tDATE:\n\t\t".get_todays_date();
+			echo "\n\tUSER ID:\n\t\t".get_user_id($email, $CONFIG);
+			$prepare	= $db->prepare($sql);
+			$prepare->bindValue(':email',  $email);
+			$prepare->bindValue(':handle', $handle);
+			$prepare->bindValue( ':date', get_todays_date() );
+			$prepare->bindValue(':userid', get_user_id($email, $CONFIG));
+			$result = $prepare->execute();
+		}
+		$db->exec('COMMIT;');
+	}
+	catch(Exception $exception){
+		if (!$FLAGS['is_quite'])
+			echo "\n".clog("\"". $exception->getMessage() ."\"\n");
+		$ret = FALSE;
+		$db->exec('ROLLBACK;');
+	}
+	return $ret;
+}
+
 function get_all_users($db, $where=null){
 	//TODO: Move to DBHelper file;
 	if ($where === null)
@@ -107,15 +164,25 @@ function __main__($ROOT){
 	require_once($ROOT . '/config/paths.php');
 	$PATHS   = get_paths($ROOT);
 	require_once($PATHS['SETTINGS_PATH']);
-	$CONFIG  = get_config($CONFIG);
+	require_once($PATHS['LIBPATH_DATES']);
+	require_once($PATHS['LIBPATH_DB_HELPER']);
+	$CONFIG  = get_config($ROOT);
 	$dbpath	= $PATHS['DB_USERS'];
 	$db		= new SQLite3($dbpath);
 	$ret		= '';
-	$suc		= init_users($db);
+	$suc		= init_users($db, $CONFIG);
 	if ($suc === FALSE){
-		$ret .= "\n<p>\n\tBad inserts;\n</p>";
+		$ret .= "\n<p>\n\tBad inserts for users;\n</p>";
 		return $ret;
 	}
+	$suc	= init_userinfo($db, $CONFIG);
+	if ($suc === FALSE){
+		$ret .= "\n<p>\n\tBad inserts for userinfo;\n</p>";
+		return $ret;
+	}
+
+	
+	$db->exec('UPDATE TABLE userinfo SET notifications=0;');
 
 	$where_clause = ['(password is Null or password = "")'];
 	$users        = get_all_users($db, $where_clause);

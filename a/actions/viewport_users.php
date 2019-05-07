@@ -133,7 +133,7 @@ else{
 		$dbpath						= $PATHS['DB_USERS'];
 		$CONFIG['QUERY_PAGE']	= $PATHS['ADMIN_VIEWPORT'];
 		$CONFIG['BODY'] .= $CONFIG['RESPONSE_CONTAINER'];
-		$CONFIG['BODY'] .= get_table_from_query($dbpath, $query, $CONFIG);
+		$CONFIG['BODY'] .= get_table_from_owner_query($dbpath, $query, $CONFIG);
 		$CONFIG['BODY'] .= "\n\t</div><!-- END CONTAINER -->";
 	}
 	else{

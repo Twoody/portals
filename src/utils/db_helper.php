@@ -14,19 +14,20 @@ TODO:
 	1. ...
 
 ******************************************************************************/
-if (php_sapi_name() === "cli"){
-		if($CONFIG === Null){
-			$ROOT = '.';
-			require_once('./config/paths.php');
-			$PATHS = get_paths($ROOT);
-			require_once($PATHS['SETTINGS_PATH']);
-			$CONFIG = get_config($ROOT);
-		}
-		$ROOT = $CONFIG['ROOT'];
-}
+//if (php_sapi_name() === "cli"){
+//		if($CONFIG === Null){
+//			$ROOT = '.';
+//			require_once('./config/paths.php');
+//			$PATHS = get_paths($ROOT);
+//			require_once($PATHS['SETTINGS_PATH']);
+//			$CONFIG = get_config($ROOT);
+//		}
+//		$ROOT = $CONFIG['ROOT'];
+//}
 //$PATHS = get_paths($ROOT);
-//require_once($PATHS['LIBPATH_HTML']);
-//echo "\n<!-- " . $PATHS['LIBPATH_DB_HELPER'] . " imported -->\n";
+require_once($PATHS['LIBPATH_HTML']);
+require_once($PATHS['LIBPATH_FA']);
+echo "\n<!-- " . $PATHS['LIBPATH_DB_HELPER'] . " imported -->\n";
 
 function delete_row($table, $where, $CONFIG=Null){
 	if ($CONFIG===Null){
@@ -50,8 +51,93 @@ function get_inventory_tables(){
 			'image_id'		=>'TEXT',
 			'categories'	=>'TEXT'
 		),
+		'carts'=>Array(
+			'id'				=>'INTEGER PRIMARY KEY',
+			'userid'			=>'TEXT',
+			'productid'		=>'TEXT',
+			'quantity'		=>'INTEGER',
+		),
+
 	);
 	return $TABLES;
+}
+function get_cart_count($userid, $CONFIG){
+	$dbpath	= $CONFIG['DBPATH_INVENTORY'];
+	$sql		= "SELECT quantity FROM carts WHERE userid = :userid";
+	$ret		= -1;
+	try{
+		$db		= new SQLite3($dbpath);
+		$prepare	= $db->prepare($sql);
+		$prepare->bindValue(':userid', $userid);
+		$result	= $prepare->execute();
+		$total	= 0;
+		if ($result && $result->fetchArray()){
+			$result->reset();
+			while ($row = $result->fetchArray(SQLITE3_ASSOC)){
+				$quantity = $row['quantity'];
+				$total += $quantity;
+			}
+		}
+		else
+			$total = 0;
+		$ret = $total;
+		$db->close();
+	}
+	catch(Exception $exception){
+		if (!$FLAGS['is_quite'])
+			echo clog("\"". $exception->getMessage() ."\"");
+		$ret = -1;
+	}
+	return $ret;
+}
+function get_notification_count($userid){
+	//TODO: IDT this works yet...
+	//TODO: We do not have notifications setup at this point;
+	$dbpath	= $CONFIG['DBPATH_USERS'];
+	$sql		= "SELECT COUNT(notifications) FROM userinfo WHERE userid = :userid";
+	$ret		= -1;
+	try{
+		$db	= new SQLite3($dbpath);
+		$prepare = $db->prepare($sql);
+		$prepare->bindValue(':userid', $userid);
+		$result = $prepare->execute();
+		$rows = $result->fetchArray();
+		if (!$rows)
+			$ret = -1;
+		else if (!$rows || count($rows) <= 0)
+			$ret = -1;
+		else if(!$rows[0])
+			$ret = -1;
+		else
+			$ret = $rows[0];
+		$db->close();
+	}
+	catch(Exception $exception){
+		if (!$FLAGS['is_quite'])
+			echo clog("\"". $exception->getMessage() ."\"");
+		$ret = -1;
+	}
+	return $ret;
+}
+function get_user_id($email, $CONFIG){
+	$dbpath	= $CONFIG['DBPATH_USERS'];
+	$sql		= "SELECT id FROM users WHERE email=:email";
+	$ret		= 0;
+	try{
+		$db	= new SQLite3($dbpath);
+		$prepare = $db->prepare($sql);
+		$prepare->bindValue(':email', $email);
+		$result	= $prepare->execute();
+		$row		= $result->fetchArray();
+		$ret = $row[0];
+		$db->close();
+	}
+	catch(Exception $exception){
+		if (!$FLAGS['is_quite'])
+			echo clog("\"". $exception->getMessage() ."\"");
+		$ret = -1;
+	}
+	return $ret;
 }
 function get_users_tables(){
 	$TABLES = Array(
@@ -65,15 +151,17 @@ function get_users_tables(){
 		),
 		'userinfo'=> Array(
 			'id'=>						'INTEGER PRIMARY KEY',
+			'userid'=>					'INTEGER',
 			'email'=>					'TEXT',
 			'handle'=>					'TEXT',
 			'fname'=>					'TEXT',
 			'lname'=>					'TEXT',
-			'joindate'=>				'INTEGER',		// Cake day
-			'isActive'=>				'BOOL',			// Did user delete account
-			'lastActive'=>				'INTEGER',		// Date user was last active
-			'isSubscribed'=>			'BOOL',			// Send subscriptions or not
-			'notificationLevel'=>	'INTEGER'		// Best rate of notifications for cont. interaction
+			'join_date'=>				'INTEGER',		// Cake day
+			'is_active'=>				'BOOL',			// Did user delete account
+			'last_active'=>			'INTEGER',		// Date user was last active
+			'is_subscribed'=>			'BOOL',			// Send subscriptions or not
+			'notifications'=>			'INTEGER',		// Current notifications;
+			'notification_level'=>	'INTEGER',		// Best rate of notifications for cont. interaction
 		),
 	);
 	return $TABLES;
@@ -92,108 +180,6 @@ function get_create_table($TNAME, $TABLE){
 	$sql .= ')';
 	return $sql;
 }
-function get_table_from_query($dbpath, $query, $CONFIG){
-	/* Return a dataTable table based off of query */
-	$db			= new SQLite3($dbpath);
-	$CUR_TABLE	= parse_from($query);
-	$table   	= "";
-	$QUERY_PAGE	= $CONFIG['QUERY_PAGE'];
-	$TABLE_ID	= $CONFIG['TABLE_ID'];
-	$db->enableExceptions(true);
-	try{
-		$prepare = $db->prepare($query);
-		if(!$CUR_TABLE)
-			$CUR_TABLE = "users";
-		if ($prepare){
-			$result	= $prepare->execute();
-			$headers	= Array();
-			if($result && $result->fetchArray()){
-				$result->reset();
-				$header  = "";
-				$footer	= "";
-				$table .= "\n\t<table id=\"".$TABLE_ID."\" class=\"table table-striped table-bordered\" ";
-				$table .= "cellspacing=\"\" width=\"100%\" role=\"grid\">";
-				$table .= "\n\t\t<thead>";
-				while ($row = $result->fetchArray(SQLITE3_ASSOC)){
-					$header .= "\n\t\t\t<tr role=\"row\">";
-					$footer .= "\n\t\t\t<tr>";
-					$row_keys = array_keys($row);
-					for($i=0; $i<count($row_keys); $i++){
-						 $row_key = $row_keys[$i];;
-						array_push($headers, $row_key);
-						$header .= "\n\t\t\t\t<th class=\"sorting\">";
-						$header .= "\n\t\t\t\t\t".$row_key;
-						$header .= "\n\t\t\t\t</th>";
-						$footer .= "\n\t\t\t\t<th>";
-						$footer .= "\n\t\t\t\t\t".$row_key;
-						$footer .= "\n\t\t\t\t</th>";
-					}
-					$header .= "\n\t\t\t</tr>";
-					$footer .= "\n\t\t\t</tr>";
-					break;
-				}
-				$table .= $header;
-				$table .= "\n\t\t</thead>";
-				$result->reset();
-				$table .= "\n\t\t<tbody>";
-				$is_odd = TRUE;
-				$is_first_row = TRUE;
-				while ($row = $result->fetchArray(SQLITE3_ASSOC)){
-					$table .= "\n\t\t\t<tr role=\"row\" class=\"";
-					if ($is_odd)
-						$table .= "odd ";
-					else
-						$table .= "even ";
-					if ($is_first_row)
-						$table .= "first ";
-					$table .= "\">"; //Closing `class`
-					$row_keys = array_keys($row);
-					$is_first_col = TRUE;
-					foreach($row_keys as $row_key){
-						$table .= "\n\t\t\t\t<td>";
-						if ($is_first_col){
-							$dHref = $QUERY_PAGE."?delete_val=".$row[$row_key]."&delete_table=".$CUR_TABLE;
-							$dHref .= "&delete_key=".$row_key."&is_deleting=TRUE";
-							$table .= "\n<a href=\"".$dHref."\" title=\"Delete Entry\" style=\"color:black\">";
-							$table .= make_font_awesome_stack(Array(
-								'backdrop-google fas fa-square',
-								'fas fa-tw fa-trash'), $CONFIG);
-							$table .= "\n</a>";
-						}
-						$table .= "".$row[$row_key];
-						$table .= "</td>";
-						$is_first_col = FALSE;
-					}
-					$table .= "\n\t\t\t</tr>";
-					$is_first_row = FALSE;
-				}
-				$table .= "\n\t\t</tbody>";
-		 		$table .= "<tfoot>";
-				$table .= $footer;
-		 		$table .= "</tfoot>";
-				$table .= "\n\t</table>";
-			}
-			else{
-				$table .= "\n\t\t\t<div class=\"col-12 bg-warning\">";
-				$table .= "\n\t\t\t\tNO RESULTS;";
-				$table .= "\n\t</div>";
-			}
-		}
-		else{
-			$table .= "\n\t\t\t<div class=\"col-12 bg-warning\">";
-			$table .= "\n\t\t\t\tBAD QUERY;";
-			$table .= "\n\t</div>";
-		}
-		$db->close();
-	}
-	catch (Exception $exception) {
-		$table .= "\n\t\t\t<div class=\"col-12 bg-warning\">";
-		$table .= "\n\t\t\t\tBAD QUERY AND PREPARE;";
-		$table .= "\n\t</div>";
-	}
-	return $table;
-}
-
 function is_db($dbpath, $CONFIG=Null){
 	$ret = TRUE;
 	if($CONFIG === Null)
@@ -213,7 +199,12 @@ function is_db($dbpath, $CONFIG=Null){
 	}
 	return $ret;
 }
-
+function has_notifications($userid){
+	//TODO: Setup a last viewed variable to toggle whether the 
+	//TODO:  notifications have been viewed yet or not;
+	//TODO:  Would compare last viewed time of notificaitons to time of latest notification;
+	return TRUE;
+}
 function has_table($table, $dbpath=Null, $CONFIG=Null){
 	/*
 	* Verifies whether or not a table exists; 
@@ -302,5 +293,44 @@ function parse_from($query){
 	//TODO: All of it...
 	//SEE: https://stackoverflow.com/questions/3694276/what-are-valid-table-names-in-sqlite
 	return "";
+}
+function update_cart($userid, $productid, $quantity, $CONFIG){
+	$prev_quantity = -1;
+	$ret = TRUE;
+	$dbpath	= $CONFIG['DBPATH_INVENTORY'];
+	$db		= new SQLite3($dbpath);
+	$sql		= "SELECT quantity FROM carts WHERE userid = :userid AND productid = :productid";
+echo clog("\"DBPATH:`".$dbpath."`\"");
+echo clog("\"sql:`".$sql."`\"");
+	$prepare = $db->prepare($sql);
+	$prepare->bindValue(':userid', $userid);
+	$prepare->bindValue(':productid', $productid);
+	$result	= $prepare->execute();
+	$rows		= $result->fetchArray();
+	if (!$rows)
+		$prev_quantity = 0;
+	else if (!$rows || count($rows) <= 0)
+		$prev_quantity = 0;
+	else if(!$rows[0])
+		$prev_quantity = 0;
+	else
+		$prev_quantity = $rows[0];
+
+	$new_quantity = $prev_quantity + $quantity;
+	$dSql		= "DELETE FROM carts WHERE userid = :userid AND productid=:productid;";
+	$prepare = $db->prepare($dSql);
+	$prepare->bindValue(':userid', $userid);
+	$prepare->bindValue(':productid', $productid);
+	$result	= $prepare->execute();
+
+	$sql = "INSERT INTO carts(userid, productid, quantity) VALUES(:userid, :productid, :quantity);";
+	$prepare = $db->prepare($sql);
+	$prepare->bindValue(':userid',		$userid);
+	$prepare->bindValue(':productid',	$productid);
+	$prepare->bindValue(':quantity',		$new_quantity);
+	$result	= $prepare->execute();
+
+	$db->close();
+	return $ret;
 }
 ?>

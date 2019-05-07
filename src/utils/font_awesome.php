@@ -72,6 +72,10 @@ function get_font_awesome_style_guide($CONFIG=Null, $ROOT=Null){
 	$html .= "\n\t\t    opacity: 0.7;";
 	$html .= "\n\t\t}";
 
+	/**** **** **** FA GENERAL ICONS **** **** ****/
+	$html .= "\n\t\t.fa-usd	{color: white;}";
+	$html .= "\n\t\t.backdrop-usd	{color: #85bb65;}";
+
 	/**** **** **** FA SOCIAL MEDIA ICONS **** **** ****/
 	$html .= "\n\t\t.fa-android						{color: white;}";
 	$html .= "\n\t\t.fa-dribbble						{color: white;}";

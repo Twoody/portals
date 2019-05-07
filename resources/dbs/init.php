@@ -28,7 +28,7 @@ $created_inv_tables	= make_inv_tables($CONFIG);
 $ret	= "\n<h1>";
 $ret	.= "\n\tMADE `".$created_user_tables."` USERS TABLES";
 $ret	.= "\n</h1>\n";
-$ret	= "\n<h1>";
+$ret	.= "\n<h1>";
 $ret	.= "\n\tMADE `".$created_inv_tables."` INVENTORY TABLES";
 $ret	.= "\n</h1>\n";
 echo  $ret;
