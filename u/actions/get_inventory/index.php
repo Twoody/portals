@@ -74,6 +74,12 @@ $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\tmymodal.modal(\"show\");";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\t";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t});";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t})";
+
+//TODO: Move into config option to turn on/off;
+//JS Option to prevent form resubmissions on refresh and back;
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\tif ( window.history.replaceState ){window.history.replaceState( null, null, window.location.href );}";
+
+
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n</script>";
 
 

@@ -296,12 +296,10 @@ function parse_from($query){
 }
 function update_cart($userid, $productid, $quantity, $CONFIG){
 	$prev_quantity = -1;
-	$ret = TRUE;
+	$ret		= TRUE;
 	$dbpath	= $CONFIG['DBPATH_INVENTORY'];
 	$db		= new SQLite3($dbpath);
 	$sql		= "SELECT quantity FROM carts WHERE userid = :userid AND productid = :productid";
-echo clog("\"DBPATH:`".$dbpath."`\"");
-echo clog("\"sql:`".$sql."`\"");
 	$prepare = $db->prepare($sql);
 	$prepare->bindValue(':userid', $userid);
 	$prepare->bindValue(':productid', $productid);

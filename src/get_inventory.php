@@ -12,18 +12,24 @@ function get_inventory($CONFIG){
 		'TITLE' => 'Purchase Item',
 		'ITEM'  => $row['name'],
 	);
-	$table	= '';
-	$CONFIG['INV_HAS_COUNTER']	= TRUE;
-	$CONFIG['MCONFIG']			= $MCONFIG;
-	if(isset($_POST['form_submit']) && ($_SESSION['processed_form'] === FALSE || $_SESSION['processed_form'] === NULL) ){
+	$table					= '';
+	$CONFIG['MCONFIG']	= $MCONFIG;
+	if(isset($_POST['form_submit']) && $processed_form !== TRUE){
 		//if modal form submitted, update db and refresh this page again...
 		$userid		= $_SESSION["userid"];
-		$_SESSION["processed_form"] = TRUE;
 		$productid	= $_POST["product"];
 		$quantity	= $_POST["quantity"];
 		$suc = update_cart($userid, $productid, $quantity, $CONFIG);
 		if (!$suc)
 			$table .= clog("\"ERROR 82393: BAD CART UPDATE\"");
+
+//http_response_code( 303 );
+//header( "Location: {$_SERVER['REQUEST_URI']}" );
+//exit;
+
+		// Redirect to this page.
+//		header("Location: " . $_SERVER['REQUEST_URI']);
+//		exit();
 	}
 	$table .= $CONFIG['INVENTORY_CONTAINER'];
 	$table .= $CONFIG['INVENTORY_ROW'];
