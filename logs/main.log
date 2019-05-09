@@ -6,6 +6,15 @@
 ******************************************************************************/
 
 
+
+Tanner.L.Woody@gmail.com
+2019-05-08
+	Inventory is all put together such that a user can continue to add to their
+	cart. Next, is to allow the user to view their cart and to manage the items 
+	within the cart;
+	Part of this is to create a shopid and build that into where the user is 
+	purchasing the item;
+
 commit 1abd5feca0c3f0ae53f71d65c3195a15332eedc8
 Author: twoody <tanner.l.woody@gmail.com>
 Date:   Sun May 5 23:37:21 2019 -0700
