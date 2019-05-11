@@ -1,4 +1,4 @@
-<?
+<?php
 function get_datatables_scripts($CONFIG=Null, $ROOT=Null){
 	if($ROOT === Null && $CONFIG===Null){
 		$ROOT = '.';	//We can also check CONFIG for `ROOT`;

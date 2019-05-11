@@ -1,4 +1,4 @@
-<?
+<?php
 function get_datatables_css($CONFIG=Null, $ROOT=Null){
 	if($ROOT === Null && $CONFIG===Null){
 		$ROOT = '.';
