@@ -1,6 +1,13 @@
 A. Main:
 	1. 	TEST functionaltiy of site when internet is back on;
 				Flip CONFIG['IS_ONLINE']
+				RESULTS:
+					Everything seems to be working okay for online.
+					However, while offline, the icons are not getting adjusted correctly.
+					I believe this has to do with the browser automatically commenting
+					out the <i>con tags and trying to do svg's instead;
+					I will google a solution upon internet access;
+
 	1. 	Design: Navbar, crumbles, media
 	1.		Everywhere there is _POST, sanitize;
 			A.	This will require making a sanitization function in utils/db_helper.php;
