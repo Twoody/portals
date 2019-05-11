@@ -23,7 +23,9 @@ function get_font_awesome_css($CONFIG=Null, $ROOT=Null){
 			);
 		}
 		else
-			$bootstrap_css .= make_css($CONFIG['FONT_AWESOME_CSS_REL'],$PATHS['LOCAL_CSS_FA']);
+			$font_awesome_css .= make_css(
+				$CONFIG['FONT_AWESOME_CSS_REL'],
+				$PATHS['LOCAL_CSS_FA']);
 	}
 	else{
 		$font_awesome_css .= "\n\t<!-- PAGE HAS NO FONT_AWESOME CSS-->";

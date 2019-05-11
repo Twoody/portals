@@ -15,9 +15,15 @@ function get_datatables_css($CONFIG=Null, $ROOT=Null){
 	if ($CONFIG['HAS_DATATABLES']){
 		$datatables_css .= "\n\t<!-- DATATABLES CSS -->";
 		if($CONFIG['IS_ONLINE'])
-			$datatables_css .= make_css($CONFIG['DATATABLES_CSS_REL'], $CONFIG['DATATABLES_CSS_LINK'], $CONFIG['DATATABLES_CSS_INTEGRITY'], $CONFIG['DATATABLES_CSS_ORIGIN']);
+			$datatables_css .= make_css(
+				$CONFIG['DATATABLES_CSS_REL'],
+				$CONFIG['DATATABLES_CSS_LINK'],
+				$CONFIG['DATATABLES_CSS_INTEGRITY'],
+				$CONFIG['DATATABLES_CSS_ORIGIN']);
 		else
-			$datatables_css .= make_css($CONFIG['DATATABLES_CSS_REL'], $PATHS['LOCAL_CSS_DATATABLES']);
+			$datatables_css .= make_css(
+				$CONFIG['DATATABLES_CSS_REL'],
+				$PATHS['LOCAL_CSS_DATATABLES']);
 	}
 	else{ //TODO: Maybe if isVerbose?
 		$datatables_css .= "\n\t<!-- PAGE HAS NO DATATABLES-->";
@@ -26,6 +32,7 @@ function get_datatables_css($CONFIG=Null, $ROOT=Null){
 }
 
 /***** Just for testing *****/
+//$ROOT		= '.';
 //$CONFIG	= get_config();
 //$CONFIG['HAS_DATATABLES'] = TRUE;
 //echo get_datatables_css($CONFIG) . "\n";

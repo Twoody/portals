@@ -15,9 +15,18 @@ function get_bootstrap_scripts($CONFIG=Null, $ROOT=Null){
 	if ($CONFIG['HAS_BOOTSTRAP']){
 		$ret .= "\n\t<!-- jQuery first,then Popper.js,then Bootstrap.JS -->"; 
 		if($CONFIG['IS_ONLINE']){
-			$ret .= make_script($CONFIG['BOOTSTRAP_JS_JQUERY_SRC'],	$CONFIG['BOOTSTRAP_JS_JQUERY_INTEGRITY'],	$CONFIG['BOOTSTRAP_JS_JQUERY_ORIGIN']);
-			$ret .= make_script($CONFIG['BOOTSTRAP_JS_POPPER_SRC'],	$CONFIG['BOOTSTRAP_JS_POPPER_INTEGRITY'],	$CONFIG['BOOTSTRAP_JS_POPPER_ORIGIN']);
-			$ret .= make_script($CONFIG['BOOTSTRAP_JS_SRC'],			$CONFIG['BOOTSTRAP_JS_INTEGRITY'],			$CONFIG['BOOTSTRAP_JS_ORIGIN']);
+			$ret .= make_script(
+				$CONFIG['BOOTSTRAP_JS_JQUERY_SRC'],	
+				$CONFIG['BOOTSTRAP_JS_JQUERY_INTEGRITY'],	
+				$CONFIG['BOOTSTRAP_JS_JQUERY_ORIGIN']);
+			$ret .= make_script(
+				$CONFIG['BOOTSTRAP_JS_POPPER_SRC'],	
+				$CONFIG['BOOTSTRAP_JS_POPPER_INTEGRITY'],	
+				$CONFIG['BOOTSTRAP_JS_POPPER_ORIGIN']);
+			$ret .= make_script(
+				$CONFIG['BOOTSTRAP_JS_SRC'],
+				$CONFIG['BOOTSTRAP_JS_INTEGRITY'],
+				$CONFIG['BOOTSTRAP_JS_ORIGIN']);
 		}
 		else{
 			//Offline and running local;
@@ -31,14 +40,20 @@ function get_bootstrap_scripts($CONFIG=Null, $ROOT=Null){
 		if ($CONFIG['HAS_JQUERY']){
 			$ret .= "\n\t<!-- jQuery first,then Popper.js -->"; 
 			if($CONFIG['IS_ONLINE'])
-				$ret .= make_script($CONFIG['BOOTSTRAP_JS_JQUERY_SRC'],	$CONFIG['BOOTSTRAP_JS_JQUERY_INTEGRITY'],	$CONFIG['BOOTSTRAP_JS_JQUERY_ORIGIN']);
+				$ret .= make_script(
+					$CONFIG['BOOTSTRAP_JS_JQUERY_SRC'],	
+					$CONFIG['BOOTSTRAP_JS_JQUERY_INTEGRITY'],	
+					$CONFIG['BOOTSTRAP_JS_JQUERY_ORIGIN']);
 			else
 				$ret .= make_script($PATHS['LOCAL_JS_JQUERY']);
 		}
 		if ($CONFIG['HAS_POOPER']){
 			$ret .= "\n\t<!-- Then Popper.js -->"; 
 			if($CONFIG['IS_ONLINE'])
-				$ret .= make_script($CONFIG['BOOTSTRAP_JS_POPPER_SRC'],	$CONFIG['BOOTSTRAP_JS_POPPER_INTEGRITY'],	$CONFIG['BOOTSTRAP_JS_POPPER_ORIGIN']);
+				$ret .= make_script(
+					$CONFIG['BOOTSTRAP_JS_POPPER_SRC'],
+					$CONFIG['BOOTSTRAP_JS_POPPER_INTEGRITY'],
+					$CONFIG['BOOTSTRAP_JS_POPPER_ORIGIN']);
 			else
 			$ret .= make_script($PATHS['LOCAL_JS_POPPER']);
 		}

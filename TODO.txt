@@ -1,4 +1,6 @@
 A. Main:
+	1. 	TEST functionaltiy of site when internet is back on;
+				Flip CONFIG['IS_ONLINE']
 	1. 	Design: Navbar, crumbles, media
 	1.		Everywhere there is _POST, sanitize;
 			A.	This will require making a sanitization function in utils/db_helper.php;

@@ -18,11 +18,10 @@ function get_font_awesome_scripts($CONFIG=Null, $ROOT=Null){
 			$ret .= make_script($CONFIG['FONT_AWESOME_JS_SRC']);
 		else
 			$ret .= make_script($PATHS['LOCAL_JS_FA']);
-			//$ret .= '';
 	}
 	return $ret;
 }
 
 /***** Just for testing *****/
-//echo get_bootstrap_scripts() . "\n";
+//echo get_font_awesome_scripts() . "\n";
 ?>
