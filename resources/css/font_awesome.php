@@ -1,4 +1,4 @@
-<?
+<?php
 function get_font_awesome_css($CONFIG=Null, $ROOT=Null){
 	if($ROOT === Null && $CONFIG === Null){
 		$ROOT = ".";
@@ -14,12 +14,16 @@ function get_font_awesome_css($CONFIG=Null, $ROOT=Null){
 	$font_awesome_css = "";
 	if ($CONFIG['HAS_FONT_AWESOME']) {
 		$font_awesome_css .= "\n\t<!-- FONT AWESOME CSS -->";
-		$font_awesome_css .= make_css(
-			$CONFIG['FONT_AWESOME_CSS_REL'], 
-			$CONFIG['FONT_AWESOME_CSS_LINK'], 
-			$CONFIG['FONT_AWESOME_CSS_INTEGRITY'], 
-			$CONFIG['FONT_AWESOME_CSS_ORIGIN']
-		);
+		if($CONFIG['IS_ONLINE']){
+			$font_awesome_css .= make_css(
+				$CONFIG['FONT_AWESOME_CSS_REL'], 
+				$CONFIG['FONT_AWESOME_CSS_LINK'], 
+				$CONFIG['FONT_AWESOME_CSS_INTEGRITY'], 
+				$CONFIG['FONT_AWESOME_CSS_ORIGIN']
+			);
+		}
+		else
+			$bootstrap_css .= make_css($CONFIG['FONT_AWESOME_CSS_REL'],$PATHS['LOCAL_CSS_FA']);
 	}
 	else{
 		$font_awesome_css .= "\n\t<!-- PAGE HAS NO FONT_AWESOME CSS-->";

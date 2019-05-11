@@ -420,6 +420,8 @@ function get_js($CONFIG=Null){
 		$s .= get_bootstrap_scripts($CONFIG);
 	if($CONFIG['HAS_DATATABLES'] || $CONFIG['HAS_DATATABLES_JQUERY'] )
 		$s .= get_datatables_scripts($CONFIG);
+	if($CONFIG['HAS_FONT_AWESOME'])
+		$s .= get_font_awesome_scripts($CONFIG);
 	if($CONFIG['CUSTOM_SCRIPTS']){
 		$s .= "\n\t<!-- Optional JavaScript -->\n";
 		$s .= $CONFIG['CUSTOM_SCRIPTS'];
@@ -853,7 +855,7 @@ function make_par( $s, $args=null ){
 	$ret .= $s."</p>\n";
 	return $ret;
 }
-function make_script($src, $integrity, $origin){
+function make_script($src, $integrity="", $origin=""){
 	/* Make a JS script to be imported into HTML page */
 	$s = "";
 	$s .= "\n\t<script";

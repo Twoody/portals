@@ -52,8 +52,6 @@ function template_b($CONFIG=Null, $PATHS=Null){
 	$CONFIG['CUSTOM_STYLES'] .= "\n\t.bg-faded { background-color:#ada316  !important;}";
 	$CONFIG['CUSTOM_STYLES'] .= "\n</style>";
 	
-	//TODO: Move to $CONFIG and get_js()
-	$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t<script src=\"https://use.fontawesome.com/18fb4b0697.js\"></script>";
 
 	$html = '';
 	$html .= get_header($CONFIG);

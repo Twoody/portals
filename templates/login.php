@@ -39,9 +39,6 @@ $CONFIG['CUSTOM_STYLES'] .= "\n.bg-primary { background-color: #000 !important;}
 $CONFIG['CUSTOM_STYLES'] .= "\n.bg-faded { background-color:#ada316  !important;}";
 $CONFIG['CUSTOM_STYLES'] .= "</style>";
 
-//TODO: Move to $CONFIG and get_js()
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t<script src=\"https://use.fontawesome.com/18fb4b0697.js\"></script>";
-
 
 echo "\n<!-- RUNNING: " . $PATHS['TEMPLATES_LOGIN'] . "-->\n";
 	

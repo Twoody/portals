@@ -7,19 +7,20 @@ function get_config($ROOT=Null){
 	echo "\n<!-- ".$PATHS['SETTINGS_PATH']." imported -->\n";
 	return Array(
 		/* ----- ----- GENERAL OPTIONS ----- ----- */
-		'FLAGS'=>[],
-		'VERSION'=>1.10,
-		'HAS_LOGIN'=>FALSE,
 		'ACTIVE_PAGE'=>"./",
-		'LANG'=>"en",
-		'CHAR_SET'=>"utf-8",
-		'META_CONTENT'=>"width=device-width, initial-scale=1, shrink-to-fit=no",
-		'TITLE '=> "", 			//Surely overwritten,
-		'FOOTER_IS_STICKY'=>TRUE,
-		'ROOT'=>$ROOT,
 		'BODY'=>"",
+		'CHAR_SET'=>"utf-8",
+		'FLAGS'=>[],
+		'FOOTER_IS_STICKY'=>TRUE,
+		'HAS_LOGIN'=>FALSE,
+		'IS_ONLINE'=>FALSE,
+		'LANG'=>"en",
+		'META_CONTENT'=>"width=device-width, initial-scale=1, shrink-to-fit=no",
+		'ROOT'=>$ROOT,
 		'RESPONSE_CONTAINER'=>"\n<div class=\"container-fluid pr-3 pl-3 m-0\">",
 		'RESPONSE_ROW'=> "\n\t<div class=\"row pl-3 pr-3 m-0\">",
+		'TITLE '=> "", 			//Surely overwritten,
+		'VERSION'=>1.10,
 	
 		/* ----- ----- LINKS ----- ----- */
 		/* WILL PROBABLY BE OWN FUNCTION IN THE FUTURE */
@@ -92,6 +93,7 @@ function get_config($ROOT=Null){
 		'FONT_AWESOME_CSS_LINK'=>"https://use.fontawesome.com/releases/v5.8.1/css/all.css",
 		'FONT_AWESOME_CSS_INTEGRITY'=>"sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf",
 		'FONT_AWESOME_CSS_ORIGIN'=>"anonymous",
+		'FONT_AWESOME_JS_SRC'=>"https://use.fontawesome.com/18fb4b0697.js",
 
 		/* ----- ----- AUTHENTIFICATION CONFIGURATION ----- ----- */
 		'SALT_CHARSET'=>'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/\\][{}\'";:?.>,<!@#$%^&*()-_=+|',

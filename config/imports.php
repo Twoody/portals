@@ -10,6 +10,7 @@ function make_imports($ROOT=Null){
 	require_once($PATHS['BOOTSTRAP_CSS_PATH']);
 	require_once($PATHS['BOOTSTRAP_JS_PATH']);
 	require_once($PATHS['FONT_AWESOME_CSS_PATH']);
+	require_once($PATHS['FONT_AWESOME_JS_PATH']);
 
 	/** ** ** ** ** ** ** UTILS ** ** ** ** ** ** **/
 	require_once($PATHS['LIBPATH_HTML']);

@@ -14,7 +14,10 @@ function get_datatables_css($CONFIG=Null, $ROOT=Null){
 	$datatables_css = "";
 	if ($CONFIG['HAS_DATATABLES']){
 		$datatables_css .= "\n\t<!-- DATATABLES CSS -->";
-		$datatables_css .= make_css($CONFIG['DATATABLES_CSS_REL'], $CONFIG['DATATABLES_CSS_LINK'], $CONFIG['DATATABLES_CSS_INTEGRITY'], $CONFIG['DATATABLES_CSS_ORIGIN']);
+		if($CONFIG['IS_ONLINE'])
+			$datatables_css .= make_css($CONFIG['DATATABLES_CSS_REL'], $CONFIG['DATATABLES_CSS_LINK'], $CONFIG['DATATABLES_CSS_INTEGRITY'], $CONFIG['DATATABLES_CSS_ORIGIN']);
+		else
+			$datatables_css .= make_css($CONFIG['DATATABLES_CSS_REL'], $PATHS['LOCAL_CSS_DATATABLES']);
 	}
 	else{ //TODO: Maybe if isVerbose?
 		$datatables_css .= "\n\t<!-- PAGE HAS NO DATATABLES-->";

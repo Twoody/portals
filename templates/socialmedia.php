@@ -29,7 +29,6 @@ $CONFIG['TITLE'] = "TEMPLATE SOCIAL MEDIA";
 //$CONFIG['HAS_BOOTSTRAP'] = FALSE;
 $CONFIG['HAS_FONT_AWESOME'] = TRUE;
 $CONFIG['CUSTOM_STYLES'] .= get_font_awesome_style_guide();
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t<script src=\"https://use.fontawesome.com/18fb4b0697.js\"></script>";
 
 echo "\n<!-- RUNNING: " . $PATHS['TEMPLATES_SOCIAL_MEDIA'] . "-->\n";
 $CONFIG['FA_STACK_SIZE'] = 'fa-3x';
