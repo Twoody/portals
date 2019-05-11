@@ -1,5 +1,6 @@
 <?php
 function display_inventory_form($CONFIG=Null){
+	//aka display_inventory_modal() ...
 	if ($CONFIG === Null){
 		$ROOT = ".";
 		require_once($ROOT . '/config/paths.php');
@@ -29,10 +30,14 @@ function display_inventory_form($CONFIG=Null){
 	$html .= "\n\t\t\t\t</div>";
 
 	$html .= "\n\t\t\t\t<div class=\"".$CONFIG['ROW_DIV']."\">";
-	$html .= "<input class=\"form-control\" type=\"text\" name=\"product\" id=\"product\" value=\"DOES NOT EXIST\" readonly>";
-	$html .= "<label class=\"form-check-label\" for=\"product\">";
-	$html .= "Product being Purchased";
-	$html .= "</label>";
+	$html .= "<input class=\"form-control\" type=\"hidden\" name=\"productid\" id=\"productid\" value=\"DOES NOT EXIST\" readonly>";
+	$html .= "\n\t\t\t\t</div><!-- END ROW -->";
+
+	$html .= "\n\t\t\t\t<div class=\"".$CONFIG['ROW_DIV']."\">";
+	$html .= "<input class=\"form-control text-center\" type=\"text\" name=\"product_name\" id=\"product_name\" value=\"".$CONFIG['PRODUCT_NAME']."\" readonly>";
+	$html .= "<small class=\"form-check-label text-muted\" for=\"product_name\">";
+	$html .= "Product Name";
+	$html .= "</small>";
 	$html .= "\n\t\t\t\t</div><!-- END ROW -->";
 
 	$html .= "\n\t\t\t\t<div class=\"".$CONFIG['ROW_DIV']."\">";
@@ -43,7 +48,7 @@ function display_inventory_form($CONFIG=Null){
 	$html .= "-";
 	$html .= "</button>";
 	$html .= "\n\t\t\t\t\t\t</div><!-- END INPUT GROUP PREPEND -->";
-	$html .= "<input type=\"text\" name=\"quantity\" class=\"form-control input-number\" value=\"10\" min=\"1\" max=\"100\">";
+	$html .= "<input type=\"text\" name=\"quantity\" class=\"form-control input-number text-center\" value=\"10\" min=\"1\" max=\"100\">";
 	$html .= "\n\t\t\t\t\t\t<div class=\"input-group-append\">";
 	$html .= "<button type=\"button\" data-type=\"plus\" ";
 	$html .=  "data-field=\"quantity\" class=\"btn btn-default btn-number\">";
@@ -51,6 +56,9 @@ function display_inventory_form($CONFIG=Null){
 	$html .= "</button>";
 	$html .= "\n\t\t\t\t\t\t</div><!-- END INPUT GROUP APPPEND -->";
 	$html .= "\n\t\t\t\t\t</div><!-- END INPUT GROUP -->";
+	$html .= "<small class=\"form-check-label text-muted\" for=\"product_name\">";
+	$html .= "Quantity";
+	$html .= "</small>";
 	$html .= "\n\t\t\t\t</div><!-- END ROW -->";
 
 	$html .= "\n\t\t\t\t<div class=\"".$CONFIG['ROW_BUTTON_DIV']."\">";

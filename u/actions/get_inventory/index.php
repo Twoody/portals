@@ -65,11 +65,12 @@ $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t});";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t$('.dataTables_length').addClass('bs-select');";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t});";
 
+//jQuery to update `DOES NOT EXIST` product id;
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t$(function(){";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t$(\".inventory-modal\").click(function(e){";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\te.preventDefault();";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\tvar mymodal = $(\"#inv_modal\");";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\t$(\".modal-body #product\").val(this.id);";
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\t$(\".modal-body #productid\").val(this.id);";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\tmymodal.modal(\"show\");";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\t";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t});";

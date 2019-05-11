@@ -6,7 +6,7 @@ session_start();
 /******************************************************************************
    Author:  Tanner.L.Woody@gmail.com
    WebLink: 
-   Date:    2019-04-22
+   Date:    2019-05-01
 
 USAGE:
 	First Check for compilation errors:
@@ -21,7 +21,6 @@ Purpose:
     Fun way to show that page was not found;
 
 Links:
-	https://www.w3schools.com/bootstrap4/bootstrap_carousel.asp
 ******************************************************************************/
 
 $ROOT = "..";
@@ -62,24 +61,25 @@ else if($_SESSION['alevel'] !== 'admin'){
 }
 else{
 	//Admin level access
+	$fname = get_user_fname($CONFIG);
 	$body .= $CONFIG['RESPONSE_CONTAINER'];
 	$body .= $CONFIG['RESPONSE_ROW'];
 	$body .= "\n\t\t\t\t<div class=\"col-12\">";
 	$body .= "\n\t\t\t\t\tHowdy, Admin";
 	$body .= "\n\t\t\t\t</div>";
 	$body .= "\n\t\t\t\t<div class=\"col-12\">";
-	$body .= "\n\t\t\t\t\tHere are some helpful links:";
+	$body .= "\n\t\t\t\t\t".$STRINGS["HELPFUL_LINKS"];
 	$body .= "\n\t\t\t\t</div>";
 	$body .= "\n\t\t\t</div><!-- END ROW -->";
 
 	$body .= "\n<ul class=\"list-group\">";
 	$body .= "\n\t<a href=\"".$PATHS['ADMIN_DASH']."\" ";
 	$body .= "class=\"list-group-item active\">";
-	$body .= "\n\t\tDashboard";
+	$body .= "\n\t\t".$STRINGS["DASHBOARD"];
 	$body .= "\n\t</a>";
 	$body .= "\n\t<a href=\"" . $PATHS['ADMIN_VIEWPORT'] . "\" ";
 	$body .= "class=\"list-group-item\">";
-	$body .= "\n\t\tSQL Display";
+	$body .= "\n\t\t" . $STRINGS['ADMIN_SQL_USERS'];
 	$body .= "\n\t</a>";
 	$body .= "\n\t<li class=\"list-group-item\">More</li>";
 	$body .= "\n\t<li class=\"list-group-item\">to</li>";
@@ -88,7 +88,6 @@ else{
 
 	$body .= "\n\t\t</div><!-- End container -->";
 }
-
 $body .= "\n\t\t</div>";
 
 $CONFIG['BODY'] .= $body;

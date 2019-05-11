@@ -48,7 +48,7 @@ function get_inventory_tables(){
 			'name'			=>'TEXT',
 			'quantity'		=>'INTEGER',
 			'price'			=>'TEXT',
-			'image_id'		=>'TEXT',
+			'imageid'		=>'TEXT',
 			'categories'	=>'TEXT'
 		),
 		'carts'=>Array(
@@ -60,6 +60,28 @@ function get_inventory_tables(){
 
 	);
 	return $TABLES;
+}
+function get_cart($userid, $CONFIG){
+	$dbpath	= $CONFIG['DBPATH_INVENTORY'];
+	$sql		= "SELECT productid, quantity FROM carts WHERE userid = :userid";
+	$result	= Array();
+	try{
+		$db		= new SQLite3($dbpath);
+		$prepare	= $db->prepare($sql);
+		$prepare->bindValue(':userid', $userid);
+		$result	= $prepare->execute();
+		if ($result && $result->fetchArray(SQLITE3_ASSOC)){
+			$result->reset();
+			$row = $result->fetchArray(SQLITE3_ASSOC);
+			$result->reset();
+		}
+		//$db->close();
+	}
+	catch(Exception $exception){
+		if (!$FLAGS['is_quite'])
+			echo clog("\"". $exception->getMessage() ."\"");
+	}
+	return $result;
 }
 function get_cart_count($userid, $CONFIG){
 	$dbpath	= $CONFIG['DBPATH_INVENTORY'];
@@ -90,6 +112,35 @@ function get_cart_count($userid, $CONFIG){
 	}
 	return $ret;
 }
+function get_cart_total($userid, $CONFIG){
+	$dbpath	= $CONFIG['DBPATH_INVENTORY'];
+	$sql		= "SELECT productid, quantity FROM carts WHERE userid = :userid";
+	$total	= 0;
+	try{
+		$db		= new SQLite3($dbpath);
+		$prepare	= $db->prepare($sql);
+		$prepare->bindValue(':userid', $userid);
+		$result	= $prepare->execute();
+		if ($result && $result->fetchArray()){
+			$result->reset();
+			while ($row = $result->fetchArray(SQLITE3_ASSOC)){
+				$quantity	= $row['quantity'];
+				$productid	= $row['productid'];
+				$price		= get_price($productid, $CONFIG);
+				$total += ($quantity*$price);
+			}
+		}
+		else
+			$total = 0;
+		$db->close();
+	}
+	catch(Exception $exception){
+		if (!$FLAGS['is_quite'])
+			echo clog("\"". $exception->getMessage() ."\"");
+	}
+	return $total;
+
+}
 function get_notification_count($userid){
 	//TODO: IDT this works yet...
 	//TODO: We do not have notifications setup at this point;
@@ -119,6 +170,106 @@ function get_notification_count($userid){
 	}
 	return $ret;
 }
+function get_price($productid, $CONFIG){
+	$dbpath	= $CONFIG['DBPATH_INVENTORY'];
+	$sql		= "SELECT price FROM inventory WHERE id = :productid";
+	$price	= 0;
+	try{
+		$db		= new SQLite3($dbpath);
+		$prepare	= $db->prepare($sql);
+		$prepare->bindValue(':productid', $productid);
+		$result	= $prepare->execute();
+		if ($result && $result->fetchArray(SQLITE3_ASSOC)){
+			$result->reset();
+			$row = $result->fetchArray(SQLITE3_ASSOC);
+			$price = $row['price'];
+		}
+		$db->close();
+	}
+	catch(Exception $exception){
+		if (!$FLAGS['is_quite'])
+			echo clog("\"". $exception->getMessage() ."\"");
+	}
+	return $price;
+}
+function get_product_name($productid, $CONFIG){
+	$dbpath	= $CONFIG['DBPATH_INVENTORY'];
+	$sql		= "SELECT name FROM inventory WHERE id = :productid";
+	$name		= "";
+	try{
+		$db		= new SQLite3($dbpath);
+		$prepare	= $db->prepare($sql);
+		$prepare->bindValue(':productid', $productid);
+		$result	= $prepare->execute();
+		if ($result && $result->fetchArray(SQLITE3_ASSOC)){
+			$result->reset();
+			$row = $result->fetchArray(SQLITE3_ASSOC);
+			$name = $row['name'];
+		}
+		$db->close();
+	}
+	catch(Exception $exception){
+		if (!$FLAGS['is_quite'])
+			echo clog("\"". $exception->getMessage() ."\"");
+	}
+	return $name;
+}
+function get_product_price($productid, $CONFIG){
+	$dbpath	= $CONFIG['DBPATH_INVENTORY'];
+	$sql		= "SELECT price FROM inventory WHERE id = :productid";
+	$price	= -1;
+	try{
+		$db		= new SQLite3($dbpath);
+		$prepare	= $db->prepare($sql);
+		$prepare->bindValue(':productid', $productid);
+		$result	= $prepare->execute();
+		if ($result && $result->fetchArray(SQLITE3_ASSOC)){
+			$result->reset();
+			$row = $result->fetchArray(SQLITE3_ASSOC);
+			$price = $row['price'];
+		}
+	}
+	catch(Exception $exception){
+		if (!$FLAGS['is_quite'])
+			echo clog("\"". $exception->getMessage() ."\"");
+	}
+	return $price;
+}
+function get_user_fname($CONFIG){
+	if (!is_logged_in($CONFIG))
+		return "";
+	$dbpath	= $CONFIG['DBPATH_USERS'];
+	$sql		= "SELECT fname FROM userinfo WHERE userid=:userid";
+	$ret		= "";
+	//$userid	= $_SESSION['userid'];
+	$userid	= "";
+	try{
+		$db	= new SQLite3($dbpath);
+		$prepare = $db->prepare($sql);
+		$prepare->bindValue(':userid', $userid);
+		$result	= $prepare->execute();
+		$row		= $result->fetchArray();
+		$ret = $row[0];
+		if (!$ret){
+			if ($_SESSION['alevel'] === 'member')
+				$ret = "Member";
+			else if ($_SESSION['alevel'] === 'owner')
+				$ret = "Owner";
+			else if ($_SESSION['alevel'] === 'admin')
+				$ret = "Admin";
+			else
+				$ret = "HACKER";
+		}
+		$db->close();
+	}
+	catch(Exception $exception){
+		if (!$FLAGS['is_quite'])
+			echo clog("\"". $exception->getMessage() ."\"");
+		$ret = "";
+	}
+	return $ret;
+}
+
 function get_user_id($email, $CONFIG){
 	$dbpath	= $CONFIG['DBPATH_USERS'];
 	$sql		= "SELECT id FROM users WHERE email=:email";
@@ -296,11 +447,11 @@ function parse_from($query){
 }
 function update_cart($userid, $productid, $quantity, $CONFIG){
 	$prev_quantity = -1;
-	$ret		= TRUE;
-	$dbpath	= $CONFIG['DBPATH_INVENTORY'];
-	$db		= new SQLite3($dbpath);
-	$sql		= "SELECT quantity FROM carts WHERE userid = :userid AND productid = :productid";
-	$prepare = $db->prepare($sql);
+	$ret				= TRUE;
+	$dbpath			= $CONFIG['DBPATH_INVENTORY'];
+	$db				= new SQLite3($dbpath);
+	$sql				= "SELECT quantity FROM carts WHERE userid = :userid AND productid = :productid";
+	$prepare 		= $db->prepare($sql);
 	$prepare->bindValue(':userid', $userid);
 	$prepare->bindValue(':productid', $productid);
 	$result	= $prepare->execute();

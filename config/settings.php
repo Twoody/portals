@@ -18,6 +18,8 @@ function get_config($ROOT=Null){
 		'FOOTER_IS_STICKY'=>TRUE,
 		'ROOT'=>$ROOT,
 		'BODY'=>"",
+		'RESPONSE_CONTAINER'=>"\n<div class=\"container-fluid pr-3 pl-3 m-0\">",
+		'RESPONSE_ROW'=> "\n\t<div class=\"row pl-3 pr-3 m-0\">",
 	
 		/* ----- ----- LINKS ----- ----- */
 		/* WILL PROBABLY BE OWN FUNCTION IN THE FUTURE */

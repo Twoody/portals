@@ -43,6 +43,128 @@ function clog($msg){
 	$html .= "\n\t\t</script>";
 	return $html;
 }
+function get_checkout_table($cart, $CONFIG){
+	$PATHS		= get_paths($CONFIG['ROOT']);
+	$dbpath		= $PATHS['DB_INVENTORY'];
+	$db			= new SQLite3($dbpath);
+	$CUR_TABLE	= 'inventory';
+	$table   	= "";
+	$QUERY_PAGE	= $CONFIG['QUERY_PAGE'];
+	$TABLE_ID	= $CONFIG['TABLE_ID'];
+	$db->enableExceptions(TRUE);
+	try{
+		if($cart && $cart->fetchArray(SQLITE3_ASSOC)){
+			$cart->reset();
+			$header  = "";
+			$footer	= "";
+			$table .= "\n\t<table id=\"".$TABLE_ID."\" class=\"table table-striped table-bordered\" ";
+			$table .= "cellspacing=\"\" width=\"100%\" role=\"grid\">";
+			$table .= "\n\t\t<thead>";
+			while ($row = $cart->fetchArray(SQLITE3_ASSOC)){
+				$header .= "\n\t\t\t<tr role=\"row\">";
+					$header .= "\n\t\t\t\t<th class=\"sorting\">";
+					$header .= "\n\t\t\t\t\tProduct Name";
+					$header .= "\n\t\t\t\t</th>";
+					$header .= "\n\t\t\t\t<th class=\"sorting\">";
+					$header .= "\n\t\t\t\t\tQuantity";
+					$header .= "\n\t\t\t\t</th>";
+				$header .= "\n\t\t\t\t<th class=\"sorting\">";
+				$header .= "\n\t\t\t\t\tPrice per Each";
+				$header .= "\n\t\t\t\t</th>";
+				$header .= "\n\t\t\t\t<th class=\"sorting\">";
+				$header .= "\n\t\t\t\t\tPrice * Quantity";
+				$header .= "\n\t\t\t\t</th>";
+				$header .= "\n\t\t\t</tr>";
+
+				$footer .= "\n\t\t\t<tr>";
+					$footer .= "\n\t\t\t\t<th>";
+					$footer .= "\n\t\t\t\t\tProduct Name";
+					$footer .= "\n\t\t\t\t</th>";
+					$footer .= "\n\t\t\t\t<th>";
+					$footer .= "\n\t\t\t\t\tQuantity";
+					$footer .= "\n\t\t\t\t</th>";
+				$footer .= "\n\t\t\t\t<th class=\"sorting\">";
+				$footer .= "\n\t\t\t\t\tPrice per Each";
+				$footer .= "\n\t\t\t\t</th>";
+				$footer .= "\n\t\t\t\t<th class=\"sorting\">";
+				$footer .= "\n\t\t\t\t\tPrice * Quantity";
+				$footer .= "\n\t\t\t\t</th>";
+				$footer .= "\n\t\t\t</tr>";
+				break;
+			}
+			$table .= $header;
+			$table .= "\n\t\t</thead>";
+			$cart->reset();
+			$table .= "\n\t\t<tbody>";
+			$is_odd = TRUE;
+			$is_first_row = TRUE;
+			while ($row = $cart->fetchArray(SQLITE3_ASSOC)){
+				$table .= "\n\t\t\t<tr role=\"row\" class=\"";
+				if ($is_odd)
+					$table .= "odd ";
+				else
+					$table .= "even ";
+				if ($is_first_row)
+					$table .= "first ";
+				$table .= "\">"; //Closing `class`
+			 	$MCONFIG			= $CONFIG['MCONFIG'];
+				$productid		= $row['productid'];
+				$quantity		= $row['quantity'];
+				$product_name	= get_product_name($productid, $CONFIG);;
+				$price			= get_product_price($productid, $CONFIG);
+				$row_keys		= array_keys($row);
+
+				$table .= "\n\t\t\t\t<td>";
+			//TODO: Maybe do a modal to edit the amount of each when checking out;
+			//	$table .= "\n<button type=\"button\" title=\"".$MCONFIG['TITLE']."\" ";
+			//	$table .= "class=\"btn inventory-modal\" id=\"".$row['name']."\"data-toggle=\"modal\" ";
+			//	$table .= "data-target=\"#".$MCONFIG['ID']."\" style=\"".$MCONFIG['STYLE']."\">";
+			//	$table .= make_font_awesome_stack(Array(
+			//		'backdrop-usd fas fa-circle',
+			//		'fas fa-tw fa-usd'), $CONFIG);
+			//	$table .= "\n</button>";
+			//	$table .= get_inventory_modal($CONFIG);
+				$table .= "".$product_name;
+				$table .= "\n\t\t\t\t</td>";
+
+				$table .= "\n\t\t\t\t<td>";
+				$table .= "\n\t\t\t\t\t".$quantity;
+				$table .= "\n\t\t\t\t</td>";
+
+				$table .= "\n\t\t\t\t<td>";
+				$table .= "\n\t\t\t\t\t".$price;
+				$table .= "\n\t\t\t\t</td>";
+
+				$table .= "\n\t\t\t\t<td>";
+				$table .= "\n\t\t\t\t\t". ($price*$quantity);
+				$table .= "\n\t\t\t\t</td>";
+
+				$table .= "\n\t\t\t</tr>";
+				$is_first_row = FALSE;
+			}
+			$table .= "\n\t\t</tbody>";
+			$table .= "<tfoot>";
+			$table .= $footer;
+			$table .= "</tfoot>";
+			$table .= "\n\t</table>";
+		}
+		else{
+			$table .= "\n\t\t\t<div class=\"col-12 bg-warning\">";
+			$table .= "\n\t\t\t\tNO RESULTS;";
+			$table .= "\n\t</div>";
+		}
+		$db->close();
+	}
+	catch (Exception $exception) {
+		$table .= "\n\t\t\t<div class=\"col-12 bg-warning\">";
+		$table .= "\n\t\t\t\tBAD QUERY AND PREPARE;<br/>";
+		$table .= "\n\t\t\t\tDB: `".$dbpath."`<br/>";
+		$table .= "\n\t\t\t\tQUERY: `".$query."`<br/>";
+		$table .= "\n\t\t\t</div>";
+	}
+	return $table;
+}
+
 function get_css($CONFIG=Null){
 	if($CONFIG === Null)
 		$CONFIG	= get_config();
@@ -348,7 +470,6 @@ function get_nav($CONFIG=Null, $PATHS=Null){
 		$html .= make_font_awesome_stack(Array(
 			'backdrop-usd fas fa-circle',
 			'fas fa-tw fa-shopping-cart'), $CONFIG);
-		//$html .= "<span class=\"badge badge-primary\">".get_notification_count($_SESSION['user_id'])."</span>";
 		$html .= "<span class=\"badge badge-primary\">".get_cart_count($_SESSION['userid'], $CONFIG)."</span>";
 		$html .= "</a>";
 		$html .= "\n\t\t\t\t\t</li>";
@@ -373,7 +494,7 @@ function get_nav($CONFIG=Null, $PATHS=Null){
 	else{
 		//TODO: HREF to settings;
 		$html .= "\n\t\t\t\t\tWelcome, ";
-		$html .= $_SESSION['username'];
+		$html .= get_user_fname($CONFIG);
 		$html .= "\n<br/>\n<a class=\"mute\" href=\"".$PATHS['USER_LOGOUT']."\">Logout\n</a>\n";
 	}
 	$html .= "\n\t\t\t\t</span>";
@@ -385,7 +506,7 @@ function get_nav($CONFIG=Null, $PATHS=Null){
 function get_table_from_inventory($CONFIG){
 	$PATHS		= get_paths($CONFIG['ROOT']);
 	$dbpath		= $PATHS['DB_INVENTORY'];
-	$query		= "SELECT name, quantity, price FROM inventory";
+	$query		= "SELECT id, name, quantity, price FROM inventory";
 	$db			= new SQLite3($dbpath);
 	$CUR_TABLE	= 'inventory';
 	$table   	= "";
@@ -398,7 +519,6 @@ function get_table_from_inventory($CONFIG){
 			$CUR_TABLE = "users";
 		if ($prepare){
 			$result	= $prepare->execute();
-			$headers	= Array();
 			if($result && $result->fetchArray()){
 				$result->reset();
 				$header  = "";
@@ -406,30 +526,36 @@ function get_table_from_inventory($CONFIG){
 				$table .= "\n\t<table id=\"".$TABLE_ID."\" class=\"table table-striped table-bordered\" ";
 				$table .= "cellspacing=\"\" width=\"100%\" role=\"grid\">";
 				$table .= "\n\t\t<thead>";
-				while ($row = $result->fetchArray(SQLITE3_ASSOC)){
-					$header .= "\n\t\t\t<tr role=\"row\">";
-					$footer .= "\n\t\t\t<tr>";
-					$row_keys = array_keys($row);
-					for($i=0; $i<count($row_keys); $i++){
-						 $row_key = $row_keys[$i];;
-						array_push($headers, $row_key);
-						$header .= "\n\t\t\t\t<th class=\"sorting\">";
-						$header .= "\n\t\t\t\t\t".$row_key;
-						$header .= "\n\t\t\t\t</th>";
-						$footer .= "\n\t\t\t\t<th>";
-						$footer .= "\n\t\t\t\t\t".$row_key;
-						$footer .= "\n\t\t\t\t</th>";
-					}
-					$header .= "\n\t\t\t</tr>";
-					$footer .= "\n\t\t\t</tr>";
-					break;
-				}
+
+				$header .= "\n\t\t\t<tr role=\"row\">";
+				$header .= "\n\t\t\t\t<th class=\"sorting\">";
+				$header .= "\n\t\t\t\t\tName";
+				$header .= "\n\t\t\t\t</th>";
+				$header .= "\n\t\t\t\t<th class=\"sorting\">";
+				$header .= "\n\t\t\t\t\tQuantity";
+				$header .= "\n\t\t\t\t</th>";
+				$header .= "\n\t\t\t\t<th class=\"sorting\">";
+				$header .= "\n\t\t\t\t\tPrice";
+				$header .= "\n\t\t\t\t</th>";
+				$header .= "\n\t\t\t</tr>";
+
+				$footer .= "\n\t\t\t<tr>";
+				$footer .= "\n\t\t\t\t<th>";
+				$footer .= "\n\t\t\t\t\tName";
+				$footer .= "\n\t\t\t\t</th>";
+				$footer .= "\n\t\t\t\t<th>";
+				$footer .= "\n\t\t\t\t\tQuntity";
+				$footer .= "\n\t\t\t\t</th>";
+				$footer .= "\n\t\t\t\t<th>";
+				$footer .= "\n\t\t\t\t\tPrice";
+				$footer .= "\n\t\t\t\t</th>";
+				$footer .= "\n\t\t\t</tr>";
+
 				$table .= $header;
 				$table .= "\n\t\t</thead>";
-				$result->reset();
 				$table .= "\n\t\t<tbody>";
-				$is_odd = TRUE;
-				$is_first_row = TRUE;
+				$is_odd			= TRUE;
+				$is_first_row	= TRUE;
 				while ($row = $result->fetchArray(SQLITE3_ASSOC)){
 					$table .= "\n\t\t\t<tr role=\"row\" class=\"";
 					if ($is_odd)
@@ -442,21 +568,25 @@ function get_table_from_inventory($CONFIG){
 					$row_keys = array_keys($row);
 					$is_first_col = TRUE;
 					foreach($row_keys as $row_key){
+						if($row_key === 'name')
+							continue;
 						$table .= "\n\t\t\t\t<td>";
 						if ($is_first_col){
-							//$dHref = $QUERY_PAGE."?delete_val=".$row[$row_key]."&delete_table=".$CUR_TABLE;
-							//$dHref .= "&delete_key=".$row_key."&is_deleting=TRUE";
+							//Modal formatting: id is productid
 						 	$MCONFIG	= $CONFIG['MCONFIG'];
 							$table .= "\n<button type=\"button\" title=\"".$MCONFIG['TITLE']."\" ";
-							$table .= "class=\"btn inventory-modal\" id=\"".$row['name']."\"data-toggle=\"modal\" ";
+							$table .= "class=\"btn inventory-modal\" id=\"".$row['id']."\"data-toggle=\"modal\" ";
 							$table .= "data-target=\"#".$MCONFIG['ID']."\" style=\"".$MCONFIG['STYLE']."\">";
 							$table .= make_font_awesome_stack(Array(
 								'backdrop-usd fas fa-circle',
 								'fas fa-tw fa-usd'), $CONFIG);
 							$table .= "\n</button>";
+							$CONFIG['PRODUCT_NAME'] = $row['name'];
 							$table .= get_inventory_modal($CONFIG);
+							$table .= "".$row['name'];
 						}
-						$table .= "".$row[$row_key];
+						else
+							$table .= "".$row[$row_key];
 						$table .= "</td>";
 						$is_first_col = FALSE;
 					}
@@ -506,7 +636,6 @@ function get_table_from_member_query($dbpath, $query, $CONFIG){
 			$CUR_TABLE = "users";
 		if ($prepare){
 			$result	= $prepare->execute();
-			$headers	= Array();
 			if($result && $result->fetchArray()){
 				$result->reset();
 				$header  = "";
@@ -520,7 +649,6 @@ function get_table_from_member_query($dbpath, $query, $CONFIG){
 					$row_keys = array_keys($row);
 					for($i=0; $i<count($row_keys); $i++){
 						 $row_key = $row_keys[$i];;
-						array_push($headers, $row_key);
 						$header .= "\n\t\t\t\t<th class=\"sorting\">";
 						$header .= "\n\t\t\t\t\t".$row_key;
 						$header .= "\n\t\t\t\t</th>";
@@ -612,7 +740,6 @@ function get_table_from_owner_query($dbpath, $query, $CONFIG){
 			$CUR_TABLE = "users";
 		if ($prepare){
 			$result	= $prepare->execute();
-			$headers	= Array();
 			if($result && $result->fetchArray()){
 				$result->reset();
 				$header  = "";
@@ -626,7 +753,6 @@ function get_table_from_owner_query($dbpath, $query, $CONFIG){
 					$row_keys = array_keys($row);
 					for($i=0; $i<count($row_keys); $i++){
 						 $row_key = $row_keys[$i];;
-						array_push($headers, $row_key);
 						$header .= "\n\t\t\t\t<th class=\"sorting\">";
 						$header .= "\n\t\t\t\t\t".$row_key;
 						$header .= "\n\t\t\t\t</th>";

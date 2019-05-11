@@ -118,7 +118,7 @@ function html_register_user($CONFIG=Null, $PATHS=Null){
 			$_SESSION['loggedin']	= TRUE;
 			$_SESSION['alevel']		= "member";
 			$_SESSION['email']		= $email;
-			$_SESSION['userid']		= get_user_id($email);
+			$_SESSION['userid']		= get_user_id($email, $CONFIG);
 		}
 	}
 	if($display_registration_form){
