@@ -49,7 +49,7 @@ if (!is_logged_in($CONFIG))
 	$body .= $STRINGS['USER_NOT_LOGGED_IN'];
 else{
 	$fname = get_user_fname($CONFIG);
-	if($_SESSION['alevel'] === 'member' || $_SESSION['alevel'] === 'owner' || $SESSION['alevel'] === 'admin'){
+	if($_SESSION['alevel'] === 'member' || $_SESSION['alevel'] === 'owner' || $_SESSION['alevel'] === 'admin'){
 		$body .= $CONFIG['RESPONSE_CONTAINER'];
 		$body .= $CONFIG['RESPONSE_ROW'];
 		$body .= "\n\t\t\t\t<div class=\"col-12\">";
@@ -79,7 +79,6 @@ else{
 		if($_SESSION['alevel'] === 'owner'){
 			$body .= "\n\t<li class=\"list-group-item\">Manage Members: Under Construction</li>";
 		}
-
 		if($_SESSION['alevel'] === 'admin'){
 			$body .= "\n\t<a href=\"".$PATHS['ADMIN_DASH']."\" ";
 			$body .= "class=\"list-group-item\">";
