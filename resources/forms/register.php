@@ -22,13 +22,13 @@ function display_registration_form($CONFIG=Null){
 	$CONFIG['ROW_DIV']			= "control-group row justify-content-center mb-3";
 	$CONFIG['ROW_BUTTON_DIV']	= "control-group row mb-3 pl-5";
 	$html = "";
-	$html .= $CONFIG['REGISTER_RESPONSE_CONTAINER'];
-	$html .= $CONFIG['REGISTER_RESPONSE_ROW'];
+	$html .= $CONFIG['GEN_CONTAINER'];
+	$html .= $CONFIG['GEN_ROW'];
 	$html .= "\n\t\t\t<div class=\"col-12 pl-0 pr-0 m-0\">";
 	$html .= "\n\t\t\t\t<h1>Get Your Post-It's Ready</h1>";
 	$html .= "\n\t\t\t</div>";
 	$html .= "\n\t\t</div><!-- END ROW -->";
-	$html .= $CONFIG['REGISTER_RESPONSE_ROW'];
+	$html .= $CONFIG['GEN_ROW'];
 
 	$html .= "\n\t\t<form class=\"form-horizontal\" action=\"".$CONFIG['ACTION_REGISTER']."\" method=\"POST\">";
 	$html .= "\n\t\t\t<fieldset>";
