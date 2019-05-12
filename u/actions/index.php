@@ -49,7 +49,7 @@ if (!is_logged_in($CONFIG))
 	$body .= $STRINGS['USER_NOT_LOGGED_IN'];
 else{
 	$fname = get_user_fname($CONFIG);
-	if($_SESSION['alevel'] === 'member'){
+	if($_SESSION['alevel'] === 'member' || $_SESSION['alevel'] === 'owner' || $SESSION['alevel'] === 'admin'){
 		$body .= $CONFIG['RESPONSE_CONTAINER'];
 		$body .= $CONFIG['RESPONSE_ROW'];
 		$body .= "\n\t\t\t\t<div class=\"col-12\">";
@@ -75,49 +75,21 @@ else{
 		$body .= "class=\"list-group-item\">";
 		$body .= "\n\t\tBuy More Stuff";
 		$body .= "\n\t</a>";
-		$body .= "\n</ul>";
-		$body .= "\n\t\t</div><!-- End container -->";
-	}
-	else if($_SESSION['alevel'] === 'owner'){
-		$body .= $CONFIG['RESPONSE_CONTAINER'];
-		$body .= $CONFIG['RESPONSE_ROW'];
-		$body .= "\n\t\t\t\t<div class=\"col-12\">";
-		$body .= "\n\t\t\t\t\tHowdy, Owner";
-		$body .= "\n\t\t\t\t</div>";
-		$body .= "\n\t\t\t\t<div class=\"col-12\">";
-		$body .= "\n\t\t\t\t\tAccess Panel";
-		$body .= "\n\t\t\t\t</div>";
-		$body .= "\n\t\t\t</div><!-- END ROW -->";
-	
-		$body .= "\n<ul class=\"list-group\">";
-		$body .= "\n\t<li class=\"list-group-item\">Under</li>";
-		$body .= "\n\t<li class=\"list-group-item\">Construction</li>";
-		$body .= "\n</ul>";
-		$body .= "\n\t\t</div><!-- End container -->";
-	}
-	else{
-		//Admin (admin) level access
-		$body .= $CONFIG['RESPONSE_CONTAINER'];
-		$body .= $CONFIG['RESPONSE_ROW'];
-		$body .= "\n\t\t\t\t<div class=\"col-12\">";
-		$body .= "\n\t\t\t\t\tHowdy, Admin";
-		$body .= "\n\t\t\t\t</div>";
-		$body .= "\n\t\t\t\t<div class=\"col-12\">";
-		$body .= "\n\t\t\t\t\tHere are some helpful links:";
-		$body .= "\n\t\t\t\t</div>";
-		$body .= "\n\t\t\t</div><!-- END ROW -->";
-	
-		$body .= "\n<ul class=\"list-group\">";
-		$body .= "\n\t<a href=\"".$PATHS['ADMIN_DASH']."\" ";
-		$body .= "class=\"list-group-item active\">";
-		$body .= "\n\t\tDashboard";
-		$body .= "\n\t</a>";
-		$body .= "\n\t<a href=\"" . $PATHS['ADMIN_VIEWPORT'] . "\" ";
-		$body .= "class=\"list-group-item\">";
-		$body .= "\n\t\t" . $STRINGS['ADMIN_SQL_USERS'];
-		$body .= "\n\t</a>";
-		$body .= "\n</ul>";
-		$body .= "\n\t\t</div><!-- End container -->";
+
+		if($_SESSION['alevel'] === 'owner'){
+			$body .= "\n\t<li class=\"list-group-item\">Manage Members: Under Construction</li>";
+		}
+
+		if($_SESSION['alevel'] === 'admin'){
+			$body .= "\n\t<a href=\"".$PATHS['ADMIN_DASH']."\" ";
+			$body .= "class=\"list-group-item\">";
+			$body .= "\n\t\tAdmin Dashboard";
+			$body .= "\n\t</a>";
+			$body .= "\n\t<a href=\"" . $PATHS['ADMIN_VIEWPORT'] . "\" ";
+			$body .= "class=\"list-group-item\">";
+			$body .= "\n\t\t" . $STRINGS['ADMIN_SQL_USERS'];
+			$body .= "\n\t</a>";
+		}
 	}
 }
 
