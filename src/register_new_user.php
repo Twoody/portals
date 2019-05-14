@@ -44,10 +44,10 @@ function html_register_user($CONFIG=Null, $PATHS=Null){
 		$display_registration_form = FALSE;
 	else if(isset($_POST['form_submit'])){
 		//Process form with userinfo table
-		$email				= $_POST["email"];
-		$handle				= $_POST["username"];
-		$pw					= $_POST["password"];
-		$pw_confirmation	= $_POST["password_confirm"];
+		$email				= sanitize_input( $_POST["email"] );
+		$handle				= sanitize_input( $_POST["username"] );
+		$pw					= sanitize_input( $_POST["password"] );
+		$pw_confirmation	= sanitize_input( $_POST["password_confirm"];
 		$is_valid_email	= is_valid_email($email, $CONFIG);
 		$is_valid_pw		= is_valid_password($pw, $CONFIG);
 		$is_valid_handle	= is_valid_handle($handle, $CONFIG);

@@ -57,10 +57,10 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 	else if(isset($_POST['form_submit'])){
 		//TODO: Authenticate user...
 		$show_login			= FALSE;
-		$email				= $_POST["inputEmail"];
+		$email				= sanitize_input( $_POST["inputEmail"] );
 		$user					= strstr($email, '@', true); //strip everything after `@`
-		$pw					= $_POST["inputPassword"];
-		$access				= $_POST["userLevel"];
+		$pw					= sanitize_input( $_POST["inputPassword"] );
+		$access				= sanitize_input( $_POST["userLevel"] );
 		$is_valid_email	= users_has_email($email, $CONFIG);
 		if ($access === "isMember")
 			$access = "member";

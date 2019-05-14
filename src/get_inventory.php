@@ -17,9 +17,9 @@ function get_inventory($CONFIG){
 	if(isset($_POST['form_submit']) && $processed_form !== TRUE){
 		//if modal form submitted, update db and refresh this page again...
 		$userid			= $_SESSION["userid"];
-		$productid		= $_POST["productid"];
-		$product_name	= $_POST["product_name"];
-		$quantity		= $_POST["quantity"];
+		$productid		= sanitize_input( $_POST["productid"] );
+		$product_name	= sanitize_input( $_POST["product_name"] );
+		$quantity		= sanitize_input( $_POST["quantity"] );
 		$suc 				= update_cart($userid, $productid, $quantity, $CONFIG);
 		if (!$suc)
 			$table .= clog("\"ERROR 82393: BAD CART UPDATE\"");

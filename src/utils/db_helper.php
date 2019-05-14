@@ -445,6 +445,12 @@ function parse_from($query){
 	//SEE: https://stackoverflow.com/questions/3694276/what-are-valid-table-names-in-sqlite
 	return "";
 }
+function sanitize_input($unsafe){
+	//$unsafe		= filter_var($input, FILTER_SANITIZE_STRING);	// HTML Sanitize
+	//$sanitized	= SQLite3::escapeString($unsafe);						// SQL sanitize
+	$sanitized	= $unsafe;
+	return $sanitized;
+}
 function update_cart($userid, $productid, $quantity, $CONFIG){
 	$prev_quantity = -1;
 	$ret				= TRUE;

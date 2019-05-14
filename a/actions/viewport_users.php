@@ -115,6 +115,7 @@ else{
 			$query	  = $_POST["query"];
 		else
 			$query	  = $prev_query;
+		$query = sanitize_input($query);
 		$_SESSION['PREV_QUERY'] = $query;
 		$CONFIG = display_admin_viewport_form($CONFIG);
 		$CONFIG['BODY'] .= "\n<hr>";
