@@ -39,8 +39,6 @@ $CONFIG['TABLE_ID'] = "inventory";
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
 $CONFIG['TITLE']						= "Shop's Inventory";
 $CONFIG['DISPLAY_HEADER']			= FALSE;
-$CONFIG['INVENTORY_CONTAINER']	= "\n<div class=\"container-fluid pr-3 pl-3 m-0\">";
-$CONFIG['INVENTORY_ROW']			= "\n\t<div class=\"row pl-3 pr-3 m-0\">";
 
 $CONFIG['CUSTOM_STYLES'] .= "\n<style>";
 $CONFIG['CUSTOM_STYLES'] .= "\n\t.sticky{position: sticky; top: 0;}"; 
@@ -87,9 +85,9 @@ $CONFIG['CUSTOM_SCRIPTS'] .= "\n</script>";
 $table = get_inventory($CONFIG);
 
 $html = "";
-$html .= $CONFIG['INVENTORY_CONTAINER'];
-$html .= $CONFIG['INVENTORY_ROW'];
-$html .= "\n\t\t\t<div class=\"col-12 bg-info\">";
+$html .= $CONFIG['GEN_CONTAINER'];
+$html .= $CONFIG['GEN_ROW'];
+$html .= $CONFIG['GEN_INFO'];
 $html .= "Some text before the invenory list";
 $html .= "\n\t\t\t</div><!-- END COL -->";
 $html .= "\n\t\t</div><!-- END ROW -->";

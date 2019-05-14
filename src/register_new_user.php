@@ -28,8 +28,6 @@ function html_register_user($CONFIG=Null, $PATHS=Null){
 
 	$ROOT = $CONFIG['ROOT'];
 	$CONFIG['ACTION_REGISTER']					= $PATHS["USER_REGISTER"];	
-	$CONFIG['REGISTER_RESPONSE_CONTAINER'] = "\n<div class=\"container-fluid pr-3 pl-3 m-0\">";
-	$CONFIG['REGISTER_RESPONSE_ROW']			= "\n\t<div class=\"row pl-3 pr-3 m-0\">";
 	if($PATHS === Null)
 		$PATHS	= get_paths($ROOT);
 	echo "\n<!-- ".$PATHS['HTML_REGISTER_USER']." imported -->\n";

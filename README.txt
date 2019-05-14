@@ -67,3 +67,5 @@ Glossary:
 		col-#: col-xs-#
 	CLI:
 		Comman Line Interface
+	MCONFIG
+		Modal Configuration;

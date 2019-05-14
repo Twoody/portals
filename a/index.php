@@ -37,8 +37,6 @@ $body   = "";
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
 $CONFIG['TITLE'] = "Logout";
 $CONFIG['DISPLAY_HEADER'] = FALSE;
-$CONFIG['RESPONSE_CONTAINER'] = "\n<div class=\"container-fluid pr-3 pl-3 m-0\">";
-$CONFIG['RESPONSE_ROW']			= "\n\t<div class=\"row pl-3 pr-3 m-0\">";
 $CONFIG['CUSTOM_STYLES'] .= "\n<style>";
 $CONFIG['CUSTOM_STYLES'] .= "\n\t.sticky{position: sticky; top: 0;}"; 
 $CONFIG['CUSTOM_STYLES'] .= "\n</style>";
@@ -50,9 +48,9 @@ if (!is_logged_in($CONFIG)){
 }
 else if($_SESSION['alevel'] !== 'admin'){
 	$body .= $STRINGS['USER_INVALID_PERMISSION'];
-	$body .= $CONFIG['RESPONSE_CONTAINER'];
-	$body .= $CONFIG['RESPONSE_ROW'];
-	$body .= "\n\t\t\t\t<div class=\"col-12 bg-info\">";
+	$body .= $CONFIG['GEN_CONTAINER'];
+	$body .= $CONFIG['GEN_ROW'];
+	$body .= $CONFIG['GEN_INFO'];
 	$body .= "You are logged in as a ".$_SESSION['alevel'].".";
 	$body .= "\n\t\t\t\t</div><!-- END COL -->";
 	$body .= "\n\t\t\t</div><!-- END ROW -->";
@@ -62,12 +60,12 @@ else if($_SESSION['alevel'] !== 'admin'){
 else{
 	//Admin level access
 	$fname = get_user_fname($CONFIG);
-	$body .= $CONFIG['RESPONSE_CONTAINER'];
-	$body .= $CONFIG['RESPONSE_ROW'];
-	$body .= "\n\t\t\t\t<div class=\"col-12\">";
-	$body .= "\n\t\t\t\t\tHowdy, Admin";
+	$body .= $CONFIG['GEN_CONTAINER'];
+	$body .= $CONFIG['GEN_ROW'];
+	$body .= $CONFIG['GEN_COL'];
+	$body .= "\n\t\t\t\t\tHowdy, " . get_user_fname($CONFIG);;
 	$body .= "\n\t\t\t\t</div>";
-	$body .= "\n\t\t\t\t<div class=\"col-12\">";
+	$body .= $CONFIG['GEN_COL'];
 	$body .= "\n\t\t\t\t\t".$STRINGS["HELPFUL_LINKS"];
 	$body .= "\n\t\t\t\t</div>";
 	$body .= "\n\t\t\t</div><!-- END ROW -->";

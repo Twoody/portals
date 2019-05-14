@@ -39,8 +39,6 @@ $CONFIG['TABLE_ID'] = "inventory";
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
 $CONFIG['TITLE']						= "My Shopping Cart";
 $CONFIG['DISPLAY_HEADER']			= FALSE;
-$CONFIG['INVENTORY_CONTAINER']	= "\n<div class=\"container-fluid pr-3 pl-3 m-0\">";
-$CONFIG['INVENTORY_ROW']			= "\n\t<div class=\"row pl-3 pr-3 m-0\">";
 
 $CONFIG['CUSTOM_STYLES'] .= "\n<style>";
 $CONFIG['CUSTOM_STYLES'] .= "\n\t.sticky{position: sticky; top: 0;}"; 
@@ -88,18 +86,19 @@ $cart_total	= get_cart_total($userid, $CONFIG);
 
 
 $html = "";
-$html .= $CONFIG['INVENTORY_CONTAINER'];
-$html .= $CONFIG['INVENTORY_ROW'];
-$html .= "\n\t\t\t<div class=\"col-12 bg-info\">";
+$html .= $CONFIG['GEN_CONTAINER'];
+$html .= $CONFIG['GEN_ROW'];
+$html .= $CONFIG['GEN_INFO'];
 $html .= "Some text before the checkout list";
 $html .= "\n\t\t\t</div><!-- END COL -->";
 $html .= "\n\t\t</div><!-- END ROW -->";
 $html .= "\n\t</div><!-- END CONTAINER -->";
 $html .= "<hr>";
 
-$html .= $CONFIG['INVENTORY_CONTAINER'];
+$html .= $CONFIG['GEN_CONTAINER'];
 $html .= $table;
 $html .= "\n\t</div><!-- END CONTAINER -->";
+//TODO: Test switch to GEN_* below
 $html .= "\n\t\t<div class=\"container\">";
 $html .= "\n\t\t<div class=\"row\">";
 $html .= "\n\t\t\t<button type=\"submit\" class=\"btn btn-primary w-100 fixed-bottom mb-5 p-3\" name=\"form_submit\">";

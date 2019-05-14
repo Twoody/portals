@@ -42,8 +42,6 @@ $CONFIG['TABLE_ID'] = "real_time";
 $CONFIG['DISPLAY_HEADER']			= FALSE;
 $CONFIG['TITLE']						= "SQL Experience";
 $CONFIG['ACTION_ADMIN_VIEWPORT']	= $PATHS["ADMIN_VIEWPORT"];	
-$CONFIG['RESPONSE_CONTAINER'] 	= "\n<div class=\"container-fluid pr-3 pl-3 m-0\">";
-$CONFIG['RESPONSE_ROW']				= "\n\t<div class=\"row pl-3 pr-3 m-0\">";
 $CONFIG['CUSTOM_STYLES'] .= "\n<style>";
 $CONFIG['CUSTOM_STYLES'] .= "\n\t.sticky{position: sticky; top: 0;}"; 
 $CONFIG['CUSTOM_STYLES'] .= "\n	table.dataTable thead .sorting:after,";
@@ -74,9 +72,9 @@ if (!is_logged_in($CONFIG)){
 }
 else if($_SESSION['alevel'] !== 'admin'){
 	$CONFIG['BODY'] .= $STRINGS['USER_INVALID_PERMISSION'];
-	$CONFIG['BODY'] .= $CONFIG['RESPONSE_CONTAINER'];
-	$CONFIG['BODY'] .= $CONFIG['RESPONSE_ROW'];
-	$CONFIG['BODY'] .= "\n\t\t\t\t<div class=\"col-12 bg-info\">";
+	$CONFIG['BODY'] .= $CONFIG['GEN_CONTAINER'];
+	$CONFIG['BODY'] .= $CONFIG['GEN_ROW'];
+	$CONFIG['BODY'] .= $CONFIG['GEN_INFO'];
 	$CONFIG['BODY'] .= "You are logged in as a " . $_SESSION['alevel'] . ".";
 	$CONFIG['BODY'] .= "\n\t\t\t\t</div><!-- END COL -->";
 	$CONFIG['BODY'] .= "\n\t\t\t</div><!-- END ROW -->";
@@ -102,9 +100,9 @@ else{
 
 		//TODO: Make toast of deleted record;
 
-		$CONFIG['BODY'] .= $CONFIG['RESPONSE_CONTAINER'];
-		$CONFIG['BODY'] .= $CONFIG['RESPONSE_ROW'];
-		$CONFIG['BODY'] .= "\n\t\t\t<div class=\"col-12 bg-info\">";
+		$CONFIG['BODY'] .= $CONFIG['GEN_CONTAINER'];
+		$CONFIG['BODY'] .= $CONFIG['GEN_ROW'];
+		$CONFIG['BODY'] .= $CONFIG['GEN_INFO'];
 		$CONFIG['BODY'] .= "\n\t\t\t\tDELETE Query:`" . $delete_sql . "`";
 		$CONFIG['BODY'] .= "\n\t\t\t</div>";
 		$CONFIG['BODY'] .= "\n\t\t</div><!-- END CONTAINER -->";
@@ -120,9 +118,9 @@ else{
 		$_SESSION['PREV_QUERY'] = $query;
 		$CONFIG = display_admin_viewport_form($CONFIG);
 		$CONFIG['BODY'] .= "\n<hr>";
-		$CONFIG['BODY'] .= $CONFIG['RESPONSE_CONTAINER'];
-		$CONFIG['BODY'] .= $CONFIG['RESPONSE_ROW'];
-		$CONFIG['BODY'] .= "\n\t\t\t<div class=\"col-12 bg-info\">";
+		$CONFIG['BODY'] .= $CONFIG['GEN_CONTAINER'];
+		$CONFIG['BODY'] .= $CONFIG['GEN_ROW'];
+		$CONFIG['BODY'] .= $CONFIG['GEN_INFO'];
 		$CONFIG['BODY'] .= "\n\t\t\t\tPrevious Query:`" . $query . "`";
 		$CONFIG['BODY'] .= "\n\t\t\t</div>";
 		$CONFIG['BODY'] .= "\n\t\t</div><!-- END ROW -->";
@@ -132,7 +130,7 @@ else{
 		//Get results of query;
 		$dbpath						= $PATHS['DB_USERS'];
 		$CONFIG['QUERY_PAGE']	= $PATHS['ADMIN_VIEWPORT'];
-		$CONFIG['BODY'] .= $CONFIG['RESPONSE_CONTAINER'];
+		$CONFIG['BODY'] .= $CONFIG['GEN_CONTAINER'];
 		$CONFIG['BODY'] .= get_table_from_owner_query($dbpath, $query, $CONFIG);
 		$CONFIG['BODY'] .= "\n\t</div><!-- END CONTAINER -->";
 	}

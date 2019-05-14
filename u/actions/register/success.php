@@ -44,13 +44,13 @@ function display_registration_success($CONFIG=Null){
 	$CONFIG['TITLE'] = "Register Success";
 	$CONFIG['DISPLAY_HEADER'] = FALSE;
 	
-	$body .= $CONFIG['REGISTER_RESPONSE_CONTAINER'];
-	$body .= $CONFIG['REGISTER_RESPONSE_ROW'];
+	$body .= $CONFIG['GEN_CONTAINER'];
+	$body .= $CONFIG['GEN_ROW'];
 	$body .= "\n\t\t<div class=\"col-12 pl-4 pr-4 pb-0 pt-0\">";
 	$body .= "\n\t\t\t<h1>Start Writing on that Post-It!</h1>";
 	$body .= "\n\t\t</div>";
 	$body .= "\n\t</div><!-- END ROW -->";
-	$body .= $CONFIG['REGISTER_RESPONSE_ROW'];
+	$body .= $CONFIG['GEN_ROW'];
 	$body .= "\n\t\t<div class=\"col-12 pl-4 pr-4 pb-0 pt-0\">";
 	$body .= "\n\t\t<h2>You are now registered!</h2>";
 	$body .= "\n\t\t</div>";

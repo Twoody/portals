@@ -23,8 +23,6 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 	}
 	$ROOT = $CONFIG['ROOT'];
 	$CONFIG['ACTION_LOGIN']					= $PATHS["USER_LOGIN"];
-	$CONFIG['LOGIN_RESPONSE_CONTAINER'] = "\n<div class=\"container-fluid pr-3 pl-3 m-0\">";
-	$CONFIG['LOGIN_RESPONSE_ROW']			= "\n\t<div class=\"row pl-3 pr-3 m-0\">";
 	if($PATHS === Null)
 		$PATHS	= get_paths($ROOT);
 	require_once($PATHS['FORMS_LOGIN']);
@@ -103,13 +101,13 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 	}
 	else if($already_logged_in === TRUE){
 		//TODO: Offer logout button;
-		$html .= $CONFIG['LOGIN_RESPONSE_CONTAINER'];
-		$html .= $CONFIG['LOGIN_RESPONSE_ROW'];
+		$html .= $CONFIG['GEN_CONTAINER'];
+		$html .= $CONFIG['GEN_ROW'];
 		$html .= "\n\t\t<div class=\"col-12 pl-4 pr-4 pb-0 pt-0\">";
 		$html .= "\n\t\t\tWelcome, ".$_SESSION['username'].".";
 		$html .= "\n\t\t</div>";
 		$html .= "\n\t</div><!-- END ROW -->";
-		$html .= $CONFIG['LOGIN_RESPONSE_ROW'];
+		$html .= $CONFIG['GEN_ROW'];
 		$html .= "\n\t\t<div class=\"col-12 pl-4 pr-4 pb-0 pt-0\">";
 		$html .= "You are ALREADY logged in.";
 		$html .= "\n\t\t</div>";
@@ -124,13 +122,13 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 		$_SESSION['alevel']		= $access;
 		$_SESSION['email']		= $email;
 		$_SESSION['userid']		= get_user_id($email, $CONFIG);
-		$html .= $CONFIG['LOGIN_RESPONSE_CONTAINER'];
-		$html .= $CONFIG['LOGIN_RESPONSE_ROW'];
+		$html .= $CONFIG['GEN_CONTAINER'];
+		$html .= $CONFIG['GEN_ROW'];
 		$html .= "\n\t\t<div class=\"col-12 pl-4 pr-4 pb-0 pt-0\">";
 		$html .= "Welcome, ".$_SESSION['username'].".";
 		$html .= "\n\t\t</div>";
 		$html .= "\n\t</div><!-- END ROW -->";
-		$html .= $CONFIG['LOGIN_RESPONSE_ROW'];
+		$html .= $CONFIG['GEN_ROW'];
 		$html .= "\n\t\t<div class=\"col-12 pl-4 pr-4 pb-0 pt-0\">";
 		$html .= "You are logged in as a ".$_SESSION['alevel'].".";
 		$html .= "\n\t\t</div>";

@@ -24,8 +24,6 @@ Purpose:
 Links:
 	NA
 ******************************************************************************/
-
-	
 function display_already_registered($CONFIG=Null){
 	if ($CONFIG === NULL){
 		$ROOT = ".";
@@ -43,15 +41,18 @@ function display_already_registered($CONFIG=Null){
 	/* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
 	$CONFIG['TITLE'] = "Register Failure";
 
-	$body .= $CONFIG['REGISTER_RESPONSE_CONTAINER'];
-	$body .= $CONFIG['REGISTER_RESPONSE_ROW'];
+	$body .= $CONFIG['GEN_CONTAINER'];
+	$body .= $CONFIG['GEN_ROW'];
+	//TODO: Test and anaylze following padding;
 	$body .= "\n\t\t<div class=\"col-12 pl-4 pr-4 pb-0 pt-0\">";
 	$body .= "\n\t\t\t<h1>Did You Lose Your Post-It!</h1>";
 	$body .= "\n\t\t</div>";
 	$body .= "\n\t</div><!-- END ROW -->";
-	$body .= $CONFIG['REGISTER_RESPONSE_ROW'];
+	$body .= $CONFIG['GEN_ROW'];
+	//TODO: Test and anaylze following padding;
 	$body .= "\n\t\t<div class=\"col-12 pl-4 pr-0 pb-0 pt-0\">";
 	$body .= "\n\t\t\t<h2>This email is already registered!</h2>";
+	$body .= "\n\t\t</div><!-- END COL -->";
 	$body .= "\n\t</div><!-- END ROW -->";
 	//TODO: Form to submit forgotten password to email;
 	//TODO: Link back to register another email address;

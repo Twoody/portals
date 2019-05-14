@@ -32,16 +32,16 @@ function get_inventory($CONFIG){
 //		header("Location: " . $_SERVER['REQUEST_URI']);
 //		exit();
 	}
-	$table .= $CONFIG['INVENTORY_CONTAINER'];
-	$table .= $CONFIG['INVENTORY_ROW'];
-	$table .= "\n\t\t\t<div class=\"col-12 bg-info\">";
+	$table .= $CONFIG['GEN_CONTAINER'];
+	$table .= $CONFIG['GEN_ROW'];
+	$table .= $CONFIG['GEN_INFO'];
 	$table .= "The start to the table.";
 	$table .= "\n\t\t\t</div><!-- END COL -->";
 	$table .= "\n\t\t</div><!-- END ROW -->";
 	$table .= "\n\t</div><!-- END CONTAINER -->";
 
-	$table .= $CONFIG['INVENTORY_CONTAINER'];
-	$table .= $CONFIG['INVENTORY_ROW'];
+	$table .= $CONFIG['GEN_CONTAINER'];
+	$table .= $CONFIG['GEN_ROW'];
 	$table .=  get_table_from_inventory($CONFIG);
 	$table .= "\n\t\t</div><!-- END ROW -->";
 	$table .= "\n\t</div><!-- END CONTAINER -->";
