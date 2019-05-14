@@ -2,12 +2,12 @@
 function display_admin_viewport_form($CONFIG=Null){
 	if ($CONFIG === Null){
 		$ROOT = ".";
+		$CONFIG	= get_config($ROOT);
 		require_once($ROOT . '/config/paths.php');
 		$PATHS	= get_paths($ROOT);
 		require_once($PATHS['SETTINGS_PATH']);
 		require_once($PATHS['LIBPATH_HTML']);
 		require_once($PATHS['STRINGS_PHP']);
-		$CONFIG	= get_config();
 	}
 	$ROOT = $CONFIG['ROOT'];
 	if($PATHS === Null)

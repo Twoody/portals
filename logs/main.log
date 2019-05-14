@@ -5,6 +5,17 @@
 *
 ******************************************************************************/
 
+Tanner.L.Woody@gmail.com
+2019-05-11
+	All GEN updates are in place where we need them;
+	Now, I am going through and wrapping those spots in specific hrefs,
+		cols, rows, and container functions;
+	The current action is to go through the rest of the pages, making amends to
+		place the content in strings.php, href.php, and the such;
+	After that, I will need to think about the href file and whether this is best with
+	multiple and organized function calls, or if that is to cost heavy.
+	The other option is to place the href calls in a function and make the necessary param calls;
+
 
 Tanner.L.Woody@gmail.com
 2019-05-11

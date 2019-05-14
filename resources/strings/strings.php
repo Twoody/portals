@@ -13,16 +13,18 @@ function get_config_strings($CONFIG=Null){
 
 	return Array(
 		"ADMIN_SQL_USERS" =>"Users MGMT",
-		"HELPFUL_LINKS"=>'Here are some helpful links:',
-		"DASHBOARD_GREETING"=> "Howdy, ". get_user_fname($CONFIG),
 		"DASHBOARD"=>"Dashboard",
-		"USER_INVALID_PERMISSION"=> $CONFIG['GEN_CONTAINER'] .  $CONFIG['GEN_ROW'] .  "\n\t\t\t\t<div class=\"col-12 bg-warning\">\n\t\t\t\t\tWarning: Access Denied;\n\t\t\t\t</div>\n\t\t\t</div><!-- End row -->\n\t\t</div><!-- End container -->",
-
-		"USER_NOT_LOGGED_IN"=> $CONFIG['GEN_CONTAINER'] .  $CONFIG['GEN_ROW'] .  "\n\t\t\t\t<div class=\"col-12 bg-warning\">\n\t\t\t\t\tWarning, not logged in;\n\t\t\t\t</div>\n\t\t\t</div><!-- End row -->\n\t\t</div><!-- End container -->",
+		"DASHBOARD_GREETING"=> "Howdy, ". get_user_fname($CONFIG),
+		"DASHBOARD_GO_SHOP"=> "Go Buy More Stuff",
+		"DASHBOARD_VIEW_INV"=>"View Current Inventory",
+		"HELPFUL_LINKS"=>'Here are some helpful links:',
+		"UNDER_CONSTRUCTION"=>'Sorry, this page is under consturction;',
+		"USER_ACCESS_LEVEL"=> "You are logged in as a ".$_SESSION['alevel'].".",
+		"USER_INVALID_PERMISSION"=> "Warning: Access Denied;",
+		"USER_NOT_LOGGED_IN"=> "Warning, not logged in;",
 
 		"USER_PW_REQS" => "\n<small id=\"passwordHelpBlock\" class=\"form-text text-muted\">Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.</small>\n",
 		"GET_PURPOSE"=>"What would you like to do today?",
-
 	);
 }
 

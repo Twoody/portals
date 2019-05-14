@@ -7,6 +7,7 @@ function make_imports($ROOT=Null){
 	$PATHS = get_paths($ROOT);
 	require_once($PATHS['SETTINGS_PATH']);
 	require_once($PATHS['STRINGS_PHP']);
+	require_once($PATHS['STRINGS_HREF']);
 	require_once($PATHS['BOOTSTRAP_CSS_PATH']);
 	require_once($PATHS['BOOTSTRAP_JS_PATH']);
 	require_once($PATHS['FONT_AWESOME_CSS_PATH']);

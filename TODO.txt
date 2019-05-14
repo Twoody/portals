@@ -10,8 +10,9 @@ A. Main:
 
 	1. 	Design: Navbar, crumbles, media
 	1.		Everywhere there is _POST, sanitize;
-			A.	This will require making a sanitization function in utils/db_helper.php;
-			B. Everywhere might be an overstatement;
+				**** **** DONE **** **** 
+					Just need to debug SQLite2::escapeString() at this point;
+
 	2. 	JSON parser
 	3.		Datatable + submit form + reset_db() call for members to test sql injection;
 	4.		HTTPS verification; SEE:

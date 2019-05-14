@@ -64,6 +64,7 @@ function get_paths($ROOT=Null){
 		'ROOT'								=> $ROOT,
 		'SETTINGS_PATH'					=> $ROOT.'/config/settings.php',
 		'STRINGS_ERRORS'     			=> $ROOT."/resources/strings/errors.json",
+		'STRINGS_HREF'     				=> $ROOT."/resources/strings/hrefs.php",
 		'STRINGS_PHP'     				=> $ROOT."/resources/strings/strings.php",
 		'TEMPLATES_B'						=> $ROOT."/templates/b.php",
 		'TEMPLATES_LOGIN'					=> $ROOT."/templates/login.php",

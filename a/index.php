@@ -32,7 +32,7 @@ require_once($PATHS['TEMPLATES_B']);
 
 $CONFIG	= get_config($ROOT);
 $STRINGS	= get_config_strings($CONFIG);
-$body   = "";
+$body  	= "";
 	
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
 $CONFIG['TITLE'] = "Logout";
@@ -44,49 +44,37 @@ $CONFIG['CUSTOM_STYLES'] .= "\n</style>";
 echo '<!-- RUNNING '.$PATHS['ADMIN_DASH'].' -->';
 
 if (!is_logged_in($CONFIG)){
-	$body .= $STRINGS['USER_NOT_LOGGED_IN'];
+	$col_0			= make_gen_warning($STRINGS['USER_NOT_LOGGED_IN'], $CONFIG);
+	$container_0	= make_gen_container(make_gen_row($col_0, $CONFIG), $CONFIG);
+	$body .= $container_0;
 }
 else if($_SESSION['alevel'] !== 'admin'){
-	$body .= $STRINGS['USER_INVALID_PERMISSION'];
-	$body .= $CONFIG['GEN_CONTAINER'];
-	$body .= $CONFIG['GEN_ROW'];
-	$body .= $CONFIG['GEN_INFO'];
-	$body .= "You are logged in as a ".$_SESSION['alevel'].".";
-	$body .= "\n\t\t\t\t</div><!-- END COL -->";
-	$body .= "\n\t\t\t</div><!-- END ROW -->";
-	$body .= "\n\t\t</div><!-- End container -->";
+	$col_0			= make_gen_warning($STRINGS['USER_INVALID_PERMISSION'], $CONFIG);
+	$container_0	= make_gen_container(make_gen_row($col_0, $CONFIG), $CONFIG);
+	$col_1			= make_gen_info($STRINGS['USER_ACCESS_LEVEL'], $CONFIG);
+	$container_1	= make_gen_container(make_gen_row($col_1, $CONFIG), $CONFIG);
+	$body .= $container_0;
+	$body .= $container_1;
 
 }
 else{
 	//Admin level access
-	$fname = get_user_fname($CONFIG);
-	$body .= $CONFIG['GEN_CONTAINER'];
-	$body .= $CONFIG['GEN_ROW'];
-	$body .= $CONFIG['GEN_COL'];
-	$body .= "\n\t\t\t\t\tHowdy, " . get_user_fname($CONFIG);;
-	$body .= "\n\t\t\t\t</div>";
-	$body .= $CONFIG['GEN_COL'];
-	$body .= "\n\t\t\t\t\t".$STRINGS["HELPFUL_LINKS"];
-	$body .= "\n\t\t\t\t</div>";
-	$body .= "\n\t\t\t</div><!-- END ROW -->";
-
-	$body .= "\n<ul class=\"list-group\">";
-	$body .= "\n\t<a href=\"".$PATHS['ADMIN_DASH']."\" ";
-	$body .= "class=\"list-group-item active\">";
-	$body .= "\n\t\t".$STRINGS["DASHBOARD"];
-	$body .= "\n\t</a>";
-	$body .= "\n\t<a href=\"" . $PATHS['ADMIN_VIEWPORT'] . "\" ";
-	$body .= "class=\"list-group-item\">";
-	$body .= "\n\t\t" . $STRINGS['ADMIN_SQL_USERS'];
-	$body .= "\n\t</a>";
-	$body .= "\n\t<li class=\"list-group-item\">More</li>";
-	$body .= "\n\t<li class=\"list-group-item\">to</li>";
-	$body .= "\n\t<li class=\"list-group-item\">Come</li>";
-	$body .= "\n</ul>";
-
-	$body .= "\n\t\t</div><!-- End container -->";
+	$fname		= get_user_fname($CONFIG);
+	$col_0		= make_gen_col($STRINGS["DASHBOARD_GREETING"], $CONFIG);
+	$col_1		= make_gen_col($STRINGS["HELPFUL_LINKS"], $CONFIG);
+	$cols_0		= $col_0 . $col_1;
+	$row0			= make_gen_row($cols_0, $CONFIG);
+	$list_items = Array(
+		get_href_admin_dash0($CONFIG, $STRINGS),
+		get_href_admin_users_mgmt($CONFIG, $STRINGS),
+		make_list_item("More"),
+		make_list_item("to"),
+		make_list_item("Come"),
+	);
+	$list			= make_list_group($list_items);
+	$container	= make_gen_container($row0 . $list, $CONFIG);
+	$body .= $container;
 }
-$body .= "\n\t\t</div>";
 
 $CONFIG['BODY'] .= $body;
 echo template_b($CONFIG, $PATHS) . "\n";

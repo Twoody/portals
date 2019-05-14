@@ -827,8 +827,6 @@ function get_table_from_owner_query($dbpath, $query, $CONFIG){
 	}
 	return $table;
 }
-
-
 function make_css($REL, $LINK, $INTEGRITY="", $ORIGIN=""){
 	/* Make a CSS stylesheet to be imported into HTML page */
 	$css .= "\n\t<link";
@@ -839,6 +837,74 @@ function make_css($REL, $LINK, $INTEGRITY="", $ORIGIN=""){
 	$css .= "\n\t</link>";
 	return $css;
 }
+function make_gen_col($c, $CONFIG){
+	$col = "";
+	$col .= "\n\t\t\t\t" . $CONFIG['GEN_COL'];
+	$col .= $c;
+	$col .= "\n\t\t\t\t</div>";
+	return $col;
+}
+function make_gen_container($c, $CONFIG){
+	$ret = "";
+	$ret .= "\n\t\t" . $CONFIG['GEN_CONTAINER'];
+	$ret .= $c;
+	$ret .= "\n\t\t</div>";
+	return $ret;
+}
+function make_gen_info($c, $CONFIG){
+	$col = "";
+	$col .= "\n\t\t\t\t" . $CONFIG['GEN_INFO'];
+	$col .= $c;
+	$col .= "\n\t\t\t\t</div>";
+	return $col;
+}
+function make_gen_row($c, $CONFIG){
+	$col = "";
+	$col .= "\n\t\t\t" . $CONFIG['GEN_ROW'];
+	$col .= $c;
+	$col .= "\n\t\t\t</div>";
+	return $col;
+}
+function make_gen_warning($c, $CONFIG){
+	$col = "";
+	$col .= "\n\t\t\t\t" . $CONFIG['GEN_WARNING'];
+	$col .= $c;
+	$col .= "\n\t\t\t\t</div>";
+	return $col;
+}
+function make_href($CONFIG=Null){
+	if ($CONFIG === Null){
+		//TODO: ERROR MGMT;
+		return 'ERROR 234';
+	}
+	$ret		= "";
+	$class	= " class=\""		. $CONFIG['HREF_CLASS']		. "\" ";
+	$link		= " href=\""		. $CONFIG['HREF_LINK']		. "\" ";
+	$role		= " role=\""		. $CONFIG['HREF_ROLE']		. "\" ";
+	$text		= $CONFIG['HREF_TEXT'];
+
+	$ret .= "\n\t\t<a " . $class . $link . $role;
+	$ret .= ">\n\t\t" . $text . "\n\t\t</a>";
+	return $ret;
+}
+function make_list_group($entries){
+	$ret = "";
+	$ret .= "\n\t\t<ul class=\"list-group\">";
+	for ($i=0; $i<count($entries); $i++){
+		$ret .= $entries[$i];
+	}
+	$ret .= "\n\t\t</ul>";
+	return $ret;
+}
+function make_list_item($text){
+	$ret = '';
+	$ret .= "\n\t\t<li class=\"list-group-item\">";
+	$ret .= $text;
+	$ret .= "\n\t\t</li>";
+	return $ret;
+}
+
+
 function make_par( $s, $args=null ){
 	//Take string `s` and be sure string is properly encapsulated as HTML paragraph
 	/*

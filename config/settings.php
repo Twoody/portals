@@ -22,6 +22,7 @@ function get_config($ROOT=Null){
 		'GEN_ROW'=> "\n\t<div class=\"row pl-3 pr-3 m-0\">",
 		'GEN_COL'=> "\n\t\t\t\t<div class=\"col-12\">",
 		'GEN_INFO'=> "\n\t\t\t\t<div class=\"col-12 bg-info\">",
+		'GEN_WARNING'=> "\n\t\t\t\t<div class=\"col-12 bg-warning\">",
 		'TITLE '=> "", 			//Surely overwritten,
 		'VERSION'=>1.10,
 	
@@ -101,6 +102,11 @@ function get_config($ROOT=Null){
 		/* ----- ----- AUTHENTIFICATION CONFIGURATION ----- ----- */
 		'SALT_CHARSET'=>'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/\\][{}\'";:?.>,<!@#$%^&*()-_=+|',
 		'SALT_LENGTH'=>64,
+
+		/* ----- ----- HTML CONFIGURATION ----- ----- */
+		'HREF_CLASS'=>'',
+		'HREF_LINK'=>'',
+		'HREF_ROLE'=>'',
 	);
 }
 ?>

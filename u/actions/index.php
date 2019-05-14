@@ -18,7 +18,7 @@ USAGE:
 			sudo apachectl start
 
 Purpose:
-    Fun way to show that page was not found;
+    Display options to user, owners, and admin;
 
 Links:
 ******************************************************************************/
@@ -27,12 +27,11 @@ $ROOT = "../..";
 require_once($ROOT.'/config/imports.php');
 make_imports($ROOT);
 $PATHS	= get_paths($ROOT);
-$home		= $PATHS['NAV_HOME'];
 require_once($PATHS['TEMPLATES_B']);
 
 $CONFIG	= get_config($ROOT);
 $STRINGS	= get_config_strings($CONFIG);
-$body   = "";
+$body		= "";
 	
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
 $CONFIG['TITLE'] = "Logout";
@@ -43,56 +42,40 @@ $CONFIG['CUSTOM_STYLES'] .= "\n</style>";
 
 echo '<!-- RUNNING '.$PATHS['USER_DASH'].' -->';
 
-if (!is_logged_in($CONFIG))
-	$body .= $STRINGS['USER_NOT_LOGGED_IN'];
+if (!is_logged_in($CONFIG)){
+	$col_0			= make_gen_warning($STRINGS['USER_NOT_LOGGED_IN'], $CONFIG);
+	$container_0	= make_gen_container(make_gen_row($col_0, $CONFIG), $CONFIG);
+	$body .= $container_0;
+}
 else{
 	$fname = get_user_fname($CONFIG);
-	if($_SESSION['alevel'] === 'member' || $_SESSION['alevel'] === 'owner' || $_SESSION['alevel'] === 'admin'){
-		$body .= $CONFIG['GEN_CONTAINER'];
-		$body .= $CONFIG['GEN_ROW'];
-		$body .= $CONFIG['GEN_COL'];
-		$body .= "\n\t\t\t\t\tHowdy, ".$fname."";
-		$body .= "\n\t\t\t\t</div>";
-		$body .= "\n\t\t\t\t<div class=\"col-12\">";
-		$body .= "\n\t\t\t\t\t" . $STRINGS["GET_PURPOSE"];
-		$body .= "\n\t\t\t\t</div>";
-		$body .= "\n\t\t\t</div><!-- END ROW -->";
-	//
-		$body .= "\n<ul class=\"list-group\">";
-		$body .= "\n\t<a href=\"".$PATHS['USER_DASHBOARD']."\" ";
-		$body .= "class=\"list-group-item active\">";
-		$body .= "\n\t\tDashboard";
-		$body .= "\n\t</a>";
-	
-		$body .= "\n\t<a href=\"".$PATHS['USER_VIEW_INVENTORY']."\" ";
-		$body .= "class=\"list-group-item\">";
-		$body .= "\n\t\tView Current Inventory";
-		$body .= "\n\t</a>";
-	
-		$body .= "\n\t<a href=\"".$PATHS['USER_GET_INVENTORY']."\" ";
-		$body .= "class=\"list-group-item\">";
-		$body .= "\n\t\tBuy More Stuff";
-		$body .= "\n\t</a>";
+	if(
+		$_SESSION['alevel'] === 'member'
+		|| $_SESSION['alevel'] === 'owner' 
+		|| $_SESSION['alevel'] === 'admin'
+	){
+		$col_0		= make_gen_col($STRINGS["DASHBOARD_GREETING"], $CONFIG);
+		$col_1		= make_gen_col($STRINGS["GET_PURPOSE"], $CONFIG);
+		$row_0		= make_gen_row($col_0.$col_1, $CONFIG);
+		$list_items = Array();
 
+		array_push($list_items, get_href_user_dash0($CONFIG, $STRINGS));
+		array_push($list_items, get_href_user_inv($CONFIG, $STRINGS));
+		array_push($list_items, get_href_user_go_shop($CONFIG, $STRINGS));
 		if($_SESSION['alevel'] === 'owner'){
-			$body .= "\n\t<li class=\"list-group-item\">Manage Members: Under Construction</li>";
+			$STRINGS["UNDER_CONSTRUCTIONS"] = "Shop Management: " . $STRINGS["UNDER_CONSTRUCTION"];
+			array_push($list_items,	make_list_item($STRINGS["UNDER_CONSTRUCTION"]));
 		}
 		if($_SESSION['alevel'] === 'admin'){
-			$body .= "\n\t<a href=\"".$PATHS['ADMIN_DASH']."\" ";
-			$body .= "class=\"list-group-item\">";
-			$body .= "\n\t\tAdmin Dashboard";
-			$body .= "\n\t</a>";
-			$body .= "\n\t<a href=\"" . $PATHS['ADMIN_VIEWPORT'] . "\" ";
-			$body .= "class=\"list-group-item\">";
-			$body .= "\n\t\t" . $STRINGS['ADMIN_SQL_USERS'];
-			$body .= "\n\t</a>";
+			array_push($list_items,	get_href_admin_dash1($CONFIG, $STRINGS));
+			array_push($list_items,	get_href_admin_users_mgmt($CONFIG, $STRINGS));
 		}
+		$list			= make_list_group($list_items);
+		$container	= make_gen_container($row_0 . $list, $CONFIG);
+		$body .= $container;
 	}
 }
 
-$body .= "\n\t\t</div>";
-
 $CONFIG['BODY'] .= $body;
 echo template_b($CONFIG, $PATHS) . "\n";
-
 ?>
