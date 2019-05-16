@@ -35,12 +35,66 @@ function alert($msg){
 	$html .= "\n\t\t</script>";
 	return $html;
 }
+function build_img($imgArr){
+	$src    = $imgArr['src'];
+	$class  = $imgArr['class'];
+	$alt    = $imgArr['alt'];
+	$width  = $imgArr['width'] ?? "100";
+	$height = $imgArr['height'] ?? "100";
+	$html = "<img class=\"".$class."\" src=\"".$src."\""; 
+	$html .= " alt=\"".$alt."\" width=\"".$width."\" height=\"".$height."\">";
+	$html .= "</img>";
+	return $html;
+}
 function clog($msg){
 	$html =  "\n\t\t<script>";
 	$html .= "\n\t\t\tconsole.log(";
 	$html .= "JSON.stringify(";
 	$html .= $msg."));";
 	$html .= "\n\t\t</script>";
+	return $html;
+}
+function get_carousel($pics, $CONFIG){
+	$body = "";
+	$body .= "\n\t\t\t\t\t<div id=\"demo\" class=\"carousel slide carousel-fade\" data-ride=\"carousel\">";
+	$body .= "\n\t\t\t\t\t\t<!-- Indicators -->";
+	$body .= "\n\t\t\t\t\t\t<ul class=\"carousel-indicators\">";
+	$body .= "\n\t\t\t\t\t\t\t<li data-target=\"#demo\" data-slide-to=\"0\" class=\"active\"></li>";
+	$body .= "\n\t\t\t\t\t\t\t<li data-target=\"#demo\" data-slide-to=\"1\"></li>";
+	$body .= "\n\t\t\t\t\t\t\t<li data-target=\"#demo\" data-slide-to=\"2\"></li>";
+	$body .= "\n\t\t\t\t\t\t</ul>";
+	$body .= "\n\t\t\t\t\t\t<!-- The slideshow -->";
+	$body .= "\n\t\t\t\t\t\t<div class=\"carousel-inner\">";
+	$body .= get_carousel_items($pics);
+	$body .= "\n\t\t\t\t\t\t</div>";
+	
+	$body .= "\n\t\t\t\t\t\t<!-- Left and right controls -->";
+	$body .= "\n\t\t\t\t\t\t<a class=\"carousel-control-prev\" href=\"#demo\" role=\"button\" data-slide=\"prev\">";
+	$body .= "\n\t\t\t\t\t\t\t<span class=\"carousel-control-prev-icon\"></span>";
+	$body .= "\n\t\t\t\t\t\t\t<span class=\"sr-only\">Previous</span>";
+	$body .= "\n\t\t\t\t\t\t</a>";
+	$body .= "\n\t\t\t\t\t\t<a class=\"carousel-control-next\" href=\"#demo\" role=\"button\" data-slide=\"next\">";
+	$body .= "\n\t\t\t\t\t\t\t<span class=\"carousel-control-next-icon\"></span>";
+	$body .= "\n\t\t\t\t\t\t\t<span class=\"sr-only\">Next</span>";
+	$body .= "\n\t\t\t\t\t\t</a>";
+	
+	$body .= "\n\t\t\t\t\t</div><!-- /.carousel -->";
+	return $body;
+}
+function get_carousel_items($items){
+	$html = "";
+	$has_active = FALSE;
+	foreach($items as $item){
+		$html .= "\n\t\t\t\t<div class=\"carousel-item ";
+		if ($has_active === FALSE){
+			$html .= "active";
+			$has_active = TRUE;
+		}
+		$html .= "\">";
+		$html .= "\n\t\t\t\t\t";
+		$html .= build_img($item);
+		$html .= "\n\t\t\t\t</div>";
+	}
 	return $html;
 }
 function get_checkout_table($cart, $CONFIG){
