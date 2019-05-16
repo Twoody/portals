@@ -54,6 +54,43 @@ function clog($msg){
 	$html .= "\n\t\t</script>";
 	return $html;
 }
+function get_ad($CONFIG){
+	$body = "";
+	$body .= "\n\t\t<div class=\"card\" style=\"width:100%\">";
+	$body .= "\n\t\t\t<img class=\"card-img-top\" src=\"./resources/images/Your-Logo-Here-Black-22.jpg\" alt=\"Card image cap\"></img>";
+	$body .= "\n\t\t\t<div class=\"card-body\">";
+	$body .= "\n\t\t\t\t<h5 class=\"card-title\">Card title</h5>";
+	$body .= "\n\t\t\t<p class=\"card-text\">";
+	$body .= "\n\t\t\t\tSome quick example text to build on the card title and make up the bulk of the card's content.";
+	$body .= "\n\t\t\t</p>";
+	$body .= "\n\t\t\t\t<a href=\"#\" class=\"btn btn-primary ad_button_link\">$$$</a>";
+	$body .= "\n\t\t\t</div>";
+	$body .= "\n\t\t</div>";
+	return $body;
+}
+function get_ads_sm($CONFIG){
+	$body = "";
+	$body .= "\n\t\t<div class=\"col-6 m-0 p-0\">";
+	$body .= "\n\t\t\t<img src=\"./resources/images/Your-Logo-Here-Black-22.jpg\" class=\"rounded mx-auto d-block\" width=\"100px\">";
+	$body .= "\n\t\t\t</img>";
+	$body .= "\n\t\t</div>";
+	$body .= "\n\t\t<div class=\"col-6 m-0 p-0\">";
+	$body .= "\n\t\t\t<img src=\"./resources/images/Your-Logo-Here-Black-22.jpg\" class=\"rounded mx-auto d-block\" width=\"100px\">";
+	$body .= "\n\t\t\t</img>";
+	$body .= "\n\t\t</div><!-- END COL -->";
+	$body .= "\n\t\t\t\t<div class=\"col-6 pl-3 pr-3 mx-auto d-block bg-success\">";
+	$body .= "\n\t\t\t\t\t<div class=\"text-center\">";
+	$body .= "\n\t\t\t\t\t\tButton 1 to Link 1";
+	$body .= "\n\t\t\t\t\t</div>";
+	$body .= "\n\t\t\t\t</div><!-- END COL -->";
+	$body .= "\n\t\t\t\t<div class=\"col-6 pl-3 pr-3 mx-auto d-block bg-warning\">";
+	$body .= "\n\t\t\t\t\t<div class=\"text-center\">";
+	$body .= "\n\t\t\t\t\t\tButton 2 to Link 2";
+	$body .= "\n\t\t\t\t\t</div>";
+	$body .= "\n\t\t\t\t</div><!-- END COL -->";
+
+	return $body;
+}
 function get_carousel($pics, $CONFIG){
 	$body = "";
 	$body .= "\n\t\t\t\t\t<div id=\"demo\" class=\"carousel slide carousel-fade\" data-ride=\"carousel\">";

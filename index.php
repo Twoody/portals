@@ -71,55 +71,26 @@ echo "<!-- LANDED ON: HOME PAGE-->";
 $body .= "\n\t\t";
 //$body .= "\n\t\t<div class=\"container fixed-width content-slider p-0\">";
 $body .= $CONFIG['GEN_CONTAINER'];
-$body .= "\n\t\t\t<div class=\"row p-0 justify-content-center\">";
-$body .= "\n\t\t\t\t<div class=\"col-12 col-sm-7 col-md-8 col-lg-9 mt-2 p-0\">";
-
+$body .= $CONFIG['GEN_ROW'];
+$body .= "\n\t\t\t\t<div class=\"col-12 col-sm-8 col-md-9 col-lg-10 m-0 p-0\">";
 $body .= get_carousel($pics, $CONFIG);
+$body .= "\n\t\t\t\t</div><!-- END COL -->";
 
-$body .= "\n\t\t\t\t</div><!-- /.col -->";
-
-$body .= "\n\t\t\t<span class=\"d-none d-sm-block\">";
-$body .= "\n\t\t\t\t<div class=\"col-sm-3 col-md-2 col-lg-1 mt-2 mr-2\" style=\"\">";
-$body .= "\n\t\t\t\t\t<div class=\"card\" style=\"width:10rem;\">";
-$body .= "\n\t\t\t\t\t\t<img class=\"card-img-top\" src=\"./resources/images/Your-Logo-Here-Black-22.jpg\" alt=\"Card image cap\">";
-$body .= "\n\t\t\t\t\t\t<div class=\"card-body\">";
-$body .= "\n\t\t\t\t\t\t\t<h5 class=\"card-title\">Card title</h5>";
-$body .= "\n\t\t\t\t\t\t\t<p class=\"card-text\">";
-$body .= "\n\t\t\t\t\t\t\tSome quick example text to build on the card title and make up ";
-$body .= "the bulk\t of the card's content.";
-$body .= "\n\t\t\t\t\t\t</p>";
-$body .= "\n\t\t\t\t\t\t\t<a href=\"#\" class=\"btn btn-primary ad_button_link\">$$$</a>";
-$body .= "\n\t\t\t\t\t\t</div>";
-$body .= "\n\t\t\t\t\t</div>";
+$body .= "\t\n\t\t\t<div class=\"col-sm-4 col-md-3 col-lg-2 pr-3 m-0\" style=\"\">";
+$body .= "\n\t\t\t\t\t<span class=\"d-none d-sm-block\">";		// Show when NOT small
+$body .= get_ad($CONFIG);
+$body.= "\n\t\t\t\t\t</span>";
 $body .= "\n\t\t\t\t</div>";
-$body.= "\n\t\t\t\t</span>";
+$body .= "\n\t\t\t</div><!-- END ROW -->";
+$body .= "\n\t\t</div><!-- END CONTAINER -->";
 
-$body .= "\n\t\t\t\t<div class=\"w-100 d-sm-none\"></div>";
+$body .= $CONFIG['GEN_CONTAINER'];
 
-$body .= "\n\t\t\t\t<span class=\"d-sm-none\">";
-$body .= "\n\t\t\t\t\t<div class=\"col-12 mx-auto\">";
-$body .= "\n\t\t\t\t\t\t<img src=\"./resources/images/Your-Logo-Here-Black-22.jpg\" class=\"rounded float-right\" width=\"100px\">";
-$body .= "\n\t\t\t\t\t\t</img>";
-$body .= "\n\t\t\t\t\t\t<img src=\"./resources/images/Your-Logo-Here-Black-22.jpg\" class=\"rounded float-left\" width=\"100px\">";
-$body .= "\n\t\t\t\t\t\t</img>";
-$body .= "\n\t\t\t\t\t</div>";
-$body .= "\n\t\t\t\t</span>";
+$body .= "\n\t<div class=\"row d-sm-none pl-3 pr-3 m-0\">";	// Show WHEN SMALL
+$body .= get_ads_sm($CONFIG);
+$body .= "\n\t\t\t</div><!-- END ROW -->";
 
-$body .= "\n\t\t\t\t<div class=\"w-100\"></div>";
-
-$body .= "\n\t\t\t\t<div class=\"col-3 d-sm-none bg-success\">";
-$body .= "\n\t\t\t\t\t<div class=\"float-left text-center\">";
-$body .= "\n\t\t\t\t\t\tButton 1 to Link 1";
-$body .= "\n\t\t\t\t\t</div>";
-$body .= "\n\t\t\t\t</div>";
-$body .= "\n\t\t\t\t<div class=\"col-3 d-sm-none bg-warning\">";
-$body .= "\n\t\t\t\t\t<div class=\"float-right text-center\">";
-$body .= "\n\t\t\t\t\t\tButton 2 to Link 2";
-$body .= "\n\t\t\t\t\t</div>";
-$body .= "\n\t\t\t\t</div>";
-
-$body .= "\n\t\t\t</div><!-- /.row -->";
-$body .= "\n\t\t</div><!-- /.container -->";
+$body .= "\n\t\t</div><!-- END CONTAINER -->";
 $CONFIG['BODY'] = $body;
 echo template_b($CONFIG) . "\n";
 
