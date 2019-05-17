@@ -1,5 +1,5 @@
 <?php 
-function get_inventory($CONFIG){
+function html_get_inventory($CONFIG){
 	//TODO: Add `where storeid = ?` to query upon adding storeid to the members;
 	//TODO:	IF the user is logged in as an owner, then have all their storeid's populated...
 	if($PATHS === Null)
@@ -32,20 +32,16 @@ function get_inventory($CONFIG){
 //		header("Location: " . $_SERVER['REQUEST_URI']);
 //		exit();
 	}
-	$table .= $CONFIG['GEN_CONTAINER'];
-	$table .= $CONFIG['GEN_ROW'];
-	$table .= $CONFIG['GEN_INFO'];
-	$table .= "The start to the table.";
-	$table .= "\n\t\t\t</div><!-- END COL -->";
-	$table .= "\n\t\t</div><!-- END ROW -->";
-	$table .= "\n\t</div><!-- END CONTAINER -->";
+	$col_0			= make_gen_info("The start to the table.", $CONFIG);
+	$row_0			= make_gen_row($col_0, $CONFIG);
+	$container_0	= make_gen_container($row_0, $CONFIG);
 
-	$table .= $CONFIG['GEN_CONTAINER'];
-	$table .= $CONFIG['GEN_ROW'];
-	$table .=  get_table_from_inventory($CONFIG);
-	$table .= "\n\t\t</div><!-- END ROW -->";
-	$table .= "\n\t</div><!-- END CONTAINER -->";
+	$col_1			= make_gen_col(get_table_from_inventory($CONFIG), $CONFIG);;
+	$row_1			= make_gen_row($col_1, $CONFIG);
+	$container_1	= make_gen_container($row_1, $CONFIG);
 
+	$table .= $container_0;
+	$table .= $container_1;
 	return $table;
 }
 ?>

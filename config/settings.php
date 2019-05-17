@@ -10,10 +10,11 @@ function get_config($ROOT=Null){
 		'ACTIVE_PAGE'=>"./",
 		'BODY'=>"",
 		'CHAR_SET'=>"utf-8",
+		'EMAIL_ADMIN'=>"<a href=\"mailto:Tanner.L.Woody@gmail.com\" target=\"_blank\">Tanner.L.Woody@gmail.com</a>",
 		'FLAGS'=>[],
 		'FOOTER_IS_STICKY'=>TRUE,
 		'HAS_LOGIN'=>FALSE,
-		//'IS_ONLINE'=>FALSE,
+		'IS_ONLINE'=>FALSE,
 		'IS_ONLINE'=>TRUE,
 		'LANG'=>"en",
 		'META_CONTENT'=>"width=device-width, initial-scale=1, shrink-to-fit=no",
@@ -107,6 +108,9 @@ function get_config($ROOT=Null){
 		'HREF_CLASS'=>'',
 		'HREF_LINK'=>'',
 		'HREF_ROLE'=>'',
+
+		/* ----- ----- MODAL CONFIGURATION ----- ----- */
+		'MCONFIG'=>'',
 	);
 }
 ?>

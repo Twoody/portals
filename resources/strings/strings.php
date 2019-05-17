@@ -13,6 +13,7 @@ function get_config_strings($CONFIG=Null){
 
 	return Array(
 		"ADMIN_SQL_USERS" =>"Users MGMT",
+		"CONTACT_ADMIN"=>"Don't see what you are looking for? Contact " .$CONFIG['EMAIL_ADMIN'] . ".",
 		"DASHBOARD"=>"Dashboard",
 		"DASHBOARD_GREETING"=> "Howdy, ". get_user_fname($CONFIG),
 		"DASHBOARD_GO_SHOP"=> "Go Buy More Stuff",

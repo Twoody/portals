@@ -35,51 +35,38 @@ require_once($PATHS['TEMPLATES_B']);
 
 echo "<!-- LANDED ON: ".$PATHS['USER_GET_INVENTORY'].":INVENTORY PAGE-->";
 
-$CONFIG['TABLE_ID'] = "inventory";
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
-$CONFIG['TITLE']						= "Shop's Inventory";
-$CONFIG['DISPLAY_HEADER']			= FALSE;
+$CONFIG['TITLE']				= "Shop's Inventory";
+$CONFIG['DISPLAY_HEADER']	= FALSE;
+$CONFIG['TABLE_ID']			= "inventory";
+$dt_orderby						= "name";
+$table							= html_get_inventory($CONFIG);
+$html								= "";
 
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n<script src=\"".$PATHS['JS_INVENTORY']."\"></script>";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n<script>";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t$(document).ready(function(){";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t$('#".$CONFIG['TABLE_ID']."').DataTable({";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\t\"order\": [[ 1, \"name\" ]]";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t});";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t$('.dataTables_length').addClass('bs-select');";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t});";
+$CONFIG['CUSTOM_SCRIPTS'] .= make_script($PATHS['JS_INVENTORY']);
+$CONFIG['CUSTOM_SCRIPTS'] .= get_datatables_jquery($dt_orderby, $CONFIG);
+
+//JS Option to prevent form resubmissions on refresh and back;
+$CONFIG['CUSTOM_SCRIPTS'] .= get_form_nullifier($CONFIG);
 
 //jQuery to update `DOES NOT EXIST` product id;
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n<script>";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t$(function(){";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t$(\".inventory-modal\").click(function(e){";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\te.preventDefault();";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\tvar mymodal = $(\"#inv_modal\");";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\t$(\".modal-body #productid\").val(this.id);";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\tmymodal.modal(\"show\");";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\t";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t});";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t})";
-
-//TODO: Move into config option to turn on/off;
-//JS Option to prevent form resubmissions on refresh and back;
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\tif ( window.history.replaceState ){window.history.replaceState( null, null, window.location.href );}";
-
-
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n</script>";
 
+$col_0			= make_gen_info("Some text before the invenory list", $CONFIG);
+$row_0			= make_gen_row($col_0, $CONFIG);
+$container_0	= make_gen_container($row_0, $CONFIG);
 
-$table = get_inventory($CONFIG);
-
-$html = "";
-$html .= $CONFIG['GEN_CONTAINER'];
-$html .= $CONFIG['GEN_ROW'];
-$html .= $CONFIG['GEN_INFO'];
-$html .= "Some text before the invenory list";
-$html .= "\n\t\t\t</div><!-- END COL -->";
-$html .= "\n\t\t</div><!-- END ROW -->";
-$html .= "\n\t</div><!-- END CONTAINER -->";
-$html .= "<hr>";
-
+$html .= $container_0;
+$html .= "\n\t<hr>";
 $html .= $table;
 
 $CONFIG['BODY'] .= $html;

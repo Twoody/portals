@@ -7,6 +7,14 @@
 
 Tanner.L.Woody@gmail.com
 2019-05-11
+	The great cleanup continues;
+	It is important to note that we are managing hrefs in res/strings/href.php;
+	It is also important to note that u/actions/index.php is our current leader
+	in condensing everything...;
+	That is, we are still fixing up the index.php pages;
+
+Tanner.L.Woody@gmail.com
+2019-05-11
 	All GEN updates are in place where we need them;
 	Now, I am going through and wrapping those spots in specific hrefs,
 		cols, rows, and container functions;

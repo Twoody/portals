@@ -272,6 +272,18 @@ function get_css($CONFIG=Null){
 	$s .= $CONFIG['CUSTOM_STYLES'];
 	return $s;
 }
+function get_datatables_jquery($orderby, $CONFIG){
+	$ret	= "";
+	$ret	.= "\n<script>";
+	$ret	.= "\n\t$(document).ready(function(){";
+	$ret	.= "\n\t\t$('#".$CONFIG['TABLE_ID']."').DataTable({";
+	$ret	.= "\n\t\t\t\"order\": [[ 1, \"".$orderby."\" ]]";
+	$ret	.= "\n\t\t});";
+	$ret	.= "\n\t\t$('.dataTables_length').addClass('bs-select');";
+	$ret	.= "\n\t});";
+	$ret	.= "\n</script>";
+	return $ret;
+}
 function get_footer($CONFIG=Null){
 	if ($CONFIG === Null)
 		$CONFIG = get_config();
@@ -462,6 +474,16 @@ function get_footer($CONFIG=Null){
 	$html .= "\n\t\t\t</div>";
 	$html .= "\n\t\t</footer>";
 	return $html;
+}
+function get_form_nullifier($CONFIG){
+	//This is a JS way to nullify the form and prevent duplicate form 
+	//	resubmissions. The proper way to do this though is with POST, REDIRECT, GET;
+	$ret = '';
+	$ret .= "\n\tif ( window.history.replaceState )";
+	$ret .= " {window.history.replaceState( null, null, window.location.href );}";
+	$ret = make_script('', '', '', $ret);
+	//function make_script($src, $integrity="", $origin="", $content=""){
+	return $ret;
 }
 function get_header($CONFIG=Null){
 	if($CONFIG === Null)
@@ -947,7 +969,7 @@ function make_gen_col($c, $CONFIG){
 	$col = "";
 	$col .= "\n\t\t\t\t" . $CONFIG['GEN_COL'];
 	$col .= $c;
-	$col .= "\n\t\t\t\t</div<!-- END COL -->";
+	$col .= "\n\t\t\t\t</div><!-- END COL -->";
 	return $col;
 }
 function make_gen_container($c, $CONFIG){
@@ -1009,8 +1031,6 @@ function make_list_item($text){
 	$ret .= "\n\t\t</li>";
 	return $ret;
 }
-
-
 function make_par( $s, $args=null ){
 	//Take string `s` and be sure string is properly encapsulated as HTML paragraph
 	/*
@@ -1027,13 +1047,19 @@ function make_par( $s, $args=null ){
 	$ret .= $s."</p>\n";
 	return $ret;
 }
-function make_script($src, $integrity="", $origin=""){
+function make_script($src, $integrity="", $origin="", $content=""){
 	/* Make a JS script to be imported into HTML page */
 	$s = "";
 	$s .= "\n\t<script";
-	$s .= "\n\t\tsrc=\"".$src."\"";
-	$s .= "\n\t\tintegrity=\"".$integrity."\"";
-	$s .= "\n\t\tcrossorigin=\"".$origin."\">";
+	if ($src)
+		$s .= "\n\t\tsrc=\"".$src."\"";
+	if ($integrity)
+		$s .= "\n\t\tintegrity=\"".$integrity."\"";
+	if ($origin)
+		$s .= "\n\t\tcrossorigin=\"".$origin."\">";
+	$s .= "\n\t>";
+	if ($content)
+		$s .= "\n\t\t" . $content;
 	$s .= "\n\t</script>";
 	return $s;
 }
