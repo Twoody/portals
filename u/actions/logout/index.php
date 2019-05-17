@@ -37,9 +37,6 @@ $body   = "";
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
 $CONFIG['TITLE'] = "Logout";
 $CONFIG['DISPLAY_HEADER'] = FALSE;
-$CONFIG['CUSTOM_STYLES'] .= "\n<style>";
-$CONFIG['CUSTOM_STYLES'] .= "\n\t.sticky{position: sticky; top: 0;}"; 
-$CONFIG['CUSTOM_STYLES'] .= "\n</style>";
 
 echo '<!-- RUNNING '.$PATHS['USER_LOGOUT'].' -->';
 

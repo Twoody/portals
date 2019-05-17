@@ -947,7 +947,7 @@ function make_gen_col($c, $CONFIG){
 	$col = "";
 	$col .= "\n\t\t\t\t" . $CONFIG['GEN_COL'];
 	$col .= $c;
-	$col .= "\n\t\t\t\t</div<!-- END COL -->>";
+	$col .= "\n\t\t\t\t</div<!-- END COL -->";
 	return $col;
 }
 function make_gen_container($c, $CONFIG){

@@ -40,20 +40,6 @@ $CONFIG['TABLE_ID'] = "inventory";
 $CONFIG['TITLE']						= "Shop's Inventory";
 $CONFIG['DISPLAY_HEADER']			= FALSE;
 
-$CONFIG['CUSTOM_STYLES'] .= "\n<style>";
-$CONFIG['CUSTOM_STYLES'] .= "\n\t.sticky{position: sticky; top: 0;}"; 
-$CONFIG['CUSTOM_STYLES'] .= "\n	table.dataTable thead .sorting:after,";
-$CONFIG['CUSTOM_STYLES'] .= "\n	table.dataTable thead .sorting:before,";
-$CONFIG['CUSTOM_STYLES'] .= "\n	table.dataTable thead .sorting_asc:after,";
-$CONFIG['CUSTOM_STYLES'] .= "\n	table.dataTable thead .sorting_asc:before,";
-$CONFIG['CUSTOM_STYLES'] .= "\n	table.dataTable thead .sorting_asc_disabled:after,";
-$CONFIG['CUSTOM_STYLES'] .= "\n	table.dataTable thead .sorting_asc_disabled:before,";
-$CONFIG['CUSTOM_STYLES'] .= "\n	table.dataTable thead .sorting_desc:after,";
-$CONFIG['CUSTOM_STYLES'] .= "\n	table.dataTable thead .sorting_desc:before,";
-$CONFIG['CUSTOM_STYLES'] .= "\n	table.dataTable thead .sorting_desc_disabled:after,";
-$CONFIG['CUSTOM_STYLES'] .= "\n	table.dataTable thead .sorting_desc_disabled:before { bottom: .5em; }";
-$CONFIG['CUSTOM_STYLES'] .= "\n</style>";
-
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n<script src=\"".$PATHS['JS_INVENTORY']."\"></script>";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n<script>";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t$(document).ready(function(){";
