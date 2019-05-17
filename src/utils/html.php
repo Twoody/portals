@@ -39,8 +39,8 @@ function build_img($imgArr){
 	$src    = $imgArr['src'];
 	$class  = $imgArr['class'];
 	$alt    = $imgArr['alt'];
-	$width  = $imgArr['width'] ?? "100";
-	$height = $imgArr['height'] ?? "100";
+	$width  = $imgArr['width'] ?? "100%";
+	$height = $imgArr['height'] ?? "100%";
 	$html = "<img class=\"".$class."\" src=\"".$src."\""; 
 	$html .= " alt=\"".$alt."\" width=\"".$width."\" height=\"".$height."\">";
 	$html .= "</img>";
@@ -55,6 +55,7 @@ function clog($msg){
 	return $html;
 }
 function get_ad($CONFIG){
+	//TODO: Condense with general libs and wrapping;
 	$body = "";
 	$body .= "\n\t\t<div class=\"card\" style=\"width:100%\">";
 	$body .= "\n\t\t\t<img class=\"card-img-top\" src=\"./resources/images/Your-Logo-Here-Black-22.jpg\" alt=\"Card image cap\"></img>";
@@ -69,6 +70,7 @@ function get_ad($CONFIG){
 	return $body;
 }
 function get_ads_sm($CONFIG){
+	//TODO: Condense with general libs and wrapping;
 	$body = "";
 	$body .= "\n\t\t<div class=\"col-6 m-0 p-0\">";
 	$body .= "\n\t\t\t<img src=\"./resources/images/Your-Logo-Here-Black-22.jpg\" class=\"rounded mx-auto d-block\" width=\"100px\">";
@@ -918,6 +920,19 @@ function get_table_from_owner_query($dbpath, $query, $CONFIG){
 	}
 	return $table;
 }
+function make_div($col, $CONFIG){
+	$ret = "\n\t\t<div ";
+	if ($col['class'])
+		$ret .= " class=\"".$col['class']."\"";
+	if ($col['style'])
+		$ret .= " style=\"".$col['style']."\"";
+	if ($col['foo'])
+		$ret .= " foo=\"".$col['foo']."\"";
+	$ret .= ">";
+	$ret .= "\n\t\t\t" . $col['content'];
+	$ret .= "\n\t\t</div>";
+	return $ret;
+}
 function make_css($REL, $LINK, $INTEGRITY="", $ORIGIN=""){
 	/* Make a CSS stylesheet to be imported into HTML page */
 	$css .= "\n\t<link";
@@ -932,35 +947,35 @@ function make_gen_col($c, $CONFIG){
 	$col = "";
 	$col .= "\n\t\t\t\t" . $CONFIG['GEN_COL'];
 	$col .= $c;
-	$col .= "\n\t\t\t\t</div>";
+	$col .= "\n\t\t\t\t</div<!-- END COL -->>";
 	return $col;
 }
 function make_gen_container($c, $CONFIG){
 	$ret = "";
 	$ret .= "\n\t\t" . $CONFIG['GEN_CONTAINER'];
 	$ret .= $c;
-	$ret .= "\n\t\t</div>";
+	$ret .= "\n\t\t</div><!-- END CONTAINER -->";
 	return $ret;
 }
 function make_gen_info($c, $CONFIG){
 	$col = "";
 	$col .= "\n\t\t\t\t" . $CONFIG['GEN_INFO'];
 	$col .= $c;
-	$col .= "\n\t\t\t\t</div>";
+	$col .= "\n\t\t\t\t</div><!-- END COL -->";
 	return $col;
 }
 function make_gen_row($c, $CONFIG){
 	$col = "";
 	$col .= "\n\t\t\t" . $CONFIG['GEN_ROW'];
 	$col .= $c;
-	$col .= "\n\t\t\t</div>";
+	$col .= "\n\t\t\t</div><!-- END ROW -->";
 	return $col;
 }
 function make_gen_warning($c, $CONFIG){
 	$col = "";
 	$col .= "\n\t\t\t\t" . $CONFIG['GEN_WARNING'];
 	$col .= $c;
-	$col .= "\n\t\t\t\t</div>";
+	$col .= "\n\t\t\t\t</div><!-- END COL -->";
 	return $col;
 }
 function make_href($CONFIG=Null){

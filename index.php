@@ -72,25 +72,35 @@ $body .= "\n\t\t";
 //$body .= "\n\t\t<div class=\"container fixed-width content-slider p-0\">";
 $body .= $CONFIG['GEN_CONTAINER'];
 $body .= $CONFIG['GEN_ROW'];
-$body .= "\n\t\t\t\t<div class=\"col-12 col-sm-8 col-md-9 col-lg-10 m-0 p-0\">";
-$body .= get_carousel($pics, $CONFIG);
-$body .= "\n\t\t\t\t</div><!-- END COL -->";
+$ad_not_sm	= "";	//Show WHEN NOT X-SMALL
+$ad_not_sm	.= "\n\t\t\t\t\t<span class=\"d-none d-sm-block\">";
+$ad_not_sm	.= get_ad($CONFIG);
+$ad_not_sm	.= "\n\t\t\t\t\t</span>";
+$col0	= Array(
+				'class'=>"col-12 col-sm-8 col-md-9 col-lg-10 m-0 p-0",
+				'content'=>get_carousel($pics, $CONFIG),
+		);
+$col1	= Array(
+				'class'=>" col-sm-4 col-md-3 col-lg-2 pr-3 m-0",
+				'content'=>$ad_not_sm,
+		);
+$col1	= Array(
+				'class'=>" col-sm-4 col-md-3 col-lg-2 pr-3 m-0",
+				'content'=>$ad_not_sm,
+		);
+$row1	= Array(
+				'class'=>" row d-sm-none pl-3 pr-3 m-0",
+				'content'=>get_ads_sm($CONFIG),
+		);
+$col_0			= make_div($col0, $CONFIG) . "<!-- END COL -->";
+$col_1			= make_div($col1, $CONFIG) . "<!-- END COL -->";
+$row_0			= make_gen_row($col_0 . $col_1, $CONFIG);
+$row_1			= make_div($row1, $CONFIG) . "<!-- END ROW -->";
+$container_0	= make_gen_container($row_0, $CONFIG);
+$container_1	= make_gen_container($row_1, $CONFIG);
+$body .= $container_0;
+$body .= $container_1;
 
-$body .= "\t\n\t\t\t<div class=\"col-sm-4 col-md-3 col-lg-2 pr-3 m-0\" style=\"\">";
-$body .= "\n\t\t\t\t\t<span class=\"d-none d-sm-block\">";		// Show when NOT small
-$body .= get_ad($CONFIG);
-$body.= "\n\t\t\t\t\t</span>";
-$body .= "\n\t\t\t\t</div>";
-$body .= "\n\t\t\t</div><!-- END ROW -->";
-$body .= "\n\t\t</div><!-- END CONTAINER -->";
-
-$body .= $CONFIG['GEN_CONTAINER'];
-
-$body .= "\n\t<div class=\"row d-sm-none pl-3 pr-3 m-0\">";	// Show WHEN SMALL
-$body .= get_ads_sm($CONFIG);
-$body .= "\n\t\t\t</div><!-- END ROW -->";
-
-$body .= "\n\t\t</div><!-- END CONTAINER -->";
 $CONFIG['BODY'] = $body;
 echo template_b($CONFIG) . "\n";
 
