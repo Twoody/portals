@@ -41,6 +41,9 @@ function build_img($imgArr){
 	$alt    = $imgArr['alt'];
 	$width  = $imgArr['width'] ?? "100%";
 	$height = $imgArr['height'] ?? "100%";
+	$width  = "100%";
+	$height =  "100%";
+
 	$html = "<img class=\"".$class."\" src=\"".$src."\""; 
 	$html .= " alt=\"".$alt."\" width=\"".$width."\" height=\"".$height."\">";
 	$html .= "</img>";
@@ -72,20 +75,24 @@ function get_ad($CONFIG){
 function get_ads_sm($CONFIG){
 	//TODO: Condense with general libs and wrapping;
 	$body = "";
-	$body .= "\n\t\t<div class=\"col-6 m-0 p-0\">";
+	$body .= "\n\t\t<div class=\"col-6 m-0 p-0 justify-content-center\">";
 	$body .= "\n\t\t\t<img src=\"./resources/images/Your-Logo-Here-Black-22.jpg\" class=\"rounded mx-auto d-block\" width=\"100px\">";
+	//$body .= "\n\t\t\t<img src=\"./resources/images/Your-Logo-Here-Black-22.jpg\" class=\"rounded d-block\" width=\"100px\">";
 	$body .= "\n\t\t\t</img>";
 	$body .= "\n\t\t</div>";
-	$body .= "\n\t\t<div class=\"col-6 m-0 p-0\">";
+	$body .= "\n\t\t<div class=\"col-6 m-0 p-0 justify-content-center\">";
 	$body .= "\n\t\t\t<img src=\"./resources/images/Your-Logo-Here-Black-22.jpg\" class=\"rounded mx-auto d-block\" width=\"100px\">";
+	//$body .= "\n\t\t\t<img src=\"./resources/images/Your-Logo-Here-Black-22.jpg\" class=\"rounded d-block\" width=\"100px\">";
 	$body .= "\n\t\t\t</img>";
 	$body .= "\n\t\t</div><!-- END COL -->";
-	$body .= "\n\t\t\t\t<div class=\"col-6 pl-3 pr-3 mx-auto d-block bg-success\">";
+	//$body .= "\n\t\t\t\t<div class=\"col-6 pl-3 pr-3 mx-auto d-block bg-success\">";
+	$body .= "\n\t\t\t\t<div class=\"col-6 pl-3 pr-3 d-block bg-success\">";
 	$body .= "\n\t\t\t\t\t<div class=\"text-center\">";
 	$body .= "\n\t\t\t\t\t\tButton 1 to Link 1";
 	$body .= "\n\t\t\t\t\t</div>";
 	$body .= "\n\t\t\t\t</div><!-- END COL -->";
-	$body .= "\n\t\t\t\t<div class=\"col-6 pl-3 pr-3 mx-auto d-block bg-warning\">";
+	//$body .= "\n\t\t\t\t<div class=\"col-6 pl-3 pr-3 mx-auto d-block bg-warning\">";
+	$body .= "\n\t\t\t\t<div class=\"col-6 pl-3 pr-3 d-block bg-warning\">";
 	$body .= "\n\t\t\t\t\t<div class=\"text-center\">";
 	$body .= "\n\t\t\t\t\t\tButton 2 to Link 2";
 	$body .= "\n\t\t\t\t\t</div>";
@@ -93,35 +100,78 @@ function get_ads_sm($CONFIG){
 
 	return $body;
 }
-function get_carousel($pics, $CONFIG){
-	$body = "";
-	$body .= "\n\t\t\t\t\t<div id=\"demo\" class=\"carousel slide carousel-fade\" data-ride=\"carousel\">";
-	$body .= "\n\t\t\t\t\t\t<!-- Indicators -->";
-	$body .= "\n\t\t\t\t\t\t<ul class=\"carousel-indicators\">";
-	$body .= "\n\t\t\t\t\t\t\t<li data-target=\"#demo\" data-slide-to=\"0\" class=\"active\"></li>";
-	$body .= "\n\t\t\t\t\t\t\t<li data-target=\"#demo\" data-slide-to=\"1\"></li>";
-	$body .= "\n\t\t\t\t\t\t\t<li data-target=\"#demo\" data-slide-to=\"2\"></li>";
-	$body .= "\n\t\t\t\t\t\t</ul>";
-	$body .= "\n\t\t\t\t\t\t<!-- The slideshow -->";
-	$body .= "\n\t\t\t\t\t\t<div class=\"carousel-inner\">";
-	$body .= get_carousel_items($pics);
-	$body .= "\n\t\t\t\t\t\t</div>";
-	
-	$body .= "\n\t\t\t\t\t\t<!-- Left and right controls -->";
-	$body .= "\n\t\t\t\t\t\t<a class=\"carousel-control-prev\" href=\"#demo\" role=\"button\" data-slide=\"prev\">";
-	$body .= "\n\t\t\t\t\t\t\t<span class=\"carousel-control-prev-icon\"></span>";
-	$body .= "\n\t\t\t\t\t\t\t<span class=\"sr-only\">Previous</span>";
-	$body .= "\n\t\t\t\t\t\t</a>";
-	$body .= "\n\t\t\t\t\t\t<a class=\"carousel-control-next\" href=\"#demo\" role=\"button\" data-slide=\"next\">";
-	$body .= "\n\t\t\t\t\t\t\t<span class=\"carousel-control-next-icon\"></span>";
-	$body .= "\n\t\t\t\t\t\t\t<span class=\"sr-only\">Next</span>";
-	$body .= "\n\t\t\t\t\t\t</a>";
-	
-	$body .= "\n\t\t\t\t\t</div><!-- /.carousel -->";
-	return $body;
+function get_carousel($pics, $car_id, $CONFIG){
+	$_car			= "";
+	$_slideshow	= get_carousel_items($pics, $CONFIG);
+	$controls	= get_carousel_controls($pics, $car_id, $CONFIG);
+	$indicators	= get_carousel_indicators($pics, $car_id, $CONFIG);
+	$style		= "height:100vh;overflow-y:auto;";
+	$style		= "";
+	$slideshow	=  Array(
+				'class'=>"carousel-inner",
+				'content'=>$_slideshow,
+				'style'=>$style,
+		);
+	$slideshow	= make_div($slideshow, $CONFIG);
+	$_car	.= $indicators . $slideshow . $controls;
+
+	$car	=  Array(
+				'class'=>"carousel slide carousel-fade",
+				'content'=>$_car,
+				'date-ride'=>"carousel",
+				'id'=>$car_id,
+				'style'=>$style,
+		);
+	$car	= make_div($car, $CONFIG);
+
+	return $car;
 }
-function get_carousel_items($items){
+function get_carousel_controls($pics, $id, $CONFIG){
+	$conrols = '';
+	$controls .= "\n\t\t<!-- Left and right controls -->";
+	$controls .= "\n\t\t<a ";
+	$controls .= " class=\"carousel-control-prev\"";
+	$controls .= " href=\"#".$id."\"";
+	$controls .= " role=\"button\"";
+	$controls .= " data-slide=\"prev\">";
+	$controls .= "\n\t\t\t<span class=\"carousel-control-prev-icon\"></span>";
+	$controls .= "\n\t\t\t<span class=\"sr-only\">Previous</span>";
+	$controls .= "\n\t\t</a>";
+	$controls .= "\n\t\t<a";
+	$controls .= " class=\"carousel-control-next\"";
+	$controls .= " href=\"#".$id."\"";
+	$controls .= " role=\"button\"";
+	$controls .= " data-slide=\"next\">";
+	$controls .= "\n\t\t\t<span class=\"carousel-control-next-icon\"></span>";
+	$controls .= "\n\t\t\t<span class=\"sr-only\">Next</span>";
+	$controls .= "\n\t\t</a>";
+	$controls .= "\n\t\t<!-- END controls -->";
+
+	return $controls;
+}
+function get_carousel_indicators($items, $id, $CONFIG){
+	//The little buttons indicating what picture we are on;
+	$indicators	= '';
+	$indicators .= "\n\t\t\t\t\t\t<!-- Indicators -->";
+	$indicators .= "\n\t\t\t\t\t\t<ul class=\"carousel-indicators\">";
+	for($i=0; $i<count($items); $i++){
+		$indicators .= "\n\t\t\t\t\t\t\t";
+		$indicators .= "<li data-target=\"#".$id."\" ";
+		$indicators .= "data-slide-to=\"".$i."\"";
+		$indicators .= "class=\"";
+		if($i === 0)
+			$indicators .= " active ";
+		$indicators .= "\">";
+		$indicators	.= "</li>";
+	}
+	$indicators .= "\n\t\t\t\t\t\t</ul>";
+	$indicators .= "\n\t\t\t\t\t\t<!-- END Indicators -->";
+
+	return $indicators;
+}
+function get_carousel_items($items, $CONFIG){
 	$html = "";
+	$html	.= "\n\t\t<!-- The slideshow -->";
 	$has_active = FALSE;
 	foreach($items as $item){
 		$html .= "\n\t\t\t\t<div class=\"carousel-item ";
@@ -134,6 +184,7 @@ function get_carousel_items($items){
 		$html .= build_img($item);
 		$html .= "\n\t\t\t\t</div>";
 	}
+	$html	.= "\n\t\t<!-- END slideshow -->";
 	return $html;
 }
 function get_checkout_table($cart, $CONFIG){
@@ -943,11 +994,16 @@ function get_table_from_owner_query($dbpath, $query, $CONFIG){
 	return $table;
 }
 function make_div($col, $CONFIG){
+	//TODO: Key-Value listings for below instead of hardcoding?;
 	$ret = "\n\t\t<div ";
+	if ($col['id'] && $col['id'] !== "")
+		$ret .= " id=\"".$col['id']."\"";
 	if ($col['class'])
 		$ret .= " class=\"".$col['class']."\"";
 	if ($col['style'])
 		$ret .= " style=\"".$col['style']."\"";
+	if ($col['data-ride'])
+		$ret .= " date-ride=\"". $col['data-ride'] ."\"";
 	if ($col['foo'])
 		$ret .= " foo=\"".$col['foo']."\"";
 	$ret .= ">";
@@ -1056,7 +1112,7 @@ function make_script($src, $integrity="", $origin="", $content=""){
 	if ($integrity)
 		$s .= "\n\t\tintegrity=\"".$integrity."\"";
 	if ($origin)
-		$s .= "\n\t\tcrossorigin=\"".$origin."\">";
+		$s .= "\n\t\tcrossorigin=\"".$origin."\"";
 	$s .= "\n\t>";
 	if ($content)
 		$s .= "\n\t\t" . $content;
