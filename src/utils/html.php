@@ -165,6 +165,7 @@ function get_carousel($pics, $car_id, $CONFIG){
 	return $car;
 }
 function get_carousel_controls($pics, $id, $CONFIG){
+	$STRINGS	= get_config_strings($CONFIG);
 	$conrols = '';
 	$controls .= "\n\t\t<!-- Left and right controls -->";
 	$controls .= "\n\t\t<a ";
@@ -175,14 +176,7 @@ function get_carousel_controls($pics, $id, $CONFIG){
 	$controls .= "\n\t\t\t<span class=\"carousel-control-prev-icon\"></span>";
 	$controls .= "\n\t\t\t<span class=\"sr-only\">Previous</span>";
 	$controls .= "\n\t\t</a>";
-	$controls .= "\n\t\t<a";
-	$controls .= " class=\"carousel-control-next\"";
-	$controls .= " href=\"#".$id."\"";
-	$controls .= " role=\"button\"";
-	$controls .= " data-slide=\"next\">";
-	$controls .= "\n\t\t\t<span class=\"carousel-control-next-icon\"></span>";
-	$controls .= "\n\t\t\t<span class=\"sr-only\">Next</span>";
-	$controls .= "\n\t\t</a>";
+	$controls .= get_href_carousel_next($CONFIG, $id);
 	$controls .= "\n\t\t<!-- END controls -->";
 
 	return $controls;
@@ -1099,13 +1093,16 @@ function make_href($CONFIG=Null){
 		//TODO: ERROR MGMT;
 		return 'ERROR 234';
 	}
-	$ret		= "";
-	$class	= " class=\""		. $CONFIG['HREF_CLASS']		. "\" ";
-	$link		= " href=\""		. $CONFIG['HREF_LINK']		. "\" ";
-	$role		= " role=\""		. $CONFIG['HREF_ROLE']		. "\" ";
+	$ret			= "";
+	$class		= " class=\""			. $CONFIG['HREF_CLASS']			. "\" ";
+	$link			= " href=\""			. $CONFIG['HREF_LINK']			. "\" ";
+	$role			= " role=\""			. $CONFIG['HREF_ROLE']			. "\" ";
+	$data_slide	= " data-slide=\""	. $CONFIG['HREF_DATA_SLIDE']	. "\" ";
+	if (!$CONFIG['HREF_DATA_SLIDE'])
+		$data_slide	= "";
 	$text		= $CONFIG['HREF_TEXT'];
 
-	$ret .= "\n\t\t<a " . $class . $link . $role;
+	$ret .= "\n\t\t<a " . $class . $link . $role . $data_slide;
 	$ret .= ">\n\t\t" . $text . "\n\t\t</a>";
 	return $ret;
 }

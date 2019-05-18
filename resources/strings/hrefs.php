@@ -49,6 +49,19 @@ function get_href_admin_users_mgmt($CONFIG, $STRINGS){
 	$href = make_href($CONFIG);
 	return $href;
 }
+function get_href_carousel_next($CONFIG, $car_id){
+	$text = "";
+	$text .= "\n\t\t\t<span class=\"carousel-control-next-icon\"></span>";
+	$text .= "\n\t\t\t<span class=\"sr-only\">Next</span>";
+	$CONFIG['HREF_CLASS']		= "carousel-control-next";
+	$CONFIG['HREF_LINK']			= "#".$car_id;
+	$CONFIG['HREF_ROLE']			= "button";
+	$CONFIG['HREF_DATA_SLIDE']	= "next";
+	$CONFIG['HREF_TEXT']			= $text;
+
+	$href = make_href($CONFIG);
+	return $href;
+}
 function get_href_user_dash0($CONFIG, $STRINGS){
 	$PATHS = get_paths($CONFIG['ROOT']);
 	$CONFIG['HREF_CLASS']	= "list-group-item active";
