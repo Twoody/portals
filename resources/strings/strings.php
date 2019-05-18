@@ -12,8 +12,11 @@ function get_config_strings($CONFIG=Null){
 	echo "\n<!-- RESOURCE FILE: ".$PATHS['STRINGS_PHP']." -->\n";
 
 	return Array(
+		"AD_TEXT"=>"\n\t\t\t\tSome quick example text to build on the card title and make up the bulk of the card's content.",
+		"AD_TITLE"=>"Card title",
 		"ADMIN_SQL_USERS" =>"Users MGMT",
 		"CONTACT_ADMIN"=>"Don't see what you are looking for? Contact " .$CONFIG['EMAIL_ADMIN'] . ".",
+		"CURRENCY"=>"$$$",
 		"DASHBOARD"=>"Dashboard",
 		"DASHBOARD_GREETING"=> "Howdy, ". get_user_fname($CONFIG),
 		"DASHBOARD_GO_SHOP"=> "Go Buy More Stuff",

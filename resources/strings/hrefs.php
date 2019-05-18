@@ -13,7 +13,15 @@ Purpose:
 echo "\n<!-- NEW ".$PATHS['STRINGS_HREF']." imported -->\n";
 require_once($PATHS['STRINGS_PHP']);
 		            //'STRINGS_PHP'
-
+function get_href_ad($CONFIG, $STRINGS){
+	$PATHS = get_paths($CONFIG['ROOT']);
+	$CONFIG['HREF_CLASS']	= "btn btn-primary ad_button_link";
+	$CONFIG['HREF_LINK']		= "#";
+	$CONFIG['HREF_ROLE']		= "";
+	$CONFIG['HREF_TEXT']		= $STRINGS["CURRENCY"];
+	$href = make_href($CONFIG);
+	return $href;
+}
 function get_href_admin_dash0($CONFIG, $STRINGS){
 	$PATHS = get_paths($CONFIG['ROOT']);
 	$CONFIG['HREF_CLASS']	= "list-group-item active";

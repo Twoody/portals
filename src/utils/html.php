@@ -30,19 +30,16 @@ require_once($PATHS['LIBPATH_AUTH_USER']);
 require_once($PATHS['LIBPATH_DB_HELPER']);
 
 function alert($msg){
-	$html =  "\n\t\t<script>";
-	$html .= "\n\t\t\talert(JSON.stringify(".$msg."));";
-	$html .= "\n\t\t</script>";
+	$js	= "\n\t\t\talert(JSON.stringify(".$msg."));";
+	$html = make_script('', '', '', $js);
 	return $html;
 }
 function build_img($imgArr){
-	$src    = $imgArr['src'];
-	$class  = $imgArr['class'];
-	$alt    = $imgArr['alt'];
+	$src    = $imgArr['src'] ?? "";
+	$class  = $imgArr['class'] ?? "";
+	$alt    = $imgArr['alt'] ?? "";
 	$width  = $imgArr['width'] ?? "100%";
 	$height = $imgArr['height'] ?? "100%";
-	$width  = "100%";
-	$height =  "100%";
 
 	$html = "<img class=\"".$class."\" src=\"".$src."\""; 
 	$html .= " alt=\"".$alt."\" width=\"".$width."\" height=\"".$height."\">";
@@ -50,27 +47,41 @@ function build_img($imgArr){
 	return $html;
 }
 function clog($msg){
-	$html =  "\n\t\t<script>";
-	$html .= "\n\t\t\tconsole.log(";
-	$html .= "JSON.stringify(";
-	$html .= $msg."));";
-	$html .= "\n\t\t</script>";
+	$js	= "\n\t\t\tconsole.log(JSON.stringify(".$msg."));";
+	$html = make_script('', '', '', $js);
 	return $html;
 }
 function get_ad($CONFIG){
 	//TODO: Condense with general libs and wrapping;
-	$body = "";
-	$body .= "\n\t\t<div class=\"card\" style=\"width:100%\">";
-	$body .= "\n\t\t\t<img class=\"card-img-top\" src=\"./resources/images/Your-Logo-Here-Black-22.jpg\" alt=\"Card image cap\"></img>";
-	$body .= "\n\t\t\t<div class=\"card-body\">";
-	$body .= "\n\t\t\t\t<h5 class=\"card-title\">Card title</h5>";
-	$body .= "\n\t\t\t<p class=\"card-text\">";
-	$body .= "\n\t\t\t\tSome quick example text to build on the card title and make up the bulk of the card's content.";
-	$body .= "\n\t\t\t</p>";
-	$body .= "\n\t\t\t\t<a href=\"#\" class=\"btn btn-primary ad_button_link\">$$$</a>";
-	$body .= "\n\t\t\t</div>";
-	$body .= "\n\t\t</div>";
-	return $body;
+	$STRINGS			= get_config_strings($CONFIG);
+	$ad_image_arr	= Array(
+		'alt'=>'Card image cap',
+		'class'=> 'card-img-top mx-auto',
+		'height'=>'auto',
+		'src'=>'./resources/images/Your-Logo-Here-Black-22.jpg',
+		'width'=>'100px',
+	);
+	$ad_text_arr = Array(
+		'class'=>'card-text',
+		'content'=>$STRINGS['AD_TEXT'],
+	);
+	$ad_img			= build_img($ad_image_arr, $CONFIG);
+	$ad_title		= "\n\t\t\t\t<h5 class=\"card-title\">".$STRINGS['AD_TITLE']."</h5>";
+	$ad_text			= make_par($ad_text_arr, $CONFIG);
+	$ad_button		= get_href_ad($CONFIG, $STRINGS);
+	$ad_body_arr	= Array(
+		'class'=>"card-body",
+		'content'=>$ad_title . $ad_text . $ad_button,
+		'style'=>"",
+	);
+	$ad_body	= make_div($ad_body_arr, $CONFIG);
+	$ad_arr = Array(
+		'class'=>"card",
+		'content'=>$ad_img . $ad_body,
+		'style'=>"width:100%",
+	);
+	$ad = make_div($ad_arr, $CONFIG);
+	return $ad;
 }
 function get_ads_sm($CONFIG){
 	//TODO: Condense with general libs and wrapping;
@@ -1087,20 +1098,15 @@ function make_list_item($text){
 	$ret .= "\n\t\t</li>";
 	return $ret;
 }
-function make_par( $s, $args=null ){
+function make_par( $par, $CONFIG=Null ){
 	//Take string `s` and be sure string is properly encapsulated as HTML paragraph
-	/*
-	if ($args === null)
-		$args = new \stdClass;
-	$isclass = var_dump(isset($args->{'class'}));
-	*/
-	$ret = '<p';
-	/*
-   if ($isclass === true){
-		ret .= ' class='.$args->class;
-	*/
-	$ret .= ">\n";
-	$ret .= $s."</p>\n";
+	$ret = "\n\t\t<p";
+	if ($par['class'])
+		$ret .= " class=\"". $par['class'] ."\"";
+	$ret .= ">";
+	if ($par['content'])
+		$ret .= $par['content'];
+	$ret .= "\n\t\t</p>";
 	return $ret;
 }
 function make_script($src, $integrity="", $origin="", $content=""){

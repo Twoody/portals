@@ -61,27 +61,24 @@ $pic1 = Array(
 			"class"=>	"d-block w-100",
 			"class"=>	"d-block",
 			"alt"=>		"Joshua Tree Wedding",
-			"width"=>	"110",
-			"height"=>	"50",
-	//		"height"=>	"100vh",
+			"width"=>	"100%",
+			"height"=>	"100%",
 		);
 $pic2 = Array(
 			"src"=>		"./resources/images/landscapes/yosemite_cooper_brodee.jpg",
 			"class"=>	"d-block w-100",
 			"class"=>	"d-block",
 			"alt"=>		"nyc",
-			"width"=>	"110",
-			"height"=>	"50",
-	//		"height"=>	"100vh",
+			"width"=>	"100%",
+			"height"=>	"100%",
 		);
 $pic3 = Array(
 			"src"=>		"./resources/images/landscapes/newport_beach_velo",
 			"class"=>	"d-block w-100",
 			"class"=>	"d-block",
 			"alt"=>		"Bianchi on the Beach",
-			"width"=>	"110",
-			"height"=>	"50",
-	//		"height"=>	"100vh",
+			"width"=>	"100%",
+			"height"=>	"100%",
 		);
 $pics = Array($pic1, $pic2, $pic3);
 
