@@ -140,7 +140,7 @@ function make_footer_bottom_cols($entries, $CONFIG=Null){
 		$CONFIG = get_config();
 	
 	$html = "";
-	$html .= "\n\t\t\t\t\t\t<div class=\"col-xs-4\">";
+	$html .= "\n\t\t\t\t\t\t<div class=\"col-4\">";
 	$html .= "\n\t\t\t\t\t\t\t<div class=\"d-inline-block\">";
 	foreach($entries as $entry){
 		$href = $entry['href'];

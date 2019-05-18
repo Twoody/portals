@@ -122,14 +122,14 @@ function get_ads_sm($CONFIG){
 	$col0 = make_div($col0_arr, $CONFIG). "<!-- END COL -->";
 	$col1 = make_div($col1_arr, $CONFIG). "<!-- END COL -->";
 	$row1_arr = Array(
-		'class'=>" row pl-3 pr-3 m-0",
+		'class'=>" row pl-3 pr-3 m-0 d-block d-sm-none",
 		'style'=>"",
 		'content'=>$col0.$col1,
 	);
 	$col2	= make_div($col2_arr, $CONFIG). "<!-- END COL -->";
 	$col3 = make_div($col3_arr, $CONFIG). "<!-- END COL -->";
 	$row2_arr = Array(
-		'class'=>" row pl-3 pr-3 m-0",
+		'class'=>" row pl-3 pr-3 m-0 d-block d-sm-none",
 		'style'=>"",
 		'content'=>$col2.$col3,
 	);
@@ -188,18 +188,17 @@ function get_carousel_indicators($items, $id, $CONFIG){
 	}
 	$indicators .= "\n\t\t\t\t\t\t</ul>";
 	$indicators .= "\n\t\t\t\t\t\t<!-- END Indicators -->";
-
 	return $indicators;
 }
 function get_carousel_items($items, $CONFIG){
+	//Go through the pictures and build into carousel slideshow;
 	$html = "";
 	$html	.= "\n\t\t<!-- The slideshow -->";
-	$has_active = FALSE;
-	foreach($items as $item){
+	for($i=0; $i<count($items); $i++){
+		$item = $items[$i];
 		$html .= "\n\t\t\t\t<div class=\"carousel-item ";
-		if ($has_active === FALSE){
+		if ($i === 0){
 			$html .= "active";
-			$has_active = TRUE;
 		}
 		$html .= "\">";
 		$html .= "\n\t\t\t\t\t";
@@ -228,12 +227,12 @@ function get_checkout_table($cart, $CONFIG){
 			$table .= "\n\t\t<thead>";
 			while ($row = $cart->fetchArray(SQLITE3_ASSOC)){
 				$header .= "\n\t\t\t<tr role=\"row\">";
-					$header .= "\n\t\t\t\t<th class=\"sorting\">";
-					$header .= "\n\t\t\t\t\tProduct Name";
-					$header .= "\n\t\t\t\t</th>";
-					$header .= "\n\t\t\t\t<th class=\"sorting\">";
-					$header .= "\n\t\t\t\t\tQuantity";
-					$header .= "\n\t\t\t\t</th>";
+				$header .= "\n\t\t\t\t<th class=\"sorting\">";
+				$header .= "\n\t\t\t\t\tProduct Name";
+				$header .= "\n\t\t\t\t</th>";
+				$header .= "\n\t\t\t\t<th class=\"sorting\">";
+				$header .= "\n\t\t\t\t\tQuantity";
+				$header .= "\n\t\t\t\t</th>";
 				$header .= "\n\t\t\t\t<th class=\"sorting\">";
 				$header .= "\n\t\t\t\t\tPrice per Each";
 				$header .= "\n\t\t\t\t</th>";
@@ -243,12 +242,12 @@ function get_checkout_table($cart, $CONFIG){
 				$header .= "\n\t\t\t</tr>";
 
 				$footer .= "\n\t\t\t<tr>";
-					$footer .= "\n\t\t\t\t<th>";
-					$footer .= "\n\t\t\t\t\tProduct Name";
-					$footer .= "\n\t\t\t\t</th>";
-					$footer .= "\n\t\t\t\t<th>";
-					$footer .= "\n\t\t\t\t\tQuantity";
-					$footer .= "\n\t\t\t\t</th>";
+				$footer .= "\n\t\t\t\t<th>";
+				$footer .= "\n\t\t\t\t\tProduct Name";
+				$footer .= "\n\t\t\t\t</th>";
+				$footer .= "\n\t\t\t\t<th>";
+				$footer .= "\n\t\t\t\t\tQuantity";
+				$footer .= "\n\t\t\t\t</th>";
 				$footer .= "\n\t\t\t\t<th class=\"sorting\">";
 				$footer .= "\n\t\t\t\t\tPrice per Each";
 				$footer .= "\n\t\t\t\t</th>";
@@ -458,7 +457,7 @@ function get_footer($CONFIG=Null){
 		$html .= "\n\t\t\t\t\t\t<!-- footer column 2 start -->";
 		$html .= "\n\t\t\t\t\t\t<div class=\"col-md-4\">";
 		$html .= "\n\t\t\t\t\t\t<!-- row start -->";
-		$html .= "\n\t\t\t\t\t\t\t<div class=\"row py-2  d-none d-md-block\">";
+		$html .= "\n\t\t\t\t\t\t\t<div class=\"row   d-none d-md-block\">";
 		$html .= "\n\t\t\t\t\t\t\t\t<div class=\"col-md-12 text-center\">";
 		$html .= "\n\t\t\t\t\t\t\t\t\t<a href=\"#\">";
 		$html .= "\n\t\t\t\t\t\t\t\t\t";
@@ -475,7 +474,7 @@ function get_footer($CONFIG=Null){
 		$html .= "\n\t\t\t\t\t\t</div>";
 		$html .= "\n\t\t\t\t\t\t<!-- row end -->";
 		$html .= "\n\t\t\t\t\t\t<!-- row start -->";
-		$html .= "\n\t\t\t\t\t\t<div class=\"row py-2 d-none d-md-block\">";
+		$html .= "\n\t\t\t\t\t\t<div class=\"row  d-none d-md-block\">";
 		$html .= "\n\t\t\t\t\t\t\t<div class=\"col text-center\">";
 		$html .= "\n\t\t\t\t\t\t\t\t<a href=\"#\">";
 		$html .= "\n\t\t\t\t\t\t\t\t\t";
@@ -496,7 +495,7 @@ function get_footer($CONFIG=Null){
 		$html .= "\n\t\t\t\t\t<!-- footer column 3 start -->";
 		$html .= "\n\t\t\t\t\t<div class=\"col-md-4\">";
 		$html .= "\n\t\t\t\t\t\t<!-- row starting  -->";
-		$html .= "\n\t\t\t\t\t\t<div class=\"row py-2 d-none d-md-block\">";
+		$html .= "\n\t\t\t\t\t\t<div class=\"row  d-none d-md-block\">";
 		$html .= "\n\t\t\t\t\t\t\t<div class=\"col-md-12 text-center\">";
 		$html .= "\n\t\t\t\t\t\t\t\t<a href=\"# \">";
 		$html .= make_font_awesome_stack(Array(
@@ -512,7 +511,7 @@ function get_footer($CONFIG=Null){
 		$html .= "\n\t\t\t\t\t\t</div>";
 		$html .= "\n\t\t\t\t\t\t<!-- row ended -->";
 		$html .= "\n\t\t\t\t\t\t<!-- row starting  -->";
-		$html .= "\n\t\t\t\t\t\t<div class=\"row py-2 d-none d-md-block\">";
+		$html .= "\n\t\t\t\t\t\t<div class=\"row  d-none d-md-block\">";
 		$html .= "\n\t\t\t\t\t\t\t<div class=\"col-md-12 text-center\">";
 		$html .= "\n\t\t\t\t\t\t\t\t<a href=\"". $CONFIG['LINK_TWITTER'] . "\">";
 		$html .= make_font_awesome_stack(Array(
