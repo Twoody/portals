@@ -119,11 +119,23 @@ function get_ads_sm($CONFIG){
 		'content'=>$text2,
 		'style'=>"",
 	);
-	$col0 = make_div($col0_arr, $CONFIG);
-	$col1 = make_div($col1_arr, $CONFIG);
-	$col2	= make_div($col2_arr, $CONFIG);
-	$col3 = make_div($col3_arr, $CONFIG);
-	$ads	.= $col0 . $col1 . $col2 . $col3;
+	$col0 = make_div($col0_arr, $CONFIG). "<!-- END COL -->";
+	$col1 = make_div($col1_arr, $CONFIG). "<!-- END COL -->";
+	$row1_arr = Array(
+		'class'=>" row pl-3 pr-3 m-0",
+		'style'=>"",
+		'content'=>$col0.$col1,
+	);
+	$col2	= make_div($col2_arr, $CONFIG). "<!-- END COL -->";
+	$col3 = make_div($col3_arr, $CONFIG). "<!-- END COL -->";
+	$row2_arr = Array(
+		'class'=>" row pl-3 pr-3 m-0",
+		'style'=>"",
+		'content'=>$col2.$col3,
+	);
+	$row1	= make_div($row1_arr, $CONFIG). "<!-- END ROW -->";
+	$row2	= make_div($row2_arr, $CONFIG). "<!-- END ROW -->";
+	$ads	.= $row1 . $row2;
 	return $ads;
 }
 function get_carousel($pics, $car_id, $CONFIG){

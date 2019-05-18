@@ -110,20 +110,12 @@ $container0 =  Array(
 				'style'=>$style,
 				'content'=>$row_0,
 		);
-
-$row1	= Array(
-				'class'=>" row d-sm-none pl-3 pr-3 m-0",
-				'content'=>get_ads_sm($CONFIG),
-		);
-//TODO: Switch var to ad_rows and put rows in get_ads_sm;
-$row_1			= make_div($row1, $CONFIG) . "<!-- END ROW -->";
 $container_0	= make_div($container0, $CONFIG);
-$container_1	= make_gen_container($row_1, $CONFIG);
+$container_1	= make_gen_container(get_ads_sm($CONFIG), $CONFIG);
 $body .= $container_0;
 $body .= $container_1;
 
 $CONFIG['BODY'] = $body;
 echo template_b($CONFIG) . "\n";
-
 ?>
 
