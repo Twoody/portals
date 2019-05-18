@@ -41,10 +41,10 @@ function build_img($imgArr){
 	$width  = $imgArr['width'] ?? "100%";
 	$height = $imgArr['height'] ?? "100%";
 
-	$html = "<img class=\"".$class."\" src=\"".$src."\""; 
-	$html .= " alt=\"".$alt."\" width=\"".$width."\" height=\"".$height."\">";
-	$html .= "</img>";
-	return $html;
+	$img = "<img class=\"".$class."\" src=\"".$src."\""; 
+	$img .= " alt=\"".$alt."\" width=\"".$width."\" height=\"".$height."\">";
+	$img .= "</img>";
+	return $img;
 }
 function clog($msg){
 	$js	= "\n\t\t\tconsole.log(JSON.stringify(".$msg."));";
@@ -85,31 +85,46 @@ function get_ad($CONFIG){
 }
 function get_ads_sm($CONFIG){
 	//TODO: Condense with general libs and wrapping;
-	$body = "";
-	$body .= "\n\t\t<div class=\"col-6 m-0 p-0 justify-content-center\">";
-	$body .= "\n\t\t\t<img src=\"./resources/images/Your-Logo-Here-Black-22.jpg\" class=\"rounded mx-auto d-block\" width=\"100px\">";
-	//$body .= "\n\t\t\t<img src=\"./resources/images/Your-Logo-Here-Black-22.jpg\" class=\"rounded d-block\" width=\"100px\">";
-	$body .= "\n\t\t\t</img>";
-	$body .= "\n\t\t</div>";
-	$body .= "\n\t\t<div class=\"col-6 m-0 p-0 justify-content-center\">";
-	$body .= "\n\t\t\t<img src=\"./resources/images/Your-Logo-Here-Black-22.jpg\" class=\"rounded mx-auto d-block\" width=\"100px\">";
-	//$body .= "\n\t\t\t<img src=\"./resources/images/Your-Logo-Here-Black-22.jpg\" class=\"rounded d-block\" width=\"100px\">";
-	$body .= "\n\t\t\t</img>";
-	$body .= "\n\t\t</div><!-- END COL -->";
-	//$body .= "\n\t\t\t\t<div class=\"col-6 pl-3 pr-3 mx-auto d-block bg-success\">";
-	$body .= "\n\t\t\t\t<div class=\"col-6 pl-3 pr-3 d-block bg-success\">";
-	$body .= "\n\t\t\t\t\t<div class=\"text-center\">";
-	$body .= "\n\t\t\t\t\t\tButton 1 to Link 1";
-	$body .= "\n\t\t\t\t\t</div>";
-	$body .= "\n\t\t\t\t</div><!-- END COL -->";
-	//$body .= "\n\t\t\t\t<div class=\"col-6 pl-3 pr-3 mx-auto d-block bg-warning\">";
-	$body .= "\n\t\t\t\t<div class=\"col-6 pl-3 pr-3 d-block bg-warning\">";
-	$body .= "\n\t\t\t\t\t<div class=\"text-center\">";
-	$body .= "\n\t\t\t\t\t\tButton 2 to Link 2";
-	$body .= "\n\t\t\t\t\t</div>";
-	$body .= "\n\t\t\t\t</div><!-- END COL -->";
-
-	return $body;
+	$STRINGS		= get_config_strings($CONFIG);
+	$ads			= '';
+	$text2_arr 	= Array(
+		'class'=>"text-center",
+		'content'=>$STRINGS['AD_SMALL_TEXT_1'],
+		'style'=>"",
+	);
+	$text1_arr 	= Array(
+		'class'=>"text-center",
+		'content'=>$STRINGS['AD_SMALL_TEXT_2'],
+		'style'=>"",
+	);
+	$text1		= make_div($text1_arr, $CONFIG);
+	$text2		= make_div($text2_arr, $CONFIG);
+	$col0_arr	= Array(
+		'class'=>"col-6 m-0 p-0 justify-content-center",
+		'content'=>"\n\t\t\t<img src=\"./resources/images/Your-Logo-Here-Black-22.jpg\" class=\"rounded mx-auto d-block\" width=\"100px\">\n\t\t\t</img>",
+		'style'=>"",
+	);
+	$col1_arr	= Array(
+		'class'=>"col-6 m-0 p-0 justify-content-center",
+		'content'=>"\n\t\t\t<img src=\"./resources/images/Your-Logo-Here-Black-22.jpg\" class=\"rounded mx-auto d-block\" width=\"100px\">\n\t\t\t</img>",
+		'style'=>"",
+	);
+	$col2_arr	= Array(
+		'class'=>"col-6 pl-3 pr-3 d-block bg-success",
+		'content'=>$text1,
+		'style'=>"",
+	);
+	$col3_arr	= Array(
+		'class'=>"col-6 pl-3 pr-3 d-block bg-warning",
+		'content'=>$text2,
+		'style'=>"",
+	);
+	$col0 = make_div($col0_arr, $CONFIG);
+	$col1 = make_div($col1_arr, $CONFIG);
+	$col2	= make_div($col2_arr, $CONFIG);
+	$col3 = make_div($col3_arr, $CONFIG);
+	$ads	.= $col0 . $col1 . $col2 . $col3;
+	return $ads;
 }
 function get_carousel($pics, $car_id, $CONFIG){
 	$_car			= "";
