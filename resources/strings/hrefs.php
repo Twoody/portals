@@ -50,6 +50,7 @@ function get_href_admin_users_mgmt($CONFIG, $STRINGS){
 	return $href;
 }
 function get_href_carousel_next($CONFIG, $car_id){
+	//TODO: This definitely needs to be moved for S.R. purposes...
 	$text = "";
 	$text .= "\n\t\t\t<span class=\"carousel-control-next-icon\"></span>";
 	$text .= "\n\t\t\t<span class=\"sr-only\">Next</span>";
@@ -57,6 +58,20 @@ function get_href_carousel_next($CONFIG, $car_id){
 	$CONFIG['HREF_LINK']			= "#".$car_id;
 	$CONFIG['HREF_ROLE']			= "button";
 	$CONFIG['HREF_DATA_SLIDE']	= "next";
+	$CONFIG['HREF_TEXT']			= $text;
+
+	$href = make_href($CONFIG);
+	return $href;
+}
+function get_href_carousel_prev($CONFIG, $car_id){
+	//TODO: This definitely needs to be moved for S.R. purposes...
+	$text = "";
+	$text .= "\n\t\t\t<span class=\"carousel-control-prev-icon\"></span>";
+	$text .= "\n\t\t\t<span class=\"sr-only\">Previous</span>";
+	$CONFIG['HREF_CLASS']		= "carousel-control-prev";
+	$CONFIG['HREF_LINK']			= "#".$car_id;
+	$CONFIG['HREF_ROLE']			= "button";
+	$CONFIG['HREF_DATA_SLIDE']	= "prev";
 	$CONFIG['HREF_TEXT']			= $text;
 
 	$href = make_href($CONFIG);

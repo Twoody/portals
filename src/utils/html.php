@@ -161,24 +161,14 @@ function get_carousel($pics, $car_id, $CONFIG){
 				'style'=>$style,
 		);
 	$car	= make_div($car, $CONFIG);
-
 	return $car;
 }
 function get_carousel_controls($pics, $id, $CONFIG){
-	$STRINGS	= get_config_strings($CONFIG);
-	$conrols = '';
-	$controls .= "\n\t\t<!-- Left and right controls -->";
-	$controls .= "\n\t\t<a ";
-	$controls .= " class=\"carousel-control-prev\"";
-	$controls .= " href=\"#".$id."\"";
-	$controls .= " role=\"button\"";
-	$controls .= " data-slide=\"prev\">";
-	$controls .= "\n\t\t\t<span class=\"carousel-control-prev-icon\"></span>";
-	$controls .= "\n\t\t\t<span class=\"sr-only\">Previous</span>";
-	$controls .= "\n\t\t</a>";
-	$controls .= get_href_carousel_next($CONFIG, $id);
-	$controls .= "\n\t\t<!-- END controls -->";
-
+	$STRINGS		= get_config_strings($CONFIG);
+	$controls	= '';
+	$controls	.= get_href_carousel_prev($CONFIG, $id);
+	$controls	.= get_href_carousel_next($CONFIG, $id);
+	$controls	.= "\n\t\t<!-- END controls -->";
 	return $controls;
 }
 function get_carousel_indicators($items, $id, $CONFIG){
