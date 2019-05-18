@@ -345,15 +345,13 @@ function get_css($CONFIG=Null){
 	return $s;
 }
 function get_datatables_jquery($orderby, $CONFIG){
-	$ret	= "";
-	$ret	.= "\n<script>";
-	$ret	.= "\n\t$(document).ready(function(){";
+	$ret	= "\n\t$(document).ready(function(){";
 	$ret	.= "\n\t\t$('#".$CONFIG['TABLE_ID']."').DataTable({";
 	$ret	.= "\n\t\t\t\"order\": [[ 1, \"".$orderby."\" ]]";
 	$ret	.= "\n\t\t});";
 	$ret	.= "\n\t\t$('.dataTables_length').addClass('bs-select');";
 	$ret	.= "\n\t});";
-	$ret	.= "\n</script>";
+	$ret = make_script('', '', '', $ret);
 	return $ret;
 }
 function get_footer($CONFIG=Null){
