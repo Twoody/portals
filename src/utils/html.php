@@ -35,11 +35,11 @@ function alert($msg){
 	return $html;
 }
 function build_img($imgArr){
-	$src    = $imgArr['src'] ?? "";
-	$class  = $imgArr['class'] ?? "";
-	$alt    = $imgArr['alt'] ?? "";
-	$width  = $imgArr['width'] ?? "100%";
-	$height = $imgArr['height'] ?? "100%";
+	$alt    = $imgArr['alt']		?? "";
+	$class  = $imgArr['class']		?? "";
+	$height = $imgArr['height']	?? "100%";
+	$src    = $imgArr['src']		?? "";
+	$width  = $imgArr['width']		?? "100%";
 
 	$img = "<img class=\"".$class."\" src=\"".$src."\""; 
 	$img .= " alt=\"".$alt."\" width=\"".$width."\" height=\"".$height."\">";
@@ -61,6 +61,7 @@ function get_ad($CONFIG){
 		'src'=>'./resources/images/Your-Logo-Here-Black-22.jpg',
 		'width'=>'100px',
 	);
+
 	$ad_text_arr = Array(
 		'class'=>'card-text',
 		'content'=>$STRINGS['AD_TEXT'],
@@ -87,6 +88,13 @@ function get_ads_sm($CONFIG){
 	//TODO: Condense with general libs and wrapping;
 	$STRINGS		= get_config_strings($CONFIG);
 	$ads			= '';
+	$ad_sm_image_arr	= Array(
+		'alt'=>'Card image cap small',
+		'class'=> 'rounded mx-auto d-block',
+		'height'=>'auto',
+		'src'=>'./resources/images/Your-Logo-Here-Black-22.jpg',
+		'width'=>'100px',
+	);
 	$text2_arr 	= Array(
 		'class'=>"text-center",
 		'content'=>$STRINGS['AD_SMALL_TEXT_1'],
@@ -97,16 +105,17 @@ function get_ads_sm($CONFIG){
 		'content'=>$STRINGS['AD_SMALL_TEXT_2'],
 		'style'=>"",
 	);
+	$ad_sm_img	= build_img($ad_sm_image_arr, $CONFIG);
 	$text1		= make_div($text1_arr, $CONFIG);
 	$text2		= make_div($text2_arr, $CONFIG);
 	$col0_arr	= Array(
-		'class'=>"col-6 m-0 p-0 justify-content-center",
-		'content'=>"\n\t\t\t<img src=\"./resources/images/Your-Logo-Here-Black-22.jpg\" class=\"rounded mx-auto d-block\" width=\"100px\">\n\t\t\t</img>",
+		'class'=>"col-6 m-0 p-0",
+		'content'=>$ad_sm_img,
 		'style'=>"",
 	);
 	$col1_arr	= Array(
-		'class'=>"col-6 m-0 p-0 justify-content-center",
-		'content'=>"\n\t\t\t<img src=\"./resources/images/Your-Logo-Here-Black-22.jpg\" class=\"rounded mx-auto d-block\" width=\"100px\">\n\t\t\t</img>",
+		'class'=>"col-6 m-0 p-0",
+		'content'=>$ad_sm_img,
 		'style'=>"",
 	);
 	$col2_arr	= Array(
@@ -122,14 +131,14 @@ function get_ads_sm($CONFIG){
 	$col0 = make_div($col0_arr, $CONFIG). "<!-- END COL -->";
 	$col1 = make_div($col1_arr, $CONFIG). "<!-- END COL -->";
 	$row1_arr = Array(
-		'class'=>" row pl-3 pr-3 m-0 d-block d-sm-none",
+		'class'=>" row pl-3 pr-3 m-0 d-sm-none",
 		'style'=>"",
 		'content'=>$col0.$col1,
 	);
 	$col2	= make_div($col2_arr, $CONFIG). "<!-- END COL -->";
 	$col3 = make_div($col3_arr, $CONFIG). "<!-- END COL -->";
 	$row2_arr = Array(
-		'class'=>" row pl-3 pr-3 m-0 d-block d-sm-none",
+		'class'=>" row pl-3 pr-3 m-0 d-sm-none",
 		'style'=>"",
 		'content'=>$col2.$col3,
 	);
