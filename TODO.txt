@@ -11,16 +11,18 @@ A. Main:
 	1. 	Design: Navbar, crumbles, media
 	1.		Everywhere there is _POST, sanitize;
 				**** **** DONE **** **** 
-					Just need to debug SQLite2::escapeString() at this point;
+					But the weird thing is I was unable to sql inject when turning it off;
+					TODO is to actually make an instance where I can inject;
+					I am trying to inject on ./a/actions/viewport_users.php
 
 	2. 	JSON parser
 	3.		Datatable + submit form + reset_db() call for members to test sql injection;
 	4.		HTTPS verification; SEE:
 				https://stackoverflow.com/questions/3865143/what-do-i-have-to-code-to-use-https
 	5.		Add a shopid to all of the get_inventory...
-	n-3.	Move Logout button to fixed right of screen
-	N-2. 	Error handling via errors.json
-	N-1.	Set all `import` html comments to use $PAGES path;
+	N-2. 	Make images tied to DB for easier editing;
+				End goal should be edit them with a pencil;
+	N-1. 	Error handling via errors.json
 	N. 	Design more templates...; LOW PRIORITY;
 
 B. Database Items:

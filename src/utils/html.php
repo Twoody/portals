@@ -431,11 +431,11 @@ function get_footer($CONFIG=Null){
 		),
 	);
 	$CONFIG['FA_STACK_SIZE'] = 'fa-2x';
-	$html = "";
-	$html .= "\n\t\t<footer class=\"m-0 mt-5";
+	$footer	= "";
+	$footer	.= "\n\t\t<footer class=\"m-0 mt-5";
 	if ($CONFIG['FOOTER_IS_STICKY'] === TRUE)
-		$html .= " fixed-bottom ";
-	$html .= "\">";
+		$footer .= " fixed-bottom ";
+	$footer	.= "\">";
 	$col0_arr	= Array(
 		'class'=>"col-4 p-0 m-0",
 		'content'=>make_footer_bottom_cols($links0, $CONFIG),
@@ -466,8 +466,8 @@ function get_footer($CONFIG=Null){
 		'style'=>"",
 	);
 	$container	= make_div($container_arr, $CONFIG) . "\n\t\t\t\t\t\t<!-- End CONTAINER -->";
-	$html .= $container; 
-	return $html;
+	$footer	.= $container; 
+	return $footer;
 }
 function get_form_nullifier($CONFIG){
 	//This is a JS way to nullify the form and prevent duplicate form 
