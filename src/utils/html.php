@@ -500,25 +500,49 @@ function get_inventory_modal($CONFIG){
 	$PATHS	= get_paths($CONFIG['ROOT']);
 	$STRINGS	= get_config_strings($CONFIG);
 	require_once($PATHS['FORMS_INVENTORY']);
-	$modal = "";
-	$modal .= "\n\t<!-- Modal -->";
-	$modal .= "\n\t<div class=\"modal fade\" id=\"".$MCONFIG['ID']."\" role=\"dialog\">";
-	$modal .= "\n\t\t<div class=\"modal-dialog\">";
-	$modal .= "\n\t\t\t<!-- Modal content-->";
-	$modal .= "\n\t\t\t<div class=\"modal-content\">";
-	$modal .= "\n\t\t\t\t<div class=\"modal-header\">";
-	$modal .= make_modal_title($STRINGS['MODAL_HEADER']);
-	$modal .= get_href_close_x_modal($CONFIG, $STRINGS);
-	$modal .= "\n\t\t\t\t</div>";
-	$modal .= "\n\t\t\t\t<div class=\"modal-body\">";
-	$modal .= display_inventory_form($CONFIG);
-	$modal .= "\n\t\t\t\t</div>";
-	$modal .= "\n\t\t\t\t<div class=\"modal-footer\">";
-	$modal .= get_href_close_modal($CONFIG, $STRINGS);
-	$modal .= "\n\t\t\t\t</div>";
-	$modal .= "\n\t\t\t</div>";
-	$modal .= "\n\t\t</div>";
-	$modal .= "\n\t</div><!-- END MODAL -->";
+	$modal_title	.= make_modal_title($STRINGS['MODAL_HEADER']);
+	$modal_X			.= get_href_close_x_modal($CONFIG, $STRINGS);
+	$mheader_arr	= Array(
+		'class'=>"modal-header",
+		'content'=>$modal_title . $modal_X,
+		'style'=>"",
+	);
+	$mbody_arr	= Array(
+		'class'=>"modal-body",
+		'content'=>display_inventory_form($CONFIG),
+		'style'=>"",
+	);
+	$mfooter_arr	= Array(
+		'class'=>"modal-footer",
+		'content'=>get_href_close_modal($CONFIG, $STRINGS),
+		'style'=>"",
+	);
+	$mheader	= make_div($mheader_arr, $CONFIG);
+	$mbody	= make_div($mbody_arr, $CONFIG);
+	$mfooter	= make_div($mfooter_arr, $CONFIG);
+
+	$mcontent_arr	= Array(
+		'class'=>"modal-content",
+		'content'=>$mheader . $mbody . $mfooter,
+		'style'=>"",
+	);
+	$mcontent		= make_div($mcontent_arr, $CONFIG);
+	$mdialog_arr	= Array(
+		'class'=>"modal-dialog",
+		'content'=>$mcontent,
+		'style'=>"",
+	);
+	$mdialog		= make_div($mdialog_arr, $CONFIG);
+	$modal_arr	= Array(
+		'class'=>"modal fade",
+		'content'=>$mdialog,
+		'id'=>$MCONFIG['ID'],
+		'role'=>'dialog',
+		'style'=>"",
+	);
+	$modal	= "\n\t<!-- Modal -->";
+	$modal	.= make_div($modal_arr, $CONFIG);
+	$modal	.= "\n\t</div><!-- END MODAL -->";
 	return $modal;
 }
 function get_js($CONFIG=Null){
