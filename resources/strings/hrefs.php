@@ -95,6 +95,55 @@ function get_href_close_x_modal($CONFIG, $STRINGS){
 	$href = make_href($CONFIG);
 	return $href;
 }
+function get_href_nav_admin($CONFIG, $STRINGS){
+	$PATHS = get_paths($CONFIG['ROOT']);
+	$CONFIG['HREF_CLASS']	= "nav-link";
+	$CONFIG['HREF_LINK']		= $PATHS['NAV_ADMIN_PANEL'];
+	$CONFIG['HREF_TEXT']		= $STRINGS["NAV_ADMIN"];
+	$href = make_href($CONFIG);
+	return $href;
+}
+function get_href_nav_brand($CONFIG, $STRINGS){
+	$PATHS = get_paths($CONFIG['ROOT']);
+	$CONFIG['HREF_CLASS']			= "navbar-brand";
+	$CONFIG['HREF_LINK']				= $PATHS['NAV_HOME'];
+	$CONFIG['HREF_TEXT']				= $STRINGS["BRAND"];
+	$href = make_href($CONFIG);
+	return $href;
+}
+function get_href_nav_features($CONFIG, $STRINGS){
+	$PATHS = get_paths($CONFIG['ROOT']);
+	$CONFIG['HREF_CLASS']			= "nav-link";
+	$CONFIG['HREF_LINK']				= $PATHS['NAV_ITEM2'];
+	$CONFIG['HREF_TEXT']				= $STRINGS["NAV_ITEM2"];
+	$href = make_href($CONFIG);
+	return $href;
+}
+function get_href_nav_home($CONFIG, $STRINGS){
+	$PATHS = get_paths($CONFIG['ROOT']);
+	$CONFIG['HREF_CLASS']			= "nav-link";
+	$CONFIG['HREF_LINK']				= $PATHS['NAV_HOME'];
+	$CONFIG['HREF_TEXT']				= $STRINGS["NAV_HOME"];
+	$href = make_href($CONFIG);
+	return $href;
+}
+function get_href_nav_pricing($CONFIG, $STRINGS){
+	$PATHS = get_paths($CONFIG['ROOT']);
+	$CONFIG['HREF_CLASS']			= "nav-link";
+	$CONFIG['HREF_LINK']				= $PATHS['NAV_ITEM3'];
+	$CONFIG['HREF_TEXT']				= $STRINGS["NAV_ITEM3"];
+	$href = make_href($CONFIG);
+	return $href;
+}
+function get_href_nav_shopping_cart($shopping_cart, $CONFIG, $STRINGS){
+	$PATHS = get_paths($CONFIG['ROOT']);
+	$CONFIG['HREF_CLASS']			= "nav-link";
+	$CONFIG['HREF_TITLE']			= $STRINGS['NAV_SHOPPING_CART'];;
+	$CONFIG['HREF_LINK']				= $PATHS['NAV_INVENTORY_DASHBOARD'];
+	$CONFIG['HREF_TEXT']				= $shopping_cart;
+	$href = make_href($CONFIG);
+	return $href;
+}
 function get_href_user_dash0($CONFIG, $STRINGS){
 	$PATHS = get_paths($CONFIG['ROOT']);
 	$CONFIG['HREF_CLASS']	= "list-group-item active";

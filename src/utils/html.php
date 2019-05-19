@@ -562,11 +562,30 @@ function get_js($CONFIG=Null){
 	}
 	return $s;
 }
+function make_tag($tag, $arr, $CONFIG){
+	$ret = "\n\t\t<".$tag." ";
+	if ($arr['id'] && $arr['id'] !== "")
+		$ret .= " id=\"".$arr['id']."\"";
+	if ($arr['class'])
+		$ret .= " class=\"".$arr['class']."\"";
+	if ($arr['style'])
+		$ret .= " style=\"".$arr['style']."\"";
+	if ($arr['data-ride'])
+		$ret .= " date-ride=\"". $arr['data-ride'] ."\"";
+	if ($arr['foo'])
+		$ret .= " foo=\"".$arr['foo']."\"";
+	$ret .= ">";
+	$ret .= "\n\t\t\t" . $arr['content'];
+	$ret .= "\n\t\t</".$tag.">";
+	return $ret;
+}
 function get_nav($CONFIG=Null, $PATHS=Null){
 	if($CONFIG === Null)
 		$CONFIG	= get_config();
 	if($PATHS === Null)
 		$PATHS	= get_paths($CONFIG['ROOT']);
+	$STRINGS			= get_config_strings($CONFIG);
+	//function make_tag($tag, $arr, $CONFIG){
 	$home			= $PATHS['NAV_HOME'];
 	$features	= $PATHS['NAV_DISPLAY_FEATURES'];
 	$pricing		= $PATHS['NAV_DISPLAY_PRICING'];
@@ -576,8 +595,7 @@ function get_nav($CONFIG=Null, $PATHS=Null){
 	$CONFIG['FA_STACK_SIZE'] = "fa-md";
 	$html = "";
 	$html .= "\n\t\t<nav class=\"navbar fixed-top navbar-expand-sm navbar-light bg-light pl-3 pr-3 pb-0 pt-0\">";
-	$html .= "\n\t\t\t<a class=\"navbar-brand\" href=\"" .$home. "\">";
-	$html .= "Portals</a>";
+	$html .= get_href_nav_brand($CONFIG, $STRINGS);
 	$html .= "\n\t\t\t<button ";
 	$html .= "\n\t\t\t\tclass=\"navbar-toggler\"";
 	$html .= "\n\t\t\t\ttype=\"button\"";
@@ -592,28 +610,29 @@ function get_nav($CONFIG=Null, $PATHS=Null){
 	$html .= "\n\t\t\t<div class=\"collapse navbar-collapse\" id=\"navbarText\">";
 	$html .= "\n\t\t\t\t<ul class=\"navbar-nav mr-auto\">";
 	$html .= "\n\t\t\t\t\t<li class=\"nav-item active\">";
-	$html .= "\n\t\t\t\t\t\t<a class=\"nav-link\" href=\"".$home."\">Home <span class=\"sr-only\">(current)</span></a>";
+	$html .= get_href_nav_home($CONFIG, $STRINGS);;
 	$html .= "\n\t\t\t\t\t</li>";
 	$html .= "\n\t\t\t\t\t<li class=\"nav-item\">";
-	$html .= "\n\t\t\t\t\t\t<a class=\"nav-link\" href=\"".$features."\">Features</a>";
+	$html .= get_href_nav_features($CONFIG, $STRINGS);;
 	$html .= "\n\t\t\t\t\t</li>";
 	$html .= "\n\t\t\t\t\t<li class=\"nav-item\">";
-	$html .= "\n\t\t\t\t\t\t<a class=\"nav-link\" href=\"".$pricing."\">Pricing</a>";
+	$html .= get_href_nav_pricing($CONFIG, $STRINGS);;
 	$html .= "\n\t\t\t\t\t</li>";
 	if(is_logged_in($CONFIG) === TRUE && !$CONFIG['IS_LOGGING_OUT']){
-		$html .= "\n\t\t\t\t\t<li class=\"nav-item\">";
-		$html .= "\n\t\t\t\t\t\t<a class=\"nav-link\" title=\"Shopping Cart\"href=\"".$cart."\">";
-		$html .= make_font_awesome_stack(Array(
+		$shopping_cart	=  make_font_awesome_stack(Array(
 			'backdrop-usd fas fa-circle',
 			'fas fa-tw fa-shopping-cart'), $CONFIG);
-		$html .= "<span class=\"badge badge-primary\">".get_cart_count($_SESSION['userid'], $CONFIG)."</span>";
-		$html .= "</a>";
+		$shopping_cart .= "<span class=\"badge badge-primary\">";
+		$shopping_cart .= get_cart_count($_SESSION['userid'], $CONFIG);
+		$shopping_cart .= "</span>";
+
+		$html .= "\n\t\t\t\t\t<li class=\"nav-item\">";
+		$html .= get_href_nav_shopping_cart($shopping_cart, $CONFIG, $STRINGS);
 		$html .= "\n\t\t\t\t\t</li>";
 	}
 	if(is_logged_in($CONFIG) === TRUE && $_SESSION['alevel'] === 'admin' && !$CONFIG['IS_LOGGING_OUT']){
-		//Give link to Admin dashboard
 		$html .= "\n\t\t\t\t\t<li class=\"nav-item\">";
-		$html .= "\n\t\t\t\t\t\t<a class=\"nav-link\" href=\"".$aDash."\">Admin</a>";
+		$html .= get_href_nav_admin($CONFIG, $STRINGS);;
 		$html .= "\n\t\t\t\t\t</li>";
 	}
 	$html .= "\n\t\t\t\t</ul>";
@@ -1039,6 +1058,8 @@ function make_href($CONFIG=Null){
 		$data_slide	= "";
 	if (!$CONFIG['HREF_DATA_DISMISS'])
 		$data_dismiss	= "";
+	if (!$CONFIG['HREF_ROLE'])
+		$role	= "";
 	$text		= $CONFIG['HREF_TEXT'];
 
 	$ret .= "\n\t\t<a " . $class . $link . $role . $data_slide;

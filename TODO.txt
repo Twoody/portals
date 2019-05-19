@@ -1,4 +1,6 @@
 A. Main:
+	1. Figure out if there are some dead links and paths in config/paths.php
+				For sure dead ones might me features and pricing from nav;
 	1. 	TEST functionaltiy of site when internet is back on;
 				Flip CONFIG['IS_ONLINE']
 				RESULTS:
@@ -20,6 +22,7 @@ A. Main:
 	4.		HTTPS verification; SEE:
 				https://stackoverflow.com/questions/3865143/what-do-i-have-to-code-to-use-https
 	5.		Add a shopid to all of the get_inventory...
+	N-3. 	sr-only + CURRENT status on navbar items
 	N-2. 	Make images tied to DB for easier editing;
 				End goal should be edit them with a pencil;
 	N-1. 	Error handling via errors.json
