@@ -138,29 +138,22 @@ function make_footer_bottom_cols($entries, $CONFIG=Null){
 	//TODO: Make this customizable to make the icons bigger from xs to md screens;
 	if($CONFIG === Null)
 		$CONFIG = get_config();
-	
 	$html = "";
-	$html .= "\n\t\t\t\t\t\t<div class=\"col-4\">";
 	$html .= "\n\t\t\t\t\t\t\t<div class=\"d-inline-block\">";
 	foreach($entries as $entry){
 		$href = $entry['href'];
 		$icon = $entry['icon'];
-		$html .= "\n\t\t\t\t\t\t\t\t<div class=\"d-inline-block text-center\">";
 		$html .= "\n\t\t\t\t\t\t\t\t\t<a href=\"". $href . "\" class=\"text-white\">";
-		$html .= "\n\t\t\t\t\t\t\t\t\t\t";
-		$html .= $icon;
+		$html .= "\n\t\t\t\t\t\t\t\t\t\t" . $icon;
 		$html .= "\n\t\t\t\t\t\t\t\t\t</a>";
-		$html .= "\n\t\t\t\t\t\t\t\t</div>";
 	}
 	$html .= "\n\t\t\t\t\t\t</div>";
-	$html .= "\n\t\t\t\t\t</div>";
 	return $html;
 }
 function make_font_awesome_stack($icons, $CONFIG=Null){
 	/* FA util function to easier init a stack of icons */
 	if($CONFIG === Null)
 		$CONFIG	= get_config();
-
 	$stacksize = $CONFIG['FA_STACK_SIZE'];
 	if($CONFIG['FA_STACK_SIZE'])
 		$stacksize = $CONFIG['FA_STACK_SIZE'];

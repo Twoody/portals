@@ -368,7 +368,7 @@ function get_footer($CONFIG=Null){
 		$CONFIG = get_config();
 	$ROOT = $CONFIG['ROOT'];
 	$CONFIG['FA_STACK_SIZE'] = 'fa-md';
-	$col1 = Array(
+	$links0 = Array(
 		Array(	'href'=>$CONFIG['LINK_GMAIL'],
 					'icon'=>make_font_awesome_stack(Array(
 						'backdrop-google fas fa-circle',
@@ -388,7 +388,7 @@ function get_footer($CONFIG=Null){
 					),$CONFIG),
 		),
 	);
-	$col2 = Array(
+	$links1 = Array(
 		Array(	'href' => $CONFIG['LINK_INSTA'],
 					'icon' => make_font_awesome_stack(Array(
 						'backdrop-instagram fas fa-circle',
@@ -408,7 +408,7 @@ function get_footer($CONFIG=Null){
 					),$CONFIG),
 		),
 	);
-	$col3 = Array(
+	$links2 = Array(
 		Array(	'href' => $CONFIG['LINK_FACEBOOK'] ,
 					'icon' => make_font_awesome_stack(Array(
 						'backdrop-facebook fas fa-circle',
@@ -429,129 +429,42 @@ function get_footer($CONFIG=Null){
 		),
 	);
 	$CONFIG['FA_STACK_SIZE'] = 'fa-2x';
-
 	$html = "";
-	$html .= "\n\t\t<footer class=\"mt-5 ";
+	$html .= "\n\t\t<footer class=\"m-0 mt-5";
 	if ($CONFIG['FOOTER_IS_STICKY'] === TRUE)
 		$html .= " fixed-bottom ";
 	$html .= "\">";
-	if ($CONFIG['FOOTER_IS_STICKY'] === False){
-		//$html .= "\n\t\t\t<div class=\"container-fluid bg-faded mt-5\">";
-		$html .= "\n\t\t\t<div class=\"container-fluid bg-faded mt-4\">";
-		$html .= "\n\t\t\t\t<div class=\"container\">";
-		$html .= "\n\t\t\t\t\t<div class=\"row py-3 justify-content-between align-items-center\">";
-		$html .= "\n\t\t\t\t\t<!-- footer column 1 start -->";
-		$html .= "\n\t\t\t\t\t\t<div class=\"col-md-4\">";
-		$html .= "\n\t\t\t\t\t\t<!-- row start -->";
-		$html .= "\n\t\t\t\t\t\t\t<div class=\"row py-3  d-none d-md-block\">";
-		$html .= "\n\t\t\t\t\t\t\t\t<div class=\"col-md-12 text-center\">";
-		$html .= "\n\t\t\t\t\t\t\t\t\t<a href=\"" . $CONFIG['LINK_TWITTER'] . "\">";
-		$html .= "\n\t\t\t\t\t\t\t\t\t\t";
-		$html .= make_font_awesome_stack(Array(
-					'backdrop-footer fas fa-circle',
-					'fab fa-footer fa-twitter'
-					),$CONFIG);
-		$html .= "\n\t\t\t\t\t\t\t\t\t</a>";
-		$html .= "\n\t\t\t\t\t\t\t\t</div>";
-		$html .= "\n\t\t\t\t\t\t\t\t<div class=\"col-md-12 text-center\">";
-		$html .= "\n\t\t\t\t\t\t\t\t\t<h4>Tweets</h4>";
-		$html .= "\n\t\t\t\t\t\t\t\t\tEmbed here";
-		$html .= "\n\t\t\t\t\t\t\t\t</div>";
-		$html .= "\n\t\t\t\t\t\t\t</div>";
-		$html .= "\n\t\t\t\t\t\t\t<!-- row end -->";
-		$html .= "\n\t\t\t\t\t\t</div>";
-		$html .= "\n\t\t\t\t\t\t<!-- footer column 1 end -->";			//End footer col 1
-		$html .= "\n\t\t\t\t\t\t<!-- footer column 2 start -->";
-		$html .= "\n\t\t\t\t\t\t<div class=\"col-md-4\">";
-		$html .= "\n\t\t\t\t\t\t<!-- row start -->";
-		$html .= "\n\t\t\t\t\t\t\t<div class=\"row   d-none d-md-block\">";
-		$html .= "\n\t\t\t\t\t\t\t\t<div class=\"col-md-12 text-center\">";
-		$html .= "\n\t\t\t\t\t\t\t\t\t<a href=\"#\">";
-		$html .= "\n\t\t\t\t\t\t\t\t\t";
-		$html .= make_font_awesome_stack(Array(
-					'backdrop-footer fas fa-circle',
-					'fas fa-fw fa-footer fa-address-card',
-					),$CONFIG);
-		$html .= "\n\t\t\t\t\t\t\t\t</a>";
-		$html .= "\n\t\t\t\t\t\t\t</div>";
-		$html .= "\n\t\t\t\t\t\t\t<div class=\"col-md-12 text-center\">";
-		$html .= "\n\t\t\t\t\t\t\t\t<h4>Contact us</h4>";
-		$html .= "\n\t\t\t\t\t\t\t\t<p>Why not?</p>";
-		$html .= "\n\t\t\t\t\t\t\t</div>";
-		$html .= "\n\t\t\t\t\t\t</div>";
-		$html .= "\n\t\t\t\t\t\t<!-- row end -->";
-		$html .= "\n\t\t\t\t\t\t<!-- row start -->";
-		$html .= "\n\t\t\t\t\t\t<div class=\"row  d-none d-md-block\">";
-		$html .= "\n\t\t\t\t\t\t\t<div class=\"col text-center\">";
-		$html .= "\n\t\t\t\t\t\t\t\t<a href=\"#\">";
-		$html .= "\n\t\t\t\t\t\t\t\t\t";
-		$html .= make_font_awesome_stack(Array(
-					'backdrop-footer fas fa-circle',
-					'fas fa-fw fa-footer fa-laptop',
-					),$CONFIG);
-		$html .= "\n\t\t\t\t\t\t\t\t</a>";
-		$html .= "\n\t\t\t\t\t\t\t</div>";
-		$html .= "\n\t\t\t\t\t\t\t<div class=\"col-md-12 text-center\">";
-		$html .= "\n\t\t\t\t\t\t\t\t<h4>Cookie policy</h4>";
-		$html .= "\n\t\t\t\t\t\t\t\t<p class=\" \">We use <a class=\" \" href=\"/# \">cookies </a></p>";
-		$html .= "\n\t\t\t\t\t\t\t</div>";
-		$html .= "\n\t\t\t\t\t\t</div>";
-		$html .= "\n\t\t\t\t\t\t<!-- row end -->";
-		$html .= "\n\t\t\t\t\t</div>";
-		$html .= "\n\t\t\t\t\t<!-- footer column 2 end -->";
-		$html .= "\n\t\t\t\t\t<!-- footer column 3 start -->";
-		$html .= "\n\t\t\t\t\t<div class=\"col-md-4\">";
-		$html .= "\n\t\t\t\t\t\t<!-- row starting  -->";
-		$html .= "\n\t\t\t\t\t\t<div class=\"row  d-none d-md-block\">";
-		$html .= "\n\t\t\t\t\t\t\t<div class=\"col-md-12 text-center\">";
-		$html .= "\n\t\t\t\t\t\t\t\t<a href=\"# \">";
-		$html .= make_font_awesome_stack(Array(
-					'backdrop-footer fas fa-circle',
-					'fas fa-fw fa-footer fa-file-pdf-o',
-					),$CONFIG);
-		$html .= "\n\t\t\t\t\t\t\t\t</a>";
-		$html .= "\n\t\t\t\t\t\t\t</div>";
-		$html .= "\n\t\t\t\t\t\t\t<div class=\"col-md-12 text-center\">";
-		$html .= "\n\t\t\t\t\t\t\t\t<h4>Download pdf</h4>";
-		$html .= "\n\t\t\t\t\t\t\t\t<p> You like print?</a></p>";
-		$html .= "\n\t\t\t\t\t\t\t</div>";
-		$html .= "\n\t\t\t\t\t\t</div>";
-		$html .= "\n\t\t\t\t\t\t<!-- row ended -->";
-		$html .= "\n\t\t\t\t\t\t<!-- row starting  -->";
-		$html .= "\n\t\t\t\t\t\t<div class=\"row  d-none d-md-block\">";
-		$html .= "\n\t\t\t\t\t\t\t<div class=\"col-md-12 text-center\">";
-		$html .= "\n\t\t\t\t\t\t\t\t<a href=\"". $CONFIG['LINK_TWITTER'] . "\">";
-		$html .= make_font_awesome_stack(Array(
-					'backdrop-footer fas fa-circle',
-					'fas fa-fw fa-footer fa-info',
-					),$CONFIG);
-		$html .= "\n\t\t\t\t\t\t\t\t</a>";
-		$html .= "\n\t\t\t\t\t\t\t</div>";
-		$html .= "\n\t\t\t\t\t\t\t<div class=\"col-md-12 text-center\">";
-		$html .= "\n\t\t\t\t\t\t\t\t<h4>Info</h4>";
-		$html .= "\n\t\t\t\t\t\t\t\tAbout us.";
-		$html .= "\n\t\t\t\t\t\t\t</div>";
-		$html .= "\n\t\t\t\t\t\t</div>";
-		$html .= "\n\t\t\t\t\t\t<!-- row ended -->";
-		$html .= "\n\t\t\t\t\t</div>";
-		$html .= "\n\t\t\t\t\t<!-- footer column 3 end -->";
-		$html .= "\n\t\t\t\t</div>";
-		$html .= "\n\t\t\t</div>";
-		$html .= "\n\t\t</div>";
-	}
-	$html .= "\n\t\t\t<div class=\"container-fluid bg-primary p-0 pl-3 pr-3\">";
-	$html .= "\n\t\t\t\t<div class=\"container bg-secondary p-0\">";
-	$html .= "\n\t\t\t\t\t<div class=\"row py-3 justify-content-between\">";
-	$html .= make_footer_bottom_cols($col1, $CONFIG);
-	$html .= "\n\t\t\t\t\t\t<!-- End Col 1 -->";
-	$html .= make_footer_bottom_cols($col2, $CONFIG);
-	$html .= "\n\t\t\t\t\t\t<!-- End Col 2 -->";
-	$html .= make_footer_bottom_cols($col3, $CONFIG);
-	$html .= "\n\t\t\t\t\t\t<!-- End Col 3 -->";
-	$html .= "\n\t\t\t\t\t</div>";
-	$html .= "\n\t\t\t\t</div>";
-	$html .= "\n\t\t\t</div>";
-	$html .= "\n\t\t</footer>";
+	$col0_arr	= Array(
+		'class'=>"col-4 p-0 m-0",
+		'content'=>make_footer_bottom_cols($links0, $CONFIG),
+		'style'=>"color:white;text-align:center",
+	);
+	$col1_arr	= Array(
+		'class'=>"col-4 p-0 m-0",
+		'content'=>make_footer_bottom_cols($links1, $CONFIG),
+		'style'=>"color:white;text-align:center",
+	);
+	$col2_arr	= Array(
+		'class'=>"col-4 p-0 m-0",
+		'content'=>make_footer_bottom_cols($links2, $CONFIG),
+		'style'=>"color:white;text-align:center",
+	);
+	$col0	= make_div($col0_arr, $CONFIG) . "\n\t\t\t\t\t\t<!-- End Col 0 -->";
+	$col1	= make_div($col1_arr, $CONFIG) . "\n\t\t\t\t\t\t<!-- End Col 1 -->";
+	$col2	= make_div($col2_arr, $CONFIG) . "\n\t\t\t\t\t\t<!-- End Col 2 -->";
+	$row0_arr	= Array(
+		'class'=>"d-flex justify-content-around",
+		'content'=>$col0.$col1.$col2,
+		'style'=>"",
+	);
+	$row0	= make_div($row0_arr, $CONFIG) . "\n\t\t\t\t\t\t<!-- End ROW -->";
+	$container_arr	= Array(
+		'class'=>"container-fluid bg-black p-0 pl-3 pr-3",
+		'content'=>$row0,
+		'style'=>"",
+	);
+	$container	= make_div($container_arr, $CONFIG) . "\n\t\t\t\t\t\t<!-- End CONTAINER -->";
+	$html .= $container; 
 	return $html;
 }
 function get_form_nullifier($CONFIG){
