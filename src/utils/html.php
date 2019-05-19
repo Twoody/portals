@@ -498,6 +498,7 @@ function get_header($CONFIG=Null){
 function get_inventory_modal($CONFIG){
 	$MCONFIG = $CONFIG['MCONFIG'];
 	$PATHS	= get_paths($CONFIG['ROOT']);
+	$STRINGS	= get_config_strings($CONFIG);
 	require_once($PATHS['FORMS_INVENTORY']);
 	$modal = "";
 	$modal .= "\n\t<!-- Modal -->";
@@ -506,14 +507,14 @@ function get_inventory_modal($CONFIG){
 	$modal .= "\n\t\t\t<!-- Modal content-->";
 	$modal .= "\n\t\t\t<div class=\"modal-content\">";
 	$modal .= "\n\t\t\t\t<div class=\"modal-header\">";
-	$modal .= "\n\t\t\t\t\t<h4 class=\"modal-title\">Modal Header</h4>";
-	$modal .= "\n\t\t\t\t\t<button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>";
+	$modal .= make_modal_title($STRINGS['MODAL_HEADER']);
+	$modal .= get_href_close_x_modal($CONFIG, $STRINGS);
 	$modal .= "\n\t\t\t\t</div>";
 	$modal .= "\n\t\t\t\t<div class=\"modal-body\">";
 	$modal .= display_inventory_form($CONFIG);
 	$modal .= "\n\t\t\t\t</div>";
 	$modal .= "\n\t\t\t\t<div class=\"modal-footer\">";
-	$modal .= "\n\t\t\t\t\t<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>";
+	$modal .= get_href_close_modal($CONFIG, $STRINGS);
 	$modal .= "\n\t\t\t\t</div>";
 	$modal .= "\n\t\t\t</div>";
 	$modal .= "\n\t\t</div>";
@@ -1004,13 +1005,16 @@ function make_href($CONFIG=Null){
 		//TODO: ERROR MGMT;
 		return 'ERROR 234';
 	}
-	$ret			= "";
-	$class		= " class=\""			. $CONFIG['HREF_CLASS']			. "\" ";
-	$link			= " href=\""			. $CONFIG['HREF_LINK']			. "\" ";
-	$role			= " role=\""			. $CONFIG['HREF_ROLE']			. "\" ";
-	$data_slide	= " data-slide=\""	. $CONFIG['HREF_DATA_SLIDE']	. "\" ";
+	$ret				= "";
+	$class			= " class=\""			. $CONFIG['HREF_CLASS']				. "\" ";
+	$link				= " href=\""			. $CONFIG['HREF_LINK']				. "\" ";
+	$role				= " role=\""			. $CONFIG['HREF_ROLE']				. "\" ";
+	$data_slide		= " data-slide=\""	. $CONFIG['HREF_DATA_SLIDE']		. "\" ";
+	$data_dismiss	= " data-slide=\""	. $CONFIG['HREF_DATA_DISMISS']	. "\" ";
 	if (!$CONFIG['HREF_DATA_SLIDE'])
 		$data_slide	= "";
+	if (!$CONFIG['HREF_DATA_DISMISS'])
+		$data_dismiss	= "";
 	$text		= $CONFIG['HREF_TEXT'];
 
 	$ret .= "\n\t\t<a " . $class . $link . $role . $data_slide;
@@ -1032,6 +1036,10 @@ function make_list_item($text){
 	$ret .= $text;
 	$ret .= "\n\t\t</li>";
 	return $ret;
+}
+function make_modal_title($text=""){
+	$mtitle .= "\n\t\t\t\t\t<h4 class=\"modal-title\">".$text."</h4>";
+	return $mtitle;
 }
 function make_par( $par, $CONFIG=Null ){
 	//Take string `s` and be sure string is properly encapsulated as HTML paragraph

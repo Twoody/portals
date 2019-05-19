@@ -17,20 +17,23 @@ function get_config_strings($CONFIG=Null){
 		"AD_TEXT"=>"\n\t\t\t\tSome quick example text to build on the card title and make up the bulk of the card's content.",
 		"AD_TITLE"=>"Card title",
 		"ADMIN_SQL_USERS" =>"Users MGMT",
+		"CLOSE_X"=>"&times;",
+		"CLOSE"=>"Close",
 		"CONTACT_ADMIN"=>"Don't see what you are looking for? Contact " .$CONFIG['EMAIL_ADMIN'] . ".",
 		"CURRENCY"=>"$$$",
 		"DASHBOARD"=>"Dashboard",
 		"DASHBOARD_GREETING"=> "Howdy, ". get_user_fname($CONFIG),
 		"DASHBOARD_GO_SHOP"=> "Go Buy More Stuff",
 		"DASHBOARD_VIEW_INV"=>"View Current Inventory",
+		"GET_PURPOSE"=>"What would you like to do today?",
 		"HELPFUL_LINKS"=>'Here are some helpful links:',
+		"MODAL_HEADER"=>"Modal Header",
 		"UNDER_CONSTRUCTION"=>'Sorry, this page is under consturction;',
 		"USER_ACCESS_LEVEL"=> "You are logged in as a ".$_SESSION['alevel'].".",
 		"USER_INVALID_PERMISSION"=> "Warning: Access Denied;",
 		"USER_NOT_LOGGED_IN"=> "Warning, not logged in;",
 
 		"USER_PW_REQS" => "\n<small id=\"passwordHelpBlock\" class=\"form-text text-muted\">Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.</small>\n",
-		"GET_PURPOSE"=>"What would you like to do today?",
 	);
 }
 

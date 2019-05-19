@@ -77,6 +77,24 @@ function get_href_carousel_prev($CONFIG, $car_id){
 	$href = make_href($CONFIG);
 	return $href;
 }
+function get_href_close_modal($CONFIG, $STRINGS){
+	$CONFIG['HREF_CLASS']			= "btn btn-default close";
+	$CONFIG['HREF_LINK']				= "";
+	$CONFIG['HREF_ROLE']				= "";
+	$CONFIG['HREF_DATA_DISMISS']	= "";
+	$CONFIG['HREF_TEXT']				= $STRINGS["CLOSE"];
+	$href = make_href($CONFIG);
+	return $href;
+}
+function get_href_close_x_modal($CONFIG, $STRINGS){
+	$CONFIG['HREF_CLASS']			= "btn btn-default close";
+	$CONFIG['HREF_LINK']				= "";
+	$CONFIG['HREF_ROLE']				= "";
+	$CONFIG['HREF_DATA_DISMISS']	= "";
+	$CONFIG['HREF_TEXT']				= $STRINGS["CLOSE_X"];
+	$href = make_href($CONFIG);
+	return $href;
+}
 function get_href_user_dash0($CONFIG, $STRINGS){
 	$PATHS = get_paths($CONFIG['ROOT']);
 	$CONFIG['HREF_CLASS']	= "list-group-item active";
