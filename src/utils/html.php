@@ -54,11 +54,12 @@ function clog($msg){
 function get_ad($CONFIG){
 	//TODO: Condense with general libs and wrapping;
 	$STRINGS			= get_config_strings($CONFIG);
+	$PATHS			= get_paths($CONFIG['ROOT']);
 	$ad_image_arr	= Array(
 		'alt'=>'Card image cap',
 		'class'=> 'card-img-top mx-auto',
 		'height'=>'auto',
-		'src'=>'./resources/images/Your-Logo-Here-Black-22.jpg',
+		'src'=>$PATHS['IMAGE_AD_LOGO'],
 		'width'=>'100px',
 	);
 
@@ -87,12 +88,13 @@ function get_ad($CONFIG){
 function get_ads_sm($CONFIG){
 	//TODO: Condense with general libs and wrapping;
 	$STRINGS		= get_config_strings($CONFIG);
+	$PATHS		= get_paths($CONFIG['ROOT']);
 	$ads			= '';
 	$ad_sm_image_arr	= Array(
 		'alt'=>'Card image cap small',
 		'class'=> 'rounded mx-auto d-block',
 		'height'=>'auto',
-		'src'=>'./resources/images/Your-Logo-Here-Black-22.jpg',
+		'src'=>$PATHS['IMAGE_AD_LOGO'],
 		'width'=>'100px',
 	);
 	$text2_arr 	= Array(

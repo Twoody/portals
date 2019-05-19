@@ -39,6 +39,7 @@ function get_paths($ROOT=Null){
 		'HTML_LOGIN_OR_SIGNOUT'			=> $ROOT."/src/html_login_or_signout.php",
 		'HTML_REGISTER_USER'				=> $ROOT."/src/register_new_user.php",
 		'HTML_USER_SETTINGS'				=> $ROOT."/src/user_settings.php",
+		"IMAGE_AD_LOGO"					=> $ROOT.'/resources/images/Your-Logo-Here-Black-22.jpg',
 		'JS_INVENTORY'						=> $ROOT."/resources/js/inventory-form.js",
 		'LIBPATH_AUTH_USER'				=> $ROOT.'/src/utils/auth.php',
 		'LIBPATH_DATES'					=> $ROOT.'/src/utils/dates.php',
