@@ -385,9 +385,10 @@ function get_footer($CONFIG=Null){
 function get_form_nullifier($CONFIG){
 	//This is a JS way to nullify the form and prevent duplicate form 
 	//	resubmissions. The proper way to do this though is with POST, REDIRECT, GET;
-	$js	= "\n\tif ( window.history.replaceState )";
-	$js	.= " {window.history.replaceState( null, null, window.location.href );}";
-	$ret	= make_script('', '', '', $js);
+	$js_arr					= Array();
+	$js_arr['content']	= "\n\tif ( window.history.replaceState )";
+	$js_arr['content']	.= " {window.history.replaceState( null, null, window.location.href );}";
+	$ret	= make_tag('script', $js_arr, $CONFIG);;
 	return $ret;
 }
 function get_header($CONFIG=Null){
@@ -476,19 +477,6 @@ function get_js($CONFIG=Null){
 		$s .= $CONFIG['CUSTOM_SCRIPTS'];
 	}
 	return $s;
-}
-function make_tag($tag, $arr, $CONFIG){
-	$keys	= array_keys($arr);
-	$ret	= "\n\t\t<".$tag." ";
-	foreach($keys as $key){
-		if ($key==='content')
-			continue;
-		$ret .= " ".$key."=\"" .$arr[$key]. "\"";
-	}
-	$ret .= ">";
-	$ret .= "\n\t\t\t" . $arr['content'];
-	$ret .= "\n\t\t</".$tag.">";
-	return $ret;
 }
 function get_nav($CONFIG=Null, $PATHS=Null){
 	if($CONFIG === Null)
@@ -793,34 +781,19 @@ function get_table_from_member_query($dbpath, $query, $CONFIG){
 			$result	= $prepare->execute();
 			if($result && $result->fetchArray()){
 				$result->reset();
-				$header  = "";
-				$footer	= "";
+				$row1			= $result->fetchArray(SQLITE3_ASSOC);
+				$columns		= array_keys($row);
+				$theader		= get_table_header($columns, $CONFIG);
+				$tfooter		= get_table_footer($columns, $CONFIG);
+				$header  	= "";
+				$footer		= "";
 				$table .= "\n\t<table id=\"".$TABLE_ID."\" class=\"table table-striped table-bordered\" ";
 				$table .= "cellspacing=\"\" width=\"100%\" role=\"grid\">";
-				$table .= "\n\t\t<thead>";
-				while ($row = $result->fetchArray(SQLITE3_ASSOC)){
-					$header .= "\n\t\t\t<tr role=\"row\">";
-					$footer .= "\n\t\t\t<tr>";
-					$row_keys = array_keys($row);
-					for($i=0; $i<count($row_keys); $i++){
-						 $row_key = $row_keys[$i];;
-						$header .= "\n\t\t\t\t<th class=\"sorting\">";
-						$header .= "\n\t\t\t\t\t".$row_key;
-						$header .= "\n\t\t\t\t</th>";
-						$footer .= "\n\t\t\t\t<th>";
-						$footer .= "\n\t\t\t\t\t".$row_key;
-						$footer .= "\n\t\t\t\t</th>";
-					}
-					$header .= "\n\t\t\t</tr>";
-					$footer .= "\n\t\t\t</tr>";
-					break;
-				}
-				$table .= $header;
-				$table .= "\n\t\t</thead>";
-				$result->reset();
+				$table .= $theader;
 				$table .= "\n\t\t<tbody>";
 				$is_odd = TRUE;
 				$is_first_row = TRUE;
+				$result->reset();
 				while ($row = $result->fetchArray(SQLITE3_ASSOC)){
 					$table .= "\n\t\t\t<tr role=\"row\" class=\"";
 					if ($is_odd)
@@ -855,9 +828,7 @@ function get_table_from_member_query($dbpath, $query, $CONFIG){
 					$is_first_row = FALSE;
 				}
 				$table .= "\n\t\t</tbody>";
-		 		$table .= "<tfoot>";
-				$table .= $footer;
-		 		$table .= "</tfoot>";
+				$table .= $tfooter;
 				$table .= "\n\t</table>";
 			}
 			else{
@@ -897,30 +868,17 @@ function get_table_from_owner_query($dbpath, $query, $CONFIG){
 			$result	= $prepare->execute();
 			if($result && $result->fetchArray()){
 				$result->reset();
-				$header  = "";
-				$footer	= "";
+				$row1			= $result->fetchArray(SQLITE3_ASSOC);
+				$columns		= array_keys($row1);
+				$result->reset();
+				$theader		= get_table_header($columns, $CONFIG);
+				$tfooter		= get_table_footer($columns, $CONFIG);
+				$header  	= "";
+				$footer		= "";
+
 				$table .= "\n\t<table id=\"".$TABLE_ID."\" class=\"table table-striped table-bordered\" ";
 				$table .= "cellspacing=\"\" width=\"100%\" role=\"grid\">";
-				$table .= "\n\t\t<thead>";
-				while ($row = $result->fetchArray(SQLITE3_ASSOC)){
-					$header .= "\n\t\t\t<tr role=\"row\">";
-					$footer .= "\n\t\t\t<tr>";
-					$row_keys = array_keys($row);
-					for($i=0; $i<count($row_keys); $i++){
-						 $row_key = $row_keys[$i];;
-						$header .= "\n\t\t\t\t<th class=\"sorting\">";
-						$header .= "\n\t\t\t\t\t".$row_key;
-						$header .= "\n\t\t\t\t</th>";
-						$footer .= "\n\t\t\t\t<th>";
-						$footer .= "\n\t\t\t\t\t".$row_key;
-						$footer .= "\n\t\t\t\t</th>";
-					}
-					$header .= "\n\t\t\t</tr>";
-					$footer .= "\n\t\t\t</tr>";
-					break;
-				}
-				$table .= $header;
-				$table .= "\n\t\t</thead>";
+				$table .= $theader;
 				$result->reset();
 				$table .= "\n\t\t<tbody>";
 				$is_odd = TRUE;
@@ -955,9 +913,7 @@ function get_table_from_owner_query($dbpath, $query, $CONFIG){
 					$is_first_row = FALSE;
 				}
 				$table .= "\n\t\t</tbody>";
-		 		$table .= "<tfoot>";
-				$table .= $footer;
-		 		$table .= "</tfoot>";
+				$table .= $tfooter;
 				$table .= "\n\t</table>";
 			}
 			else{
@@ -1064,21 +1020,19 @@ function make_list_item($text){
 	$ret .= "\n\t\t</li>";
 	return $ret;
 }
-function make_script($src, $integrity="", $origin="", $content=""){
-	/* Make a JS script to be imported into HTML page */
-	$s = "";
-	$s .= "\n\t<script";
-	if ($src)
-		$s .= "\n\t\tsrc=\"".$src."\"";
-	if ($integrity)
-		$s .= "\n\t\tintegrity=\"".$integrity."\"";
-	if ($origin)
-		$s .= "\n\t\tcrossorigin=\"".$origin."\"";
-	$s .= "\n\t>";
-	if ($content)
-		$s .= "\n\t\t" . $content;
-	$s .= "\n\t</script>";
-	return $s;
+function make_tag($tag, $arr, $CONFIG){
+	$keys	= array_keys($arr);
+	$ret	= "\n\t\t<".$tag." ";
+	foreach($keys as $key){
+		if ($key==='content')
+			continue;
+		$ret .= " ".$key."=\"" .$arr[$key]. "\"";
+	}
+	$ret .= ">";
+	if($arr['content'])
+		$ret .= "\n\t\t\t" . $arr['content'];
+	$ret .= "\n\t\t</".$tag.">";
+	return $ret;
 }
 function tab(){
 	//Return HTML tab; TODO: param for length of tab;
