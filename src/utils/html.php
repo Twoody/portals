@@ -69,7 +69,7 @@ function get_ad($CONFIG){
 	);
 	$ad_img			= build_img($ad_image_arr, $CONFIG);
 	$ad_title		= "\n\t\t\t\t<h5 class=\"card-title\">".$STRINGS['AD_TITLE']."</h5>";
-	$ad_text			= make_par($ad_text_arr, $CONFIG);
+	$ad_text			= make_tag('p', $ad_text_arr, $CONFIG);
 	$ad_button		= get_href_ad($CONFIG, $STRINGS);
 	$ad_body_arr	= Array(
 		'class'=>"card-body",
@@ -220,56 +220,43 @@ function get_carousel_items($items, $CONFIG){
 	return $html;
 }
 function get_checkout_table($cart, $CONFIG){
-	$PATHS		= get_paths($CONFIG['ROOT']);
-	$dbpath		= $PATHS['DB_INVENTORY'];
-	$db			= new SQLite3($dbpath);
-	$CUR_TABLE	= 'inventory';
-	$table   	= "";
-	$QUERY_PAGE	= $CONFIG['QUERY_PAGE'];
-	$TABLE_ID	= $CONFIG['TABLE_ID'];
+	$PATHS			= get_paths($CONFIG['ROOT']);
+	$dbpath			= $PATHS['DB_INVENTORY'];
+	$db				= new SQLite3($dbpath);
+	$CUR_TABLE		= 'inventory';
+	$table   		= "";
+	$QUERY_PAGE		= $CONFIG['QUERY_PAGE'];
+	$TABLE_ID		= $CONFIG['TABLE_ID'];
+	$columns_items	= Array(
+		'Product Name',
+		'Quantity',
+		'Price per Each',
+		'Price * Quantity',
+	);
+	$footers_content	= '';
+	for ($i=0; $i<count($columns_items); $i++){
+		$th_arr = Array(
+			'class'=>'',
+			'content'=> $columns_items[$i],
+		);
+		$footers_content .= make_tag('th', $th_arr, $CONFIG);
+	}
+	$footer_row_arr	= Array(
+		'content'=>$footers_content,
+	);
+	$footer_row	= make_tag('tr', $footer_row_arr, $CONFIG);
+	$footer_arr	= Array(
+		'content'=>$footer_row
+	);
+	$footer	= make_tag('tfoot', $footer_arr, $CONFIG);
+	$header	= get_table_header($columns_items, $CONFIG);
 	$db->enableExceptions(TRUE);
 	try{
 		if($cart && $cart->fetchArray(SQLITE3_ASSOC)){
 			$cart->reset();
-			$header  = "";
-			$footer	= "";
 			$table .= "\n\t<table id=\"".$TABLE_ID."\" class=\"table table-striped table-bordered\" ";
 			$table .= "cellspacing=\"\" width=\"100%\" role=\"grid\">";
-			$table .= "\n\t\t<thead>";
-			while ($row = $cart->fetchArray(SQLITE3_ASSOC)){
-				$header .= "\n\t\t\t<tr role=\"row\">";
-				$header .= "\n\t\t\t\t<th class=\"sorting\">";
-				$header .= "\n\t\t\t\t\tProduct Name";
-				$header .= "\n\t\t\t\t</th>";
-				$header .= "\n\t\t\t\t<th class=\"sorting\">";
-				$header .= "\n\t\t\t\t\tQuantity";
-				$header .= "\n\t\t\t\t</th>";
-				$header .= "\n\t\t\t\t<th class=\"sorting\">";
-				$header .= "\n\t\t\t\t\tPrice per Each";
-				$header .= "\n\t\t\t\t</th>";
-				$header .= "\n\t\t\t\t<th class=\"sorting\">";
-				$header .= "\n\t\t\t\t\tPrice * Quantity";
-				$header .= "\n\t\t\t\t</th>";
-				$header .= "\n\t\t\t</tr>";
-
-				$footer .= "\n\t\t\t<tr>";
-				$footer .= "\n\t\t\t\t<th>";
-				$footer .= "\n\t\t\t\t\tProduct Name";
-				$footer .= "\n\t\t\t\t</th>";
-				$footer .= "\n\t\t\t\t<th>";
-				$footer .= "\n\t\t\t\t\tQuantity";
-				$footer .= "\n\t\t\t\t</th>";
-				$footer .= "\n\t\t\t\t<th class=\"sorting\">";
-				$footer .= "\n\t\t\t\t\tPrice per Each";
-				$footer .= "\n\t\t\t\t</th>";
-				$footer .= "\n\t\t\t\t<th class=\"sorting\">";
-				$footer .= "\n\t\t\t\t\tPrice * Quantity";
-				$footer .= "\n\t\t\t\t</th>";
-				$footer .= "\n\t\t\t</tr>";
-				break;
-			}
 			$table .= $header;
-			$table .= "\n\t\t</thead>";
 			$cart->reset();
 			$table .= "\n\t\t<tbody>";
 			$is_odd = TRUE;
@@ -319,9 +306,7 @@ function get_checkout_table($cart, $CONFIG){
 				$is_first_row = FALSE;
 			}
 			$table .= "\n\t\t</tbody>";
-			$table .= "<tfoot>";
 			$table .= $footer;
-			$table .= "</tfoot>";
 			$table .= "\n\t</table>";
 		}
 		else{
@@ -500,7 +485,11 @@ function get_inventory_modal($CONFIG){
 	$PATHS	= get_paths($CONFIG['ROOT']);
 	$STRINGS	= get_config_strings($CONFIG);
 	require_once($PATHS['FORMS_INVENTORY']);
-	$modal_title	.= make_modal_title($STRINGS['MODAL_HEADER']);
+	$mtitle_arr		= Array(
+		'class'=>'modal-title',
+		'contnet'=>$STRINGS['MODAL_HEADER'],
+	);
+	$modal_title	.= make_tag('h4', $mtitle_arr, $CONFIG);
 	$modal_X			.= get_href_close_x_modal($CONFIG, $STRINGS);
 	$mheader_arr	= Array(
 		'class'=>"modal-header",
@@ -798,6 +787,28 @@ function get_table_from_inventory($CONFIG){
 	}
 	return $table;
 }
+function get_table_header($columns_items, $CONFIG){
+	$headers_content	= '';
+	for ($i=0; $i<count($columns_items); $i++){
+		$th_arr = Array(
+			'class'=>'sorting',
+			'content'=> $columns_items[$i],
+		);
+		$headers_content .= make_tag('th', $th_arr, $CONFIG);
+
+		$th_arr['class']	= '';
+	}
+	$header_row_arr	= Array(
+		'role'=>'row',
+		'content'=>$headers_content,
+	);
+	$header_row	= make_tag('tr', $header_row_arr, $CONFIG);
+	$header_arr	= Array(
+		'content'=>$header_row
+	);
+	$header	= make_tag('thead', $header_arr, $CONFIG);
+	return $header;
+}
 function get_table_from_member_query($dbpath, $query, $CONFIG){
 	//TODO:	members to have a counter and submit;
 	/* Return a dataTable table based off of query */
@@ -1084,21 +1095,6 @@ function make_list_item($text){
 	$ret .= "\n\t\t<li class=\"list-group-item\">";
 	$ret .= $text;
 	$ret .= "\n\t\t</li>";
-	return $ret;
-}
-function make_modal_title($text=""){
-	$mtitle .= "\n\t\t\t\t\t<h4 class=\"modal-title\">".$text."</h4>";
-	return $mtitle;
-}
-function make_par( $par, $CONFIG=Null ){
-	//Take string `s` and be sure string is properly encapsulated as HTML paragraph
-	$ret = "\n\t\t<p";
-	if ($par['class'])
-		$ret .= " class=\"". $par['class'] ."\"";
-	$ret .= ">";
-	if ($par['content'])
-		$ret .= $par['content'];
-	$ret .= "\n\t\t</p>";
 	return $ret;
 }
 function make_script($src, $integrity="", $origin="", $content=""){

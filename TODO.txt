@@ -1,6 +1,11 @@
 A. Main:
 	1. Figure out if there are some dead links and paths in config/paths.php
 				For sure dead ones might me features and pricing from nav;
+				Part of this is going to be changing:
+					make_script()
+					make_href()
+					etc.
+				, calls to make_tag();
 	1. 	TEST functionaltiy of site when internet is back on;
 				Flip CONFIG['IS_ONLINE']
 				RESULTS:
