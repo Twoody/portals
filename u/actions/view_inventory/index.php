@@ -39,16 +39,13 @@ $CONFIG['TABLE_ID'] = "inventory";
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
 $CONFIG['TITLE']						= "My Shopping Cart";
 $CONFIG['DISPLAY_HEADER']			= FALSE;
+$dt_orderby								= "name";
 
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n<script src=\"".$PATHS['JS_INVENTORY']."\"></script>";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n<script>";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t$(document).ready(function(){";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t$('#".$CONFIG['TABLE_ID']."').DataTable({";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\t\"order\": [[ 1, \"name\" ]]";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t});";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t$('.dataTables_length').addClass('bs-select');";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t});";
+$CONFIG['CUSTOM_SCRIPTS'] .= get_form_nullifier($CONFIG);
 
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n<script>";
+$CONFIG['CUSTOM_SCRIPTS'] .= get_datatables_jquery($dt_orderby, $CONFIG);;
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t$(function(){";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t$(\".inventory-modal\").click(function(e){";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\te.preventDefault();";
@@ -58,10 +55,6 @@ $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\tmymodal.modal(\"show\");";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\t";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t});";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t})";
-
-//TODO: Move into config option to turn on/off;
-//JS Option to prevent form resubmissions on refresh and back;
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\tif ( window.history.replaceState ){window.history.replaceState( null, null, window.location.href );}";
 
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n</script>";
 

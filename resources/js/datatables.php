@@ -11,35 +11,38 @@ function get_datatables_scripts($CONFIG=Null, $ROOT=Null){
 	$PATHS = get_paths($ROOT);
 	echo "\n<!-- ".$PATHS['DATATABLES_JS_PATH']." imported -->\n";
 
-
+	$dt_arr		= get_js_arr();
+	$jquery_arr	= get_js_arr();
 	$ret = "";
 	if ($CONFIG['HAS_DATATABLES']){
 		$ret .= "\n\t<!-- jQuery first,then DataTables.js -->"; 
 		if($CONFIG['IS_ONLINE']){
-			$ret .= make_script(
-				$CONFIG['DATATABLES_JS_JQUERY_SRC'],
-				$CONFIG['DATATABLES_JS_JQUERY_INTEGRITY'],
-				$CONFIG['DATATABLES_JS_JQUERY_ORIGIN']);
-			$ret .= make_script(
-				$CONFIG['DATATABLES_JS_SRC'],
-				$CONFIG['DATATABLES_JS_INTEGRITY'],
-				$CONFIG['DATATABLES_JS_ORIGIN']);
+			$jquery_arr['src']			= $CONFIG['DATATABLES_JS_JQUERY_SRC'];
+			$jquery_arr['integrity']	= $CONFIG['DATATABLES_JS_JQUERY_INTEGRITY'];
+			$jquery_arr['crossorigin']	= $CONFIG['DATATABLES_JS_JQUERY_ORIGIN'];
+
+			$dt_arr['src']					= $CONFIG['DATATABLES_JS_SRC'];
+			$dt_arr['integrity']			= $CONFIG['DATATABLES_JS_INTEGRITY'];
+			$dt_arr['crossorigin']		= $CONFIG['DATATABLES_JS_ORIGIN'];
 		}
 		else{
 			//Offline and running local;
-			$ret .= make_script($PATHS['LOCAL_JS_JQUERY_DATATABLES']);
-			$ret .= make_script($PATHS['LOCAL_JS_DATATABLES']);
+			$jquery_arr['src']	= $PATHS['LOCAL_JS_JQUERY_DATATABLES'];
+			$dt_arr['src']			= $PATHS['LOCAL_JS_DATATABLES'];
 		}
+		$ret .= make_tag('script', $jquery_arr, $CONFIG);
+		$ret .= make_tag('script', $dt_arr, $CONFIG);
 	}
 	else if($CONFIG['HAS_DATATABLES_JQUERY']){
-		$ret .= "\n\t<!-- jQuery first -->"; 
-		if($CONFIG['IS_ONLINE'])
-			$ret .= make_script(
-				$CONFIG['DATATABLES_JS_JQUERY_SRC'],
-				$CONFIG['DATATABLES_JS_JQUERY_INTEGRITY'],
-				$CONFIG['DATATABLES_JS_JQUERY_ORIGIN']);
+		$ret .= "\n\t<!-- DataTables jQuery -->"; 
+		if($CONFIG['IS_ONLINE']){
+			$jquery_arr['src']			= $CONFIG['DATATABLES_JS_JQUERY_SRC'];
+			$jquery_arr['integrity']	= $CONFIG['DATATABLES_JS_JQUERY_INTEGRITY'];
+			$jquery_arr['crossorigin']	= $CONFIG['DATATABLES_JS_JQUERY_ORIGIN'];
+		}
 		else
-			$ret .= make_script($PATHS['LOCAL_JS_JQUERY_DATATABLES']);
+			$jquery_arr['src']	= $PATHS['LOCAL_JS_JQUERY_DATATABLES'];
+		$ret .= make_tag('script', $jquery_arr, $CONFIG);
 	}
 	else
 		$ret .= " \n\t<!-- NO DATATABLES MODULES IMPORTED-->\n";

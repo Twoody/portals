@@ -42,15 +42,17 @@ $CONFIG['TABLE_ID']			= "inventory";
 $dt_orderby						= "name";
 $table							= html_get_inventory($CONFIG);
 $html								= "";
-
-$CONFIG['CUSTOM_SCRIPTS'] .= make_script($PATHS['JS_INVENTORY']);
-$CONFIG['CUSTOM_SCRIPTS'] .= get_datatables_jquery($dt_orderby, $CONFIG);
+$js_inv_arr						= get_js_arr();
+$js_inv_arr['src']			= $PATHS['JS_INVENTORY'];
+$CONFIG['CUSTOM_SCRIPTS'] .= make_tag('script', $js_inv_arr, $CONFIG);
 
 //JS Option to prevent form resubmissions on refresh and back;
 $CONFIG['CUSTOM_SCRIPTS'] .= get_form_nullifier($CONFIG);
 
 //jQuery to update `DOES NOT EXIST` product id;
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n<script>";
+
+$CONFIG['CUSTOM_SCRIPTS'] .= get_datatables_jquery($dt_orderby, $CONFIG);;
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t$(function(){";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t$(\".inventory-modal\").click(function(e){";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\te.preventDefault();";

@@ -30,8 +30,9 @@ require_once($PATHS['LIBPATH_AUTH_USER']);
 require_once($PATHS['LIBPATH_DB_HELPER']);
 
 function alert($msg){
-	$js	= "\n\t\t\talert(JSON.stringify(".$msg."));";
-	$html = make_script('', '', '', $js);
+	$js_arr					= get_js_arr();
+	$js_arr['content']	= "\n\t\t\talert(JSON.stringify(".$msg."));";
+	$html						= make_tag('script', $js_arr, $CONFIG);
 	return $html;
 }
 function build_img($imgArr){
@@ -47,8 +48,9 @@ function build_img($imgArr){
 	return $img;
 }
 function clog($msg){
-	$js	= "\n\t\t\tconsole.log(JSON.stringify(".$msg."));";
-	$html = make_script('', '', '', $js);
+	$js_arr					= get_js_arr();
+	$js_arr['content']	= "\n\t\t\tconsole.log(JSON.stringify(".$msg."));";
+	$html						= make_tag('script', $js_arr, $CONFIG);
 	return $html;
 }
 function get_ad($CONFIG){
@@ -267,14 +269,14 @@ function get_css($CONFIG=Null){
 	return $s;
 }
 function get_datatables_jquery($orderby, $CONFIG){
-	$ret	= "\n\t$(document).ready(function(){";
-	$ret	.= "\n\t\t$('#".$CONFIG['TABLE_ID']."').DataTable({";
-	$ret	.= "\n\t\t\t\"order\": [[ 1, \"".$orderby."\" ]]";
-	$ret	.= "\n\t\t});";
-	$ret	.= "\n\t\t$('.dataTables_length').addClass('bs-select');";
-	$ret	.= "\n\t});";
-	$ret = make_script('', '', '', $ret);
-	return $ret;
+	//TODO: Debug when putting in make_tag('script');
+	$content	= "\n\t$(document).ready(function(){";
+	$content	.= "\n\t\t$('#".$CONFIG['TABLE_ID']."').DataTable({";
+	$content	.= "\n\t\t\t\"order\": [[ 1, \"".$orderby."\" ]]";
+	$content	.= "\n\t\t});";
+	$content	.= "\n\t\t$('.dataTables_length').addClass('bs-select');";
+	$content	.= "\n\t});";
+	return $content;
 }
 function get_footer($CONFIG=Null){
 	if ($CONFIG === Null)
@@ -383,11 +385,9 @@ function get_footer($CONFIG=Null){
 function get_form_nullifier($CONFIG){
 	//This is a JS way to nullify the form and prevent duplicate form 
 	//	resubmissions. The proper way to do this though is with POST, REDIRECT, GET;
-	$ret = '';
-	$ret .= "\n\tif ( window.history.replaceState )";
-	$ret .= " {window.history.replaceState( null, null, window.location.href );}";
-	$ret = make_script('', '', '', $ret);
-	//function make_script($src, $integrity="", $origin="", $content=""){
+	$js	= "\n\tif ( window.history.replaceState )";
+	$js	.= " {window.history.replaceState( null, null, window.location.href );}";
+	$ret	= make_script('', '', '', $js);
 	return $ret;
 }
 function get_header($CONFIG=Null){
@@ -595,55 +595,40 @@ function get_nav_text($CONFIG, $STRINGS){
 	$nav_text = make_tag('span', $nav_text_arr, $CONFIG);
 	return $nav_text;
 }
+function get_js_arr(){
+	return Array(
+		'content'=>'',
+		'integrity'=>'',
+		'crossorigin'=>'',
+		'src'=>'',
+	);
+}
 function get_table_from_inventory($CONFIG){
-	$PATHS		= get_paths($CONFIG['ROOT']);
-	$dbpath		= $PATHS['DB_INVENTORY'];
-	$query		= "SELECT id, name, quantity, price FROM inventory";
-	$db			= new SQLite3($dbpath);
-	$CUR_TABLE	= 'inventory';
-	$table   	= "";
-	$QUERY_PAGE	= $CONFIG['QUERY_PAGE'];
-	$TABLE_ID	= $CONFIG['TABLE_ID'];
+	$PATHS			= get_paths($CONFIG['ROOT']);
+	$dbpath			= $PATHS['DB_INVENTORY'];
+	$query			= "SELECT id, name, quantity, price FROM inventory";
+	$db				= new SQLite3($dbpath);
+	$CUR_TABLE		= 'inventory';
+	$table   		= "";
+	$QUERY_PAGE		= $CONFIG['QUERY_PAGE'];
+	$TABLE_ID		= $CONFIG['TABLE_ID'];
+	$columns_items	= Array(
+		'Name',
+		'Quantity',
+		'Price',
+	);
+	$theader		= get_table_header($columns_items, $CONFIG);
+	$tfooter		= get_table_footer($columns_items, $CONFIG);
 	$db->enableExceptions(TRUE);
 	try{
 		$prepare = $db->prepare($query);
-		if(!$CUR_TABLE)
-			$CUR_TABLE = "users";
 		if ($prepare){
 			$result	= $prepare->execute();
 			if($result && $result->fetchArray()){
 				$result->reset();
-				$header  = "";
-				$footer	= "";
 				$table .= "\n\t<table id=\"".$TABLE_ID."\" class=\"table table-striped table-bordered\" ";
 				$table .= "cellspacing=\"\" width=\"100%\" role=\"grid\">";
-				$table .= "\n\t\t<thead>";
-
-				$header .= "\n\t\t\t<tr role=\"row\">";
-				$header .= "\n\t\t\t\t<th class=\"sorting\">";
-				$header .= "\n\t\t\t\t\tName";
-				$header .= "\n\t\t\t\t</th>";
-				$header .= "\n\t\t\t\t<th class=\"sorting\">";
-				$header .= "\n\t\t\t\t\tQuantity";
-				$header .= "\n\t\t\t\t</th>";
-				$header .= "\n\t\t\t\t<th class=\"sorting\">";
-				$header .= "\n\t\t\t\t\tPrice";
-				$header .= "\n\t\t\t\t</th>";
-				$header .= "\n\t\t\t</tr>";
-
-				$footer .= "\n\t\t\t<tr>";
-				$footer .= "\n\t\t\t\t<th>";
-				$footer .= "\n\t\t\t\t\tName";
-				$footer .= "\n\t\t\t\t</th>";
-				$footer .= "\n\t\t\t\t<th>";
-				$footer .= "\n\t\t\t\t\tQuntity";
-				$footer .= "\n\t\t\t\t</th>";
-				$footer .= "\n\t\t\t\t<th>";
-				$footer .= "\n\t\t\t\t\tPrice";
-				$footer .= "\n\t\t\t\t</th>";
-				$footer .= "\n\t\t\t</tr>";
-
-				$table .= $header;
+				$table .= $theader;
 				$table .= "\n\t\t</thead>";
 				$table .= "\n\t\t<tbody>";
 				$is_odd			= TRUE;
@@ -686,9 +671,7 @@ function get_table_from_inventory($CONFIG){
 					$is_first_row = FALSE;
 				}
 				$table .= "\n\t\t</tbody>";
-		 		$table .= "<tfoot>";
-				$table .= $footer;
-		 		$table .= "</tfoot>";
+				$table .= $tfooter;
 				$table .= "\n\t</table>";
 			}
 			else{

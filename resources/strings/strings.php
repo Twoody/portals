@@ -1,4 +1,5 @@
 <?php
+echo "\n<!-- RESOURCE FILE: ".$PATHS['STRINGS_PHP']." -->\n";
 function get_config_strings($CONFIG=Null){
 	if ($CONFIG === Null){
 		$ROOT = ".";
@@ -9,7 +10,6 @@ function get_config_strings($CONFIG=Null){
 	}
 	$ROOT		= $CONFIG['ROOT'];
 	$PATHS	= get_paths($ROOT);
-	echo "\n<!-- RESOURCE FILE: ".$PATHS['STRINGS_PHP']." -->\n";
 
 	return Array(
 		"AD_SMALL_TEXT_1"=>"\n\t\t\t\tButton 1 to Link 1",

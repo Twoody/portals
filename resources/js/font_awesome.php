@@ -11,15 +11,18 @@ function get_font_awesome_scripts($CONFIG=Null, $ROOT=Null){
 	$PATHS = get_paths($ROOT);
 	echo "\n<!-- ".$PATHS['FONT_AWESOME_JS_PATH']." imported -->\n";
 
-	$ret	= "";
 	if ($CONFIG['HAS_FONT_AWESOME']){
-		$ret .= "\n\t<!-- jQuery first,then Popper.js,then Bootstrap.JS -->"; 
 		if($CONFIG['IS_ONLINE'])
-			$ret .= make_script($CONFIG['FONT_AWESOME_JS_SRC']);
+			$js_src = $CONFIG['FONT_AWESOME_JS_SRC'];
 		else
-			$ret .= make_script($PATHS['LOCAL_JS_FA']);
+			$js_src = $PATHS['LOCAL_JS_FA'];
 	}
-	return $ret;
+	$js_arr	= Array(
+		'src'=>$js_src,
+	);
+	$script	= "\n\t<!-- Font Awesome Src -->"; 
+	$script	.= make_tag('script', $js_arr, $CONFIG);
+	return $script;
 }
 
 /***** Just for testing *****/
