@@ -584,15 +584,8 @@ function get_nav($CONFIG=Null, $PATHS=Null){
 		$CONFIG	= get_config();
 	if($PATHS === Null)
 		$PATHS	= get_paths($CONFIG['ROOT']);
-	$STRINGS			= get_config_strings($CONFIG);
-	//function make_tag($tag, $arr, $CONFIG){
-	$home			= $PATHS['NAV_HOME'];
-	$features	= $PATHS['NAV_DISPLAY_FEATURES'];
-	$pricing		= $PATHS['NAV_DISPLAY_PRICING'];
-	$settings	= $PATHS['NAV_USER_SETTINGS'];
-	$aDash		= $PATHS['NAV_ADMIN_PANEL'];
-	$cart			= $PATHS['NAV_CART'];
-	$CONFIG['FA_STACK_SIZE'] = "fa-md";
+	$STRINGS	= get_config_strings($CONFIG);
+	$nav_items	= get_nav_items($CONFIG);
 	$html = "";
 	$html .= "\n\t\t<nav class=\"navbar fixed-top navbar-expand-sm navbar-light bg-light pl-3 pr-3 pb-0 pt-0\">";
 	$html .= get_href_nav_brand($CONFIG, $STRINGS);
@@ -608,55 +601,75 @@ function get_nav($CONFIG=Null, $PATHS=Null){
 	$html .= "\n\t\t\t\t<span class=\"navbar-toggler-icon\"></span>";
 	$html .= "\n\t\t\t</button>";
 	$html .= "\n\t\t\t<div class=\"collapse navbar-collapse\" id=\"navbarText\">";
-	$html .= "\n\t\t\t\t<ul class=\"navbar-nav mr-auto\">";
-	$html .= "\n\t\t\t\t\t<li class=\"nav-item active\">";
-	$html .= get_href_nav_home($CONFIG, $STRINGS);;
-	$html .= "\n\t\t\t\t\t</li>";
-	$html .= "\n\t\t\t\t\t<li class=\"nav-item\">";
-	$html .= get_href_nav_features($CONFIG, $STRINGS);;
-	$html .= "\n\t\t\t\t\t</li>";
-	$html .= "\n\t\t\t\t\t<li class=\"nav-item\">";
-	$html .= get_href_nav_pricing($CONFIG, $STRINGS);;
-	$html .= "\n\t\t\t\t\t</li>";
-	if(is_logged_in($CONFIG) === TRUE && !$CONFIG['IS_LOGGING_OUT']){
-		$shopping_cart	=  make_font_awesome_stack(Array(
-			'backdrop-usd fas fa-circle',
-			'fas fa-tw fa-shopping-cart'), $CONFIG);
-		$shopping_cart .= "<span class=\"badge badge-primary\">";
-		$shopping_cart .= get_cart_count($_SESSION['userid'], $CONFIG);
-		$shopping_cart .= "</span>";
-
-		$html .= "\n\t\t\t\t\t<li class=\"nav-item\">";
-		$html .= get_href_nav_shopping_cart($shopping_cart, $CONFIG, $STRINGS);
-		$html .= "\n\t\t\t\t\t</li>";
-	}
-	if(is_logged_in($CONFIG) === TRUE && $_SESSION['alevel'] === 'admin' && !$CONFIG['IS_LOGGING_OUT']){
-		$html .= "\n\t\t\t\t\t<li class=\"nav-item\">";
-		$html .= get_href_nav_admin($CONFIG, $STRINGS);;
-		$html .= "\n\t\t\t\t\t</li>";
-	}
-	$html .= "\n\t\t\t\t</ul>";
+	$html .= $nav_items;
 	$html .= "\n\t\t\t\t<span class=\"navbar-text\">";
-	if (is_logged_in($CONFIG) === False || $CONFIG['IS_LOGGING_OUT'] === TRUE){
-		$html .= "<a href=\"".$PATHS['USER_LOGIN']."\">";
-		$html .= "Sign in";
-		$html .= "</a>";
-		$html .= " or ";
-		$html .= "<a href=\"".$PATHS['USER_REGISTER']."\">";
-		$html .= "Register now";
-		$html .= "</a>";
+	if (is_logged_in($CONFIG) === FALSE || $CONFIG['IS_LOGGING_OUT'] === TRUE){
+		$html .= get_href_nav_sign_in($CONFIG, $STRINGS);
+		$html .= $STRINGS['GEN_OR'];;
+		$html .= get_href_nav_register($CONFIG, $STRINGS);
 	}
 	else{
 		//TODO: HREF to settings;
-		$html .= "\n\t\t\t\t\tWelcome, ";
-		$html .= get_user_fname($CONFIG);
-		$html .= "\n<br/>\n<a class=\"mute\" href=\"".$PATHS['USER_LOGOUT']."\">Logout\n</a>\n";
+		$html .= $STRINGS['NAV_WELCOME'];;
+		$html .= "\n<br/>";
+		$html .= get_href_nav_logout($CONFIG, $STRINGS);
 	}
 	$html .= "\n\t\t\t\t</span>";
 	$html .= "\n\t\t\t</div>";
 	$html .= "\n\t\t</nav>";
 	$html .= "\n";
 	return $html;
+}
+function get_nav_items($CONFIG){
+	$CONFIG['FA_STACK_SIZE'] = "fa-md";
+	$STRINGS			= get_config_strings($CONFIG);
+	$nav_item_tag	= 'li';
+	$nav_item_arr	= Array(
+		'id'=>'',
+		'class'=>'nav-item',
+		'content'=>'',
+		'style'=>'',
+	);
+	//TODO: Find out what active page is;
+	//TODO: Wrap all of elements in an Arr;
+	$home_arr							= $nav_item_arr;
+	$home_arr['content'] 			= get_href_nav_home($CONFIG, $STRINGS);
+	$home_arr['class']				.= ' active';
+	$home									= make_tag($nav_item_tag, $home_arr, $CONFIG);
+	$item2_arr							= $nav_item_arr;
+	$item2_arr['content']			= get_href_nav_features($CONFIG, $STRINGS);
+	$item2								= make_tag($nav_item_tag, $item2_arr, $CONFIG);
+	$item3_arr							= $nav_item_arr;
+	$item3_arr['content']			= get_href_nav_pricing($CONFIG, $STRINGS);
+	$item3								= make_tag($nav_item_tag, $item3_arr, $CONFIG);
+	if(is_logged_in($CONFIG) === TRUE && !$CONFIG['IS_LOGGING_OUT']){
+		$shopping_cart	=  make_font_awesome_stack(Array(
+			'backdrop-usd fas fa-circle',
+			'fas fa-tw fa-shopping-cart'), $CONFIG);
+		$shopping_cart 					.= "<span class=\"badge badge-primary\">";
+		$shopping_cart 					.= get_cart_count($_SESSION['userid'], $CONFIG);
+		$shopping_cart 					.= "</span>";
+		$shopping_cart_arr				= $nav_item_arr;
+		$shopping_cart_arr['content']	= get_href_nav_shopping_cart($shopping_cart, $CONFIG, $STRINGS);
+		$shopping_cart_li					= make_tag($nav_item_tag, $shopping_cart_arr, $CONFIG);
+	}
+	else
+		$shopping_cart_li	= "<!-- NO SHOPPING CART TO SHOW -->";
+	if(is_logged_in($CONFIG) === TRUE && $_SESSION['alevel'] === 'admin' && !$CONFIG['IS_LOGGING_OUT']){
+		$admin_arr					= $nav_item_arr;
+		$admin_arr['content']	= get_href_nav_admin($CONFIG, $STRINGS);
+		$admin_dash					= make_tag($nav_item_tag, $admin_arr, $CONFIG);
+	}
+	else
+		$admin_dash	= "<!-- NOT ADMIN DASH -->";
+	$nav_items_arr	= Array(
+		'id'=>'',
+		'class'=>'navbar-nav mr-auto',
+		'content'=>$home.$item2.$item3.$shopping_cart_li.$admin_dash,
+		'style'=>'',
+	);
+	$nav_items = make_tag('ul', $nav_items_arr, $CONFIG);
+	return $nav_items;
 }
 function get_table_from_inventory($CONFIG){
 	$PATHS		= get_paths($CONFIG['ROOT']);

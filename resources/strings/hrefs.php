@@ -127,6 +127,15 @@ function get_href_nav_home($CONFIG, $STRINGS){
 	$href = make_href($CONFIG);
 	return $href;
 }
+function get_href_nav_logout($CONFIG, $STRINGS){
+	//$html .= "\n<a class=\"mute\" href=\"".$PATHS['USER_LOGOUT']."\">Logout\n</a>\n";
+	$PATHS = get_paths($CONFIG['ROOT']);
+	$CONFIG['HREF_CLASS']			= "mute";
+	$CONFIG['HREF_LINK']				= $PATHS['USER_LOGOUT'];
+	$CONFIG['HREF_TEXT']				= $STRINGS["LOGOUT"];
+	$href = make_href($CONFIG);
+	return $href;
+}
 function get_href_nav_pricing($CONFIG, $STRINGS){
 	$PATHS = get_paths($CONFIG['ROOT']);
 	$CONFIG['HREF_CLASS']			= "nav-link";
@@ -135,12 +144,28 @@ function get_href_nav_pricing($CONFIG, $STRINGS){
 	$href = make_href($CONFIG);
 	return $href;
 }
+function get_href_nav_register($CONFIG, $STRINGS){
+	$PATHS = get_paths($CONFIG['ROOT']);
+	$CONFIG['HREF_CLASS']	= "";
+	$CONFIG['HREF_LINK']		= $PATHS['USER_REGISTER'];
+	$CONFIG['HREF_TEXT']		= $STRINGS["NAV_REGISTER"];
+	$href = make_href($CONFIG);
+	return $href;
+}
 function get_href_nav_shopping_cart($shopping_cart, $CONFIG, $STRINGS){
 	$PATHS = get_paths($CONFIG['ROOT']);
 	$CONFIG['HREF_CLASS']			= "nav-link";
 	$CONFIG['HREF_TITLE']			= $STRINGS['NAV_SHOPPING_CART'];;
-	$CONFIG['HREF_LINK']				= $PATHS['NAV_INVENTORY_DASHBOARD'];
+	$CONFIG['HREF_LINK']				= $PATHS['USER_DASH'];
 	$CONFIG['HREF_TEXT']				= $shopping_cart;
+	$href = make_href($CONFIG);
+	return $href;
+}
+function get_href_nav_sign_in($CONFIG, $STRINGS){
+	$PATHS = get_paths($CONFIG['ROOT']);
+	$CONFIG['HREF_CLASS']	= "";
+	$CONFIG['HREF_LINK']		= $PATHS['USER_LOGIN'];
+	$CONFIG['HREF_TEXT']		= $STRINGS["NAV_SIGN_IN"];
 	$href = make_href($CONFIG);
 	return $href;
 }
