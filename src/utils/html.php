@@ -585,6 +585,8 @@ function get_nav($CONFIG=Null, $PATHS=Null){
 	if($PATHS === Null)
 		$PATHS	= get_paths($CONFIG['ROOT']);
 	$STRINGS	= get_config_strings($CONFIG);
+	$ICONS	= get_config_icons($CONFIG);
+	//$nav_items = make_tag('ul', $nav_items_arr, $CONFIG);
 	$nav_items	= get_nav_items($CONFIG);
 	$html = "";
 	$html .= "\n\t\t<nav class=\"navbar fixed-top navbar-expand-sm navbar-light bg-light pl-3 pr-3 pb-0 pt-0\">";
@@ -598,7 +600,7 @@ function get_nav($CONFIG=Null, $PATHS=Null){
 	$html .= "\n\t\t\t\taria-expanded=\"false\"";
 	$html .= "\n\t\t\t\taria-label=\"Toggle navigation\"";
 	$html .= "\n\t\t\t>";
-	$html .= "\n\t\t\t\t<span class=\"navbar-toggler-icon\"></span>";
+	$html .= $ICONS['NAV_TOGGLE'];
 	$html .= "\n\t\t\t</button>";
 	$html .= "\n\t\t\t<div class=\"collapse navbar-collapse\" id=\"navbarText\">";
 	$html .= $nav_items;
