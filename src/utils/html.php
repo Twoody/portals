@@ -563,17 +563,13 @@ function get_js($CONFIG=Null){
 	return $s;
 }
 function make_tag($tag, $arr, $CONFIG){
-	$ret = "\n\t\t<".$tag." ";
-	if ($arr['id'] && $arr['id'] !== "")
-		$ret .= " id=\"".$arr['id']."\"";
-	if ($arr['class'])
-		$ret .= " class=\"".$arr['class']."\"";
-	if ($arr['style'])
-		$ret .= " style=\"".$arr['style']."\"";
-	if ($arr['data-ride'])
-		$ret .= " date-ride=\"". $arr['data-ride'] ."\"";
-	if ($arr['foo'])
-		$ret .= " foo=\"".$arr['foo']."\"";
+	$keys	= array_keys($arr);
+	$ret	= "\n\t\t<".$tag." ";
+	foreach($keys as $key){
+		if ($key==='content')
+			continue;
+		$ret .= " ".$key."=\"" .$arr[$key]. "\"";
+	}
 	$ret .= ">";
 	$ret .= "\n\t\t\t" . $arr['content'];
 	$ret .= "\n\t\t</".$tag.">";
@@ -581,42 +577,33 @@ function make_tag($tag, $arr, $CONFIG){
 }
 function get_nav($CONFIG=Null, $PATHS=Null){
 	if($CONFIG === Null)
-		$CONFIG	= get_config();
+		$CONFIG = get_config();
 	if($PATHS === Null)
-		$PATHS	= get_paths($CONFIG['ROOT']);
-	$STRINGS	= get_config_strings($CONFIG);
-	$ICONS	= get_config_icons($CONFIG);
-	//$nav_items = make_tag('ul', $nav_items_arr, $CONFIG);
+		$PATHS = get_paths($CONFIG['ROOT']);
+	$STRINGS		= get_config_strings($CONFIG);
+	$ICONS		= get_config_icons($CONFIG);
+	$toggle_arr	= Array(
+		"aria-controls"=>"navbarText",
+		"aria-expanded"=>"false",
+		"aria-label"	=>"Toggle navigation",
+		"class"			=>"navbar-toggler",
+		"content"		=>$ICONS['NAV_TOGGLE'],
+		"data-target"	=>"#navbarText",
+		"data-toggle"	=>"collapse",
+		"type"			=>"button",
+	);
+	$toggle		= make_tag('button', $toggle_arr, $CONFIG);
 	$nav_items	= get_nav_items($CONFIG);
+	$nav_text	= get_nav_text($CONFIG, $STRINGS);
 	$html = "";
 	$html .= "\n\t\t<nav class=\"navbar fixed-top navbar-expand-sm navbar-light bg-light pl-3 pr-3 pb-0 pt-0\">";
 	$html .= get_href_nav_brand($CONFIG, $STRINGS);
-	$html .= "\n\t\t\t<button ";
-	$html .= "\n\t\t\t\tclass=\"navbar-toggler\"";
-	$html .= "\n\t\t\t\ttype=\"button\"";
-	$html .= "\n\t\t\t\tdata-toggle=\"collapse\"";
-	$html .= "\n\t\t\t\tdata-target=\"#navbarText\"";
-	$html .= "\n\t\t\t\taria-controls=\"navbarText\"";
-	$html .= "\n\t\t\t\taria-expanded=\"false\"";
-	$html .= "\n\t\t\t\taria-label=\"Toggle navigation\"";
-	$html .= "\n\t\t\t>";
-	$html .= $ICONS['NAV_TOGGLE'];
-	$html .= "\n\t\t\t</button>";
+	$html .= $toggle;
 	$html .= "\n\t\t\t<div class=\"collapse navbar-collapse\" id=\"navbarText\">";
+
 	$html .= $nav_items;
-	$html .= "\n\t\t\t\t<span class=\"navbar-text\">";
-	if (is_logged_in($CONFIG) === FALSE || $CONFIG['IS_LOGGING_OUT'] === TRUE){
-		$html .= get_href_nav_sign_in($CONFIG, $STRINGS);
-		$html .= $STRINGS['GEN_OR'];;
-		$html .= get_href_nav_register($CONFIG, $STRINGS);
-	}
-	else{
-		//TODO: HREF to settings;
-		$html .= $STRINGS['NAV_WELCOME'];;
-		$html .= "\n<br/>";
-		$html .= get_href_nav_logout($CONFIG, $STRINGS);
-	}
-	$html .= "\n\t\t\t\t</span>";
+	$html .= $nav_text;
+
 	$html .= "\n\t\t\t</div>";
 	$html .= "\n\t\t</nav>";
 	$html .= "\n";
@@ -672,6 +659,26 @@ function get_nav_items($CONFIG){
 	);
 	$nav_items = make_tag('ul', $nav_items_arr, $CONFIG);
 	return $nav_items;
+}
+function get_nav_text($CONFIG, $STRINGS){
+	$content = "";
+	if (is_logged_in($CONFIG) === FALSE || $CONFIG['IS_LOGGING_OUT'] === TRUE){
+		$content .= get_href_nav_sign_in($CONFIG, $STRINGS);
+		$content .= $STRINGS['GEN_OR'];;
+		$content .= get_href_nav_register($CONFIG, $STRINGS);
+	}
+	else{
+		//TODO: HREF to settings;
+		$content .= $STRINGS['NAV_WELCOME'];;
+		$content .= "\n<br/>";
+		$content .= get_href_nav_logout($CONFIG, $STRINGS);
+	}
+	$nav_text_arr = Array(
+		"class"=>"navbar-text",
+		"content"=>$content,
+	);
+	$nav_text = make_tag('span', $nav_text_arr, $CONFIG);
+	return $nav_text;
 }
 function get_table_from_inventory($CONFIG){
 	$PATHS		= get_paths($CONFIG['ROOT']);
