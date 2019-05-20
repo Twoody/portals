@@ -592,22 +592,22 @@ function get_nav($CONFIG=Null, $PATHS=Null){
 		"data-toggle"	=>"collapse",
 		"type"			=>"button",
 	);
-	$toggle		= make_tag('button', $toggle_arr, $CONFIG);
-	$nav_items	= get_nav_items($CONFIG);
-	$nav_text	= get_nav_text($CONFIG, $STRINGS);
-	$html = "";
-	$html .= "\n\t\t<nav class=\"navbar fixed-top navbar-expand-sm navbar-light bg-light pl-3 pr-3 pb-0 pt-0\">";
-	$html .= get_href_nav_brand($CONFIG, $STRINGS);
-	$html .= $toggle;
-	$html .= "\n\t\t\t<div class=\"collapse navbar-collapse\" id=\"navbarText\">";
-
-	$html .= $nav_items;
-	$html .= $nav_text;
-
-	$html .= "\n\t\t\t</div>";
-	$html .= "\n\t\t</nav>";
-	$html .= "\n";
-	return $html;
+	$toggle			= make_tag('button', $toggle_arr, $CONFIG);
+	$nav_items		= get_nav_items($CONFIG);
+	$nav_text		= get_nav_text($CONFIG, $STRINGS);
+	$collapse_arr	= Array(
+		"class"=>"collapse navbar-collapse",
+		"content"=>$nav_items . $nav_text,
+		"id"=>"navbarText",
+	);
+	$collapse	= make_tag('div', $collapse_arr, $CONFIG);
+	$nav_arr		= Array(
+		"class"=>"navbar fixed-top navbar-expand-sm navbar-light bg-light pl-3 pr-3 pb-0 pt-0",
+		"content"=>get_href_nav_brand($CONFIG, $STRINGS) . $toggle . $collapse,
+		"id"=>"navbar_b",
+	);
+	$nav	= make_tag('nav', $nav_arr, $CONFIG);
+	return $nav;
 }
 function get_nav_items($CONFIG){
 	$CONFIG['FA_STACK_SIZE'] = "fa-md";
