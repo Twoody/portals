@@ -230,25 +230,25 @@ function get_checkout_table($cart, $CONFIG){
 		'Price per Each',
 		'Price * Quantity',
 	);
-		if($cart && $cart->fetchArray(SQLITE3_ASSOC)){
-			$cart->reset();	//Reset after above fetchArray()
-			$header	= get_table_header($columns_items, $CONFIG);
-			$footer	= get_table_footer($columns_items, $CONFIG);
-			$tbody	= get_table_body($cart, $CONFIG);
-			$table	.= "\n\t<table id=\"".$TABLE_ID."\" class=\"table table-striped table-bordered\" ";
-			$table	.= "cellspacing=\"\" width=\"100%\" role=\"grid\">";
-
-			$table	.= $header;
-			$table	.= $tbody;
-			$table	.= $footer;
-
-			$table .= "\n\t</table>";
-		}
-		else{
-			$table .= "\n\t\t\t<div class=\"col-12 bg-warning\">";
-			$table .= "\n\t\t\t\tNO RESULTS;";
-			$table .= "\n\t</div>";
-		}
+	if($cart && $cart->fetchArray(SQLITE3_ASSOC)){
+		$cart->reset();	//Reset after above fetchArray()
+		$theader		= get_table_header($columns_items, $CONFIG);
+		$tfooter		= get_table_footer($columns_items, $CONFIG);
+		$tbody		= get_table_body($cart, $CONFIG);
+		$table_arr	= Array(
+			'cellspacing'=>'',
+			'class'=>'table table-striped table-bordered',
+			'content'=>$theader . $tbody . $tfooter,
+			'id'=>$TABLE_ID,
+			'role'=>'grid',
+			'width'=>'100%',
+			
+		);
+		$table .= make_tag("table", $table_arr, $CONFIG);
+	}
+	else{
+		$table .= make_gen_warning("NO RESULTS;", $CONFIG);
+	}
 	return $table;
 }
 
@@ -714,52 +714,39 @@ function get_table_from_inventory($CONFIG){
 	return $table;
 }
 function get_table_body($cart, $CONFIG){
+	//TODO: IF adding modals, add a MCONFIG param instead of plugging into CONFIG
 	$table			= "\n\t\t<tbody>";
 	$is_odd			= TRUE;
-	$is_first_row	= TRUE;
+	$row_cnt			= 1;
 	while ($row = $cart->fetchArray(SQLITE3_ASSOC)){
-		$table .= "\n\t\t\t<tr role=\"row\" class=\"";
-		if ($is_odd)
-			$table .= "odd ";
+		$row_class = "";
+		if ($row_cnt%2 === 1)
+			$row_class .= "odd ";
 		else
-			$table .= "even ";
-		if ($is_first_row)
-			$table .= "first ";
-		$table .= "\">"; //Closing `class`
-	 	$MCONFIG			= $CONFIG['MCONFIG'];
+			$row_class .= "even ";
+		if ($row_cnt === 1)
+			$row_class .= "first ";
 		$productid		= $row['productid'];
 		$quantity		= $row['quantity'];
 		$product_name	= get_product_name($productid, $CONFIG);;
 		$price			= get_product_price($productid, $CONFIG);
-		$row_keys		= array_keys($row);
-
-		$table .= "\n\t\t\t\t<td>";
-	//TODO: Maybe do a modal to edit the amount of each when checking out;
-	//	$table .= "\n<button type=\"button\" title=\"".$MCONFIG['TITLE']."\" ";
-	//	$table .= "class=\"btn inventory-modal\" id=\"".$row['name']."\"data-toggle=\"modal\" ";
-	//	$table .= "data-target=\"#".$MCONFIG['ID']."\" style=\"".$MCONFIG['STYLE']."\">";
-	//	$table .= make_font_awesome_stack(Array(
-	//		'backdrop-usd fas fa-circle',
-	//		'fas fa-tw fa-usd'), $CONFIG);
-	//	$table .= "\n</button>";
-	//	$table .= get_inventory_modal($CONFIG);
-		$table .= "".$product_name;
-		$table .= "\n\t\t\t\t</td>";
-
-		$table .= "\n\t\t\t\t<td>";
-		$table .= "\n\t\t\t\t\t".$quantity;
-		$table .= "\n\t\t\t\t</td>";
-
-		$table .= "\n\t\t\t\t<td>";
-		$table .= "\n\t\t\t\t\t".$price;
-		$table .= "\n\t\t\t\t</td>";
-
-		$table .= "\n\t\t\t\t<td>";
-		$table .= "\n\t\t\t\t\t". ($price*$quantity);
-		$table .= "\n\t\t\t\t</td>";
-
-		$table .= "\n\t\t\t</tr>";
-		$is_first_row = FALSE;
+		$cols 			= Array(
+			 $product_name, $quantity, $price, ($price*$quantity),
+		);
+		$row_content = '';
+		for($i=0; $i<count($cols); $i++){
+			$col_arr	= Array(
+				'content'=>$cols[$i],
+			);
+			$row_content .= make_tag('td', $col_arr, $CONFIG);
+		}
+		$row_arr = Array(
+			'content'=>$row_content,
+			'class'=>$row_class,
+		);
+		$row = make_tag('tr', $row_arr, $CONFIG);
+		$table .= $row;
+		$row_cnt += 1;
 	}
 	$table .= "\n\t\t</tbody>";
 	return $table;
