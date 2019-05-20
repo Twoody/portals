@@ -76,13 +76,13 @@ function get_ad($CONFIG){
 		'content'=>$ad_title . $ad_text . $ad_button,
 		'style'=>"",
 	);
-	$ad_body	= make_div($ad_body_arr, $CONFIG);
+	$ad_body	= make_tag("div",$ad_body_arr, $CONFIG);
 	$ad_arr = Array(
 		'class'=>"card",
 		'content'=>$ad_img . $ad_body,
 		'style'=>"width:100%",
 	);
-	$ad = make_div($ad_arr, $CONFIG);
+	$ad = make_tag("div",$ad_arr, $CONFIG);
 	return $ad;
 }
 function get_ads_sm($CONFIG){
@@ -108,8 +108,8 @@ function get_ads_sm($CONFIG){
 		'style'=>"",
 	);
 	$ad_sm_img	= build_img($ad_sm_image_arr, $CONFIG);
-	$text1		= make_div($text1_arr, $CONFIG);
-	$text2		= make_div($text2_arr, $CONFIG);
+	$text1		= make_tag("div",$text1_arr, $CONFIG);
+	$text2		= make_tag("div",$text2_arr, $CONFIG);
 	$col0_arr	= Array(
 		'class'=>"col-6 m-0 p-0",
 		'content'=>$ad_sm_img,
@@ -130,22 +130,22 @@ function get_ads_sm($CONFIG){
 		'content'=>$text2,
 		'style'=>"",
 	);
-	$col0 = make_div($col0_arr, $CONFIG). "<!-- END COL -->";
-	$col1 = make_div($col1_arr, $CONFIG). "<!-- END COL -->";
+	$col0 = make_tag("div",$col0_arr, $CONFIG). "<!-- END COL -->";
+	$col1 = make_tag("div",$col1_arr, $CONFIG). "<!-- END COL -->";
 	$row1_arr = Array(
 		'class'=>" row pl-3 pr-3 m-0 d-sm-none",
 		'style'=>"",
 		'content'=>$col0.$col1,
 	);
-	$col2	= make_div($col2_arr, $CONFIG). "<!-- END COL -->";
-	$col3 = make_div($col3_arr, $CONFIG). "<!-- END COL -->";
+	$col2	= make_tag("div",$col2_arr, $CONFIG). "<!-- END COL -->";
+	$col3 = make_tag("div",$col3_arr, $CONFIG). "<!-- END COL -->";
 	$row2_arr = Array(
 		'class'=>" row pl-3 pr-3 m-0 d-sm-none",
 		'style'=>"",
 		'content'=>$col2.$col3,
 	);
-	$row1	= make_div($row1_arr, $CONFIG). "<!-- END ROW -->";
-	$row2	= make_div($row2_arr, $CONFIG). "<!-- END ROW -->";
+	$row1	= make_tag("div",$row1_arr, $CONFIG). "<!-- END ROW -->";
+	$row2	= make_tag("div",$row2_arr, $CONFIG). "<!-- END ROW -->";
 	$ads	.= $row1 . $row2;
 	return $ads;
 }
@@ -161,7 +161,7 @@ function get_carousel($pics, $car_id, $CONFIG){
 				'content'=>$_slideshow,
 				'style'=>$style,
 		);
-	$slideshow	= make_div($slideshow, $CONFIG);
+	$slideshow	= make_tag("div",$slideshow, $CONFIG);
 	$_car	.= $indicators . $slideshow . $controls;
 
 	$car	=  Array(
@@ -171,7 +171,7 @@ function get_carousel($pics, $car_id, $CONFIG){
 				'id'=>$car_id,
 				'style'=>$style,
 		);
-	$car	= make_div($car, $CONFIG);
+	$car	= make_tag("div",$car, $CONFIG);
 	return $car;
 }
 function get_carousel_controls($pics, $id, $CONFIG){
@@ -451,21 +451,21 @@ function get_footer($CONFIG=Null){
 		'content'=>make_footer_bottom_cols($links2, $CONFIG),
 		'style'=>"color:white;text-align:center",
 	);
-	$col0	= make_div($col0_arr, $CONFIG) . "\n\t\t\t\t\t\t<!-- End Col 0 -->";
-	$col1	= make_div($col1_arr, $CONFIG) . "\n\t\t\t\t\t\t<!-- End Col 1 -->";
-	$col2	= make_div($col2_arr, $CONFIG) . "\n\t\t\t\t\t\t<!-- End Col 2 -->";
+	$col0	= make_tag("div",$col0_arr, $CONFIG) . "\n\t\t\t\t\t\t<!-- End Col 0 -->";
+	$col1	= make_tag("div",$col1_arr, $CONFIG) . "\n\t\t\t\t\t\t<!-- End Col 1 -->";
+	$col2	= make_tag("div",$col2_arr, $CONFIG) . "\n\t\t\t\t\t\t<!-- End Col 2 -->";
 	$row0_arr	= Array(
 		'class'=>"d-flex justify-content-around",
 		'content'=>$col0.$col1.$col2,
 		'style'=>"",
 	);
-	$row0	= make_div($row0_arr, $CONFIG) . "\n\t\t\t\t\t\t<!-- End ROW -->";
+	$row0	= make_tag("div",$row0_arr, $CONFIG) . "\n\t\t\t\t\t\t<!-- End ROW -->";
 	$container_arr	= Array(
 		'class'=>"container-fluid bg-black p-0 pl-3 pr-3",
 		'content'=>$row0,
 		'style'=>"",
 	);
-	$container	= make_div($container_arr, $CONFIG) . "\n\t\t\t\t\t\t<!-- End CONTAINER -->";
+	$container	= make_tag("div",$container_arr, $CONFIG) . "\n\t\t\t\t\t\t<!-- End CONTAINER -->";
 	$footer	.= $container; 
 	return $footer;
 }
@@ -517,22 +517,22 @@ function get_inventory_modal($CONFIG){
 		'content'=>get_href_close_modal($CONFIG, $STRINGS),
 		'style'=>"",
 	);
-	$mheader	= make_div($mheader_arr, $CONFIG);
-	$mbody	= make_div($mbody_arr, $CONFIG);
-	$mfooter	= make_div($mfooter_arr, $CONFIG);
+	$mheader	= make_tag("div",$mheader_arr, $CONFIG);
+	$mbody	= make_tag("div",$mbody_arr, $CONFIG);
+	$mfooter	= make_tag("div",$mfooter_arr, $CONFIG);
 
 	$mcontent_arr	= Array(
 		'class'=>"modal-content",
 		'content'=>$mheader . $mbody . $mfooter,
 		'style'=>"",
 	);
-	$mcontent		= make_div($mcontent_arr, $CONFIG);
+	$mcontent		= make_tag("div",$mcontent_arr, $CONFIG);
 	$mdialog_arr	= Array(
 		'class'=>"modal-dialog",
 		'content'=>$mcontent,
 		'style'=>"",
 	);
-	$mdialog		= make_div($mdialog_arr, $CONFIG);
+	$mdialog		= make_tag("div",$mdialog_arr, $CONFIG);
 	$modal_arr	= Array(
 		'class'=>"modal fade",
 		'content'=>$mdialog,
@@ -541,7 +541,7 @@ function get_inventory_modal($CONFIG){
 		'style'=>"",
 	);
 	$modal	= "\n\t<!-- Modal -->";
-	$modal	.= make_div($modal_arr, $CONFIG);
+	$modal	.= make_tag("div",$modal_arr, $CONFIG);
 	$modal	.= "\n\t</div><!-- END MODAL -->";
 	return $modal;
 }
@@ -1001,24 +1001,6 @@ function get_table_from_owner_query($dbpath, $query, $CONFIG){
 		$table .= "\n\t</div>";
 	}
 	return $table;
-}
-function make_div($col, $CONFIG){
-	//TODO: Key-Value listings for below instead of hardcoding?;
-	$ret = "\n\t\t<div ";
-	if ($col['id'] && $col['id'] !== "")
-		$ret .= " id=\"".$col['id']."\"";
-	if ($col['class'])
-		$ret .= " class=\"".$col['class']."\"";
-	if ($col['style'])
-		$ret .= " style=\"".$col['style']."\"";
-	if ($col['data-ride'])
-		$ret .= " date-ride=\"". $col['data-ride'] ."\"";
-	if ($col['foo'])
-		$ret .= " foo=\"".$col['foo']."\"";
-	$ret .= ">";
-	$ret .= "\n\t\t\t" . $col['content'];
-	$ret .= "\n\t\t</div>";
-	return $ret;
 }
 function make_css($REL, $LINK, $INTEGRITY="", $ORIGIN=""){
 	/* Make a CSS stylesheet to be imported into HTML page */

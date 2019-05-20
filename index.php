@@ -93,20 +93,20 @@ $col1	= Array(
 				'class'=>" col-sm-4 col-md-3 col-lg-2 pr-3 m-0",
 				'content'=>$ad_not_sm,
 		);
-$col_0	= make_div($col0, $CONFIG) . "<!-- END COL -->";
-$col_1	= make_div($col1, $CONFIG) . "<!-- END COL -->";
+$col_0	= make_tag("div", $col0, $CONFIG) . "<!-- END COL -->";
+$col_1	= make_tag("div", $col1, $CONFIG) . "<!-- END COL -->";
 $row0	= Array(
 				'class'=>" row pl-3 pr-3 m-0",
 				'style'=>$style,
 				'content'=>$col_0.$col_1,
 		);
-$row_0	= make_div($row0, $CONFIG) . "<!-- END ROW -->";
+$row_0	= make_tag("div", $row0, $CONFIG) . "<!-- END ROW -->";
 $container0 =  Array(
 				'class'=>" container-fluid pl-3 pr-3 m-0",
 				'style'=>$style,
 				'content'=>$row_0,
 		);
-$container_0	= make_div($container0, $CONFIG);
+$container_0	= make_tag("div", $container0, $CONFIG);
 $container_1	= make_gen_container(get_ads_sm($CONFIG), $CONFIG);
 $body .= $container_0;
 $body .= $container_1;
