@@ -221,9 +221,6 @@ function get_carousel_items($items, $CONFIG){
 }
 function get_checkout_table($cart, $CONFIG){
 	$PATHS			= get_paths($CONFIG['ROOT']);
-	$dbpath			= $PATHS['DB_INVENTORY'];
-	$db				= new SQLite3($dbpath);
-	$CUR_TABLE		= 'inventory';
 	$table   		= "";
 	$QUERY_PAGE		= $CONFIG['QUERY_PAGE'];
 	$TABLE_ID		= $CONFIG['TABLE_ID'];
@@ -233,80 +230,18 @@ function get_checkout_table($cart, $CONFIG){
 		'Price per Each',
 		'Price * Quantity',
 	);
-	$footers_content	= '';
-	for ($i=0; $i<count($columns_items); $i++){
-		$th_arr = Array(
-			'class'=>'',
-			'content'=> $columns_items[$i],
-		);
-		$footers_content .= make_tag('th', $th_arr, $CONFIG);
-	}
-	$footer_row_arr	= Array(
-		'content'=>$footers_content,
-	);
-	$footer_row	= make_tag('tr', $footer_row_arr, $CONFIG);
-	$footer_arr	= Array(
-		'content'=>$footer_row
-	);
-	$footer	= make_tag('tfoot', $footer_arr, $CONFIG);
-	$header	= get_table_header($columns_items, $CONFIG);
-	$db->enableExceptions(TRUE);
-	try{
 		if($cart && $cart->fetchArray(SQLITE3_ASSOC)){
-			$cart->reset();
-			$table .= "\n\t<table id=\"".$TABLE_ID."\" class=\"table table-striped table-bordered\" ";
-			$table .= "cellspacing=\"\" width=\"100%\" role=\"grid\">";
-			$table .= $header;
-			$cart->reset();
-			$table .= "\n\t\t<tbody>";
-			$is_odd = TRUE;
-			$is_first_row = TRUE;
-			while ($row = $cart->fetchArray(SQLITE3_ASSOC)){
-				$table .= "\n\t\t\t<tr role=\"row\" class=\"";
-				if ($is_odd)
-					$table .= "odd ";
-				else
-					$table .= "even ";
-				if ($is_first_row)
-					$table .= "first ";
-				$table .= "\">"; //Closing `class`
-			 	$MCONFIG			= $CONFIG['MCONFIG'];
-				$productid		= $row['productid'];
-				$quantity		= $row['quantity'];
-				$product_name	= get_product_name($productid, $CONFIG);;
-				$price			= get_product_price($productid, $CONFIG);
-				$row_keys		= array_keys($row);
+			$cart->reset();	//Reset after above fetchArray()
+			$header	= get_table_header($columns_items, $CONFIG);
+			$footer	= get_table_footer($columns_items, $CONFIG);
+			$tbody	= get_table_body($cart, $CONFIG);
+			$table	.= "\n\t<table id=\"".$TABLE_ID."\" class=\"table table-striped table-bordered\" ";
+			$table	.= "cellspacing=\"\" width=\"100%\" role=\"grid\">";
 
-				$table .= "\n\t\t\t\t<td>";
-			//TODO: Maybe do a modal to edit the amount of each when checking out;
-			//	$table .= "\n<button type=\"button\" title=\"".$MCONFIG['TITLE']."\" ";
-			//	$table .= "class=\"btn inventory-modal\" id=\"".$row['name']."\"data-toggle=\"modal\" ";
-			//	$table .= "data-target=\"#".$MCONFIG['ID']."\" style=\"".$MCONFIG['STYLE']."\">";
-			//	$table .= make_font_awesome_stack(Array(
-			//		'backdrop-usd fas fa-circle',
-			//		'fas fa-tw fa-usd'), $CONFIG);
-			//	$table .= "\n</button>";
-			//	$table .= get_inventory_modal($CONFIG);
-				$table .= "".$product_name;
-				$table .= "\n\t\t\t\t</td>";
+			$table	.= $header;
+			$table	.= $tbody;
+			$table	.= $footer;
 
-				$table .= "\n\t\t\t\t<td>";
-				$table .= "\n\t\t\t\t\t".$quantity;
-				$table .= "\n\t\t\t\t</td>";
-
-				$table .= "\n\t\t\t\t<td>";
-				$table .= "\n\t\t\t\t\t".$price;
-				$table .= "\n\t\t\t\t</td>";
-
-				$table .= "\n\t\t\t\t<td>";
-				$table .= "\n\t\t\t\t\t". ($price*$quantity);
-				$table .= "\n\t\t\t\t</td>";
-
-				$table .= "\n\t\t\t</tr>";
-				$is_first_row = FALSE;
-			}
-			$table .= "\n\t\t</tbody>";
-			$table .= $footer;
 			$table .= "\n\t</table>";
 		}
 		else{
@@ -314,15 +249,6 @@ function get_checkout_table($cart, $CONFIG){
 			$table .= "\n\t\t\t\tNO RESULTS;";
 			$table .= "\n\t</div>";
 		}
-		$db->close();
-	}
-	catch (Exception $exception) {
-		$table .= "\n\t\t\t<div class=\"col-12 bg-warning\">";
-		$table .= "\n\t\t\t\tBAD QUERY AND PREPARE;<br/>";
-		$table .= "\n\t\t\t\tDB: `".$dbpath."`<br/>";
-		$table .= "\n\t\t\t\tQUERY: `".$query."`<br/>";
-		$table .= "\n\t\t\t</div>";
-	}
 	return $table;
 }
 
@@ -786,6 +712,77 @@ function get_table_from_inventory($CONFIG){
 		$table .= "\n\t\t\t</div>";
 	}
 	return $table;
+}
+function get_table_body($cart, $CONFIG){
+	$table			= "\n\t\t<tbody>";
+	$is_odd			= TRUE;
+	$is_first_row	= TRUE;
+	while ($row = $cart->fetchArray(SQLITE3_ASSOC)){
+		$table .= "\n\t\t\t<tr role=\"row\" class=\"";
+		if ($is_odd)
+			$table .= "odd ";
+		else
+			$table .= "even ";
+		if ($is_first_row)
+			$table .= "first ";
+		$table .= "\">"; //Closing `class`
+	 	$MCONFIG			= $CONFIG['MCONFIG'];
+		$productid		= $row['productid'];
+		$quantity		= $row['quantity'];
+		$product_name	= get_product_name($productid, $CONFIG);;
+		$price			= get_product_price($productid, $CONFIG);
+		$row_keys		= array_keys($row);
+
+		$table .= "\n\t\t\t\t<td>";
+	//TODO: Maybe do a modal to edit the amount of each when checking out;
+	//	$table .= "\n<button type=\"button\" title=\"".$MCONFIG['TITLE']."\" ";
+	//	$table .= "class=\"btn inventory-modal\" id=\"".$row['name']."\"data-toggle=\"modal\" ";
+	//	$table .= "data-target=\"#".$MCONFIG['ID']."\" style=\"".$MCONFIG['STYLE']."\">";
+	//	$table .= make_font_awesome_stack(Array(
+	//		'backdrop-usd fas fa-circle',
+	//		'fas fa-tw fa-usd'), $CONFIG);
+	//	$table .= "\n</button>";
+	//	$table .= get_inventory_modal($CONFIG);
+		$table .= "".$product_name;
+		$table .= "\n\t\t\t\t</td>";
+
+		$table .= "\n\t\t\t\t<td>";
+		$table .= "\n\t\t\t\t\t".$quantity;
+		$table .= "\n\t\t\t\t</td>";
+
+		$table .= "\n\t\t\t\t<td>";
+		$table .= "\n\t\t\t\t\t".$price;
+		$table .= "\n\t\t\t\t</td>";
+
+		$table .= "\n\t\t\t\t<td>";
+		$table .= "\n\t\t\t\t\t". ($price*$quantity);
+		$table .= "\n\t\t\t\t</td>";
+
+		$table .= "\n\t\t\t</tr>";
+		$is_first_row = FALSE;
+	}
+	$table .= "\n\t\t</tbody>";
+	return $table;
+}
+
+function get_table_footer($columns_items, $CONFIG){
+	$footers_content	= '';
+	for ($i=0; $i<count($columns_items); $i++){
+		$th_arr = Array(
+			'class'=>'',
+			'content'=> $columns_items[$i],
+		);
+		$footers_content .= make_tag('th', $th_arr, $CONFIG);
+	}
+	$footer_row_arr	= Array(
+		'content'=>$footers_content,
+	);
+	$footer_row	= make_tag('tr', $footer_row_arr, $CONFIG);
+	$footer_arr	= Array(
+		'content'=>$footer_row
+	);
+	$footer	= make_tag('tfoot', $footer_arr, $CONFIG);
+	return $footer;
 }
 function get_table_header($columns_items, $CONFIG){
 	$headers_content	= '';
