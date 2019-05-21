@@ -593,6 +593,7 @@ function get_js_arr(){
 }
 function get_table_from_inventory($CONFIG){
 	$PATHS			= get_paths($CONFIG['ROOT']);
+	$ICONS			= get_config_icons($CONFIG);
 	$dbpath			= $PATHS['DB_INVENTORY'];
 	$query			= "SELECT id, name, quantity, price FROM inventory";
 	$db				= new SQLite3($dbpath);
@@ -614,36 +615,17 @@ function get_table_from_inventory($CONFIG){
 			$result	= $prepare->execute();
 			if($result && $result->fetchArray()){
 				$result->reset();
-				$table_arr	= Array(
-					'cellspacing'=>'',
-					'class'=>'table table-striped table-bordered',
-					'content'=>$theader . $tbody . $tfooter,
-					'id'=>$TABLE_ID,
-					'role'=>'grid',
-					'width'=>'100%',
-					
-				);
-				$table .= "\n\t<table id=\"".$TABLE_ID."\" class=\"table table-striped table-bordered\" ";
-				$table .= "cellspacing=\"\" width=\"100%\" role=\"grid\">";
-				$table .= $theader;
-				$table .= "\n\t\t</thead>";
-				$table .= "\n\t\t<tbody>";
-				$is_odd			= TRUE;
-				$is_first_row	= TRUE;
-				$row_cnt			= 1;
-
-				$result->reset();
+				$row_cnt	= 1;
 				while ($row = $result->fetchArray(SQLITE3_ASSOC)){
-					$table .= "\n\t\t\t<tr role=\"row\" class=\"";
+					$row_content = "";
+					$row_class = "";
 					if ($row_cnt % 2 === 1)
-						$table .= "odd ";
+						$row_class .= "odd ";
 					else
-						$table .= "even ";
+						$row_class .= "even ";
 					if ($row_cnt === 1)
-						$table .= "first ";
-					$table .= "\">"; //Closing `class`
+						$row_class .= "first ";
 					$row_keys = array_keys($row);
-					$is_first_col = TRUE;
 					for($i=0; $i<count($row_keys); $i++){
 						$row_key	= $row_keys[$i];
 						if($row_key === 'id')
@@ -652,13 +634,17 @@ function get_table_from_inventory($CONFIG){
 							//Modal formatting: id is productid
 						 	$MCONFIG	= $CONFIG['MCONFIG'];
 							$button = '';
-							$button .= "\n<button type=\"button\" title=\"".$MCONFIG['TITLE']."\" ";
-							$button .= "class=\"btn inventory-modal\" id=\"".$row['id']."\"data-toggle=\"modal\" ";
-							$button .= "data-target=\"#".$MCONFIG['ID']."\" style=\"".$MCONFIG['STYLE']."\">";
-							$button .= make_font_awesome_stack(Array(
-								'backdrop-usd fas fa-circle',
-								'fas fa-tw fa-usd'), $CONFIG);
-							$button .= "\n</button>";
+							$button_arr = Array(
+								'class'=>'btn inventory-modal',
+								'content'=>$ICONS['CURRENCY_CIRCLE'],
+								'data-target'=>"#".$MCONFIG['ID'],
+								'data-toggle'=>'modal',
+								'id'=>$row['id'],
+								'style'=>$MCONFIG['STYLE'],
+								'title'=>$MCONFIG['TITLE'],
+								'type'=>'button',
+							);
+							$button	= make_tag('button', $button_arr, $CONFIG);
 							$cell_content = $button;
 							$cell_content .= get_inventory_modal($CONFIG);
 							$cell_content .= $row['name'];
@@ -669,17 +655,33 @@ function get_table_from_inventory($CONFIG){
 							'content'=>$cell_content,
 						);
 						$cell = make_tag('td', $cell_arr, $CONFIG);
-						$table .= $cell;
-						$is_first_col = FALSE;
-					}
-					$table .= "\n\t\t\t</tr>";
+						$row_content .= $cell;
+					}//End for-loop
+					$row_arr = Array(
+						'class'=>$row_class,
+						'content'=>$row_content,
+						'role'=>'row',
+					);
+					$row = make_tag('tr', $row_arr, $CONFIG);
+					$tbody_content .= $row;
 					$row_cnt += 1;
-				}
-				$table .= "\n\t\t</tbody>";
-				//$tbody		= get_table_body($cart, $CONFIG);
-				$table .= $tfooter;
-				$table .= "\n\t</table>";
-				//$table .= make_tag("table", $table_arr, $CONFIG);
+				}//End While
+				$tbody_arr	= Array(
+					'content'=>$tbody_content,
+				);
+				$tbody	= make_tag('tbody', $tbody_arr, $CONFIG);
+				$table_content .= $theader;
+				$table_content .= $tbody;
+				$table_content .= $tfooter;
+				$table_arr	= Array(
+					'cellspacing'=>'',
+					'class'=>'table table-striped table-bordered',
+					'content'=>$table_content,
+					'id'=>$TABLE_ID,
+					'role'=>'grid',
+					'width'=>'100%',
+				);
+				$table	= make_tag('table', $table_arr, $CONFIG);
 			}
 			else{
 				$table .= make_gen_warning("NO RESULTS;", $CONFIG);
@@ -694,13 +696,13 @@ function get_table_from_inventory($CONFIG){
 		$msg		= "\n\t\t\t\tBAD QUERY AND PREPARE;<br/>";
 		$msg		.= "\n\t\t\t\tDB: `".$dbpath."`<br/>";
 		$msg		.= "\n\t\t\t\tQUERY: `".$query."`<br/>";
+		$msg		.= "\n\t\t\t\tMSG: `".$exception."`<br/>";
 		$table	.= make_gen_warning($msg, $CONFIG);
 	}
 	return $table;
 }
 function get_table_body($cart, $CONFIG){
 	//TODO: IF adding modals, add a MCONFIG param instead of plugging into CONFIG
-	$table			= "\n\t\t<tbody>";
 	$row_cnt			= 1;
 	while ($row = $cart->fetchArray(SQLITE3_ASSOC)){
 		$row_class = "";
@@ -729,11 +731,14 @@ function get_table_body($cart, $CONFIG){
 			'class'=>$row_class,
 		);
 		$row = make_tag('tr', $row_arr, $CONFIG);
-		$table .= $row;
+		$tbody_content .= $row;
 		$row_cnt += 1;
 	}
-	$table .= "\n\t\t</tbody>";
-	return $table;
+	$tbody_arr	= Array(
+		'content'=>$tbody_content,
+	);
+	$tbody	= make_tag('tbody', $tbody_arr, $CONFIG);
+	return $tbody;
 }
 function get_table_footer($columns_items, $CONFIG){
 	$footers_content	= '';

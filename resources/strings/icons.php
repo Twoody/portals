@@ -16,5 +16,9 @@ Links:
 function get_config_icons($CONFIG){
 	return Array(
 		"NAV_TOGGLE"=>"\n\t\t\t\t<span class=\"navbar-toggler-icon\"></span>",
+		'CURRENCY_CIRCLE'=>make_font_awesome_stack(Array(
+								'backdrop-usd fas fa-circle',
+								'fas fa-tw fa-usd'), $CONFIG
+								),
 	);
 }
