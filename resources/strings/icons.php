@@ -13,16 +13,93 @@ Purpose:
 
 Links:
 ******************************************************************************/
+function get_icon_nav_toggle($CONFIG){
+	$i_arr	= Array(
+		'class'=>'navbar-toggler-icon',
+	);
+	return make_tag('span', $i_arr, $CONFIG);
+}
+
 function get_config_icons($CONFIG){
+	$CONFIG['FA_STACK_SIZE'] = 'fa-md';
 	return Array(
-		"NAV_TOGGLE"=>"\n\t\t\t\t<span class=\"navbar-toggler-icon\"></span>",
-		'CURRENCY_CIRCLE'=>make_font_awesome_stack(Array(
-									'backdrop-usd fas fa-circle',
-									'fas fa-tw fa-usd'), $CONFIG
+		"NAV_TOGGLE"=>get_icon_nav_toggle($CONFIG),
+		'CURRENCY_CIRCLE'=>make_font_awesome_stack(
+			Array(
+				'backdrop-usd fas fa-circle',
+				'fas fa-tw fa-usd'
+			), 
+			$CONFIG
 		),
-		'DELETE_TRASH'=> make_font_awesome_stack(Array(
-									'backdrop-google fas fa-square',
-									'fas fa-tw fa-trash'), $CONFIG
+		'DELETE_TRASH'=>make_font_awesome_stack(
+			Array(
+				'backdrop-google fas fa-square',
+				'fas fa-tw fa-trash'
+			), 
+			$CONFIG
+		),
+		'FOOTER_GMAIL'=>make_font_awesome_stack(
+			Array(
+				'backdrop-google fas fa-circle',
+				'fab fa-tw fa-google'
+			), 
+			$CONFIG
+		),
+		'FOOTER_SO'=>make_font_awesome_stack(
+			Array(
+				'backdrop-stack-overflow fas fa-circle',
+				'fab fa-tw fa-stack-overflow'
+			), 
+			$CONFIG
+		),
+		'FOOTER_PLAY_STORE'=>make_font_awesome_stack(
+			Array(
+				'backdrop-android fas fa-circle',
+				'fab fa-tw fa-android'
+			), 
+			$CONFIG
+		),
+		'FOOTER_INSTAGRAM'=>make_font_awesome_stack(
+			Array(
+				'backdrop-instagram fas fa-circle',
+				'fab fa-tw fa-instagram'
+			), 
+			$CONFIG
+		),
+		'FOOTER_STRAVA'=>make_font_awesome_stack(
+			Array(
+				'backdrop-strava fas fa-circle',
+				'fab fa-tw fa-strava'
+			), 
+			$CONFIG
+		),
+		'FOOTER_GITHUB'=>make_font_awesome_stack(
+			Array(
+				'backdrop-github fas fa-circle',
+				'fab fa-tw fa-github'
+			), 
+			$CONFIG
+		),
+		'FOOTER_FACEBOOK'=>make_font_awesome_stack(
+			Array(
+				'backdrop-facebook fas fa-circle',
+				'fab fa-tw fa-facebook'
+			), 
+			$CONFIG
+		),
+		'FOOTER_TWITTER'=>make_font_awesome_stack(
+			Array(
+				'backdrop-twitter fas fa-circle',
+				'fab fa-tw fa-twitter'
+			), 
+			$CONFIG
+		),
+		'FOOTER_LINKEDIN'=>make_font_awesome_stack(
+			Array(
+				'backdrop-linkedin fas fa-circle',
+				'fab fa-tw fa-linkedin'
+			), 
+			$CONFIG
 		),
 	);
 }

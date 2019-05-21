@@ -280,88 +280,28 @@ function get_datatables_jquery($orderby, $CONFIG){
 function get_footer($CONFIG=Null){
 	if ($CONFIG === Null)
 		$CONFIG = get_config();
-	$ROOT		= $CONFIG['ROOT'];
-	$ICONS	= get_config_icons($CONFIG);
-	$CONFIG['FA_STACK_SIZE'] = 'fa-md';
-	$links0 = Array(
-		Array(	'href'=>$CONFIG['LINK_GMAIL'],
-					'icon'=>make_font_awesome_stack(Array(
-						'backdrop-google fas fa-circle',
-						'fab fa-fw fa-google'
-					),$CONFIG),
-		),
-		Array(	'href'=>$CONFIG['LINK_STACKOVERFLOW'],
-					'icon'=>make_font_awesome_stack(Array(
-						'backdrop-stack-overflow fas fa-circle',
-						'fab fa-tw fa-stack-overflow'
-					),$CONFIG),
-		),
-		Array(	'href'=>$CONFIG['LINK_ANDROID'],
-					'icon'=>make_font_awesome_stack(Array(
-						'backdrop-android fas fa-circle',
-						'fab fa-tw fa-android'
-					),$CONFIG),
-		),
-	);
-	$links1 = Array(
-		Array(	'href' => $CONFIG['LINK_INSTA'],
-					'icon' => make_font_awesome_stack(Array(
-						'backdrop-instagram fas fa-circle',
-						'fab fa-fw fa-instagram'
-					),$CONFIG),
-		),
-		Array(	'href' => $CONFIG['LINK_STRAVA'] ,
-					'icon' => make_font_awesome_stack(Array(
-						'backdrop-strava fas fa-circle',
-						'fab fa-tw fa-strava'
-					),$CONFIG),
-		),
-		Array(	'href' => $CONFIG['LINK_GITHUB'],
-					'icon' => make_font_awesome_stack(Array(
-						'backdrop-github fas fa-circle',
-						'fab fa-tw fa-github'
-					),$CONFIG),
-		),
-	);
-	$links2 = Array(
-		Array(	'href' => $CONFIG['LINK_FACEBOOK'] ,
-					'icon' => make_font_awesome_stack(Array(
-						'backdrop-facebook fas fa-circle',
-						'fab fa-fw fa-facebook'
-					),$CONFIG),
-		),
-		Array(	'href'=> $CONFIG['LINK_TWITTER'] ,
-					'icon'=> make_font_awesome_stack(Array(
-						'backdrop-twitter fas fa-circle',
-						'fab fa-tw fa-twitter'
-					),$CONFIG),
-		),
-		Array(	'href' => $CONFIG['LINK_LINKEDIN'],
-					'icon' => make_font_awesome_stack(Array(
-						'backdrop-linkedin fas fa-circle',
-						'fab fa-tw fa-linkedin'
-					),$CONFIG),
-		),
-	);
-	$CONFIG['FA_STACK_SIZE'] = 'fa-2x';
-	$footer	= "";
-	$footer	.= "\n\t\t<footer class=\"m-0 mt-5";
+	$ROOT			= $CONFIG['ROOT'];
+	$ICONS		= get_config_icons($CONFIG);
+	$col0_links	= get_footer_col0_icons($ICONS, $CONFIG);
+	$col1_links	= get_footer_col1_icons($ICONS, $CONFIG);
+	$col2_links	= get_footer_col2_icons($ICONS, $CONFIG);
+
+	$footer_class	= "m-0 mt-5";
 	if ($CONFIG['FOOTER_IS_STICKY'] === TRUE)
-		$footer .= " fixed-bottom ";
-	$footer	.= "\">";
+		$footer_class .= " fixed-bottom ";
 	$col0_arr	= Array(
 		'class'=>"col-4 p-0 m-0",
-		'content'=>make_footer_bottom_cols($links0, $CONFIG),
+		'content'=>make_footer_bottom_cols($col0_links, $CONFIG),
 		'style'=>"color:white;text-align:center",
 	);
 	$col1_arr	= Array(
 		'class'=>"col-4 p-0 m-0",
-		'content'=>make_footer_bottom_cols($links1, $CONFIG),
+		'content'=>make_footer_bottom_cols($col0_links1, $CONFIG),
 		'style'=>"color:white;text-align:center",
 	);
 	$col2_arr	= Array(
 		'class'=>"col-4 p-0 m-0",
-		'content'=>make_footer_bottom_cols($links2, $CONFIG),
+		'content'=>make_footer_bottom_cols($col0_links2, $CONFIG),
 		'style'=>"color:white;text-align:center",
 	);
 	$col0	= make_tag("div",$col0_arr, $CONFIG) . "\n\t\t\t\t\t\t<!-- End Col 0 -->";
@@ -379,7 +319,11 @@ function get_footer($CONFIG=Null){
 		'style'=>"",
 	);
 	$container	= make_tag("div",$container_arr, $CONFIG) . "\n\t\t\t\t\t\t<!-- End CONTAINER -->";
-	$footer	.= $container; 
+	$footer_arr	= Array(
+		'class'=>$footer_class,
+		'content'=>$container,
+	);
+	$footer		= make_tag('footer', $footer_arr, $CONFIG);;
 	return $footer;
 }
 function get_form_nullifier($CONFIG){

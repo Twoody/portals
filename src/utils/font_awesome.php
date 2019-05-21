@@ -32,8 +32,50 @@ Purpose:
 //		__init_utils_FA__($CONFIG);
 //}
 
-function get_FA_contact_us(){
-	
+function get_footer_col0_icons($ICONS, $CONFIG){
+	//Return d-block of href icons;
+	$links0 = Array(
+		Array(	'href'=>$CONFIG['LINK_GMAIL'],
+					'icon'=>$ICONS['FOOTER_GMAIL'],
+		),
+		Array(	'href'=>$CONFIG['LINK_STACKOVERFLOW'],
+					'icon'=>$ICONS['FOOTER_SO'],
+		),
+		Array(	'href'=>$CONFIG['LINK_ANDROID'],
+					'icon'=>$ICONS['FOOTER_PLAY_STORE'],
+		),
+	);
+	return $links0;
+}
+function get_footer_col1_icons($ICONS, $CONFIG){
+	//Return d-block of href icons;
+	$links1 = Array(
+		Array(	'href'=>$CONFIG['LINK_INSTA'],
+					'icon'=>$ICONS['FOOTER_INSTAGRAM'],
+		),
+		Array(	'href'=>$CONFIG['LINK_STRAVA'] ,
+					'icon'=>$ICONS['FOOTER_STRAVA'],
+		),
+		Array(	'href'=>$CONFIG['LINK_GITHUB'],
+					'icon'=>$ICONS['FOOTER_GITHUB'],
+		),
+	);
+	return $links1;
+}
+function get_footer_col2_icons($ICONS, $CONFIG){
+	//Return d-block of href icons;
+	$links2 = Array(
+		Array(	'href'=>$CONFIG['LINK_FACEBOOK'] ,
+					'icon'=>$ICONS['FOOTER_FACEBOOK'],
+		),
+		Array(	'href'=>$CONFIG['LINK_TWITTER'] ,
+					'icon'=>$ICONS['FOOTER_TWITTER'],
+		),
+		Array(	'href'=>$CONFIG['LINK_LINKEDIN'],
+					'icon'=>$ICONS['FOOTER_LINKEDIN'],
+		),
+	);
+	return $links2;
 }
 function get_font_awesome_style_guide($CONFIG=Null, $ROOT=Null){
 	if ($ROOT === Null){
