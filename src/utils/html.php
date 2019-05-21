@@ -763,6 +763,8 @@ function get_table_from_owner_query($dbpath, $query, $CONFIG){
 	//TODO: 	owner table to have delete and add items
 	/* Return a dataTable table based off of query */
 	$db			= new SQLite3($dbpath);
+	$STRINGS		= get_config_strings($CONFIG);
+	$ICONS		= get_config_icons($CONFIG);
 	$CUR_TABLE	= parse_from($query);
 	$table   	= "";
 	$QUERY_PAGE	= $CONFIG['QUERY_PAGE'];
@@ -807,11 +809,15 @@ function get_table_from_owner_query($dbpath, $query, $CONFIG){
 						if ($is_first_col){
 							$dHref = $QUERY_PAGE."?delete_val=".$row[$row_key]."&delete_table=".$CUR_TABLE;
 							$dHref .= "&delete_key=".$row_key."&is_deleting=TRUE";
-							$table .= "\n<a href=\"".$dHref."\" title=\"Delete Entry\" style=\"color:black\">";
-							$table .= make_font_awesome_stack(Array(
-								'backdrop-google fas fa-square',
-								'fas fa-tw fa-trash'), $CONFIG);
-							$table .= "\n</a>";
+
+							$href_arr = Array(
+								'content'=> $ICONS['DELETE_TRASH'],
+								'href'=>$dHref,
+								'style'=>'color:black;',
+								'title'=>$STRINGS['DELETE_ENTRY'],
+							);
+							$href = make_tag('a', $href_arr, $CONFIG);
+							$table .= $href;
 						}
 						$table .= "".$row[$row_key];
 						$table .= "</td>";
@@ -825,22 +831,20 @@ function get_table_from_owner_query($dbpath, $query, $CONFIG){
 				$table .= "\n\t</table>";
 			}
 			else{
-				$table .= "\n\t\t\t<div class=\"col-12 bg-warning\">";
-				$table .= "\n\t\t\t\tNO RESULTS;";
-				$table .= "\n\t</div>";
+				$table .= make_gen_warning("NO RESULTS;", $CONFIG);
 			}
 		}
 		else{
-			$table .= "\n\t\t\t<div class=\"col-12 bg-warning\">";
-			$table .= "\n\t\t\t\tBAD QUERY;";
-			$table .= "\n\t</div>";
+			$table .= make_gen_warning("BAD QUERY;", $CONFIG);
 		}
 		$db->close();
 	}
 	catch (Exception $exception) {
-		$table .= "\n\t\t\t<div class=\"col-12 bg-warning\">";
-		$table .= "\n\t\t\t\tBAD QUERY AND PREPARE;";
-		$table .= "\n\t</div>";
+		$msg		= "\n\t\t\t\tBAD QUERY AND PREPARE;<br/>";
+		$msg		.= "\n\t\t\t\tDB: `".$dbpath."`<br/>";
+		$msg		.= "\n\t\t\t\tQUERY: `".$query."`<br/>";
+		$msg		.= "\n\t\t\t\tMSG: `".$exception."`<br/>";
+		$table	.= make_gen_warning($msg, $CONFIG);
 	}
 	return $table;
 }
