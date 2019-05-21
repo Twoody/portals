@@ -614,6 +614,15 @@ function get_table_from_inventory($CONFIG){
 			$result	= $prepare->execute();
 			if($result && $result->fetchArray()){
 				$result->reset();
+				$table_arr	= Array(
+					'cellspacing'=>'',
+					'class'=>'table table-striped table-bordered',
+					'content'=>$theader . $tbody . $tfooter,
+					'id'=>$TABLE_ID,
+					'role'=>'grid',
+					'width'=>'100%',
+					
+				);
 				$table .= "\n\t<table id=\"".$TABLE_ID."\" class=\"table table-striped table-bordered\" ";
 				$table .= "cellspacing=\"\" width=\"100%\" role=\"grid\">";
 				$table .= $theader;
@@ -621,73 +630,77 @@ function get_table_from_inventory($CONFIG){
 				$table .= "\n\t\t<tbody>";
 				$is_odd			= TRUE;
 				$is_first_row	= TRUE;
+				$row_cnt			= 1;
+
+				$result->reset();
 				while ($row = $result->fetchArray(SQLITE3_ASSOC)){
 					$table .= "\n\t\t\t<tr role=\"row\" class=\"";
-					if ($is_odd)
+					if ($row_cnt % 2 === 1)
 						$table .= "odd ";
 					else
 						$table .= "even ";
-					if ($is_first_row)
+					if ($row_cnt === 1)
 						$table .= "first ";
 					$table .= "\">"; //Closing `class`
 					$row_keys = array_keys($row);
 					$is_first_col = TRUE;
-					foreach($row_keys as $row_key){
-						if($row_key === 'name')
+					for($i=0; $i<count($row_keys); $i++){
+						$row_key	= $row_keys[$i];
+						if($row_key === 'id')
 							continue;
-						$table .= "\n\t\t\t\t<td>";
-						if ($is_first_col){
+						if($row_key === 'name'){
 							//Modal formatting: id is productid
 						 	$MCONFIG	= $CONFIG['MCONFIG'];
-							$table .= "\n<button type=\"button\" title=\"".$MCONFIG['TITLE']."\" ";
-							$table .= "class=\"btn inventory-modal\" id=\"".$row['id']."\"data-toggle=\"modal\" ";
-							$table .= "data-target=\"#".$MCONFIG['ID']."\" style=\"".$MCONFIG['STYLE']."\">";
-							$table .= make_font_awesome_stack(Array(
+							$button = '';
+							$button .= "\n<button type=\"button\" title=\"".$MCONFIG['TITLE']."\" ";
+							$button .= "class=\"btn inventory-modal\" id=\"".$row['id']."\"data-toggle=\"modal\" ";
+							$button .= "data-target=\"#".$MCONFIG['ID']."\" style=\"".$MCONFIG['STYLE']."\">";
+							$button .= make_font_awesome_stack(Array(
 								'backdrop-usd fas fa-circle',
 								'fas fa-tw fa-usd'), $CONFIG);
-							$table .= "\n</button>";
-							$CONFIG['PRODUCT_NAME'] = $row['name'];
-							$table .= get_inventory_modal($CONFIG);
-							$table .= "".$row['name'];
+							$button .= "\n</button>";
+							$cell_content = $button;
+							$cell_content .= get_inventory_modal($CONFIG);
+							$cell_content .= $row['name'];
 						}
 						else
-							$table .= "".$row[$row_key];
-						$table .= "</td>";
+							$cell_content = $row[$row_key];
+						$cell_arr	= Array(
+							'content'=>$cell_content,
+						);
+						$cell = make_tag('td', $cell_arr, $CONFIG);
+						$table .= $cell;
 						$is_first_col = FALSE;
 					}
 					$table .= "\n\t\t\t</tr>";
-					$is_first_row = FALSE;
+					$row_cnt += 1;
 				}
 				$table .= "\n\t\t</tbody>";
+				//$tbody		= get_table_body($cart, $CONFIG);
 				$table .= $tfooter;
 				$table .= "\n\t</table>";
+				//$table .= make_tag("table", $table_arr, $CONFIG);
 			}
 			else{
-				$table .= "\n\t\t\t<div class=\"col-12 bg-warning\">";
-				$table .= "\n\t\t\t\tNO RESULTS;";
-				$table .= "\n\t</div>";
+				$table .= make_gen_warning("NO RESULTS;", $CONFIG);
 			}
 		}
 		else{
-			$table .= "\n\t\t\t<div class=\"col-12 bg-warning\">";
-			$table .= "\n\t\t\t\tBAD QUERY;";
-			$table .= "\n\t</div>";
+			$table .= make_gen_warning("BAD QUERY;", $CONFIG);
 		}
 		$db->close();
 	}
 	catch (Exception $exception) {
-		$table .= "\n\t\t\t<div class=\"col-12 bg-warning\">";
-		$table .= "\n\t\t\t\tBAD QUERY AND PREPARE;<br/>";
-		$table .= "\n\t\t\t\tDB: `".$dbpath."`<br/>";
-		$table .= "\n\t\t\t\tQUERY: `".$query."`<br/>";
-		$table .= "\n\t\t\t</div>";
+		$msg		= "\n\t\t\t\tBAD QUERY AND PREPARE;<br/>";
+		$msg		.= "\n\t\t\t\tDB: `".$dbpath."`<br/>";
+		$msg		.= "\n\t\t\t\tQUERY: `".$query."`<br/>";
+		$table	.= make_gen_warning($msg, $CONFIG);
 	}
 	return $table;
 }
 function get_table_body($cart, $CONFIG){
 	//TODO: IF adding modals, add a MCONFIG param instead of plugging into CONFIG
 	$table			= "\n\t\t<tbody>";
-	$is_odd			= TRUE;
 	$row_cnt			= 1;
 	while ($row = $cart->fetchArray(SQLITE3_ASSOC)){
 		$row_class = "";
@@ -722,7 +735,6 @@ function get_table_body($cart, $CONFIG){
 	$table .= "\n\t\t</tbody>";
 	return $table;
 }
-
 function get_table_footer($columns_items, $CONFIG){
 	$footers_content	= '';
 	for ($i=0; $i<count($columns_items); $i++){
@@ -741,115 +753,6 @@ function get_table_footer($columns_items, $CONFIG){
 	);
 	$footer	= make_tag('tfoot', $footer_arr, $CONFIG);
 	return $footer;
-}
-function get_table_header($columns_items, $CONFIG){
-	$headers_content	= '';
-	for ($i=0; $i<count($columns_items); $i++){
-		$th_arr = Array(
-			'class'=>'sorting',
-			'content'=> $columns_items[$i],
-		);
-		$headers_content .= make_tag('th', $th_arr, $CONFIG);
-
-		$th_arr['class']	= '';
-	}
-	$header_row_arr	= Array(
-		'role'=>'row',
-		'content'=>$headers_content,
-	);
-	$header_row	= make_tag('tr', $header_row_arr, $CONFIG);
-	$header_arr	= Array(
-		'content'=>$header_row
-	);
-	$header	= make_tag('thead', $header_arr, $CONFIG);
-	return $header;
-}
-function get_table_from_member_query($dbpath, $query, $CONFIG){
-	//TODO:	members to have a counter and submit;
-	/* Return a dataTable table based off of query */
-	$db			= new SQLite3($dbpath);
-	$CUR_TABLE	= parse_from($query);
-	$table   	= "";
-	$QUERY_PAGE	= $CONFIG['QUERY_PAGE'];
-	$TABLE_ID	= $CONFIG['TABLE_ID'];
-	$db->enableExceptions(true);
-	try{
-		$prepare = $db->prepare($query);
-		if(!$CUR_TABLE)
-			$CUR_TABLE = "users";
-		if ($prepare){
-			$result	= $prepare->execute();
-			if($result && $result->fetchArray()){
-				$result->reset();
-				$row1			= $result->fetchArray(SQLITE3_ASSOC);
-				$columns		= array_keys($row);
-				$theader		= get_table_header($columns, $CONFIG);
-				$tfooter		= get_table_footer($columns, $CONFIG);
-				$header  	= "";
-				$footer		= "";
-				$table .= "\n\t<table id=\"".$TABLE_ID."\" class=\"table table-striped table-bordered\" ";
-				$table .= "cellspacing=\"\" width=\"100%\" role=\"grid\">";
-				$table .= $theader;
-				$table .= "\n\t\t<tbody>";
-				$is_odd = TRUE;
-				$is_first_row = TRUE;
-				$result->reset();
-				while ($row = $result->fetchArray(SQLITE3_ASSOC)){
-					$table .= "\n\t\t\t<tr role=\"row\" class=\"";
-					if ($is_odd)
-						$table .= "odd ";
-					else
-						$table .= "even ";
-					if ($is_first_row)
-						$table .= "first ";
-					$table .= "\">"; //Closing `class`
-					$row_keys = array_keys($row);
-					$is_first_col = TRUE;
-					foreach($row_keys as $row_key){
-						$table .= "\n\t\t\t\t<td>";
-						if ($is_first_col){
-							/*
-							$dHref = $QUERY_PAGE."?delete_val=".$row[$row_key]."&delete_table=".$CUR_TABLE;
-							$dHref .= "&delete_key=".$row_key."&is_deleting=TRUE";
-							$table .= "\n<a href=\"".$dHref."\" title=\"Delete Entry\" style=\"color:black\">";
-							$table .= make_font_awesome_stack(Array(
-								'backdrop-google fas fa-square',
-								'fas fa-tw fa-trash'), $CONFIG);
-							$table .= "\n</a>";
-							*/
-							//TODO: Add a counter plut +/- options;
-							//Add a submit;
-						}
-						$table .= "".$row[$row_key];
-						$table .= "</td>";
-						$is_first_col = FALSE;
-					}
-					$table .= "\n\t\t\t</tr>";
-					$is_first_row = FALSE;
-				}
-				$table .= "\n\t\t</tbody>";
-				$table .= $tfooter;
-				$table .= "\n\t</table>";
-			}
-			else{
-				$table .= "\n\t\t\t<div class=\"col-12 bg-warning\">";
-				$table .= "\n\t\t\t\tNO RESULTS;";
-				$table .= "\n\t</div>";
-			}
-		}
-		else{
-			$table .= "\n\t\t\t<div class=\"col-12 bg-warning\">";
-			$table .= "\n\t\t\t\tBAD QUERY;";
-			$table .= "\n\t</div>";
-		}
-		$db->close();
-	}
-	catch (Exception $exception) {
-		$table .= "\n\t\t\t<div class=\"col-12 bg-warning\">";
-		$table .= "\n\t\t\t\tBAD QUERY AND PREPARE;";
-		$table .= "\n\t</div>";
-	}
-	return $table;
 }
 function get_table_from_owner_query($dbpath, $query, $CONFIG){
 	//TODO: 	owner table to have delete and add items
@@ -935,6 +838,29 @@ function get_table_from_owner_query($dbpath, $query, $CONFIG){
 		$table .= "\n\t</div>";
 	}
 	return $table;
+}
+
+function get_table_header($columns_items, $CONFIG){
+	$headers_content	= '';
+	for ($i=0; $i<count($columns_items); $i++){
+		$th_arr = Array(
+			'class'=>'sorting',
+			'content'=> $columns_items[$i],
+		);
+		$headers_content .= make_tag('th', $th_arr, $CONFIG);
+
+		$th_arr['class']	= '';
+	}
+	$header_row_arr	= Array(
+		'role'=>'row',
+		'content'=>$headers_content,
+	);
+	$header_row	= make_tag('tr', $header_row_arr, $CONFIG);
+	$header_arr	= Array(
+		'content'=>$header_row
+	);
+	$header	= make_tag('thead', $header_arr, $CONFIG);
+	return $header;
 }
 function make_css($REL, $LINK, $INTEGRITY="", $ORIGIN=""){
 	/* Make a CSS stylesheet to be imported into HTML page */
@@ -1029,7 +955,7 @@ function make_tag($tag, $arr, $CONFIG){
 		$ret .= " ".$key."=\"" .$arr[$key]. "\"";
 	}
 	$ret .= ">";
-	if($arr['content'])
+	if($arr['content'] !== Null)
 		$ret .= "\n\t\t\t" . $arr['content'];
 	$ret .= "\n\t\t</".$tag.">";
 	return $ret;
