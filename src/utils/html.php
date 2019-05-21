@@ -244,7 +244,6 @@ function get_checkout_table($cart, $CONFIG){
 			'id'=>$TABLE_ID,
 			'role'=>'grid',
 			'width'=>'100%',
-			
 		);
 		$table .= make_tag("table", $table_arr, $CONFIG);
 	}
@@ -281,7 +280,8 @@ function get_datatables_jquery($orderby, $CONFIG){
 function get_footer($CONFIG=Null){
 	if ($CONFIG === Null)
 		$CONFIG = get_config();
-	$ROOT = $CONFIG['ROOT'];
+	$ROOT		= $CONFIG['ROOT'];
+	$ICONS	= get_config_icons($CONFIG);
 	$CONFIG['FA_STACK_SIZE'] = 'fa-md';
 	$links0 = Array(
 		Array(	'href'=>$CONFIG['LINK_GMAIL'],
@@ -781,33 +781,28 @@ function get_table_from_owner_query($dbpath, $query, $CONFIG){
 				$row1			= $result->fetchArray(SQLITE3_ASSOC);
 				$columns		= array_keys($row1);
 				$result->reset();
-				$theader		= get_table_header($columns, $CONFIG);
-				$tfooter		= get_table_footer($columns, $CONFIG);
-				$header  	= "";
-				$footer		= "";
+				$theader			= get_table_header($columns, $CONFIG);
+				$tfooter			= get_table_footer($columns, $CONFIG);
+				$tbody_content	= '';;
+				$table_content	= '';;
 
-				$table .= "\n\t<table id=\"".$TABLE_ID."\" class=\"table table-striped table-bordered\" ";
-				$table .= "cellspacing=\"\" width=\"100%\" role=\"grid\">";
-				$table .= $theader;
 				$result->reset();
-				$table .= "\n\t\t<tbody>";
-				$is_odd = TRUE;
-				$is_first_row = TRUE;
+				$row_cnt	= 1;
 				while ($row = $result->fetchArray(SQLITE3_ASSOC)){
-					$table .= "\n\t\t\t<tr role=\"row\" class=\"";
-					if ($is_odd)
-						$table .= "odd ";
+					$row_class = '';
+					if ($row_cnt%2 === 1)
+						$row_class .= "odd ";
 					else
-						$table .= "even ";
-					if ($is_first_row)
-						$table .= "first ";
-					$table .= "\">"; //Closing `class`
+						$row_class .= "even ";
+					if ($row_cnt === 1)
+						$row_class .= "first ";
 					$row_keys = array_keys($row);
-					$is_first_col = TRUE;
-					foreach($row_keys as $row_key){
-						$table .= "\n\t\t\t\t<td>";
-						if ($is_first_col){
-							$dHref = $QUERY_PAGE."?delete_val=".$row[$row_key]."&delete_table=".$CUR_TABLE;
+					$row_content = '';
+					for($i=0; $i<count($row_keys); $i++){
+						$row_key	= $row_keys[$i];
+						$row_val	= $row[$row_key];
+						if ($i === 0){
+							$dHref = $QUERY_PAGE."?delete_val=".$row_val."&delete_table=".$CUR_TABLE;
 							$dHref .= "&delete_key=".$row_key."&is_deleting=TRUE";
 
 							$href_arr = Array(
@@ -817,18 +812,41 @@ function get_table_from_owner_query($dbpath, $query, $CONFIG){
 								'title'=>$STRINGS['DELETE_ENTRY'],
 							);
 							$href = make_tag('a', $href_arr, $CONFIG);
-							$table .= $href;
+							$cell_content	= $href;
+							$cell_content	.= $row_val;
 						}
-						$table .= "".$row[$row_key];
-						$table .= "</td>";
-						$is_first_col = FALSE;
-					}
-					$table .= "\n\t\t\t</tr>";
-					$is_first_row = FALSE;
-				}
-				$table .= "\n\t\t</tbody>";
-				$table .= $tfooter;
-				$table .= "\n\t</table>";
+						else
+							$cell_content	= $row_val;
+						$cell_arr = Array(
+							'content'=>$cell_content,
+						);
+						$cell = make_tag('td', $cell_arr, $CONFIG);
+						$row_content .= $cell;
+					}//End for-loop
+					$row_arr = Array(
+						'content'=>$row_content,
+						'class'=>$row_class,
+					);
+					$row	= make_tag('tr', $row_arr, $CONFIG);
+					$tbody_content .= $row;
+					$row_cnt	+= 1;
+				}//End while loop
+				$tbody_arr	= Array(
+					'content'=>$tbody_content,
+				);
+				$tbody	= make_tag('tbody', $tbody_arr, $CONFIG);
+				$table_content .= $theader;
+				$table_content .= $tbody;
+				$table_content .= $tfooter;
+				$table_arr	= Array(
+					'cellspacing'=>'',
+					'class'=>'table table-striped table-bordered',
+					'content'=>$theader . $tbody . $tfooter,
+					'id'=>$TABLE_ID,
+					'role'=>'grid',
+					'width'=>'100%',
+				);
+				$table = make_tag("table", $table_arr, $CONFIG);;
 			}
 			else{
 				$table .= make_gen_warning("NO RESULTS;", $CONFIG);
