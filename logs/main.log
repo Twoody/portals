@@ -6,6 +6,12 @@
 ******************************************************************************/
 
 Tanner.L.Woody@gmail.com
+2019-05-19 5pm 
+	Major bug fix with make_tags() at if(arr['content']);
+	Has Been resolved, but did not mention in commit log :|
+
+
+Tanner.L.Woody@gmail.com
 2019-05-11
 	The great cleanup continues;
 	It is important to note that we are managing hrefs in res/strings/href.php;
