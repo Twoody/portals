@@ -48,7 +48,7 @@ function build_img($imgArr){
 	return $img;
 }
 function clog($msg){
-	$js_arr					= get_js_arr();
+	$js_arr					= [];
 	$js_arr['content']	= "\n\t\t\tconsole.log(JSON.stringify(".$msg."));";
 	$html						= make_tag('script', $js_arr, $CONFIG);
 	return $html;
