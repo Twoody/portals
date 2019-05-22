@@ -1,4 +1,5 @@
 A. Main:
+	1. Validate res/forms/* with make_tags() and the such...
 	1. Figure out if there are some dead links and paths in config/paths.php
 				For sure dead ones might me features and pricing from nav;
 				Part of this is going to be changing:
