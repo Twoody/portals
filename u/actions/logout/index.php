@@ -30,6 +30,7 @@ $PATHS	= get_paths($ROOT);
 $CONFIG	= get_config($ROOT);
 $STRINGS	= get_config_strings($CONFIG);
 $home		= $PATHS['NAV_HOME'];
+$singin	= $PATHS['NAV_'];
 require_once($PATHS['TEMPLATES_B']);
 
 $body   = "";
@@ -65,7 +66,8 @@ if (is_logged_in($CONFIG)){
 else{
 	//user not logged in
 	$col0			= make_gen_warning($STRINGS['LOGOUT_WARNING'], $CONFIG);
-	$row0			= make_gen_row($col0, $CONFIG);
+	$col1			= make_gen_col(get_nav_text($CONFIG, $STRINGS), $CONFIG);
+	$row0			= make_gen_row($col0.$col1, $CONFIG);
 	$container0	= make_gen_container($row0, $CONFIG);
 	$body .= $container0;
 }
