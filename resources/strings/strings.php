@@ -43,8 +43,9 @@ function get_config_strings($CONFIG=Null){
 		"USER_ACCESS_LEVEL"=> "You are logged in as a ".$_SESSION['alevel'].".",
 		"USER_INVALID_PERMISSION"=> "Warning: Access Denied;",
 		"USER_NOT_LOGGED_IN"=> "Warning, not logged in;",
-
+//TODO: Get rid of html...
 		"USER_PW_REQS" => "\n<small id=\"passwordHelpBlock\" class=\"form-text text-muted\">Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.</small>\n",
+		"VIEW_INV_TEXT"=>"Some text before the checkout list.",
 	);
 }
 
