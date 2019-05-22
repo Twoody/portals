@@ -57,7 +57,7 @@ if (is_logged_in($CONFIG)){
 		'role'=>'button',
 	);
 	$button		= make_tag('a', $button_arr, $CONFIG);
-	$col1			= make_gen_col($button);
+	$col1			= make_gen_col($button, $CONFIG);
 	$row1			= make_gen_row($col1, $CONFIG);
 	$container0	= make_gen_container($row0.$row1, $CONFIG);
 	$body .= $container0;
