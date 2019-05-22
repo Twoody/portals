@@ -30,7 +30,7 @@ require_once($PATHS['LIBPATH_AUTH_USER']);
 require_once($PATHS['LIBPATH_DB_HELPER']);
 
 function alert($msg){
-	$js_arr					= get_js_arr();
+	$js_arr					= [];
 	$js_arr['content']	= "\n\t\t\talert(JSON.stringify(".$msg."));";
 	$html						= make_tag('script', $js_arr, $CONFIG);
 	return $html;
