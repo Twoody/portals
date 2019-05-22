@@ -27,8 +27,9 @@ Links:
 $ROOT = "../../..";
 require_once($ROOT.'/config/imports.php');
 make_imports($ROOT);
-$PATHS  = get_paths($ROOT);
-$CONFIG = get_config($ROOT);
+$PATHS 	= get_paths($ROOT);
+$CONFIG	= get_config($ROOT);
+$STRINGS	= get_config_strings($CONFIG);
 require_once($PATHS['HTML_REGISTER_USER']);
 require_once($PATHS['TEMPLATES_B']);
 
@@ -37,7 +38,7 @@ echo "<!-- LANDED ON: REGISTRATION PAGE-->";
 $body   = "";
 	
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
-$CONFIG['TITLE'] = "Register";
+$CONFIG['TITLE'] = $STRINGS["REGISTER"];
 $CONFIG['DISPLAY_HEADER'] = FALSE;
 
 $CONFIG = html_register_user($CONFIG, $PATHS);

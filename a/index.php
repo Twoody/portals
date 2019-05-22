@@ -27,16 +27,15 @@ $ROOT = "..";
 require_once($ROOT.'/config/imports.php');
 make_imports($ROOT);
 $PATHS	= get_paths($ROOT);
-$home		= $PATHS['NAV_HOME'];
-require_once($PATHS['TEMPLATES_B']);
-
 $CONFIG	= get_config($ROOT);
 $STRINGS	= get_config_strings($CONFIG);
-$body  	= "";
-	
+
+require_once($PATHS['TEMPLATES_B']);
+
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
-$CONFIG['TITLE'] = "Logout";
-$CONFIG['DISPLAY_HEADER'] = FALSE;
+$CONFIG['TITLE']				= $STRINGS["DASHBOARD_ADMIN"];
+$CONFIG['DISPLAY_HEADER']	= FALSE;
+$body								= "";
 
 echo '<!-- RUNNING '.$PATHS['ADMIN_DASH'].' -->';
 
@@ -52,7 +51,6 @@ else if($_SESSION['alevel'] !== 'admin'){
 	$container_1	= make_gen_container(make_gen_row($col_1, $CONFIG), $CONFIG);
 	$body .= $container_0;
 	$body .= $container_1;
-
 }
 else{
 	//Admin level access
