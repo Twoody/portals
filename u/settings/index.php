@@ -32,19 +32,25 @@ make_imports($ROOT);
 $PATHS  = get_paths($ROOT);
 require_once($PATHS['TEMPLATES_B']);
 
-$CONFIG = get_config($ROOT);
-$body   = "";
+$CONFIG	= get_config($ROOT);
+$STRINGS	= get_config_strings($CONFIG);
+$body		= "";
+echo '<!-- LANDED ON: '.$PATHS['USER_SETTINGS'].' -->';
 	
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
-$CONFIG['TITLE'] = "IN CONSTRCUCTION";
+$CONFIG['TITLE'] = $STRINGS['UNDER_CONSTRUCTION_TITLE'];;
 $CONFIG['DISPLAY_HEADER'] = FALSE;
 
-//TODO: Make HEADER
-$body .= "\n\t\t";
-$body .= "<h1>PAGE IN CONSTRUCTIONS</h1>";
+$h1_arr	= Array(
+	'content'=>$STRINGS['UNDER_CONSTRUCTION_HEADER'],
+);
+$h1			= make_tag('h1', $h1_arr, $CONFIG);
+$row0			= make_gen_row($h1, $config);
+$container0	= make_gen_container($row0, $config);
+
+$body .= $container0;
 
 $CONFIG['BODY'] = $body;
-//echo '<!-- '.$PATHS['NAV_HOME'].' -->';
 echo template_b($CONFIG, $PATHS) . "\n";
 
 ?>

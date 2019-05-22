@@ -85,6 +85,7 @@ function get_paths($ROOT=Null){
 		'USER_REGISTER'					=> $ROOT.'/u/actions/register/index.php',
 		'USER_REGISTER_DOES_EXIST'		=> $ROOT.'/u/actions/register/already_registered.php',
 		'USER_REGISTER_SUCCESS'			=> $ROOT.'/u/actions/register/success.php',
+		'USER_SETTINGS'					=> $ROOT.'/u/settings/index.php',
 	);
 }
 ?>

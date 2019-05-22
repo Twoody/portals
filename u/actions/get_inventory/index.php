@@ -27,8 +27,9 @@ Links:
 $ROOT = "../../..";
 require_once($ROOT.'/config/imports.php');
 make_imports($ROOT);
-$PATHS  = get_paths($ROOT);
-$CONFIG = get_config($ROOT);
+$PATHS	= get_paths($ROOT);
+$CONFIG	= get_config($ROOT);
+$STRINGS	= get_config_strings($CONFIG);
 require_once($PATHS['HTML_LOGIN_OR_SIGNOUT']);
 require_once($PATHS['HTML_GET_INVENTORY']);
 require_once($PATHS['TEMPLATES_B']);
@@ -36,7 +37,7 @@ require_once($PATHS['TEMPLATES_B']);
 echo "<!-- LANDED ON: ".$PATHS['USER_GET_INVENTORY'].":INVENTORY PAGE-->";
 
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
-$CONFIG['TITLE']				= "Shop's Inventory";
+$CONFIG['TITLE']				= $STRINGS["SHOPPING_TITLE"];
 $CONFIG['DISPLAY_HEADER']	= FALSE;
 $CONFIG['TABLE_ID']			= "inventory";
 $dt_orderby						= "name";
