@@ -40,6 +40,7 @@ $body	= "";
 $CONFIG['TITLE']				= "Login";
 $CONFIG['DISPLAY_HEADER']	= FALSE;
 
+//TODO: What is really going on below 0.o
 $CONFIG = html_login_or_signout($CONFIG, $PATHS); //Will get ./resources/forms/foo IFF user logged in;
 echo template_b($CONFIG, $PATHS) . "\n";
 ?>
