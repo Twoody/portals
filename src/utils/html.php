@@ -268,14 +268,15 @@ function get_css($CONFIG=Null){
 	return $s;
 }
 function get_datatables_jquery($orderby, $CONFIG){
-	//TODO: Debug when putting in make_tag('script');
 	$content	= "\n\t$(document).ready(function(){";
 	$content	.= "\n\t\t$('#".$CONFIG['TABLE_ID']."').DataTable({";
 	$content	.= "\n\t\t\t\"order\": [[ 1, \"".$orderby."\" ]]";
 	$content	.= "\n\t\t});";
 	$content	.= "\n\t\t$('.dataTables_length').addClass('bs-select');";
 	$content	.= "\n\t});";
-	return $content;
+	$js_arr	= [];
+	$js_arr['content'] = $content;
+	return make_tag('script', $js_arr, $CONFIG);
 }
 function get_footer($CONFIG=Null){
 	if ($CONFIG === Null)
@@ -296,12 +297,12 @@ function get_footer($CONFIG=Null){
 	);
 	$col1_arr	= Array(
 		'class'=>"col-4 p-0 m-0",
-		'content'=>make_footer_bottom_cols($col0_links1, $CONFIG),
+		'content'=>make_footer_bottom_cols($col1_links, $CONFIG),
 		'style'=>"color:white;text-align:center",
 	);
 	$col2_arr	= Array(
 		'class'=>"col-4 p-0 m-0",
-		'content'=>make_footer_bottom_cols($col0_links2, $CONFIG),
+		'content'=>make_footer_bottom_cols($col2_links, $CONFIG),
 		'style'=>"color:white;text-align:center",
 	);
 	$col0	= make_tag("div",$col0_arr, $CONFIG) . "\n\t\t\t\t\t\t<!-- End Col 0 -->";
@@ -422,6 +423,19 @@ function get_js($CONFIG=Null){
 	}
 	return $s;
 }
+function get_js_arr(){
+	return Array(
+		'content'=>'',
+		'integrity'=>'',
+		'crossorigin'=>'',
+		'src'=>'',
+	);
+}
+function get_js_inv($PATHS, $CONFIG){
+	$js_inv_arr				= get_js_arr();
+	$js_inv_arr['src']	= $PATHS['JS_INVENTORY'];
+	return make_tag('script', $js_inv_arr, $CONFIG);
+}
 function get_nav($CONFIG=Null, $PATHS=Null){
 	if($CONFIG === Null)
 		$CONFIG = get_config();
@@ -526,14 +540,6 @@ function get_nav_text($CONFIG, $STRINGS){
 	);
 	$nav_text = make_tag('span', $nav_text_arr, $CONFIG);
 	return $nav_text;
-}
-function get_js_arr(){
-	return Array(
-		'content'=>'',
-		'integrity'=>'',
-		'crossorigin'=>'',
-		'src'=>'',
-	);
 }
 function get_table_from_inventory($CONFIG){
 	$PATHS			= get_paths($CONFIG['ROOT']);

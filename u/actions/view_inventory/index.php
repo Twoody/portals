@@ -18,7 +18,9 @@ USAGE:
 			sudo apachectl start
 
 Purpose:
-    Allow user to login;
+    View the users current inventory;
+	 TODO:
+	 	Be able to edit the current inventory with pencils + modals;
 
 Links:
 	NA
@@ -27,8 +29,9 @@ Links:
 $ROOT = "../../..";
 require_once($ROOT.'/config/imports.php');
 make_imports($ROOT);
-$PATHS  = get_paths($ROOT);
-$CONFIG = get_config($ROOT);
+$PATHS	= get_paths($ROOT);
+$CONFIG	= get_config($ROOT);
+$STRINGS = get_config_strings($CONFIG);
 require_once($PATHS['HTML_LOGIN_OR_SIGNOUT']);
 require_once($PATHS['HTML_GET_INVENTORY']);
 require_once($PATHS['TEMPLATES_B']);
@@ -41,11 +44,11 @@ $CONFIG['TITLE']						= "My Shopping Cart";
 $CONFIG['DISPLAY_HEADER']			= FALSE;
 $dt_orderby								= "name";
 
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n<script src=\"".$PATHS['JS_INVENTORY']."\"></script>";
+$CONFIG['CUSTOM_SCRIPTS'] .= get_js_inv($PATHS, $CONFIG);;
 $CONFIG['CUSTOM_SCRIPTS'] .= get_form_nullifier($CONFIG);
+$CONFIG['CUSTOM_SCRIPTS'] .= get_datatables_jquery($dt_orderby, $CONFIG);;
 
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n<script>";
-$CONFIG['CUSTOM_SCRIPTS'] .= get_datatables_jquery($dt_orderby, $CONFIG);;
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t$(function(){";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t$(\".inventory-modal\").click(function(e){";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\te.preventDefault();";
@@ -63,34 +66,26 @@ $cart			= get_cart($userid, $CONFIG);
 $table		= get_checkout_table($cart, $CONFIG);
 $cart_total	= get_cart_total($userid, $CONFIG);
 
+$col0			= make_gen_info($STRINGS['VIEW_INV_TEXT'], $CONFIG);
+$row0			= make_gen_row($col0, $CONFIG);
+$container0	= make_gen_container($row0, $CONFIG);
 
-$html = "";
-$html .= $CONFIG['GEN_CONTAINER'];
-$html .= $CONFIG['GEN_ROW'];
-$html .= $CONFIG['GEN_INFO'];
-$html .= "Some text before the checkout list";
-$html .= "\n\t\t\t</div><!-- END COL -->";
-$html .= "\n\t\t</div><!-- END ROW -->";
-$html .= "\n\t</div><!-- END CONTAINER -->";
+$button_arr	= Array(
+	'class'=>'btn btn-primary w-100 fixed-bottom mb-5 p-3',
+	'content'=>"$".$cart_total." due. Checkout?",
+	'name'=>'form_submit',
+	'type'=>'submit',
+);
+$button		= make_tag('button', $button_arr, $CONFIG);
+$row1			= make_gen_row($button, $CONFIG);
+$container1	= make_gen_container($table, $CONFIG);
+$container2	= make_gen_container($row1, $CONFIG);
+
+$html	= "";
+$html .= $container0;
 $html .= "<hr>";
-
-$html .= $CONFIG['GEN_CONTAINER'];
-$html .= $table;
-$html .= "\n\t</div><!-- END CONTAINER -->";
-//TODO: Test switch to GEN_* below
-$html .= "\n\t\t<div class=\"container\">";
-$html .= "\n\t\t<div class=\"row\">";
-$html .= "\n\t\t\t<button type=\"submit\" class=\"btn btn-primary w-100 fixed-bottom mb-5 p-3\" name=\"form_submit\">";
-$html	.= "\n\t\t\t\t$".$cart_total." due. Checkout?";
-$html .= "\n\t\t\t</button>";
-$html .= "\n\t\t</div><!-- END ROW -->";
-
-
-//$html .= "\n\t\t\t<div class=\"col-5 text-right bg-info mb-5\">";
-//$html .= "<h1>Total Amount Due: $$$$</h1>";
-//$html .= "\n\t\t\t</div><!-- END COL -->";
-//$html .= "\n\t\t</div><!-- END ROW -->";
-$html .= "\n\t</div><!-- END CONTAINER -->";
+$html	.= $container1;
+$html	.= $container2;
 
 $CONFIG['BODY'] .= $html;
 echo template_b($CONFIG, $PATHS) . "\n";
