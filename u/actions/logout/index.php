@@ -18,62 +18,58 @@ USAGE:
 			sudo apachectl start
 
 Purpose:
-    Fun way to show that page was not found;
+    Logout information;
 
 Links:
-	https://www.w3schools.com/bootstrap4/bootstrap_carousel.asp
 ******************************************************************************/
 
 $ROOT = "../../..";
 require_once($ROOT.'/config/imports.php');
 make_imports($ROOT);
 $PATHS	= get_paths($ROOT);
+$CONFIG	= get_config($ROOT);
+$STRINGS	= get_config_strings($CONFIG);
 $home		= $PATHS['NAV_HOME'];
 require_once($PATHS['TEMPLATES_B']);
 
-$CONFIG = get_config($ROOT);
 $body   = "";
 	
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
-$CONFIG['TITLE'] = "Logout";
-$CONFIG['DISPLAY_HEADER'] = FALSE;
+$CONFIG['TITLE']				= $STRINGS["LOGOUT"];
+$CONFIG['DISPLAY_HEADER']	= FALSE;
 
 echo '<!-- RUNNING '.$PATHS['USER_LOGOUT'].' -->';
 
-$body .= "\n\t\t<div class=\"container fixed-width p-5 sticky\">";
 if (is_logged_in($CONFIG)){
-	$_SESSIONS['username']	= Null;
-	$_SESSIONS['loggedin']	= Null;
-	$_SESSIONS['alevel']		= Null;
-	$_SESSIONS['email']		= Null;
-	$CONFIG['IS_LOGGING_OUT'] = TRUE;
+	$_SESSIONS['username']		= Null;
+	$_SESSIONS['loggedin']		= Null;
+	$_SESSIONS['alevel']			= Null;
+	$_SESSIONS['email']			= Null;
+	$CONFIG['IS_LOGGING_OUT']	= TRUE;
 	session_destroy();
-	$body .= "\n\t\t\t<div class=\"row justify-content-center\">";
-	$body .= "\n\t\t\t\t<div class=\"col-12\">";
-	$body .= "\n\t\t\t\t\tSuccessfully logged out";
-	$body .= "\n\t\t\t\t</div>";
-	$body .= "\n\t\t\t</div>";
-	$body .= "\n\t\t\t<div class=\"row justify-content-center\">";
-	$body .= "\n\t\t\t\t<div class=\"col-12\">";
-	$body .= "\n\t\t\t\t\t<a role=\"button\" class=\"btn btn-primary btn-block btn-lg\" ";
-	$body .= "href=\"".$home."\"";
-	$body .= ">";
-	$body .= "\n\t\t\t\t\t\tReturn home";
-	$body .= "\n\t\t\t\t\t</a>";
-	$body .= "\n\t\t\t\t</div>";
-	$body .= "\n\t\t\t</div><!-- End row -->";
+
+	$col0			= make_gen_col($STRINGS['LOGOUT_SUCCESS'], $CONFIG);
+	$row0			= make_gen_row($col0, $CONFIG);
+	$button_arr	= Array(
+		'class'=>'btn btn-primary btn-block btn-lg',
+		'content'=>$STRINGS['RET_HOME'],
+		'href'=>$home,
+		'role'=>'button',
+	);
+	$button		= make_tag('a', $button_arr, $CONFIG);
+	$col1			= make_gen_col($button);
+	$row1			= make_gen_row($col1, $CONFIG);
+	$container0	= make_gen_container($row0.$row1, $CONFIG);
+	$body .= $container0;
 }
 else{
 	//user not logged in
-	$body .= "\n\t\t\t<div class=\"row justify-content-center\">";
-	$body .= "\n\t\t\t\t<div class=\"col-12 bg-warning\">";
-	$body .= "\n\t\t\t\t\tWarning, not logged in;";
-	$body .= "\n\t\t\t\t</div>";
-	$body .= "\n\t\t\t</div><!-- End row -->";
+	$col0			= make_gen_warning($STRINGS['LOGOUT_WARNING'], $CONFIG);
+	$row0			= make_gen_row($col0, $CONFIG);
+	$container0	= make_gen_container($row0, $CONFIG);
+	$body .= $container0;
 }
-$body .= "\n\t\t</div>";
 
 $CONFIG['BODY'] .= $body;
 echo template_b($CONFIG, $PATHS) . "\n";
-
 ?>
