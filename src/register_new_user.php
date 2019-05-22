@@ -47,7 +47,7 @@ function html_register_user($CONFIG=Null, $PATHS=Null){
 		$email				= sanitize_input( $_POST["email"] );
 		$handle				= sanitize_input( $_POST["username"] );
 		$pw					= sanitize_input( $_POST["password"] );
-		$pw_confirmation	= sanitize_input( $_POST["password_confirm"];
+		$pw_confirmation	= sanitize_input( $_POST["password_confirm"] );
 		$is_valid_email	= is_valid_email($email, $CONFIG);
 		$is_valid_pw		= is_valid_password($pw, $CONFIG);
 		$is_valid_handle	= is_valid_handle($handle, $CONFIG);
