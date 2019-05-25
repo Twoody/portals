@@ -336,6 +336,30 @@ function get_form_nullifier($CONFIG){
 	$ret	= make_tag('script', $js_arr, $CONFIG);;
 	return $ret;
 }
+function get_google_analytics($CONFIG=Null){
+	/*
+	* Google Analytics has been replace with Google Tag Manager (GMT)
+	* Should be injected into every page no matter what...
+	*/
+	$gtm_arr	= Array(
+		"async"=>"",
+		"src"=>$CONFIG["LINK_GTM"],
+	);
+	$gtm	= make_tag('script', $gtm_arr, $CONFIG);
+	$gtag_content	= "";
+	$gtag_content	.= "\n\t\twindow.dataLayer = window.dataLayer || [];";
+	$gtag_content	.= "\n\t\tfunction gtag(){dataLayer.push(arguments);}";
+	$gtag_content	.= "\n\t\tgtag('js', new Date());";
+	$gtag_content	.= "\n\t\tgtag('config', 'UA-59999025-2');";
+	$gtag_arr		= Array(
+		'content'=>$gtag_content,
+	);
+	$gtag	= make_tag('script', $gtag_arr, $CONFIG);
+	$js	= "\n\t<!-- Global site tag (gtag.js) - Google Analytics -->";
+	$js	.= $gtm;
+	$js	.= $gtag;
+	return $js;
+}
 function get_header($CONFIG=Null){
 	if($CONFIG === Null)
 		$CONFIG	= get_config();
@@ -346,6 +370,7 @@ function get_header($CONFIG=Null){
 	$s .=	"\n\t<!-- Required meta tags -->";
 	$s .=	"\n\t<meta charset=\"".$CONFIG['CHAR_SET']."\">";
 	$s .=	"\n\t<meta name=\"viewport\" content=\"".$CONFIG['META_CONTENT']."\">";
+	$s	.= get_google_analytics($CONFIG);
 	$s .= get_css($CONFIG); //<link> elements
 	$s .= "";
 	$s .=	"\n\t<title>".$CONFIG['TITLE']."</title>";

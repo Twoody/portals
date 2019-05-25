@@ -38,6 +38,7 @@ function get_config($ROOT=Null){
 		'LINK_STRAVA' => 'https://www.strava.com/athletes/9502204',
 		'LINK_STACKOVERFLOW' => 'https://stackoverflow.com/users/2957890/t-woody',
 		'LINK_GITHUB' => 'https://github.com/TWoody',
+		'LINK_GTM' => 'https://www.googletagmanager.com/gtag/js?id=UA-59999025-2',
 		//TODO: Client links and page...
 		//'LINK_CLIENT1' => '',
 
