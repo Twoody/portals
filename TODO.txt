@@ -1,3 +1,35 @@
+Major Projects to Implement
+	0.		Implement a coule of screen focused on skill sets;
+				A. OWASP following
+				B.	ISO followings
+				C. Database Management
+				D. Many-to-Many relationship
+				E. Post, redirect, get  + JS form nullifiler
+				G.	SQLite3 database gui
+				H.	Multilingual support
+				I.	Vanilla PHP
+				J.	Vanilla Javascript
+				K.	jQuery
+				L. Dynamic Website buiding
+				M. User Management
+				N. Password Security with Hashing
+				O. Test-Driven Development
+				P. Cookies
+				Q. Bootstrap + Flexbox
+				R. Templates
+				S.	Cloud Computing
+				T. Image uploading
+				U.	Image processing + manipulation (aspect ratios)
+				V. API -- The Future!
+	1.		Pencils on all of the items for owners to edit their shops content
+	2. 	Image uploader
+	3.A	News Feed
+	3.B	Voting System on news Feed
+	3.C	Dashboard to give other users voting power
+	3.D	Dashboard to see leadeerboard of voting power 
+	4.		SVG icons and svg icon manipulation
+
+
 A. Main:
 	1. Validate res/forms/* with make_tags() and the such...
 	1. Figure out if there are some dead links and paths in config/paths.php
@@ -15,7 +47,6 @@ A. Main:
 					I believe this has to do with the browser automatically commenting
 					out the <i>con tags and trying to do svg's instead;
 					I will google a solution upon internet access;
-
 	1. 	Design: Navbar, crumbles, media
 	1.		Everywhere there is _POST, sanitize;
 				**** **** DONE **** **** 
@@ -46,4 +77,5 @@ D. Users
 	1.		`Remember Me` functionality;
 	2.		In /u/settings/ let user see what owner they are affiliated with;
 
-E. Random
+E. Randoma
+	1. Find out about the changes to .htaccess and the rewrite rules implemented around HTTPS reges like references..
