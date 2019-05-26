@@ -6,7 +6,7 @@ session_start();
 /******************************************************************************
    Author:  Tanner.L.Woody@gmail.com
    WebLink: 
-   Date:    2019-04-20
+   Date:    2019-05-26
 
 USAGE:
 	First Check for compilation errors:
@@ -22,10 +22,8 @@ Purpose:
 	 Display the locations where possible params and configs can take place;
 
 Links:
-	https://www.w3schools.com/bootstrap4/bootstrap_carousel.asp
-	https://stackoverflow.com/questions/12172177/set-div-height-equal-to-screen-size
 ******************************************************************************/
-$ROOT = '.';
+$ROOT = '..';
 require_once($ROOT.'/config/imports.php');
 make_imports($ROOT);
 
@@ -40,54 +38,28 @@ $CONFIG['CUSTOM_STYLES'] .= "\n<style>";
 $CONFIG['CUSTOM_STYLES'] .= "\n\t.content-slider{display:flex; justify-content:center;}"; 
 $CONFIG['CUSTOM_STYLES'] .= "\n\t.ad_button_link{display:flex; justify-content:center;}"; 
 $CONFIG['CUSTOM_STYLES'] .= "\n</style>";
-/*
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n<script>";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t$(document).ready(function(){";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t$('.".$car_id."').height($(window).height());";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t});";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n</script>";
-*/
+
 $body		= "";
-$style	= "height:100vh;overflow-y:auto;";
-$style	= "height:100vh;";
 $style	= "";
 	
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
-$CONFIG['TITLE']				= "Home At Last";
+$CONFIG['TITLE']				= $STRINGS['FEATURES_TITLE'];;
 $CONFIG['DISPLAY_HEADER']	= FALSE;
-$pic1 = Array(
-			"src"=>		$PATHS['IMAGE_CAROUSEL_1'],
-			"class"=>	"d-block",
-			"alt"=>		"Joshua Tree Wedding",
-			"width"=>	"100%",
-			"height"=>	"100%",
-		);
-$pic2 = Array(
-			"src"=>		$PATHS['IMAGE_CAROUSEL_2'],
-			"class"=>	"d-block",
-			"alt"=>		"nyc",
-			"width"=>	"100%",
-			"height"=>	"100%",
-		);
-$pic3 = Array(
-			"src"=>		$PATHS['IMAGE_CAROUSEL_3'],
-			"class"=>	"d-block",
-			"alt"=>		"Bianchi on the Beach",
-			"width"=>	"100%",
-			"height"=>	"100%",
-		);
-$pics = Array($pic1, $pic2, $pic3);
 
-echo "<!-- LANDED ON: HOME PAGE-->";
+echo "<!-- LANDED ON: Features Index-->";
 
-$ad_not_sm	= "";	//Show WHEN NOT X-SMALL
-$ad_not_sm	.= "\n\t\t\t\t\t<span class=\"d-none d-sm-block\">";
-$ad_not_sm	.= get_ad($CONFIG);
-$ad_not_sm	.= "\n\t\t\t\t\t</span>";
+$ad_not_sm_content	= get_ad($CONFIG);	//Show WHEN NOT X-SMALL
+
+$ad_not_sm_arr	= Array(
+	'class'=>"d-none d-sm-block",
+	'content'=>$ad_not_sm_content,
+);
+$ad_not_sm		= make_tag('span', $ad_not_sm_arr, $CONFIG);
+
 $col0	= Array(
 				'class'=>"col-12 col-sm-8 col-md-9 col-lg-10 m-0 p-0 fit-screen",
 				'style'=>$style,
-				'content'=>get_carousel($pics, $car_id, $CONFIG),
+				'content'=>make_lorem_ipsum(5),
 		);
 $col1	= Array(
 				'class'=>" col-sm-4 col-md-3 col-lg-2 pr-3 m-0",

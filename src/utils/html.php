@@ -948,6 +948,20 @@ function make_list_item($text){
 	$ret .= "\n\t\t</li>";
 	return $ret;
 }
+function make_lorem_ipsum($cnt=1){
+	$LI			= new LoremIpsum();
+	$ret			= '';
+	$ipsum_arr	= Array(
+		'content'=>'',
+		'syle'=>'',
+	);
+	for($i=0; $i<$cnt; $i++){
+		$content	= "";
+		$ipsum_arr['content'] = tab() . $LI->paragraph();
+		$ret	.= make_tag('p', $ipsum_arr, $CONFIG);
+	}
+	return $ret;
+}
 function make_tag($tag, $arr, $CONFIG){
 	$keys	= array_keys($arr);
 	$ret	= "\n\t\t<".$tag." ";
