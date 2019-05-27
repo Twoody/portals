@@ -59,6 +59,7 @@ function get_config_strings($CONFIG=Null){
 		"NAV_REGISTER"=>"Register Now",
 		"NAV_SIGN_IN"=>"Sign In",
 		"NAV_WELCOME"=>"Welcome, " . get_user_fname($CONFIG),
+		"QUOTE_TIM_BERNER"=>"The Semantic Web is not a separate Web but an extension of the current one, in which information is given well-defined meaning, better enabling computers and people to work in cooperation.",
 		"RET_HOME"=>"Return Home",
 		"REGISTER"=>"Register",
 		"SHOPPING_TITLE"=>"Shop's Inventory",
