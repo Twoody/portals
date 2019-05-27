@@ -69,8 +69,13 @@ function get_ad($CONFIG){
 		'class'=>'card-text',
 		'content'=>$STRINGS['AD_TEXT'],
 	);
+	$ad_title_arr	= Array(
+		'class'=> 'card-title',
+		'content'=>$STRINGS['AD_TITLE'],
+		'style'=>'text-align:center;',
+	);
 	$ad_img			= build_img($ad_image_arr, $CONFIG);
-	$ad_title		= "\n\t\t\t\t<h5 class=\"card-title\">".$STRINGS['AD_TITLE']."</h5>";
+	$ad_title		= make_tag('h5', $ad_title_arr, $CONFIG);;
 	$ad_text			= make_tag('p', $ad_text_arr, $CONFIG);
 	$ad_button		= get_href_ad($CONFIG, $STRINGS);
 	$ad_body_arr	= Array(
@@ -99,19 +104,21 @@ function get_ads_sm($CONFIG){
 		'src'=>$PATHS['IMAGE_AD_LOGO'],
 		'width'=>'100px',
 	);
-	$text2_arr 	= Array(
-		'class'=>"text-center",
+	$text1_arr 	= Array(
+		'class'=>"text-center btn btn-primary ad_button_link ",
 		'content'=>$STRINGS['AD_SMALL_TEXT_1'],
+		'href'=>'#',
 		'style'=>"",
 	);
-	$text1_arr 	= Array(
-		'class'=>"text-center",
+	$text2_arr 	= Array(
+		'class'=>"text-center btn btn-primary ad_button_link ",
 		'content'=>$STRINGS['AD_SMALL_TEXT_2'],
+		'href'=>'#',
 		'style'=>"",
 	);
 	$ad_sm_img	= build_img($ad_sm_image_arr, $CONFIG);
-	$text1		= make_tag("div",$text1_arr, $CONFIG);
-	$text2		= make_tag("div",$text2_arr, $CONFIG);
+	$text1		= make_tag("a",$text1_arr, $CONFIG);
+	$text2		= make_tag("a",$text2_arr, $CONFIG);
 	$col0_arr	= Array(
 		'class'=>"col-6 m-0 p-0",
 		'content'=>$ad_sm_img,
@@ -123,12 +130,12 @@ function get_ads_sm($CONFIG){
 		'style'=>"",
 	);
 	$col2_arr	= Array(
-		'class'=>"col-6 pl-3 pr-3 d-block bg-success",
+		'class'=>"col-6 pl-3 pr-3 d-block",
 		'content'=>$text1,
 		'style'=>"",
 	);
 	$col3_arr	= Array(
-		'class'=>"col-6 pl-3 pr-3 d-block bg-warning",
+		'class'=>"col-6 pl-3 pr-3 d-block",
 		'content'=>$text2,
 		'style'=>"",
 	);
