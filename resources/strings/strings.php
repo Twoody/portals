@@ -1,4 +1,21 @@
 <?php
+/******************************************************************************
+   Author:  Tanner.L.Woody@gmail.com
+   WebLink: github.com/twoody/phpTests/utils/html.php
+   Date:    20190420
+
+USAGE:
+   In php, put at the head of function:
+      $STRINGS = get_config_string($CONFIG);
+		$LI		= new LoremIpsum
+
+Purpose:
+    General Util Library to ensure we have minimal errors while outputting HTML.
+Links:
+	https://github.com/joshtronic/php-loremipsum/blob/master/src/LoremIpsum.php
+******************************************************************************/
+
+
 echo "\n<!-- RESOURCE FILE: ".$PATHS['STRINGS_PHP']." -->\n";
 function get_config_strings($CONFIG=Null){
 	if ($CONFIG === Null){
