@@ -104,21 +104,11 @@ function get_ads_sm($CONFIG){
 		'src'=>$PATHS['IMAGE_AD_LOGO'],
 		'width'=>'100px',
 	);
-	$text1_arr 	= Array(
-		'class'=>"text-center btn btn-primary ad_button_link ",
-		'content'=>$STRINGS['AD_SMALL_TEXT_1'],
-		'href'=>'#',
-		'style'=>"",
-	);
-	$text2_arr 	= Array(
-		'class'=>"text-center btn btn-primary ad_button_link ",
-		'content'=>$STRINGS['AD_SMALL_TEXT_2'],
-		'href'=>'#',
-		'style'=>"",
-	);
 	$ad_sm_img	= build_img($ad_sm_image_arr, $CONFIG);
-	$text1		= make_tag("a",$text1_arr, $CONFIG);
-	$text2		= make_tag("a",$text2_arr, $CONFIG);
+	$ad_href1	= $CONFIG['AD_SM_HREF1'];
+	$ad_href2	= $CONFIG['AD_SM_HREF2'];
+	$text1		= get_href_ad_sm($STRINGS['AD_SMALL_TEXT_1'], $ad_href1, $CONFIG);
+	$text2		= get_href_ad_sm($STRINGS['AD_SMALL_TEXT_2'], $ad_href2, $CONFIG);
 	$col0_arr	= Array(
 		'class'=>"col-6 m-0 p-0",
 		'content'=>$ad_sm_img,

@@ -27,6 +27,10 @@ function get_config($ROOT=Null){
 		'TITLE '=> "", 			//Surely overwritten,
 		'VERSION'=>1.10,
 	
+		/* ----- ----- ADS ----- ----- */
+		'AD_SM_HREF1'=>'#',
+		'AD_SM_HREF2'=>'#',
+
 		/* ----- ----- LINKS ----- ----- */
 		/* WILL PROBABLY BE OWN FUNCTION IN THE FUTURE */
 		'LINK_ANDROID' => 'https://play.google.com/store/apps/details?id=com.beWoody.tanner.KISS_List',

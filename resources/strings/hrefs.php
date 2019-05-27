@@ -22,6 +22,17 @@ function get_href_ad($CONFIG, $STRINGS){
 	$href = make_href($CONFIG);
 	return $href;
 }
+function get_href_ad_sm($content, $href, $CONFIG){
+	$text_arr 	= Array(
+		'class'=>"text-center btn btn-primary ad_button_link ",
+		'content'=>$content,
+		'href'=>$href,
+		'style'=>"",
+	);
+	$text	= make_tag("a",$text_arr, $CONFIG);
+	return $text;
+
+}
 function get_href_admin_dash0($CONFIG, $STRINGS){
 	$PATHS = get_paths($CONFIG['ROOT']);
 	$CONFIG['HREF_CLASS']	= "list-group-item active";
