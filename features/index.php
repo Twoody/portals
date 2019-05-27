@@ -86,34 +86,40 @@ $ad_not_sm_arr	= Array(
 	'content'=>$ad_not_sm_content,
 );
 $ad_not_sm		= make_tag('span', $ad_not_sm_arr, $CONFIG);
-$quote_arr		= Array(
+$quote_top_arr		= Array(
+	'content'=> $STRINGS['QUOTE_OSHO'],
+	'cite'=>'Osho',
+);
+$quote_bottom_arr		= Array(
 	'content'=> $STRINGS['QUOTE_TIM_BERNER'],
 	'cite'=>'Tim Berner',
 );
-$quote				= make_tag('blockquote', $quote_arr, $CONFIG);
+$quote_top			= make_tag('blockquote', $quote_top_arr, $CONFIG);
+$quote_bottom		= make_tag('blockquote', $quote_bottom_arr, $CONFIG);
 $disclaimer_txt	= '<b>This page is in the works. </b>';
 $disclaimer_txt	.= 'To start it off, I decided to work with a blog-esque platform first and do two birds with one stone. What you are seeing here is all randomly generated lorem ispum text followed by a block quote at the end. My next step is going to be plugging in some jQuery so that different MVVM features work in reference to a drop-down naviation menu. This menu will reset the text on the image and work as a navigator for all of the fun and interesting aspects of this site exist and how they are helpful in both the computer science and professional industries.';
 $disclaimer_arr	= Array('content'=>$disclaimer_txt,);
 $disclaimer			= make_tag('p', $disclaimer_arr, $CONFIG);
-
-$col0_arr		= Array(
+$disclaimer .= "\n<hr style=\"height:1px;border:none;color:#333;background-color:#333;\">";
+$col0_arr	= Array(
 				'class'=>"col-12 col-sm-8 col-md-9 col-lg-10 m-0 p-0 fit-screen",
 				'style'=>$style,
-				'content'=>$disclaimer ."<hr>". make_lorem_ipsum(5),
+				'content'=>$disclaimer . $quote_top . make_lorem_ipsum(5),
 		);
-$col1_arr		= Array(
+$col1_arr	= Array(
 				'class'=>" col-sm-4 col-md-3 col-lg-2 pr-3 m-0",
 				'content'=>$ad_not_sm,
 		);
 $col2_arr				= $col0_arr;
-$col2_arr['content']	= $quote;
+$col2_arr['content']	= $quote_bottom;
 $col0	= make_tag("div", $col0_arr, $CONFIG) . "<!-- END COL -->";
 $col1	= make_tag("div", $col1_arr, $CONFIG) . "<!-- END COL -->";
+$col2	= make_tag("div", $col2_arr, $CONFIG) . "<!-- END COL -->";
 
 $row0_arr	= Array(
 				'class'=>" row pl-3 pr-3 m-0",
 				'style'=>$style,
-				'content'=>$col0.$col1.$quote,
+				'content'=>$col0.$col1,
 		);
 $row1_arr	= $row0_arr;
 $row1_arr['content']	= $col2;

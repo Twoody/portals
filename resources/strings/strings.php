@@ -60,6 +60,7 @@ function get_config_strings($CONFIG=Null){
 		"NAV_SIGN_IN"=>"Sign In",
 		"NAV_WELCOME"=>"Welcome, " . get_user_fname($CONFIG),
 		"QUOTE_TIM_BERNER"=>"The Semantic Web is not a separate Web but an extension of the current one, in which information is given well-defined meaning, better enabling computers and people to work in cooperation.",
+		"QUOTE_OSHO"=>"Falling in love you remain a child; rising in love you mature. By and by love becomes not a relationship, it becomes a state of your being. Not that you are in love - now you are love.",
 		"RET_HOME"=>"Return Home",
 		"REGISTER"=>"Register",
 		"SHOPPING_TITLE"=>"Shop's Inventory",
