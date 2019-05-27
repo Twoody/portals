@@ -15,7 +15,7 @@ require_once($PATHS['STRINGS_PHP']);
 		            //'STRINGS_PHP'
 function get_href_ad($CONFIG, $STRINGS){
 	$PATHS = get_paths($CONFIG['ROOT']);
-	$CONFIG['HREF_CLASS']	= "btn btn-primary ad_button_link";
+	$CONFIG['HREF_CLASS']	= "btn btn-primary ad-button-link";
 	$CONFIG['HREF_LINK']		= "#";
 	$CONFIG['HREF_ROLE']		= "";
 	$CONFIG['HREF_TEXT']		= $STRINGS["CURRENCY"];
@@ -24,7 +24,7 @@ function get_href_ad($CONFIG, $STRINGS){
 }
 function get_href_ad_sm($content, $href, $CONFIG){
 	$text_arr 	= Array(
-		'class'=>"text-center btn btn-primary ad_button_link ",
+		'class'=>"text-center btn btn-primary ad-button-link ",
 		'content'=>$content,
 		'href'=>$href,
 		'style'=>"",

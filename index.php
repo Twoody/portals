@@ -38,7 +38,8 @@ require_once($PATHS['TEMPLATES_B']);
 $CONFIG['CUSTOM_STYLES'] .= "\n<style>";
 //$CONFIG['CUSTOM_STYLES'] .= "\n\t.carousel-inner img {max-height: 100%;display:block;}"; 
 $CONFIG['CUSTOM_STYLES'] .= "\n\t.content-slider{display:flex; justify-content:center;}"; 
-$CONFIG['CUSTOM_STYLES'] .= "\n\t.ad_button_link{display:flex; justify-content:center;}"; 
+//TODO: WHY IS THIS NOT COMING OVER FROM passtow.css ?!?!?!?!
+$CONFIG['CUSTOM_STYLES'] .= "\n\t.ad-button-link{display:flex; justify-content:center;}"; 
 $CONFIG['CUSTOM_STYLES'] .= "\n</style>";
 /*
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n<script>";
@@ -87,7 +88,7 @@ $ad_not_sm	.= "\n\t\t\t\t\t</span>";
 $col0	= Array(
 				'class'=>"col-12 col-sm-8 col-md-9 col-lg-10 m-0 p-0 fit-screen",
 				'style'=>$style,
-				'content'=>get_carousel($pics, $car_id, $CONFIG),
+				'content'=>"<hr class=\"thick-line\">".get_carousel($pics, $car_id, $CONFIG),
 		);
 $col1	= Array(
 				'class'=>" col-sm-4 col-md-3 col-lg-2 pr-3 m-0",

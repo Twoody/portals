@@ -23,6 +23,7 @@ function get_paths($ROOT=Null){
 		'ADMIN_VIEWPORT'					=> $ROOT."/a/actions/viewport_users.php",
 		'BOOTSTRAP_CSS_PATH'				=> $ROOT.'/resources/css/bootstrap.php',
 		'BOOTSTRAP_JS_PATH'				=> $ROOT.'/resources/js/bootstrap.php',
+		'CSS_PASSTOW'						=> $ROOT.'/resources/css/offline/passtow.css',
 		'DATATABLES_CSS_PATH'			=> $ROOT.'/resources/css/datatables.php',
 		'DATATABLES_JS_PATH'				=> $ROOT.'/resources/js/datatables.php',
 		'DB_USERS'							=> $ROOT."/resources/dbs/users.db",

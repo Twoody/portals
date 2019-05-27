@@ -255,6 +255,7 @@ function get_css($CONFIG=Null){
 		$CONFIG	= get_config();
 	$ROOT = $CONFIG['ROOT'];
 	$s = "";
+	$s .= get_passtow_css($CONFIG);
 	if($CONFIG['HAS_BOOTSTRAP'] || $CONFIG['HAS_POPPER'] || $CONFIG['HAS_JQUERY'] )
 		$s .= get_bootstrap_css($CONFIG);
 	if($CONFIG['HAS_DATATABLES'] || $CONFIG['HAS_DATATABLES_JQUERY'] )
@@ -562,6 +563,15 @@ function get_nav_text($CONFIG, $STRINGS){
 	);
 	$nav_text = make_tag('span', $nav_text_arr, $CONFIG);
 	return $nav_text;
+}
+function get_passtow_css($CONFIG){
+	if($CONFIG === Null)
+		$CONFIG	= get_config($ROOT);
+	$ROOT		= $CONFIG['ROOT'];
+	$PATHS	= get_paths($ROOT);
+	echo "\n<!-- LOCAL ".$PATHS['CSS_PASSTOW']." imported -->\n";
+	$css_arr = Array('href'=>$PATHS['CSS_PASSTOW'], 'rel'=>'stylesheet');
+	return make_tag('link', $css_arr, $CONFIG);
 }
 function get_table_from_inventory($CONFIG){
 	$PATHS			= get_paths($CONFIG['ROOT']);

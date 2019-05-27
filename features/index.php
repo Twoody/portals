@@ -36,38 +36,6 @@ require_once($PATHS['TEMPLATES_B']);
 
 $CONFIG['CUSTOM_STYLES'] .= "\n<style>";
 $CONFIG['CUSTOM_STYLES'] .= "\n@import url(https://fonts.googleapis.com/css?family=PT+Sans|Ubuntu:300,400,700);"; 
-//$CONFIG['CUSTOM_STYLES'] .= "\n\t.carousel-inner img {max-height: 100%;display:block;}"; 
-$CONFIG['CUSTOM_STYLES'] .= "\n\t.content-slider{display:flex; justify-content:center;}"; 
-$CONFIG['CUSTOM_STYLES'] .= "\n\t.ad_button_link{display:flex; justify-content:center;}"; 
-$CONFIG['CUSTOM_STYLES']	.= "\n\tblockquote {";
-$CONFIG['CUSTOM_STYLES']	.= "\n\t  display: block;";
-$CONFIG['CUSTOM_STYLES']	.= "\n\t  border-width: 2px 0;";
-$CONFIG['CUSTOM_STYLES']	.= "\n\t  border-style: solid;";
-$CONFIG['CUSTOM_STYLES']	.= "\n\t  border-color: #eee;";
-$CONFIG['CUSTOM_STYLES']	.= "\n\t  padding: 1.5em 0 0.5em;";
-$CONFIG['CUSTOM_STYLES']	.= "\n\t  margin: 1.5em 0;";
-$CONFIG['CUSTOM_STYLES']	.= "\n\t  position: relative;";
-$CONFIG['CUSTOM_STYLES']	.= "\n\t}";
-$CONFIG['CUSTOM_STYLES']	.= "\n\tblockquote:before {";
-$CONFIG['CUSTOM_STYLES']	.= "\n\t  content: '\\201C';";
-$CONFIG['CUSTOM_STYLES']	.= "\n\t  position: absolute;";
-$CONFIG['CUSTOM_STYLES']	.= "\n\t  top: 0em;";
-$CONFIG['CUSTOM_STYLES']	.= "\n\t  left: 50%;";
-$CONFIG['CUSTOM_STYLES']	.= "\n\t  transform: translate(-50%, -50%);";
-$CONFIG['CUSTOM_STYLES']	.= "\n\t  background: #fff;";
-$CONFIG['CUSTOM_STYLES']	.= "\n\t  width: 3rem;";
-$CONFIG['CUSTOM_STYLES']	.= "\n\t  height: 2rem;";
-$CONFIG['CUSTOM_STYLES']	.= "\n\t  font: 6em/1.08em 'PT Sans', sans-serif;";
-$CONFIG['CUSTOM_STYLES']	.= "\n\t  color: #666;";
-$CONFIG['CUSTOM_STYLES']	.= "\n\t  text-align: center;";
-$CONFIG['CUSTOM_STYLES']	.= "\n\t}";
-$CONFIG['CUSTOM_STYLES']	.= "\n\tblockquote:after {";
-$CONFIG['CUSTOM_STYLES']	.= "\n\t  content: \"\\2013 \\2003\" attr(cite);";
-$CONFIG['CUSTOM_STYLES']	.= "\n\t  display: block;";
-$CONFIG['CUSTOM_STYLES']	.= "\n\t  text-align: right;";
-$CONFIG['CUSTOM_STYLES']	.= "\n\t  font-size: 0.875em;";
-$CONFIG['CUSTOM_STYLES']	.= "\n\t  color: #e74c3c;";
-$CONFIG['CUSTOM_STYLES']	.= "\n\t}";
 $CONFIG['CUSTOM_STYLES'] .= "\n</style>";
 
 $body		= "";
@@ -100,7 +68,7 @@ $disclaimer_txt	= '<b>This page is in the works. </b>';
 $disclaimer_txt	.= 'To start it off, I decided to work with a blog-esque platform first and do two birds with one stone. What you are seeing here is a quote followed by all randomly generated lorem ispum text followed by a block quote at the end. My next step is to plug in some jQuery so that different MVVM features work in reference to a drop-down navigation menu. This menu will reset the text on the page and work as a navigator for all of the fun and interesting aspects that exist on this site. Each text will explain how the features are helpful in both the computer science and professional industries.';
 $disclaimer_arr	= Array('content'=>$disclaimer_txt,);
 $disclaimer			= make_tag('p', $disclaimer_arr, $CONFIG);
-$disclaimer .= "\n<hr style=\"height:5px;border:none;color:#333;background-color:#333;\">";
+$disclaimer .= "\n<hr class=\"thick-line\">";
 $col0_arr	= Array(
 				'class'=>"col-12 col-sm-8 col-md-9 col-lg-10 m-0 p-0 fit-screen",
 				'style'=>$style,
