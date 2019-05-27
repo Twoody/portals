@@ -97,10 +97,10 @@ $quote_bottom_arr		= Array(
 $quote_top			= make_tag('blockquote', $quote_top_arr, $CONFIG);
 $quote_bottom		= make_tag('blockquote', $quote_bottom_arr, $CONFIG);
 $disclaimer_txt	= '<b>This page is in the works. </b>';
-$disclaimer_txt	.= 'To start it off, I decided to work with a blog-esque platform first and do two birds with one stone. What you are seeing here is all randomly generated lorem ispum text followed by a block quote at the end. My next step is going to be plugging in some jQuery so that different MVVM features work in reference to a drop-down naviation menu. This menu will reset the text on the image and work as a navigator for all of the fun and interesting aspects of this site exist and how they are helpful in both the computer science and professional industries.';
+$disclaimer_txt	.= 'To start it off, I decided to work with a blog-esque platform first and do two birds with one stone. What you are seeing here is a quote followed by all randomly generated lorem ispum text followed by a block quote at the end. My next step is to plug in some jQuery so that different MVVM features work in reference to a drop-down navigation menu. This menu will reset the text on the page and work as a navigator for all of the fun and interesting aspects that exist on this site. Each text will explain how the features are helpful in both the computer science and professional industries.';
 $disclaimer_arr	= Array('content'=>$disclaimer_txt,);
 $disclaimer			= make_tag('p', $disclaimer_arr, $CONFIG);
-$disclaimer .= "\n<hr style=\"height:1px;border:none;color:#333;background-color:#333;\">";
+$disclaimer .= "\n<hr style=\"height:5px;border:none;color:#333;background-color:#333;\">";
 $col0_arr	= Array(
 				'class'=>"col-12 col-sm-8 col-md-9 col-lg-10 m-0 p-0 fit-screen",
 				'style'=>$style,
