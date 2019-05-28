@@ -57,20 +57,20 @@ $ad_not_sm_arr	= Array(
 $ad_not_sm				= make_tag('span', $ad_not_sm_arr, $CONFIG);
 $dropdown_items		= get_dropdown_items($CONFIG);
 $goodReq					= False;
+echo "\n<!-- MEAT123: `" . $CONFIG['TITLE'] ."` -->";
+
 if(isset($_GET['display_code'])){
 	$display_req	= $_GET['display_code'];
-	if(is_key_in_items($display_req)){
-		$main_content	= get_dropdown_text($display_req);
+	if(is_key_in_items($display_req, $CONFIG)){
+		$main_content	= get_dropdown_text($display_req, $CONFIG);
 		$goodReq			= True;
 	}
 }
 if ($goodReq === False)
 	$main_content	= make_lorem_ipsum(1);
-
 $dropdown_items		= "";
 $dropdown_items_arr	= get_dropdown_items($CONFIG);
 for ($i=0; $i<count($dropdown_items_arr); $i++){
-	echo "\n<!-- MEAT: " . $item['title'] ." -->";
 	$item				= $dropdown_items_arr[$i];
 	$display_code	= "display_code=" . $item['code'];
 	$display_title	= "display_title=" . $item['title'];
