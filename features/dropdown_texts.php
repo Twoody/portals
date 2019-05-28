@@ -14,12 +14,22 @@ Purpose:
 	Key value pair to load content;
 *******************************************************************************/
 function get_f_text($CONFIG){
-	$ret = 'Not registerd yet...';
-	$ret .= "Pleaes understand that there are 10+ items above that we need to process and make into their own select text and mini-blog post. " ;
-	$ret .= "We will soon have all of the mappings put here with specifics, until then, enjoy the fun \$_GET seen here!";
-	return $ret;
+	$content = 'Not registerd yet...';
+	$content .= "Pleaes understand that there are 10+ items above that we need to process and make into their own select text and mini-blog post. " ;
+	$content .= "We will soon have all of the mappings put here with specifics, until then, enjoy the fun \$_GET seen here!";
+	$p	= make_tag('p', Array('content'=>$content), $CONFIG);
+	return $p;
 }
-function get_dropdown_text($key){
+function get_reset_text($CONFIG){
+	$STRINGS	= get_config_strings($CONFIG);
+	$content = $STRINGS['FEATURES_RESET'];
+	$p	= make_tag('p', Array('content'=>$content), $CONFIG);
+	return $p;
+}
+function get_cloud_text($CONFIG){
+	$content = "";
+}
+function get_dropdown_text($key, $CONFIG){
 	//Return the text associated with key
 	$items	= get_dropdown_items($CONFIG);
 	$text		= "";
@@ -32,7 +42,7 @@ function get_dropdown_text($key){
 	}//end i-for
 	return $text;
 }
-function is_key_in_items($key){
+function is_key_in_items($key,$CONFIG){
 	$items	= get_dropdown_items($CONFIG);
 	for ($i=0; $i<count($items); $i++){
 		$item = $items[$i];
@@ -46,7 +56,7 @@ function get_dropdown_items($CONFIG){
 		1=>Array(
 				'title'=>'Reset',  			
 				'code'=>'reset',                              			
-	 			'funct'=>make_lorem_ipsum(1, $CONFIG),
+	 			'funct'=>get_reset_text($CONFIG) . make_lorem_ipsum(1, $CONFIG),
 		),
 	 	2=>Array(
 	     		'title'=>'Cloud Computing', 			
