@@ -30,6 +30,7 @@ function get_paths($ROOT=Null){
 		'DB_INVENTORY'						=> $ROOT."/resources/dbs/inventory.db",
 		'FEATURES'							=> $ROOT."/features/index.php",
 		'FEATURES_DD_HELPER'				=> $ROOT."/features/dropdown_texts.php",
+		'FEATURES_JS'						=> $ROOT."/resources/js/offline/dropdown.js",
 		'FONT_AWESOME_CSS_PATH'			=> $ROOT.'/resources/css/font_awesome.php',
 		'FONT_AWESOME_JS_PATH'			=> $ROOT.'/resources/js/font_awesome.php',
 		'FORMS_ADMIN_VIEWPORT'			=> $ROOT."/resources/forms/admin_viewport.php",
