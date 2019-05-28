@@ -31,8 +31,10 @@ function get_dropdown_items($CONFIG){
 		'Many-to-Many Relationships',
 		'Minimum Viable Product',
 		'Multi-Lingual Support',
+		'Not Wordpress',
 		'OWASP Security Standards',
 		'PHP',
+		'Regular Expression Mastery',
 		'Post, Redirect, Get + JS Form Nullifier',
 		'Templates',
 		'Test Driven Development',
@@ -41,7 +43,6 @@ function get_dropdown_items($CONFIG){
 		'User Workflow',
 		'Version Control (GIT)',
 		'VIM',
-		'Wordpress',
 	);
 	return $dropdown_items_arr;
 }
@@ -71,13 +72,13 @@ function get_dropdown_texts($CONFIG){
 		'user_workflow'=>get_f_text($CONFIG),
 		'git'=>get_f_text($CONFIG),
 		'vim'=>get_f_text($CONFIG),
-		'wordpress'=>get_f_text($CONFIG),
+		'not_wordpress'=>get_f_text($CONFIG),
 	);
 }
 function get_f_text($CONFIG){
 	$ret = 'Not registerd yet...';
 	$ret .= "Pleaes understand that there are 10+ items above that we need to process and make into their own select text and mini-blog post. " ;
-	$ret .= "We will soon have all of the mappings put here with specifics, until then, enjoy the fun \$_GET see here!";
+	$ret .= "We will soon have all of the mappings put here with specifics, until then, enjoy the fun \$_GET seen here!";
 	return $ret;
 }
 ?>
