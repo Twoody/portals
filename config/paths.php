@@ -28,6 +28,7 @@ function get_paths($ROOT=Null){
 		'DATATABLES_JS_PATH'				=> $ROOT.'/resources/js/datatables.php',
 		'DB_USERS'							=> $ROOT."/resources/dbs/users.db",
 		'DB_INVENTORY'						=> $ROOT."/resources/dbs/inventory.db",
+		'FEATURES'							=> $ROOT."/features/index.php",
 		'FONT_AWESOME_CSS_PATH'			=> $ROOT.'/resources/css/font_awesome.php',
 		'FONT_AWESOME_JS_PATH'			=> $ROOT.'/resources/js/font_awesome.php',
 		'FORMS_ADMIN_VIEWPORT'			=> $ROOT."/resources/forms/admin_viewport.php",
