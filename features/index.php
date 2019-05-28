@@ -35,6 +35,7 @@ $car_id	= "demo-carousel";
 require_once($PATHS['TEMPLATES_B']);
 
 $CONFIG['CUSTOM_STYLES'] .= "\n<style>";
+$CONFIG['CUSTOM_STYLES'] .= "\n\t.scrollable-menu{ height: auto; max-height: 200px; overflow-x: hidden; }";
 $CONFIG['CUSTOM_STYLES'] .= "\n</style>";
 
 $body		= "";
@@ -53,50 +54,113 @@ $ad_not_sm_arr	= Array(
 	'content'=>$ad_not_sm_content,
 );
 $ad_not_sm		= make_tag('span', $ad_not_sm_arr, $CONFIG);
-$quote_top_arr		= Array(
-	'content'=> $STRINGS['QUOTE_OSHO'],
-	'cite'=>'Osho',
+$dropdown_items_arr	= Array( //These are the items in specifics to making this website;
+	'Cloud Computing',
+	'Cookies',
+	'Database Management',
+	'Demos and Pilots',
+	'Dev Tools',
+	'Image and File Uploading',
+	'Image Manipulation and Processing (Aspect Ratio & Mores)',
+	'ISO Formatting',
+	'jQuery',
+	'Java',
+	'Javascript',
+	'Many-to-Many Relationships',
+	'Minimum Viable Product',
+	'Multi-Lingual Support',
+	'OWASP Security Standards',
+	'PHP',
+	'Post, Redirect, Get + JS Form Nullifier',
+	'Templates',
+	'Test Driven Development',
+	'User Experience (UX)',
+	'User Management',
+	'User Workflow',
+	'Version Control (GIT)',
+	'VIM',
+	'Wordpress',
 );
-$quote_bottom_arr		= Array(
-	'content'=> $STRINGS['QUOTE_TIM_BERNER'],
-	'cite'=>'Tim Berner',
+$goodReq = False;
+
+$main_content	= make_lorem_ipsum(1);
+$dropdown_items	= "";
+for ($i=0; $i<count($dropdown_items_arr); $i++){
+	$item	= $dropdown_items_arr[$i];
+	$getReq	= strtolower($item);
+	$getReq	= str_replace(' ', '_', $getReq);
+	$dropdown_item_arr	= Array(
+		'class'=>"dropdown-item",
+		'href'=>$PATHS['FEATUERS']."?display=".$getReq ,
+		'content'=>$item,
+	);
+	$dropdown_items	.= "\n\t" . make_tag('a', $dropdown_item_arr, $CONFIG);
+}//end i-for
+$dropdown_menu_arr	= Array(
+	'class'=>"dropdown-menu scrollable-menu",
+	'content'=>$dropdown_items,
 );
-$quote_top			= make_tag('blockquote', $quote_top_arr, $CONFIG);
-$quote_bottom		= make_tag('blockquote', $quote_bottom_arr, $CONFIG);
-$disclaimer_txt	= '<b>This page is in the works. </b>';
-$disclaimer_txt	.= 'To start it off, I decided to work with a blog-esque platform first and do two birds with one stone. What you are seeing here is a quote followed by all randomly generated lorem ispum text followed by a block quote at the end. My next step is to plug in some jQuery so that different MVVM features work in reference to a drop-down navigation menu. This menu will reset the text on the page and work as a navigator for all of the fun and interesting aspects that exist on this site. Each text will explain how the features are helpful in both the computer science and professional industries.';
-$disclaimer_arr	= Array('content'=>$disclaimer_txt,);
-$disclaimer			= make_tag('p', $disclaimer_arr, $CONFIG);
-$disclaimer .= "\n<hr class=\"thick-line\">";
+$dropdown_menu	= make_tag('div', $dropdown_menu_arr, $CONFIG);
+$dd_desc_arr	= Array(
+	'type'=>'button',
+	'class'=>'btn btn-danger',
+	'content'=>'Make UR Own Site',
+);
+//$dd_toggle	= make_tag('button', $dd_toggle_arr, $CONFIG);
+$dd_desc		= make_tag('button', $dd_desc_arr, $CONFIG);
+
+$dd_toggle_arr	= Array(
+	'type'=>'button',
+	'class'=>'btn btn-danger dropdown-toggle dropdown-toggle-split',
+	'data-toggle'=>"dropdown",
+	'aria-haspopup'=>"true",
+	'aria-expanded'=>"false",
+);
+$dd_toggle	= make_tag('button', $dd_toggle_arr, $CONFIG);
+$dropdown_arr	= Array(
+	'class'=>'btn-group',
+	'content'=>$dd_desc . $dd_toggle . $dropdown_menu,
+);
+$dropdown	= make_tag('div', $dropdown_arr, $CONFIG);
 $col0_arr	= Array(
 				'class'=>"col-12 col-sm-8 col-md-9 col-lg-10 m-0 p-0 fit-screen",
-				'style'=>$style,
-				'content'=>$disclaimer . $quote_top . make_lorem_ipsum(5),
+				'style'=>"display:flex;justify-content:center;",
+				'content'=> $dropdown,
 		);
+$thickline_arr = Array(
+				'class'=>"col-12 col-sm-8 col-md-9 col-lg-10 m-0 p-0 fit-screen",
+				'content'=> "<hr class=\"thick-line\">",
+);
+$thickline	= make_tag('div', $thickline_arr, $CONFIG);
+$col0	= make_tag('div', $col0_arr, $CONFIG);
+$row0_arr = Array(
+				'class'=>" row-fluid pl-3 pr-3 m-0",
+				'style'=>$style,
+				'content'=>$col0 . $thickline ,
+		);
+$row0	= make_tag("div", $row0_arr, $CONFIG) . "<!-- END ROW -->";
 $col1_arr	= Array(
+				'class'=>"col-12 col-sm-8 col-md-9 col-lg-10 m-0 p-0 fit-screen",
+				'style'=>$style,
+				'content'=> $main_content,
+		);
+$col2_arr	= Array(
 				'class'=>" col-sm-4 col-md-3 col-lg-2 pr-3 m-0",
 				'content'=>$ad_not_sm,
 		);
-$col2_arr				= $col0_arr;
-$col2_arr['content']	= $quote_bottom;
-$col0	= make_tag("div", $col0_arr, $CONFIG) . "<!-- END COL -->";
 $col1	= make_tag("div", $col1_arr, $CONFIG) . "<!-- END COL -->";
 $col2	= make_tag("div", $col2_arr, $CONFIG) . "<!-- END COL -->";
 
-$row0_arr	= Array(
+$row1_arr	= Array(
 				'class'=>" row pl-3 pr-3 m-0",
 				'style'=>$style,
-				'content'=>$col0.$col1,
+				'content'=>$col1.$col2,
 		);
-$row1_arr	= $row0_arr;
-$row1_arr['content']	= $col2;
-
-$row0	= make_tag("div", $row0_arr, $CONFIG) . "<!-- END ROW -->";
 $row1	= make_tag("div", $row1_arr, $CONFIG) . "<!-- END ROW -->";
 $container0_arr =  Array(
 				'class'=>" container-fluid pl-3 pr-3 m-0",
 				'style'=>$style,
-				'content'=>$row0.$row1,
+				'content'=>$row0 . $row1,
 		);
 $container0	= make_tag("div", $container0_arr, $CONFIG);
 $container1	= make_gen_container(get_ads_sm($CONFIG), $CONFIG);
