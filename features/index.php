@@ -35,7 +35,6 @@ $car_id	= "demo-carousel";
 require_once($PATHS['TEMPLATES_B']);
 
 $CONFIG['CUSTOM_STYLES'] .= "\n<style>";
-$CONFIG['CUSTOM_STYLES'] .= "\n@import url(https://fonts.googleapis.com/css?family=PT+Sans|Ubuntu:300,400,700);"; 
 $CONFIG['CUSTOM_STYLES'] .= "\n</style>";
 
 $body		= "";
