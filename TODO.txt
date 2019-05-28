@@ -1,26 +1,9 @@
 Major Projects to Implement
 	0.		Implement a coule of screen focused on skill sets;
-				A. OWASP following
-				B.	ISO followings
-				C. Database Management
-				D. Many-to-Many relationship
-				E. Post, redirect, get  + JS form nullifiler
-				G.	SQLite3 database gui
-				H.	Multilingual support
-				I.	Vanilla PHP
-				J.	Vanilla Javascript
-				K.	jQuery
-				L. Dynamic Website buiding
-				M. User Management
-				N. Password Security with Hashing
-				O. Test-Driven Development
-				P. Cookies
-				Q. Bootstrap + Flexbox
-				R. Templates
-				S.	Cloud Computing
-				T. Image uploading
-				U.	Image processing + manipulation (aspect ratios)
-				V. API -- The Future!
+				STATUS:
+					Javacript, dropdown, and query string all in place;
+					Custom functions to get the required text need to be init'ed;
+					I am going to start writing some of those...
 	1.		Pencils on all of the items for owners to edit their shops content
 	2. 	Image uploader
 	3.A	News Feed
