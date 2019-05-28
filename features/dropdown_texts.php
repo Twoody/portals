@@ -77,7 +77,7 @@ function get_dropdown_texts($CONFIG){
 function get_f_text($CONFIG){
 	$ret = 'Not registerd yet...';
 	$ret .= "Pleaes understand that there are 10+ items above that we need to process and make into their own select text and mini-blog post. " ;
-	$ret .= "We will soon have all of the mappings put here with specifics, until then, enjoy the fun \$\_GET see here!";
+	$ret .= "We will soon have all of the mappings put here with specifics, until then, enjoy the fun \$_GET see here!";
 	return $ret;
 }
 ?>
