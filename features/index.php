@@ -33,6 +33,7 @@ $PATHS	= get_paths($ROOT);
 $STRINGS	= get_config_strings($CONFIG);
 $car_id	= "demo-carousel";
 require_once($PATHS['TEMPLATES_B']);
+require_once($PATHS['FEATURES_DD_HELPER']);
 
 $CONFIG['CUSTOM_STYLES'] .= "\n<style>";
 $CONFIG['CUSTOM_STYLES'] .= "\n\t.scrollable-menu{ height: auto; max-height: 200px; overflow-x: hidden; }";
@@ -54,36 +55,20 @@ $ad_not_sm_arr	= Array(
 	'content'=>$ad_not_sm_content,
 );
 $ad_not_sm		= make_tag('span', $ad_not_sm_arr, $CONFIG);
-$dropdown_items_arr	= Array( //These are the items in specifics to making this website;
-	'Cloud Computing',
-	'Cookies',
-	'Database Management',
-	'Demos and Pilots',
-	'Dev Tools',
-	'Image and File Uploading',
-	'Image Manipulation and Processing (Aspect Ratio & Mores)',
-	'ISO Formatting',
-	'jQuery',
-	'Java',
-	'Javascript',
-	'Many-to-Many Relationships',
-	'Minimum Viable Product',
-	'Multi-Lingual Support',
-	'OWASP Security Standards',
-	'PHP',
-	'Post, Redirect, Get + JS Form Nullifier',
-	'Templates',
-	'Test Driven Development',
-	'User Experience (UX)',
-	'User Management',
-	'User Workflow',
-	'Version Control (GIT)',
-	'VIM',
-	'Wordpress',
-);
+$dropdown_items_arr	= get_dropdown_items($CONFIG);
+$dropdown_texts	= get_dropdown_texts($CONFIG);
 $goodReq = False;
+if(isset($_GET['display'])){
+	//dropdown.php function call to get key-value of `display`
+	$display_req	= $_GET['display'];
+	if(array_key_exists($display_req, $dropdown_texts)){
+		$main_content	= $dropdown_texts[$display_req];
+		$goodReq = True;
+	}
+}
+if ($goodReq === False)
+	$main_content	= make_lorem_ipsum(1);
 
-$main_content	= make_lorem_ipsum(1);
 $dropdown_items	= "";
 for ($i=0; $i<count($dropdown_items_arr); $i++){
 	$item	= $dropdown_items_arr[$i];
