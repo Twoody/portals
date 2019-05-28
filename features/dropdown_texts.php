@@ -62,6 +62,7 @@ function get_dropdown_texts($CONFIG){
 		'many_to_many_relationships'=>get_f_text($CONFIG),
 		'minimum_viable_product'=>get_f_text($CONFIG),
 		'multi_lingual_support'=>get_f_text($CONFIG),
+		'not_wordpress'=>get_f_text($CONFIG),
 		'owasp_security_standards'=>get_f_text($CONFIG),
 		'php'=>get_f_text($CONFIG),
 		'post_redirect_get'=>get_f_text($CONFIG),
@@ -72,7 +73,6 @@ function get_dropdown_texts($CONFIG){
 		'user_workflow'=>get_f_text($CONFIG),
 		'git'=>get_f_text($CONFIG),
 		'vim'=>get_f_text($CONFIG),
-		'not_wordpress'=>get_f_text($CONFIG),
 	);
 }
 function get_f_text($CONFIG){
