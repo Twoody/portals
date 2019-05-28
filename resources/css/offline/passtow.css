@@ -29,13 +29,18 @@ blockquote:after {
 }
 .ad-button-link{
 	display:flex; 
-	//justify-content:center;
+	/*
 	text-align:center;
+	*/
+	justify-content:center;
 } 
+.carousel-inner img {max-height: 100%;display:block;}
 .content-slider{
 	display:flex;
-	//justify-content:center;
+	/*
 	text-align:center;
+	*/
+	justify-content:center;
 } 
 .thick-line{
 	height:5px;

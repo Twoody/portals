@@ -44,6 +44,7 @@ function get_config_strings($CONFIG=Null){
 		"DASHBOARD_GREETING"=> "Howdy, ". get_user_fname($CONFIG),
 		"DASHBOARD_GO_SHOP"=> "Go Buy More Stuff",
 		"DASHBOARD_VIEW_INV"=>"View Current Inventory",
+		"HOME_TITLE"=>"Work in Progress",
 		"DELETE_ENTRY"=>"Delete Entry",
 		"GET_PURPOSE"=>"What would you like to do today?",
 		"GEN_OR"=>" or ",

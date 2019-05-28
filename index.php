@@ -36,10 +36,6 @@ $car_id	= "demo-carousel";
 require_once($PATHS['TEMPLATES_B']);
 
 $CONFIG['CUSTOM_STYLES'] .= "\n<style>";
-//$CONFIG['CUSTOM_STYLES'] .= "\n\t.carousel-inner img {max-height: 100%;display:block;}"; 
-$CONFIG['CUSTOM_STYLES'] .= "\n\t.content-slider{display:flex; justify-content:center;}"; 
-//TODO: WHY IS THIS NOT COMING OVER FROM passtow.css ?!?!?!?!
-$CONFIG['CUSTOM_STYLES'] .= "\n\t.ad-button-link{display:flex; justify-content:center;}"; 
 $CONFIG['CUSTOM_STYLES'] .= "\n</style>";
 /*
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n<script>";
@@ -54,7 +50,7 @@ $style	= "height:100vh;";
 $style	= "";
 	
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
-$CONFIG['TITLE']				= "Home At Last";
+$CONFIG['TITLE']				= $STRINGS['HOME_TITLE'];;
 $CONFIG['DISPLAY_HEADER']	= FALSE;
 $pic1 = Array(
 			"src"=>		$PATHS['IMAGE_CAROUSEL_1'],
@@ -116,4 +112,3 @@ $body .= $container_1;
 $CONFIG['BODY'] = $body;
 echo template_b($CONFIG) . "\n";
 ?>
-

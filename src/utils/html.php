@@ -255,13 +255,13 @@ function get_css($CONFIG=Null){
 		$CONFIG	= get_config();
 	$ROOT = $CONFIG['ROOT'];
 	$s = "";
-	$s .= get_passtow_css($CONFIG);
 	if($CONFIG['HAS_BOOTSTRAP'] || $CONFIG['HAS_POPPER'] || $CONFIG['HAS_JQUERY'] )
 		$s .= get_bootstrap_css($CONFIG);
 	if($CONFIG['HAS_DATATABLES'] || $CONFIG['HAS_DATATABLES_JQUERY'] )
 		$s .= get_datatables_css($CONFIG);
 	if($CONFIG['HAS_FONT_AWESOME'])
 		$s .= get_font_awesome_css($CONFIG);
+	$s .= get_passtow_css($CONFIG);
 	$s .= $CONFIG['CUSTOM_STYLES'];
 	return $s;
 }
@@ -570,8 +570,12 @@ function get_passtow_css($CONFIG){
 	$ROOT		= $CONFIG['ROOT'];
 	$PATHS	= get_paths($ROOT);
 	echo "\n<!-- LOCAL ".$PATHS['CSS_PASSTOW']." imported -->\n";
-	$css_arr = Array('href'=>$PATHS['CSS_PASSTOW'], 'rel'=>'stylesheet');
-	return make_tag('link', $css_arr, $CONFIG);
+	$css_arr = Array(
+		'rel'=>'stylesheet',
+		'href'=>$PATHS['CSS_PASSTOW'], 
+		'type'=>"text/css",
+	);
+	return make_tag("link", $css_arr, $CONFIG);
 }
 function get_table_from_inventory($CONFIG){
 	$PATHS			= get_paths($CONFIG['ROOT']);

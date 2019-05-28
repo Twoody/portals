@@ -24,10 +24,11 @@ function get_href_ad($CONFIG, $STRINGS){
 }
 function get_href_ad_sm($content, $href, $CONFIG){
 	$text_arr 	= Array(
-		'class'=>"text-center btn btn-primary ad-button-link ",
+		'class'=>"text-center btn btn-primary ad-button-link",
+		'class'=>"ad-button-link btn btn-primary",
 		'content'=>$content,
 		'href'=>$href,
-		'style'=>"",
+		//'style'=>"",
 	);
 	$text	= make_tag("a",$text_arr, $CONFIG);
 	return $text;
