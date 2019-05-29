@@ -3,6 +3,12 @@ Major Projects to Implement
 				//STATUS: Cloud computing done;
 					Next I thought we would focus on github and the usual 
 					work system through there;
+	0.		Implement a blog in navbar;
+				Implement a blog db with author, date, and other stuff listed
+					in a recent git commit;
+				The db will also keep track of pageviews;
+			The blog page will pull from db and have **sponsored** posts;
+
 	1.		Pencils on all of the items for owners to edit their shops content
 	2. 	Image uploader
 	3.A	News Feed
