@@ -76,8 +76,8 @@
 		<kbd class="bash-green">&nbsp;&nbsp;(use "git add <file>..." to update what will be committed)</kbd>
 		<kbd class="bash-green">&nbsp;&nbsp;(use "git checkout -- <file>..." to discard changes in working directory)</kbd>
 		<kbd class="bash-green"></kbd>
-		<kbd class="git-red">&nbsp;&nbsp;&nbsp;modified:   config/paths.php</kbd>
-		<kbd class="git-red">&nbsp;&nbsp;&nbsp;modified:   config/settings.php</kbd>
+		<kbd class="git-red">&nbsp;&nbsp;&nbsp;modified:&nbsp;&nbsp;&nbsp;config/paths.php</kbd>
+		<kbd class="git-red">&nbsp;&nbsp;&nbsp;modified:&nbsp;&nbsp;&nbsp;config/settings.php</kbd>
 		<kbd class="bash-green"></kbd>
 		<kbd class="bash-green">Untracked files:</kbd>
 		<kbd class="bash-green">&nbsp;&nbsp;(use "git add <file>..." to include in what will be committed)</kbd>
@@ -263,7 +263,50 @@
 	</span>
 	<br/>
 	Next, we need to <code>merge</code> the <code>features</code> branch to 
-	the <code>master</code> branch.
+	the <code>master</code> branch. But before we `merge`, if we were on a team
+	of some sort, someone else might have updated `master` since your checkout
+	of `features`. Thus, we need to `git pull` first. Thus:
+	<pre class="terminal-block">
+		&nbsp;$&nbsp;<kbd class="bash-green">clear</kbd>
+		&nbsp;$&nbsp;<kbd class="bash-green">git branch</kbd>
+		<kbd class="bash-green">&nbsp;features</kbd>
+		<kbd class="bash-green">*</kbd>&nbsp;<kbd class="bash-dark-green">master</kbd>
+		<kbd class="bash-green">Switched to branch 'master'</kbd>
+		<kbd class="bash-green">Your branch is up to date with 'origin/master'.</kbd>
+		&nbsp;$ <kbd class='bash-green'>git pull</kbd>
+		&nbsp;<kbd class='bash-green'>Already up to date.</kbd>
+		&nbsp;$ <kbd class='bash-green'>git merge features</kbd>
+		<kbd class='bash-green'>Updating b4b7fa7..78c1ce0</kbd>
+		<kbd class='bash-green'>Fast-forward</kbd>
+		<kbd class='bash-green'>&nbsp;config/paths.php&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;3 ++</kbd>
+		<kbd class='bash-green'>&nbsp;config/settings.php&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;2 +-</kbd>
+		<kbd class='bash-green'>&nbsp;2 files changed, 5 insertions(+), 0 deletions(-)</kbd>
+		&nbsp;$&nbsp;<kbd class="vim-marker">&block;</kbd>
+	</pre>
+	<span style="font-size:10px;float:right;">
+		EXAMPLE 8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span>
+	<br/>
+	Perfect! The last step is to `push` to `master`. After this, the initial
+	__EXAMPLE 1__ is our last and final step!
+	<pre class="terminal-block">
+		&nbsp;$&nbsp;<kbd class="bash-green">clear</kbd>
+		&nbsp;$&nbsp;<kbd class="bash-green">git push</kbd>
+		<kbd class="bash-green">Enumerating objects: 17, done.</kbd>
+		<kbd class="bash-green">Counting objects: 100% (17/17), done.</kbd>
+		<kbd class="bash-green">Delta compression using up to 4 threads</kbd>
+		<kbd class="bash-green">Compressing objects: 100% (12/12), done.</kbd>
+		<kbd class="bash-green">Writing objects: 100% (12/12), 1.58 KiB | 1.58 MiB/s, done.</kbd>
+		<kbd class="bash-green">Total 12 (delta 8), reused 0 (delta 0)</kbd>
+		<kbd class="bash-green">remote: Resolving deltas: 100% (8/8), completed with 4 local objects.</kbd>
+		<kbd class="bash-green">To github.com:Twoody/portals.git</kbd>
+   	<kbd class="bash-green">XXXXXXX..XXXXXXX  master -> master</kbd>
+		&nbsp;$&nbsp;<kbd class="vim-marker">&block;</kbd>
+	</pre>
+	<span style="font-size:10px;float:right;">
+		EXAMPLE 9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span>
+
 
 <!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
 </p>
