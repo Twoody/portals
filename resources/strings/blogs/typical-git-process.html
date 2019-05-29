@@ -234,8 +234,34 @@
 		EXAMPLE 6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	</span>
 	<br/>
+	If you are on branch `master`, and this is your own local project, go ahead 
+	and push the results up.
+
+	Otherwise, stick around as we talk more about `branches` and those best 
+	practices!
 <!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
 </p>
 <p>
+	`branches` in `git` are a fundamental sanity check. By having a major branch
+	`master` that we can use as our 100%, verified, and good to go piece of
+	software, we are able to make other branches and completely destroy the code
+	base by breaking everything if we have to. And if everything goes wrong, we 
+	can just make a new branch and try things out again.
+	<br/>
+	In my every day `git` usage, I push to my `features` branch. And when I am
+	finally satisfied with the newest features and review process, I `checkout`
+	the `master` branch with:
+	<pre class="terminal-block">
+		&nbsp;$&nbsp;<kbd class="bash-green">clear</kbd>
+		&nbsp;$&nbsp;<kbd class="bash-green">git checkout master</kbd>
+		<kbd class="bash-green">Switched to branch 'master'</kbd>
+		<kbd class="bash-green">Your branch is up to date with 'origin/master'.</kbd>
+		&nbsp;$&nbsp;<kbd class="vim-marker">&block;</kbd>
+	</pre>
+	<span style="font-size:10px;float:right;">
+		EXAMPLE 7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span>
+	<br/>
+
 <!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
 </p>
