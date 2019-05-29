@@ -1,0 +1,50 @@
+<!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
+<p>
+	<span class="first-word">Learning</span> <code>git<code> takes nothing more
+	than patience. Do you know that the modern day keyboard we use for computers
+	was predicted to fail miserably? No one thought that a person could possibly
+	learn to punch all of the keys in a quick and efficient matter. We would 
+	have to all be professional painist if we wanted to use a computer!
+	<b>
+		But here we are, in 2019, and the keyboard has more than set a precedent
+		for how to operate with a computer.
+	</b>
+</p>
+
+<p>
+	In this tutorial, I hope to explain to you a very typical workflow I go
+	through while using the command line and <code>git</code>. In this 
+	tutorial, I am going to be using my editor of choice, <code>vim</code>.
+	<br/>
+	Remember that there are multiple configurations and variables that can be 
+	altered and changed from source to source.
+	For example,I have my <kbd class="bash-green">~/.gitconfig</kbd> configured 
+	to default to <code>vim</code>. On some servers, <code>git</code> will try
+	to write <code>commit</code> messages in <code>nano</code> or <code>atom</code>.
+</p>
+<hr class="thickline">
+<p>
+	In my case, I want to test my website locally, know that everything works,
+	and then have my working changes deployed directly to production with having
+	zero down time. How can I accomplish this?
+</p>
+<p>
+	If you answered "Just pull into master on prod.", then you are right! In three
+	commands from the terminal, I can <code>ssh<code> into the server, 
+	<code>cd<code> to the <kbd class="bash-green">.../.git</kbd> directory, and 
+	finally <code>git pull</code> with an access token previously setup.
+	<!-- TODO: LINK TO ACCESS TOKEN SETUP -->
+	<br/>
+		<span style="font-size:10px">
+			Note that the command <code>passtow</code> seen below is a 
+			<code>bash alias</code> which is equivalent to: 
+			<br/>
+			<code>ssh username@123.456.789.01</code>
+		</span>"
+	<br/>
+	<pre class="terminal-block">
+		$&nbsp;<kbd style="color:#00ef77;">passtow</kbd>
+		$&nbsp;<kbd style="color:#00ef77;">cd public_html</kbd>
+		$&nbsp;<kbd style="color:#00ef77;">git pull</kbd>
+	</pre>
+</p>
