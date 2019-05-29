@@ -1,0 +1,64 @@
+<!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
+<p>
+	<span class="first-word">Cookies</span> are more than Nestle Toll House
+	nom-noms. Words have a different meaning depending on context and who you
+	are talking to. A Cookie in our sense is a packet of data that the browser
+	stores for the user and webmaster to communicate between each other.
+</p>
+
+<p>
+	In our case, we use a <code>SESSIONS</code> cookie to store information at
+	login. This infomration stored cannot be as easily created as:
+	<pre class="terminal-block">
+		<kbd class="bash-green">
+		&nbsp;&nbsp;&nbsp;//My php code
+		&nbsp;&nbsp;&nbsp;if (good_login){
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$_SESSION['username']&nbsp;&nbsp;&nbsp;= $user;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$_SESSION['loggedin']&nbsp;&nbsp;&nbsp;= TRUE;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$_SESSION['alevel']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= $access;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$_SESSION['email']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= $email;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$_SESSION['userid']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= get_user_id($email, $CONFIG);
+		</kbd>
+	</pre>
+	Do you see the problems? <span class="highlighter">Cookies being created and 
+	managed on the user side is a big no-no.</span> This means that a malicious user 
+	can go in and save their session as:<br/>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>$_SESSION['alevel'] = 'Admin';</code>.
+</p>
+
+<p>
+	If we have one of those malicious users (aka <em>hackers</em>) trying to change
+	their roles like this, it is a sign that our whole site is broken and does not
+	meet OWASP standards. That is why we need to do something a little bit 
+	different! 
+	<!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
+	<span class="highlighter">
+	And that is why we create session id's for the users cookies, while we store
+	those id's in a database, and can determine the users credentials on lookup
+	each time they visit a new page or reload.
+	</span>
+</p>
+
+<p>
+	And even if we try to prevent a hacker from mangling our cookies, that does
+	not mean they cannot try to hijack someones current session:
+	<blockquote cite="www.php.net">
+		There are several ways to leak an existing session ID to third parties. E.g. JavaScript injections, session IDs in URLs, packet sniffing, physical access to the device, etc. A leaked session ID enables the third party to access all resources associated with a specific ID. First, URLs carrying session IDs. If there are links to an external site or resource, the URL including the session ID might be stored in the external site's referrer logs. Second, a more active attacker might listen to network traffic. If it is unencrypted, session IDs will flow in plain text over the network. The solution is to implement SSL/TLS on the server and make it mandatory for users. HSTS should be used for improved security.
+	</blockquote>
+</p>
+
+
+<p>
+	<!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
+</p>
+
+<p>
+Links:
+	<ul class="bibliography">
+		<li>
+			<a class="biblio-link" href="https://www.php.net/manual/en/features.session.security.management.php">
+				PHP Manual SESSIONS
+			</a>
+		</li>
+	</ul>
+</p>
