@@ -1,13 +1,13 @@
 <!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
 <p>
-	<span class="first-word">Learning</span> <code>git<code> takes nothing more
-	than patience. Do you know that the modern day keyboard we use for computers
+	<span class="first-word">Learning</span> <code>git</code> takes nothing more
+	than patience. Did you know that the modern day keyboard used for computers
 	was predicted to fail miserably? No one thought that a person could possibly
 	learn to punch all of the keys in a quick and efficient matter. We would 
 	have to all be professional painist if we wanted to use a computer!
 	<b>
 		But here we are, in 2019, and the keyboard has more than set a precedent
-		for how to operate with a computer.
+		for how to operate a computer.
 	</b>
 </p>
 
@@ -25,26 +25,145 @@
 <hr class="thickline">
 <p>
 	In my case, I want to test my website locally, know that everything works,
-	and then have my working changes deployed directly to production with having
-	zero down time. How can I accomplish this?
+	<span class="highlighter">
+		and then have my working changes deployed directly to production with 
+		having zero down time.
+	</span>
+	How can I accomplish this?
 </p>
 <p>
 	If you answered "Just pull into master on prod.", then you are right! In three
-	commands from the terminal, I can <code>ssh<code> into the server, 
-	<code>cd<code> to the <kbd class="bash-green">.../.git</kbd> directory, and 
+	commands from the terminal, I can <code>ssh</code> into the server, 
+	<code>cd</code> to the <kbd class="bash-green">.../.git</kbd> directory, and 
 	finally <code>git pull</code> with an access token previously setup.
 	<!-- TODO: LINK TO ACCESS TOKEN SETUP -->
 	<br/>
+	<hr class="thin-line">
 		<span style="font-size:10px">
 			Note that the command <code>passtow</code> seen below is a 
 			<code>bash alias</code> which is equivalent to: 
 			<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<code>ssh username@123.456.789.01</code>
 		</span>"
+	<hr class="thin-line">
 	<br/>
 	<pre class="terminal-block">
-		$&nbsp;<kbd style="color:#00ef77;">passtow</kbd>
-		$&nbsp;<kbd style="color:#00ef77;">cd public_html</kbd>
-		$&nbsp;<kbd style="color:#00ef77;">git pull</kbd>
+		$&nbsp;<kbd class="bash-green">passtow</kbd>
+		$&nbsp;<kbd class="bash-green">cd public_html</kbd>
+		$&nbsp;<kbd class="bash-green">git pull</kbd>
 	</pre>
+</p>
+<p>
+	<span style="font-size:25px; font-style:bold;">
+		WAIT! DON'T LEAVE YET!!! 
+	</span>
+	Sure, that is the heart of this post, but there is 
+	so much more to know than just doing a <code>git pull</code>. For example, you need
+	to know about staging your commits, untracked files, and other useful commands.
+	Again, here are five commands that I personally run in unison in order to 
+	finalize my <code>local branch</code> to be pulled into prod:
+	<!-- TODO: fake output -->
+	<pre class="terminal-block">
+		$&nbsp;<kbd class="bash-green">clear</kbd>
+		$&nbsp;<kbd class="bash-green">git pull</kbd>
+		$&nbsp;<kbd class="bash-green">git status</kbd>
+		<kbd class="bash-green">On branch features</kbd>
+		<kbd class="bash-green">Your branch is ahead of 'origin/features' by 5 commits.</kbd>
+		<kbd class="bash-green">&nbsp;&nbsp;(use "git push" to publish your local commits)</kbd>
+		<kbd class="bash-green"></kbd>
+		<kbd class="bash-green">Changes not staged for commit:</kbd>
+		<kbd class="bash-green">&nbsp;&nbsp;(use "git add <file>..." to update what will be committed)</kbd>
+		<kbd class="bash-green">&nbsp;&nbsp;(use "git checkout -- <file>..." to discard changes in working directory)</kbd>
+		<kbd class="bash-green"></kbd>
+		<kbd class="git-red">&nbsp;&nbsp;&nbsp;modified:   config/paths.php</kbd>
+		<kbd class="git-red">&nbsp;&nbsp;&nbsp;modified:   config/settings.php</kbd>
+		<kbd class="bash-green"></kbd>
+		<kbd class="bash-green">Untracked files:</kbd>
+		<kbd class="bash-green">&nbsp;&nbsp;(use "git add <file>..." to include in what will be committed)</kbd>
+		<kbd class="bash-green"></kbd>
+		<kbd class="git-red">&nbsp;&nbsp;&nbsp;foo</kbd>
+		<kbd class="bash-green"></kbd>
+		<kbd class="bash-green">no changes added to commit (use "git add" and/or "git commit -a")</kbd>
+		$&nbsp;<kbd class="bash-green">git commit -a</kbd>
+		$&nbsp;<kbd class="bash-green">git push</kbd>
+	</pre>
+	<span style="font-size:10px;float:right;">
+		EXAMPLE 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span>
+	<br/>
+	<hr class="thin-line">
+</p>
+<p>
+	<code>git commit -a</code> is the command that will open up <code>vim</code>.
+	When <code>vim</code> does open up, you should see a command screen like:
+
+	<pre class="vim-git-commit">
+		<kbd class="vim-marker">&block;</kbd>
+		&nbsp;# Please enter the commit message for your changes. Lines starting
+		&nbsp;# with '#' will be ignored, and an empty message aborts the commit.
+		&nbsp;#
+		&nbsp;# On branch <kbd class="git-commit-info">features</kbd>
+		&nbsp;# Your branch is ahead of <kbd class="git-commit-info">'origin/features'</kbd> by 5 commits.
+		&nbsp;#&nbsp;&nbsp;&nbsp;(use "git push" to publish your local commits)
+		&nbsp;#
+		&nbsp;# Changes to be committed:
+		&nbsp;#<kbd class="git-commit-modified">&nbsp;&nbsp;modified:</kbd>&nbsp;&nbsp;&nbsp;<kbd class="git-commit-path">config/paths.php</kbd>
+		&nbsp;#<kbd class="git-commit-modified">&nbsp;&nbsp;modified:</kbd>&nbsp;&nbsp;&nbsp;<kbd class="git-commit-path">config/settings.php</kbd>
+		&nbsp;#
+		&nbsp;# Untracked files:
+		&nbsp;#<kbd class="git-commit-path">&nbsp;&nbsp;foo</kbd>
+		&nbsp;#
+	</pre>
+	<span style="font-size:10px;float:right;">
+		EXAMPLE 2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span>
+	<br/>
+	<hr class="thin-line">
+	That blinking green marker (<kbd class="vim-marker">&block;</kbd>) is your
+	cursor. Notice that you'll see a file name below along with some tildas (~).
+	You are about to make a message for your commit. Type <kbd>i</kbd> to go 
+	into `insert mode`. Type out your message (i.e. "Config changes to have 
+	settings point to new path foo"). And <kbd>esc</kbd> `insert mode`.
+</p>
+
+<p>
+	Finally, you'll have a message that looks somethig like below:
+	<pre class="vim-git-commit">
+		<kbd class="git-commit-title">Config changes to have settings point to new path foo</kbd>
+		&nbsp;
+		<kbd class="git-commit-message">Paths var to include new path res/me/blog/foo;</kbd>
+		<kbd class="git-commit-message">Setting to pull in new path instead of hardcoded;</kbd>
+		&nbsp;# Please enter the commit message for your changes. Lines starting
+		&nbsp;# with '#' will be ignored, and an empty message aborts the commit.
+		&nbsp;#
+		&nbsp;# On branch <kbd class="git-commit-info">features</kbd>
+		&nbsp;# Your branch is ahead of <kbd class="git-commit-info">'origin/features'</kbd> by 5 commits.
+		&nbsp;#&nbsp;&nbsp;&nbsp;(use "git push" to publish your local commits)
+		&nbsp;#
+		&nbsp;# Changes to be committed:
+		&nbsp;#<kbd class="git-commit-modified">&nbsp;&nbsp;modified:</kbd>&nbsp;&nbsp;&nbsp;<kbd class="git-commit-path">config/paths.php</kbd>
+		&nbsp;#<kbd class="git-commit-modified">&nbsp;&nbsp;modified:</kbd>&nbsp;&nbsp;&nbsp;<kbd class="git-commit-path">config/settings.php</kbd>
+		&nbsp;#
+		&nbsp;# Untracked files:
+		&nbsp;#<kbd class="git-commit-path">&nbsp;&nbsp;foo</kbd>
+		&nbsp;#
+	</pre>
+	<span style="font-size:10px;float:right;">
+		EXAMPLE 3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span>
+	<br/>
+	<hr class="thin-line">
+	Be sure that there is no <kbd class="bash-green">-- INSERT --</kbd> at the
+	bottom of your screen. And very carefully type out the commands:
+	<br/>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<kbd class="bash-green">:w</kbd> + <kbd>ENTER</kbd>
+	<br/>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<kbd class="bash-green">:q</kbd> + <kbd>ENTER</kbd>
+<!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
+</p>
+<p>
+<!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
 </p>
