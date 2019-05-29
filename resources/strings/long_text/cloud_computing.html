@@ -1,0 +1,250 @@
+<!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
+<p>
+	Cloud computing can mean several different things.
+	Like most definitions in this world, different things are 
+	returened depending on who you ask.
+</p>
+
+
+<p>
+	"The Cloud" is the usual place to start. 
+	And to build a website, you usually need to start with "The Cloud".
+</p>
+
+<p>
+<p>
+	To build a website, you will need a dedicated server that will be fast, 
+	reliable, and secure. 
+	Unless your skill set is going to be systems administrator and/or network 
+	programmer, you probably do not want to worry about the 
+	<pre class="terminal-block">
+		$&nbsp;<kbd style="color:#00ef77;">sudo apachectl start</kbd>
+	</pre>
+	calls. 
+	You will not want to worry about the
+		<a href="https://letsencrypt.org" class="highlighter" target="_blank">
+			letsEncrpy Secure Socket Layer (SSL) Certificates. 
+		</a>
+	You do not want to fandangle with email accounts and 16 years of 
+	boilerplate code to 
+	create another GUI to another bash processed sql bridge.
+</p>
+
+<p>
+	By choosing someone to host your server for you, hours can be saved on your 
+	project. 
+	Having a server and space in "The Cloud" is like calling 
+	<code>
+		get_server('my-website.com'); 
+	</code>
+	in the game of life. It prevents the life user to 
+	<code>
+		my_computer = get_computer() 
+	</code>
+	It prevents the user to 
+	<code>
+		if(is_broken(my_computer)){my_computer = replace_computer();}. 
+	</code>
+</p>
+
+<p>
+	Now, that we understand what "The Cloud" is, we need to understand how to 
+	interact with "The Cloud". 
+	Essentially, you have tools like:
+	<ol>
+		<li>
+			Github
+		</li>
+		<li>
+			Github
+		</li>
+		<li>
+			Github
+		</li>
+		<li>
+			<a href="https://www.chiark.greenend.org.uk/~sgtatham/putty/" class="highlighter" target="_blank">
+			PuTTY (a free SSH and Telnet client)
+			</a>
+		</li>
+		<li>
+			Bash, the Terminal, and SSH
+			<ol type="A">
+				<li>
+					Access Tokens
+				</li>
+				<li>
+					SSH Key-Gen
+				</li>
+				<li>
+					puTTY for Windows Users
+				</li>
+				<li>
+					VIM (If new to programming, taking the time to learn <code>vim</code> now is 
+					an exponential investment)
+				</li>
+				<li>
+					<code>grep</code>, <code>find</code>, <code>rm</code>, <code>mv</code>, 
+					<code>.bashrc</code>, <code>.vimrc</code>, <code>vim</code>, <code>man</code>, 
+					<code>du</code>, <code>brew</code>, <code>choco</code>, <code>cat</code>, 
+					<code>clear</code>, <code>ls</code>, <code>git</code>, <code>piping</code>,
+					AND MORE!
+				</li>
+				<li>
+					<code>scp</code> and <code>rsync</code> (these get their own shoutout)
+				</li>
+			</ol>
+		</li>
+		<li>
+			FileZilla and FTP for Windows Users
+		</li>
+		<li>
+			Content Delivery Networks (CDNs)
+		</li>
+		<li>
+			Python, LaTex, Regex, Organizatino (i.e. DevOp Skills)
+		</li>
+	</ol>
+</p>
+
+<!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
+<p>
+	And then you have standards put together by organizations like OWASP and 
+	ISO to keep everyone on the same page.
+	For example, consider the date 
+	<code>
+		2019-04-05
+	</code>
+	and the date 
+	<code>
+		04-05-2019. 
+	</code>
+	Years of cultural influence and usage of putting the year last in our dates 
+	has us thinking the second date is better.
+	But us computer scientists like the first date better!
+</p>
+
+<p>
+	And what about passwords and handling user information? What about user 
+	authentification? What about Priviliges, Roles, 3rd party dependencies, 
+	...? 
+	<a href="https://www.owasp.org" class="highlighter" target="_blank">
+		 Enter OWASP
+	</a>
+	.
+</p>
+<p>
+	Let's look at the top three items above. <b>VERSION CONTROL IS THE 
+	TOP ITEM FOR EVERYTHING.</b> Without version control, we might as well
+	be running around a rat maze until we get so exhausted, we just stop. 
+</p>
+<p>
+	It is at that point where most projects just go abandoned. But with
+	version control, the user can go back and save the day for a contaminated
+	database. The user can go back to a time when their files were not 
+	corrupted and not compiling. I will cover this more in the github blog,
+	<a class="highlighter"><b>which I would highly suggest looking at before 
+	anything else if you identify as a beginner or github novice.</b></a>
+</p>
+<p>
+	But before you go, there are three final concepts that we need to touch on.
+	<ol>
+		<li>
+			<a class="highlighter" href="https://en.wikipedia.org/wiki/Infrastructure_as_a_service">
+				Infrastructure as a service (IaaS)
+			</a>
+		</li>
+		<li>
+			<a class="highlighter" href="https://en.wikipedia.org/wiki/Platform_as_a_service">
+				Platform as a service (PaaS)
+			</a>
+		</li>
+		<li>
+			<a class="highlighter" href="https://en.wikipedia.org/wiki/Software_as_a_service">
+				Software as a service (SaaS)
+			</a>
+		</li>
+	</ol>
+</p>
+<!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
+<p>
+	<span style="font-size:24px"><em>IaaS</em></span>
+	are servers meant to handle high level API calls online.  Consider a 
+	company like PayPal where a shop can make an API call asking for money from 
+	one account to be put into their account. Consider My Fitness Pal which can 
+	look up recipes where 
+		<code>get_calories_by_serving(recipe) &lt; _GET['calories']</code>
+	. MFP and PayPal (along with practically every top tech company) has an 
+	amazing API structure. And some companies ONLY have API's and databases. 
+	The website is not their focus. Creating is not their focus. These 
+	companies are 100% focused on databases.
+</p>
+<!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
+<p>
+	<span style="font-size:24px"><em>PaaS</em></span>
+	are servers meant to provide a <b>platform</b> where users can come and 
+	create content. 
+	<span class="highlighter">
+		WYSIWIGS, Google App Engine, Oracle Cloud Platform are all examples of PaaS.
+	</span>
+	And there are many, many more. Within this group, we have five other 
+	specific example:
+	<ol>
+		<li>
+			Public Platforms
+		</li>
+		<li>
+			Private Platforms
+		</li>
+		<li>
+			Hybrid Platforms
+		</li>
+		<li>
+			Communications Platforms
+		</li>
+		<li>
+			Mobile Platforms
+		</li>
+		<li>
+			Open Platforms
+		</li>
+	</ol>
+</p>
+<p>
+	<span style="font-size:24px"><em>SaaS</em></span>
+	. This is the holy grail. These companies offer their clients a service.
+	Say the client has 10 gigs of data. Company Foo just made software 
+	<code>bar.exe</code>.
+	And this new software will take that 10 gig data import, process it, and
+	spit out a website, which Company Foo has also taken care of for 
+	hosting, security, and everything else. 
+	<span class="highlighter">
+		In this case, the client rarely sees the code that executes and
+		does all of the work. Things just magically happen, and everyone
+		appears to be left happy at the end of the day.
+	</span>
+	However, there is now <b>Open SaaS</b>, such as WordPress. Open SaaS
+	gives clients at least the opportunity to validate the claims the
+	seller are making;
+</p>
+<h2 class="biblio-title">
+		Bibbliography
+</h2>
+<p>
+	<ul class="bibliography">
+		<li class="bib-link">
+			<a  href="https://en.wikipedia.org/wiki/Public_key_certificate">
+				SSL Certificates
+			</a>
+		</li>
+		<li class="bib-link">
+			<a href="https://www.reddit.com/r/cloudcomputing/comments/7qc055/what_exactly_is_cloud_computing/">
+				What is Cloud Computing?
+			</a>
+		</li>
+		<li class="bib-link">
+			<a href="https://www.chiark.greenend.org.uk/~sgtatham/putty/">
+				Link to puTTY
+			</a>
+		</li>
+	</ul>
+</p>
