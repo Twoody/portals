@@ -48,3 +48,54 @@ blockquote:after {
 	color:#333;
 	background-color:#333;
 }
+.terminal-block{
+	/* Used primarily with pre */
+	border-radius: 25px;
+	background:#000000;
+	color:#f4e404;
+	margin:15px;
+	padding:10px;
+	white-space:pre-line;
+}
+.bash-green{
+	color:#00ef77;
+}
+
+/**** **** Links  **** ****/
+span.highlighter{
+	background-color:#feeb05;
+	text-decoration: none;
+	color:#9b9a92;
+}
+a.highlighter, a.highlighter:link{
+	background-color:#feeb05;
+	text-decoration: none;
+	color:#9b9a92;
+}
+a.highlighter:hover{
+	background-color:#d883ef;
+	text-decoration: none;
+	color:#000000;
+}
+a.highlighter:visited{
+	background-color:#9b9a92;
+	text-decoration: none;
+	color:#feeb05;
+}
+
+/**** **** bibliography  **** ****/
+.bibliography{
+	border: 2px solid;
+	border-radius: 20px;
+	padding: 7px;
+	background-color:#FFDEF8;
+	float: left; 
+}
+.biblio-title{
+	display:flex;
+	border: 2px dashed;
+	border-radius: 20px;
+	padding: 8px;
+	text-align: center;
+	background-color:#FFDEF8;
+}
