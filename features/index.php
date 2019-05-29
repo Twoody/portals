@@ -55,7 +55,6 @@ $ad_not_sm_arr	= Array(
 	'content'=>$ad_not_sm_content,
 );
 $ad_not_sm				= make_tag('span', $ad_not_sm_arr, $CONFIG);
-$dropdown_items		= get_dropdown_items($CONFIG);
 $goodReq					= False;
 echo "\n<!-- MEAT123: `" . $CONFIG['TITLE'] ."` -->";
 
