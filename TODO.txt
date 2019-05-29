@@ -1,9 +1,8 @@
 Major Projects to Implement
 	0.		Implement a coule of screen focused on skill sets;
-				STATUS:
-					Javacript, dropdown, and query string all in place;
-					Custom functions to get the required text need to be init'ed;
-					I am going to start writing some of those...
+				//STATUS: Cloud computing done;
+					Next I thought we would focus on github and the usual 
+					work system through there;
 	1.		Pencils on all of the items for owners to edit their shops content
 	2. 	Image uploader
 	3.A	News Feed
