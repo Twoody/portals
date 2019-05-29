@@ -54,6 +54,7 @@ function get_paths($ROOT=Null){
 		'LIBPATH_FA'						=> $ROOT.'/src/utils/font_awesome.php',
 		'LIBPATH_HTML'						=> $ROOT.'/src/utils/html.php',
 		'LIBPATH_JSON'						=> $ROOT.'/src/utils/json_helper.php',
+		"LONG_TEXT_CLOUD_COMPUTING"	=> $ROOT."/resources/strings/long_text/cloud_computing.html",
 		"LOCAL_CSS_BOOTSTRAP"			=> $ROOT.'/resources/css/offline/bootstrap.min.css',
 		"LOCAL_CSS_DATATABLES"			=> $ROOT.'/resources/css/offline/dataTables.bootstrap4.min.css',
 		"LOCAL_CSS_FA"						=> $ROOT.'/resources/css/offline/fa.css',
