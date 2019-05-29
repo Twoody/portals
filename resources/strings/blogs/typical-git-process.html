@@ -210,7 +210,7 @@
 	"Oh no! Are you telling me I need to go back and change everything that we
 	already did?"
 	<br/>
-	No, I am not saying that. In your case, you were probably on branch `master`.
+	No, I am not saying that. In your case, you were probably on branch <code>master</code>.
 	This can easily be checked by the following in bash:
 	<pre class="terminal-block">
 		&nbsp;$&nbsp;<kbd class="bash-green">clear</kbd>
@@ -234,23 +234,23 @@
 		EXAMPLE 6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	</span>
 	<br/>
-	If you are on branch `master`, and this is your own local project, go ahead 
+	If you are on branch <code>master</code>, and this is your own local project, go ahead 
 	and push the results up.
 
-	Otherwise, stick around as we talk more about `branches` and those best 
+	Otherwise, stick around as we talk more about <code>branches</code> and those best 
 	practices!
 <!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
 </p>
 <p>
-	`branches` in `git` are a fundamental sanity check. By having a major branch
-	`master` that we can use as our 100%, verified, and good to go piece of
+	<code>branches</code> in <code>git</code> are a fundamental sanity check. By having a major branch
+	<code>master</code> that we can use as our 100%, verified, and good to go piece of
 	software, we are able to make other branches and completely destroy the code
 	base by breaking everything if we have to. And if everything goes wrong, we 
 	can just make a new branch and try things out again.
 	<br/>
-	In my every day `git` usage, I push to my `features` branch. And when I am
-	finally satisfied with the newest features and review process, I `checkout`
-	the `master` branch with:
+	In my every day <code>git</code> usage, I push to my <code>features</code> branch. And when I am
+	finally satisfied with the newest features and review process, I <code>checkout</code>
+	the <code>master</code> branch with:
 	<pre class="terminal-block">
 		&nbsp;$&nbsp;<kbd class="bash-green">clear</kbd>
 		&nbsp;$&nbsp;<kbd class="bash-green">git checkout master</kbd>
@@ -262,6 +262,8 @@
 		EXAMPLE 7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	</span>
 	<br/>
+	Next, we need to <code>merge</code> the <code>features</code> branch to 
+	the <code>master</code> branch.
 
 <!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
 </p>
