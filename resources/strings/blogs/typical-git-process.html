@@ -69,7 +69,7 @@
 		$&nbsp;<kbd class="bash-green">git pull</kbd>
 		$&nbsp;<kbd class="bash-green">git status</kbd>
 		<kbd class="bash-green">On branch features</kbd>
-		<kbd class="bash-green">Your branch is ahead of 'origin/features' by 5 commits.</kbd>
+		<kbd class="bash-green">Your branch is up to date with 'origin/features'.</kbd>
 		<kbd class="bash-green">&nbsp;&nbsp;(use "git push" to publish your local commits)</kbd>
 		<kbd class="bash-green"></kbd>
 		<kbd class="bash-green">Changes not staged for commit:</kbd>
@@ -104,7 +104,7 @@
 		&nbsp;# with '#' will be ignored, and an empty message aborts the commit.
 		&nbsp;#
 		&nbsp;# On branch <kbd class="git-commit-info">features</kbd>
-		&nbsp;# Your branch is ahead of <kbd class="git-commit-info">'origin/features'</kbd> by 5 commits.
+		&nbsp;# Your branch is up to date with <kbd class="git-commit-info">'origin/features'</kbd>.
 		&nbsp;#&nbsp;&nbsp;&nbsp;(use "git push" to publish your local commits)
 		&nbsp;#
 		&nbsp;# Changes to be committed:
@@ -123,8 +123,8 @@
 	That blinking green marker (<kbd class="vim-marker">&block;</kbd>) is your
 	cursor. Notice that you'll see a file name below along with some tildas (~).
 	You are about to make a message for your commit. Type <kbd>i</kbd> to go 
-	into `insert mode`. Type out your message (i.e. "Config changes to have 
-	settings point to new path foo"). And <kbd>esc</kbd> `insert mode`.
+	into <code>insert mode</code>. Type out your message (i.e. "Config changes to have 
+	settings point to new path foo"). And <kbd>esc</kbd> <code>insert mode</code>.
 </p>
 
 <p>
@@ -138,7 +138,7 @@
 		&nbsp;# with '#' will be ignored, and an empty message aborts the commit.
 		&nbsp;#
 		&nbsp;# On branch <kbd class="git-commit-info">features</kbd>
-		&nbsp;# Your branch is ahead of <kbd class="git-commit-info">'origin/features'</kbd> by 5 commits.
+		&nbsp;# Your branch is up to date with <kbd class="git-commit-info">'origin/features'</kbd>.
 		&nbsp;#&nbsp;&nbsp;&nbsp;(use "git push" to publish your local commits)
 		&nbsp;#
 		&nbsp;# Changes to be committed:
@@ -162,6 +162,78 @@
 	<br/>
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	<kbd class="bash-green">:q</kbd> + <kbd>ENTER</kbd>
+	<br/>
+	Cool! You have officially made a git commit and should now be sitting idly
+	back within your bash environment.
+<!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
+</p>
+<p>
+	And again, walk through the following bash commands to view the current
+	state of your git repo:
+	<pre class="terminal-block">
+		$&nbsp;<kbd class="bash-green">clear</kbd>
+		$&nbsp;<kbd class="bash-green">git status</kbd>
+		<kbd class="bash-green">On branch features</kbd>
+		<kbd class="bash-green">Your branch is ahead of 'origin/features' by 1 commit.</kbd>
+		<kbd class="bash-green">&nbsp;&nbsp;(use "git push" to publish your local commits)</kbd>
+		<kbd class="bash-green"></kbd>
+		<kbd class="bash-green">Changes not staged for commit:</kbd>
+		<kbd class="bash-green">&nbsp;&nbsp;(use "git add <file>..." to update what will be committed)</kbd>
+		<kbd class="bash-green">&nbsp;&nbsp;(use "git checkout -- <file>..." to discard changes in working directory)</kbd>
+		<kbd class="bash-green"></kbd>
+		<kbd class="bash-green"></kbd>
+		<kbd class="bash-green">Untracked files:</kbd>
+		<kbd class="bash-green">&nbsp;&nbsp;(use "git add <file>..." to include in what will be committed)</kbd>
+		<kbd class="bash-green"></kbd>
+		<kbd class="git-red">&nbsp;&nbsp;&nbsp;foo</kbd>
+		<kbd class="bash-green"></kbd>
+		<kbd class="bash-green">no changes added to commit (use "git add" and/or "git commit -a")</kbd>
+		$&nbsp;<kbd class="vim-marker">&block;</kbd>
+	</pre>
+	<span style="font-size:10px;float:right;">
+		EXAMPLE 4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span>
+	<br/>
+	<hr class="thin-line">
+	If your screen still looks like <em>EXAMPLE 1</em>, that means you might have
+	had a bad keystroke and/or unpleasant time trying out VIM. In other words,
+	your git commit message was not recgonized. Go back to <em>EXAMPLE 3</em> and
+	try out the <code>git commit</code> process again...
+<!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
+</p>
+<p>
+	Otherwise, you are ready to <code>git push</code> your commit to your github profile.
+	Now remember those "best practices" and one-hundred percent uptime that we
+	were talking about? If you noticed, we have been working this whole time on 
+	branch <code>features</code>.
+	<br/>
+	"Oh no! Are you telling me I need to go back and change everything that we
+	already did?"
+	<br/>
+	No, I am not saying that. In your case, you were probably on branch `master`.
+	This can easily be checked by the following in bash:
+	<pre class="terminal-block">
+		&nbsp;$&nbsp;<kbd class="bash-green">clear</kbd>
+		&nbsp;$&nbsp;<kbd class="bash-green">git branch</kbd>
+		<kbd class="bash-green">*</kbd>&nbsp;<kbd class="bash-dark-green">features</kbd>
+		&nbsp;&nbsp;&nbsp;&nbsp;<kbd class="bash-green">master</kbd>
+		&nbsp;$&nbsp;<kbd class="vim-marker">&block;</kbd>
+	</pre>
+	<span style="font-size:10px;float:right;">
+		EXAMPLE 5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span>
+	<br/>
+	OR it might just look like this:
+	<pre class="terminal-block">
+		&nbsp;$&nbsp;<kbd class="bash-green">clear</kbd>
+		&nbsp;$&nbsp;<kbd class="bash-green">git branch</kbd>
+		<kbd class="bash-green">*</kbd>&nbsp;<kbd class="bash-dark-green">master</kbd>
+		&nbsp;$&nbsp;<kbd class="vim-marker">&block;</kbd>
+	</pre>
+	<span style="font-size:10px;float:right;">
+		EXAMPLE 6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span>
+	<br/>
 <!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
 </p>
 <p>
