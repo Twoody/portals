@@ -21,6 +21,7 @@ function get_paths($ROOT=Null){
 	return Array(
 		'ADMIN_DASH'						=> $ROOT."/a/index.php",
 		'ADMIN_VIEWPORT'					=> $ROOT."/a/actions/viewport_users.php",
+		'BLOG_DIR'							=> $ROOT."/resources/strings/blogs",
 		'BOOTSTRAP_CSS_PATH'				=> $ROOT.'/resources/css/bootstrap.php',
 		'BOOTSTRAP_JS_PATH'				=> $ROOT.'/resources/js/bootstrap.php',
 		'CSS_PASSTOW'						=> $ROOT.'/resources/css/offline/passtow.css',
