@@ -27,7 +27,9 @@ function get_reset_text($CONFIG){
 	return $p;
 }
 function get_cloud_text($CONFIG){
-	$content = "";
+	$PATHS	= get_paths($CONFIG['ROOT']);
+	$text	= file_get_contents($PATHS['LONG_TEXT_CLOUD_COMPUTING']);
+	return $text;
 }
 function get_dropdown_text($key, $CONFIG){
 	//Return the text associated with key
@@ -61,7 +63,7 @@ function get_dropdown_items($CONFIG){
 	 	2=>Array(
 	     		'title'=>'Cloud Computing', 			
 				'code'=>'cloud_computing',
-				'funct'=>get_f_text($CONFIG),
+				'funct'=>get_cloud_text($CONFIG),
 		),
 	 	3=>Array(
 	     		'title'=>'Cookies', 			
