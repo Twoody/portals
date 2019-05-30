@@ -69,3 +69,6 @@ Glossary:
 		Comman Line Interface
 	MCONFIG
 		Modal Configuration;
+
+Helpful commands:
+	scp foo passtowc@162.241.216.71:/home3/public_html/foo
