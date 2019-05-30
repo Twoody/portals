@@ -976,6 +976,36 @@ function make_lorem_ipsum($cnt=1){
 	}
 	return $ret;
 }
+function make_recent_blogs($limit=5, $CONFIG=Null){
+	//Return html rows of most recent blogs
+	$blogs		= get_recent_blogs($limit, $CONFIG);
+	$html			= "";
+	$ul_content	= "";
+	if ($blogs	=== [])
+		echo "\n<!-- WARNING 789: `REQUEST WAS NULL` -->";
+	else
+		echo "\n<!-- INFO 788: `".count($blogs)."` -->";
+	if ($blogs && $blogs->fetchArray()){
+		$blogs->reset();
+		$PATHS	= get_paths($CONFIG['ROOT']);
+		while($blog	= $blogs->fetchArray( SQLITE3_ASSOC)){
+			$a_arr		= Array(
+				'content'=>$blog['title'],
+				'href'	=>$PATHS['GET_BLOGS']."?blog_post=".$blog['filepath']
+			);
+			$li_content	= make_tag('a', $a_arr, $CONFIG);
+			$li	= make_tag('li', Array('content'=>$li_content), $CONFIG);
+			echo "\n<!-- MEAT443: `".$li."` -->";
+			$ul_content	.= $li;
+		}//end i-for
+		$ul_arr	= Array('content'=>$ul_content);
+		$ul		= make_tag('ul', $ul_arr, $CONFIG);
+		$html		.= $ul;
+	}
+	else
+		$html	.= "\n<p>No blogs found...</p>";
+	return $html;
+}
 function make_tag($tag, $arr, $CONFIG){
 	$keys	= array_keys($arr);
 	$ret	= "\n\t\t<".$tag." ";

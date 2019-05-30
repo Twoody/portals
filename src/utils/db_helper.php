@@ -235,6 +235,39 @@ function get_product_price($productid, $CONFIG){
 	}
 	return $price;
 }
+function get_recent_blogs($limit=5, $CONFIG){
+	//Return $limit blog post items from blog table in resources.db;
+	//$limit cannot be bigger than 10;
+	if ($limit < 5)
+		$limit = 1;
+	else if ($limit > 10)
+		$limit = 10;
+	$dbpath	= $CONFIG['DBPATH_RESOURCES'];
+	$table	= $CONFIG['DBTABLE_BLOG'];
+	$sql		= "SELECT * FROM " . $table . " LIMIT " . $limit;
+	try{
+		$db		= new SQLite3($dbpath);
+		$prepare = $db->prepare($sql);
+		$blogs	= $prepare->execute();
+		if ($blogs && $blogs->fetchArray()){
+			$blogs->reset();
+			while($blog	= $blogs->fetchArray( SQLITE3_ASSOC)){
+				echo "\n<!-- INFO 333: `".count($blog)."` -->";
+				echo "\n<!-- INFO 333: `".$blog['title']."` -->";
+			}
+		}
+		//Did you know that you cannot just close the db
+		//while working with the sql results?
+		//Closing the db will nuke all results tied to it!
+		//$db->close();
+	}
+	catch(Exception $exception){
+		if (!$FLAGS['is_quite'])
+			echo clog("\"". $exception->getMessage() ."\"");
+		$blogs = Array();
+	}
+	return $blogs;
+}
 function get_user_fname($CONFIG){
 	if (!is_logged_in($CONFIG))
 		return "";

@@ -47,6 +47,7 @@ function get_config_strings($CONFIG=Null){
 		"DELETE_ENTRY"=>"Delete Entry",
 		"DISCLAIMER"=>"<b>This page is in the works. </b> To start it off, I decided to work with a blog-esque platform first and do two birds with one stone. What you are seeing here is a quote followed by all randomly generated lorem ispum text followed by a block quote at the end. My next step is to plug in some jQuery so that different MVVM features work in reference to a drop-down navigation menu. This menu will reset the text on the page and work as a navigator for all of the fun and interesting aspects that exist on this site. Each text will explain how the features are helpful in both the computer science and professional industries.",
 		"BLOG_404"=>"Sorry, we did not find the blog that you are looking for.",
+		"BLOGS_TITLE"=>"Blog",
 		"FEATURES_RESET"=>'Reset? Sure, here is some randomly generated Lorem Ipsum text.',
 		"FEATURES_TITLE"=>'Features',
 		"GET_PURPOSE"=>"What would you like to do today?",

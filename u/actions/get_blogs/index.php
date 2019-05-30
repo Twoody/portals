@@ -21,6 +21,9 @@ Purpose:
     Display the general layout expected of a login page;
 	 Display the locations where possible params and configs can take place;
 
+Supported Query Vars:
+	`blog_post`
+
 Links:
 	https://1stwebdesigner.com/css-snippets-blockquotes/
 ******************************************************************************/
@@ -41,7 +44,7 @@ $body		= "";
 $style	= "";
 	
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
-$CONFIG['TITLE']				= $STRINGS['FEATURES_TITLE'];;
+$CONFIG['TITLE']				= $STRINGS['BLOGS_TITLE'];;
 $CONFIG['DISPLAY_HEADER']	= FALSE;
 
 echo "<!-- LANDED ON: Features Index-->";
@@ -61,13 +64,8 @@ $quote_bottom_arr		= Array(
 	'content'=> $STRINGS['QUOTE_TIM_BERNER'],
 	'cite'=>'Tim Berner',
 );
-$quote_top			= make_tag('blockquote', $quote_top_arr, $CONFIG);
 $quote_bottom		= make_tag('blockquote', $quote_bottom_arr, $CONFIG);
-$disclaimer_txt	= $STRINGS["BLOG_404"];
-$disclaimer_arr	= Array('content'=>$disclaimer_txt,);
-$disclaimer			= make_tag('p', $disclaimer_arr, $CONFIG);
-$disclaimer			.= "\n<hr style=\"height:5px;border:none;color:#333;background-color:#333;\">";
-$good_req			= False;
+$quote_top			= make_tag('blockquote', $quote_top_arr, $CONFIG);
 if(isset($_GET['blog_post'])){
 	$blog_post	= $_GET['blog_post'];
 	$blogpath	= $PATHS['BLOG_DIR'] ."/".$blog_post;
@@ -75,9 +73,26 @@ if(isset($_GET['blog_post'])){
 		$main_content	= file_get_contents($blogpath);
 		$good_req		= True;
 	}
+	else{
+		//File not found
+		$disclaimer_txt	= $STRINGS["BLOG_404"];
+		$disclaimer_arr	= Array('content'=>$disclaimer_txt,);
+		$disclaimer			= make_tag('p', $disclaimer_arr, $CONFIG);
+		$disclaimer			.= "\n<hr style=\"height:5px;border:none;color:#333;background-color:#333;\">";
+		$main_content		= $disclaimer . $quote_top;
+	}
 }
-if ($good_req === False)
-	$main_content = $disclaimer . $quote_top . make_lorem_ipsum(5);
+else{
+	//No request was made;
+	$main_content	= "\n<!-- Start to recent Blogs -->";
+	$recent_blogs	= make_recent_blogs(5, $CONFIG);
+	if ($recent_blogs === "")
+		$main_content	= "<p>Sorry, nothing found.</p>";
+	else
+		$main_content	.= $recent_blogs;
+	$main_content	.= "\n<!-- End to recent Blogs -->";
+	//$main_content	= $quote_top . make_lorem_ipsum(5);
+}
 
 $col0_arr	= Array(
 				'class'=>"col-12 col-sm-8 col-md-9 col-lg-10 m-0 p-0 fit-screen",

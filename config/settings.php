@@ -53,6 +53,8 @@ function get_config($ROOT=Null){
 		/* ----- ----- DATABASE MANAGEMENT ----- ----- */
 		'DBPATH_USERS'=> $PATHS['DB_USERS'],
 		'DBPATH_INVENTORY'=> $PATHS['DB_INVENTORY'],
+		'DBPATH_RESOURCES'=> $PATHS['DB_RESOURCES'],
+		'DBTABLE_BLOG'=> 'blogs',
 		'USERS_VERSION'=>1.00,
 		
 		/* ----- ----- BOOTSTRAP REQUIRED PARAMETERS AND CONFIGURATION ----- ----- */
