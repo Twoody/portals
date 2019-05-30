@@ -255,6 +255,7 @@ function get_recent_blogs($limit=5, $CONFIG){
 				echo "\n<!-- INFO 333: `".count($blog)."` -->";
 				echo "\n<!-- INFO 333: `".$blog['title']."` -->";
 			}
+			$blogs->reset();
 		}
 		//Did you know that you cannot just close the db
 		//while working with the sql results?
