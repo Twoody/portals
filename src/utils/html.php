@@ -515,6 +515,9 @@ function get_nav_items($CONFIG){
 	$item3_arr							= $nav_item_arr;
 	$item3_arr['content']			= get_href_nav_pricing($CONFIG, $STRINGS);
 	$item3								= make_tag($nav_item_tag, $item3_arr, $CONFIG);
+	$item4_arr							= $nav_item_arr;
+	$item4_arr['content']			= get_href_nav_item4($CONFIG, $STRINGS);
+	$item4								= make_tag($nav_item_tag, $item4_arr, $CONFIG);
 	if(is_logged_in($CONFIG) === TRUE && !$CONFIG['IS_LOGGING_OUT']){
 		$shopping_cart	=  make_font_awesome_stack(Array(
 			'backdrop-usd fas fa-circle',
@@ -538,7 +541,7 @@ function get_nav_items($CONFIG){
 	$nav_items_arr	= Array(
 		'id'=>'',
 		'class'=>'navbar-nav mr-auto',
-		'content'=>$home.$item2.$item3.$shopping_cart_li.$admin_dash,
+		'content'=>$home.$item2.$item3.$item4.$shopping_cart_li.$admin_dash,
 		'style'=>'',
 	);
 	$nav_items = make_tag('ul', $nav_items_arr, $CONFIG);

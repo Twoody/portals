@@ -72,6 +72,7 @@ function get_paths($ROOT=Null){
 		'NAV_HOME'							=> $ROOT.'/index.php',
 		'NAV_ITEM2'							=> $ROOT.'/features/index.php',
 		'NAV_ITEM3'							=> $ROOT.'/pricing/index.php',
+		'NAV_ITEM4'							=> $ROOT.'/u/actions/get_blogs/index.php',
 		'NAV_DISPLAY_FEATURES'			=> $ROOT.'/src/display_features.php',
 		'NAV_DISPLAY_PRICING'			=> $ROOT.'/src/display_pricing.php',
 		'NAV_USER_SETTINGS'				=> $ROOT.'/src/user_settings.php',

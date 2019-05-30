@@ -61,6 +61,7 @@ function get_config_strings($CONFIG=Null){
 		"NAV_HOME"=>"Home",
 		"NAV_ITEM2"=>"Features",
 		"NAV_ITEM3"=>"Pricing",
+		"NAV_ITEM4"=>"Blog",
 		"NAV_REGISTER"=>"Register Now",
 		"NAV_SIGN_IN"=>"Sign In",
 		"NAV_WELCOME"=>"Welcome, " . get_user_fname($CONFIG),

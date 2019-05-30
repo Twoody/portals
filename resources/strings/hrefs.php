@@ -32,7 +32,6 @@ function get_href_ad_sm($content, $href, $CONFIG){
 	);
 	$text	= make_tag("a",$text_arr, $CONFIG);
 	return $text;
-
 }
 function get_href_admin_dash0($CONFIG, $STRINGS){
 	$PATHS = get_paths($CONFIG['ROOT']);
@@ -114,6 +113,16 @@ function get_href_nav_admin($CONFIG, $STRINGS){
 	$CONFIG['HREF_TEXT']		= $STRINGS["NAV_ADMIN"];
 	$href = make_href($CONFIG);
 	return $href;
+}
+function get_href_nav_item4($CONFIG, $STRINGS){
+	$PATHS 		= get_paths($CONFIG['ROOT']);
+	$text_arr 	= Array(
+		'class'=>"nav-link",
+		'content'=>$STRINGS['NAV_ITEM4'],
+		'href'=>$PATHS['NAV_ITEM4'],
+	);
+	$text	= make_tag("a",$text_arr, $CONFIG);
+	return $text;
 }
 function get_href_nav_brand($CONFIG, $STRINGS){
 	$PATHS = get_paths($CONFIG['ROOT']);
