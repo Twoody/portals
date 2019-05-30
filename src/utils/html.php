@@ -923,29 +923,6 @@ function make_gen_warning($c, $CONFIG){
 	$col .= "\n\t\t\t\t</div><!-- END COL -->";
 	return $col;
 }
-function make_href($CONFIG=Null){
-	if ($CONFIG === Null){
-		//TODO: ERROR MGMT;
-		return 'ERROR 234';
-	}
-	$ret				= "";
-	$class			= " class=\""			. $CONFIG['HREF_CLASS']				. "\" ";
-	$link				= " href=\""			. $CONFIG['HREF_LINK']				. "\" ";
-	$role				= " role=\""			. $CONFIG['HREF_ROLE']				. "\" ";
-	$data_slide		= " data-slide=\""	. $CONFIG['HREF_DATA_SLIDE']		. "\" ";
-	$data_dismiss	= " data-slide=\""	. $CONFIG['HREF_DATA_DISMISS']	. "\" ";
-	if (!$CONFIG['HREF_DATA_SLIDE'])
-		$data_slide	= "";
-	if (!$CONFIG['HREF_DATA_DISMISS'])
-		$data_dismiss	= "";
-	if (!$CONFIG['HREF_ROLE'])
-		$role	= "";
-	$text		= $CONFIG['HREF_TEXT'];
-
-	$ret .= "\n\t\t<a " . $class . $link . $role . $data_slide;
-	$ret .= ">\n\t\t" . $text . "\n\t\t</a>";
-	return $ret;
-}
 function make_list_group($entries){
 	$ret = "";
 	$ret .= "\n\t\t<ul class=\"list-group\">";
