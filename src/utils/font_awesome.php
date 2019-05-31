@@ -180,17 +180,21 @@ function make_footer_bottom_cols($entries, $CONFIG=Null){
 	//TODO: Make this customizable to make the icons bigger from xs to md screens;
 	if($CONFIG === Null)
 		$CONFIG = get_config();
-	$html = "";
-	$html .= "\n\t\t\t\t\t\t\t<div class=\"d-inline-block\">";
+	$content	= "";
 	foreach($entries as $entry){
-		$href = $entry['href'];
-		$icon = $entry['icon'];
-		$html .= "\n\t\t\t\t\t\t\t\t\t<a href=\"". $href . "\" class=\"text-white\">";
-		$html .= "\n\t\t\t\t\t\t\t\t\t\t" . $icon;
-		$html .= "\n\t\t\t\t\t\t\t\t\t</a>";
+		$href_arr	= Array(
+			'class'		=> 'text-white',
+			'href'		=> $entry['href'],
+			'target'		=> "_blank",
+			'content'	=> $entry['icon'],
+		);
+		$content .= make_tag('a', $href_arr, $CONIG);
 	}
-	$html .= "\n\t\t\t\t\t\t</div>";
-	return $html;
+	$div_arr	= Array(
+		'class'		=> 'd-inline-block',
+		'content'	=> $content,
+	);
+	return make_tag('div', $div_arr, $CONFIG);
 }
 function make_font_awesome_stack($icons, $CONFIG=Null){
 	/* FA util function to easier init a stack of icons */
