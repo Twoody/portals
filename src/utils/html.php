@@ -367,7 +367,9 @@ function get_header($CONFIG=Null){
 	$s .=	"\n<head>";
 	$s .=	"\n\t<!-- Required meta tags -->";
 	$s .=	"\n\t<meta charset=\"".$CONFIG['CHAR_SET']."\">";
-	$s .=	"\n\t<meta name=\"viewport\" content=\"".$CONFIG['META_CONTENT']."\">";
+	$s .=	"\n\t<meta name=\"viewport\"		content=\"".$CONFIG['META_CONTENT']."\">";
+	$s .=	"\n\t<meta name=\"keywords\"		content=\"".$CONFIG['META_KEYWORDS']."\">";
+	$s .=	"\n\t<meta name=\"description\"	content=\"".$CONFIG['META_DESCRIPTION']."\">";
 	$s	.= get_google_analytics($CONFIG);
 	$s .= get_css($CONFIG); //<link> elements
 	$s .= "";

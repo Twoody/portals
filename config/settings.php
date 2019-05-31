@@ -18,6 +18,8 @@ function get_config($ROOT=Null){
 		'IS_ONLINE'=>TRUE,
 		'LANG'=>"en",
 		'META_CONTENT'=>"width=device-width, initial-scale=1, shrink-to-fit=no",
+		'META_KEYWORDS'=>"Tanner Woody, Software Developer, Senior Developer, resume, technology blogs, vanillar php, vanilla javascript",
+		'META_DESCRIPTION'=>"General blog about the potential of understanding security and best practices from the grounds up. This messge will need to be changed on each page with some easy config magic put in place orginially.",
 		'ROOT'=>$ROOT,
 		'GEN_CONTAINER'=>"\n<div class=\"container-fluid pr-3 pl-3 m-0\">",
 		'GEN_ROW'=> "\n\t<div class=\"row pl-3 pr-3 m-0\">",
