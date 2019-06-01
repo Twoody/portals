@@ -55,21 +55,21 @@ $CONFIG['DISPLAY_HEADER']	= FALSE;
 $pic1 = Array(
 			"src"=>		$PATHS['IMAGE_CAROUSEL_1'],
 			"class"=>	"d-block",
-			"alt"=>		"Joshua Tree Wedding",
+			"alt"=>		"Tanner Woody and Betsy Woody Model for Joshua Tree Wedding",
 			"width"=>	"100%",
 			"height"=>	"100%",
 		);
 $pic2 = Array(
 			"src"=>		$PATHS['IMAGE_CAROUSEL_2'],
 			"class"=>	"d-block",
-			"alt"=>		"nyc",
+			"alt"=>		"Tanner Woody's Dogs at Yosemite",
 			"width"=>	"100%",
 			"height"=>	"100%",
 		);
 $pic3 = Array(
 			"src"=>		$PATHS['IMAGE_CAROUSEL_3'],
 			"class"=>	"d-block",
-			"alt"=>		"Bianchi on the Beach",
+			"alt"=>		"Tanner Woody's Bianchi Bicycle on the Beach",
 			"width"=>	"100%",
 			"height"=>	"100%",
 		);
