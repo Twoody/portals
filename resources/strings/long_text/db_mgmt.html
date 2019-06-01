@@ -1,5 +1,72 @@
 <!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
+<!--                        Tanner Woody  2019-05-31                      -->
+<!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
 <p>
-	<span class="first-word">Cookies</span> are more than Nestly
+	<span class="first-word">Managing</span> a database involves insurance,
+	knowledge of the softwares purpose and history, intricate foresight, focus
+	on performace, and extensive experience within the databases:
+	<ol>
+		<li>
+			Languages
+		</li>
+		<li>
+			Paradigm
+		</li>
+		<li>
+			Grammar
+		</li>
+	</ol>
+</p>
+<p>
+	If you are trying to make your own website, and you feel like you do not need
+	a database, I would kindly disagree. Databases go hand-in-hand with every piece
+	of technology.
+	<span class="highlighter">
+		If scalability is not a thought while coding, then it will never happen 
+		within that developers lifetime, as long as they believe their products are 
+		not good enough to be scaled to something larger.
+	</span>
+	And surprisingly enough, an application designed to be scaled larger is in
+	fact easier to maintain and work with.
+<!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
+</p>
+
+<p>
+	Anyway, I digress. Databases are a fundamental part of user management,
+	content management, settings and configuration, and more. The trick to
+	utilizing databases for a task at hand is to keep all of the items normalized.
+	For example, if making a database for a bookshop, consider the current
+	architectures having one table with columns: 
+	<ul>
+		<li>
+			"book title"
+		</li>
+		<li>
+			"book price"
+		</li>
+		<li>
+			"copies sold"
+		</li>
+		<li>
+			"profit from sales".
+		</li>
+		<li>
+			"books in stock".
+		</li>
+		<li>
+			"cost spent per book".
+		</li>
+	<ul>
+	In this example, the first red flag that I would spot in the table to make
+	a check on is how the store is calculating their `profit from sales`.
+
+	We can find the profit from already existing columns. By having a seperate 
+	function to determine the profit gained per book, we decrease risk in terms 
+	of versioning and keeping clean and stable code. If we need to update our 
+	database at some point and move records around, we can check the version 
+	of the `calculate_profits(book_id)` function was used.
+
+
+<!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
 </p>
 
