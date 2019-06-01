@@ -77,7 +77,7 @@ function get_dropdown_items($CONFIG){
 	 	3=>Array(
 	     		'title'=>'Database Management',
 				'code'=>'database_management',
-	 			'funct'=>get_f_text($CONFIG),
+	 			'funct'=>get_file_text($PATHS['LONG_TEXT_DB_MGMT'],$CONFIG),
 		),
 	 	4=>Array(
 	     		'title'=>'Demos and Pilots',

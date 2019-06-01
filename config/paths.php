@@ -59,6 +59,7 @@ function get_paths($ROOT=Null){
 		'LIBPATH_JSON'						=> $ROOT.'/src/utils/json_helper.php',
 		"LONG_TEXT_CLOUD_COMPUTING"	=> $ROOT."/resources/strings/long_text/cloud_computing.html",
 		"LONG_TEXT_COOKIES"				=> $ROOT."/resources/strings/long_text/cookies.html",
+		"LONG_TEXT_DB_MGMT"				=> $ROOT."/resources/strings/long_text/db_mgmt.html",
 		"LONG_TEXT_GITHUB"				=> $ROOT."/resources/strings/long_text/github.html",
 		"LOCAL_CSS_BOOTSTRAP"			=> $ROOT.'/resources/css/offline/bootstrap.min.css',
 		"LOCAL_CSS_DATATABLES"			=> $ROOT.'/resources/css/offline/dataTables.bootstrap4.min.css',
