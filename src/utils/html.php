@@ -58,7 +58,7 @@ function get_ad($CONFIG){
 	$STRINGS			= get_config_strings($CONFIG);
 	$PATHS			= get_paths($CONFIG['ROOT']);
 	$ad_image_arr	= Array(
-		'alt'=>'Card image cap',
+		'alt'=>'Example of what ad placement for desktop can look like on your site',
 		'class'=> 'card-img-top mx-auto',
 		'height'=>'auto',
 		'src'=>$PATHS['IMAGE_AD_LOGO'],
@@ -98,7 +98,7 @@ function get_ads_sm($CONFIG){
 	$PATHS		= get_paths($CONFIG['ROOT']);
 	$ads			= '';
 	$ad_sm_image_arr	= Array(
-		'alt'=>'Card image cap small',
+		'alt'=>'Example of what ad placement for mobile can look like on your site',
 		'class'=> 'rounded mx-auto d-block',
 		'height'=>'auto',
 		'src'=>$PATHS['IMAGE_AD_LOGO'],
