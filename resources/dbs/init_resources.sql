@@ -29,20 +29,21 @@ CREATE TABLE IF NOT EXISTS comments(
 	is_deleted BOOLEAN
 );
 INSERT INTO blogs(
-	author 		,
-	date_posted ,
-	last_edited ,
-	title 		,
-	filepath 	,	
-	views 		,
-	favorites	,
-	comments		,
-	claps 		,
-	rocks 		,
-	edits			,
-	flags			,
-	is_public	,
-	is_deleted	
+	author 			,
+	date_posted 	,
+	last_edited 	,
+	title 			,
+	filepath 		,	
+	views 			,
+	favorites		,
+	comments			,
+	claps 			,
+	rocks 			,
+	edits				,
+	flags				,
+	is_public		,
+	is_deleted		,
+	is_sponsored
 )
 VALUES(
 	'Tanner Lee Woody',
@@ -58,5 +59,6 @@ VALUES(
 	0,
 	0,
 	TRUE,
+	FALSE,
 	FALSE
 );
