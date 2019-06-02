@@ -51,7 +51,7 @@ $style	= "";
 	
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
 $CONFIG['TITLE']				= $STRINGS['HOME_TITLE'];;
-$CONFIG['DISPLAY_HEADER']	= FALSE;
+$CONFIG['DISPLAY_HEADER']	= TRUE;
 $pic1 = Array(
 			"src"=>		$PATHS['IMAGE_CAROUSEL_1'],
 			"class"=>	"d-block",
