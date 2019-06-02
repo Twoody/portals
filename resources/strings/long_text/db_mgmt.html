@@ -63,13 +63,13 @@
 		</li>
 	</ul>
 	In this example, the first red flag that I would spot in the table to make
-	a check on is how the store is calculating their `profit from sales`.
+	a check on is how the store is calculating their <code>profit from sales</code>.
 
 	We can find the profit from already existing columns. By having a seperate 
 	function to determine the profit gained per book, we decrease risk in terms 
 	of versioning and keeping clean and stable code. If we need to update our 
 	database at some point and move records around, we can check the version 
-	of the `calculate_profits(book_id)` function was used. We might also 
+	of the <code>calculate_profits(book_id)</code> function was used. We might also 
 	realize that the function we were using before is something better handled
 	by an account.
 <!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
