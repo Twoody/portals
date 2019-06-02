@@ -78,7 +78,7 @@ if(isset($_GET['blog_post'])){
 		$disclaimer_txt	= $STRINGS["BLOG_404"];
 		$disclaimer_arr	= Array('content'=>$disclaimer_txt,);
 		$disclaimer			= make_tag('p', $disclaimer_arr, $CONFIG);
-		$disclaimer			.= "\n<hr style=\"height:5px;border:none;color:#333;background-color:#333;\">";
+		$disclaimer			.= "\n<hr class=\"thick-line\">";
 		$main_content		= $disclaimer . $quote_top;
 	}
 }
