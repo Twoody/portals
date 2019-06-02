@@ -60,11 +60,12 @@ function template_b($CONFIG=Null, $PATHS=Null){
 	$html .= "\n";
 	$html .= "\n<body>";
 	$html .= get_nav($CONFIG, $PATHS);
-
+//TODO: Col + row + container make_tag() calls;
 	$html .= "\n\t<div class=\"container-fluid pt-3\">";
 	$html .= "\n\t\t<div class=\"row justify-content-start\">";
 	$html .= "\n\t\t\t<div class=\"col-12 pl-3 \">";
-	$html .= "\n\t\t\t\t<h1>".$CONFIG['TITLE']."</h1>";
+	if($CONFIG['DISPLAY_HEADER'] === TRUE)
+		$html .= make_tag("h1", Array('content'=>$CONFIG['TITLE']), $CONFIG);
 	$html .= "\n\t\t\t</div>";
 	$html .= "\n\t\t</div>";
 	$html .= "\n\t</div>";

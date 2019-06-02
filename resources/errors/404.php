@@ -27,19 +27,19 @@ Links:
 $ROOT = "../..";
 require_once($ROOT.'/config/imports.php');
 make_imports($ROOT);
-$PATHS  = get_paths($ROOT);
+$CONFIG	= get_config($ROOT);
+$PATHS	= get_paths($ROOT);
+$STRINGS	= get_config_strings($CONFIG);
 require_once($PATHS['TEMPLATES_B']);
 
-$CONFIG = get_config($ROOT);
-$body   = "";
 	
+$body		= "";
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
 $CONFIG['TITLE'] = "PG-14 Not Found";
 $CONFIG['DISPLAY_HEADER'] = FALSE;
 
 //TODO: Make HEADER
-$body .= "\n\t\t";
-$body .= "<h1> page was not found, homes.</h1>";
+$body .= make_tag('h1', Array('content'=>$STRINGS['404']), $CONFIG);
 
 $CONFIG['BODY'] = $body;
 //echo '<!-- '.$PATHS['NAV_HOME'].' -->';
