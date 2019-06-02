@@ -249,9 +249,20 @@ function get_checkout_table($cart, $CONFIG){
 	}
 	return $table;
 }
-function get_comment_box($CONFIG){
+function get_comment_box($id, $CONFIG){
 	//TODO
-	return '';
+	$label_arr	= Array(
+		'for'=>$id,
+		'content'=>$STRINGS['COMMENT_HERE'],
+	);
+	$text_arr	= Array(
+		'class'=>'form-control',
+		'rows'=>'5',
+		'id'=>$id,
+	);
+	$label		= make_tag('label', $label_arr, $CONFIG);
+	$textarea	= make_tag('textarea', $text_arr, $CONFIG);
+	return $label . "\n\t" . $textarea;
 }
 function get_comments($CONFIG){
 	//TODO
