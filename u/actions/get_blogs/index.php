@@ -39,6 +39,7 @@ require_once($PATHS['TEMPLATES_B']);
 
 $CONFIG['CUSTOM_STYLES'] .= "\n<style>";
 $CONFIG['CUSTOM_STYLES'] .= "\n</style>";
+$CONFIG['CUSTOM_SCRIPTS'] .= "<script src=\"./get_blog.js"."\"></script>";//TODO
 
 $body		= "";
 $style	= "";
@@ -66,12 +67,31 @@ $quote_bottom_arr		= Array(
 );
 $quote_bottom		= make_tag('blockquote', $quote_bottom_arr, $CONFIG);
 $quote_top			= make_tag('blockquote', $quote_top_arr, $CONFIG);
+$collapse_blog		= "";
 if(isset($_GET['blog_post'])){
 	$blog_post	= $_GET['blog_post'];
 	$blogpath	= $PATHS['BLOG_DIR'] ."/".$blog_post;
 	if(file_exists($blogpath)){
-		$main_content	= file_get_contents($blogpath);
+		$blog_content	= file_get_contents($blogpath);
 		$good_req		= True;
+		$blog_arr		= Array(
+			'id'=>"blog",
+			'class'=>'collapse show',
+			'aria-labelledby'=>"Main Blog Content",
+			'content'=>$blog_content,
+		);
+		$main_content			= make_tag('div', $blog_arr, $CONFIG);
+		$collapse_blog_arr	= Array(
+			'class'=>'btn btn-info',
+			'id'=>'blog-collapser',
+			'data-toggle'=>'collapse',
+			'data-target'=>'#blog',
+			'aria-expanded'=>'true',
+			'aria-controls'=>'blog',
+			'content'=>'Collapse Blog',	//TODO
+		);
+		$collapse_blog	= make_tag('button', $collapse_blog_arr, $CONFIG);
+		$collapse_blog .="\n\t<br/>";
 	}
 	else{
 		//File not found
@@ -87,17 +107,18 @@ else{
 	$main_content	= "\n<!-- Start to recent Blogs -->";
 	$recent_blogs	= make_recent_blogs(5, $CONFIG);
 	if ($recent_blogs === "")
-		$main_content	= "<p>Sorry, nothing found.</p>";
+		$main_content	= "<p>Sorry, nothing found.</p>";	//TODO
 	else
 		$main_content	.= $recent_blogs;
 	$main_content	.= "\n<!-- End to recent Blogs -->";
 	//$main_content	= $quote_top . make_lorem_ipsum(5);
 }
 
+
 $col0_arr	= Array(
 				'class'=>"col-12 col-sm-8 col-md-9 col-lg-10 m-0 p-0 fit-screen",
 				'style'=>$style,
-				'content'=>$main_content,
+				'content'=>$collapse_blog . $main_content,
 		);
 $col1_arr	= Array(
 				'class'=>" col-sm-4 col-md-3 col-lg-2 pr-3 m-0",
