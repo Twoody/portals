@@ -249,7 +249,14 @@ function get_checkout_table($cart, $CONFIG){
 	}
 	return $table;
 }
-
+function get_comment_box($CONFIG){
+	//TODO
+	return '';
+}
+function get_comments($CONFIG){
+	//TODO
+	return '';
+}
 function get_css($CONFIG=Null){
 	if($CONFIG === Null)
 		$CONFIG	= get_config();

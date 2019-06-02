@@ -47,6 +47,7 @@ $style	= "";
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
 $CONFIG['TITLE']				= $STRINGS['BLOGS_TITLE'];;
 $CONFIG['DISPLAY_HEADER']	= FALSE;
+$CONFIG['HAS_COMMENTS']		= TRUE;
 
 echo "<!-- LANDED ON: Features Index-->";
 
