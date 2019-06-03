@@ -22,10 +22,20 @@ function date_to_text($d){
 	$mm   = preg_replace('/^0/', '', $mm);
 	$ret .= $yyyy . " years, " . $mm . " months, and " . $dd . " days old";
 	return $ret;
-}//end dateToText()
+}//end date_to_text()
 function get_todays_date(){
 	//$date = date('Y-m-d H:i:s')
 	$date = date('Y-m-d');
 	return $date;
+}
+function get_blog_date($date){
+	$date_arr	= date_to_arr($date);
+	$y				= $date_arr[0];
+	$m				= $date_arr[1];
+	$d				= $date_arr[2];
+	return $m .'-'. $d .'-'. $y;
+}
+function date_to_arr($date){
+	return explode('-', $date);
 }
 ?>
