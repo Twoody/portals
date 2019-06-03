@@ -15,7 +15,7 @@ function get_config($ROOT=Null){
 		'FOOTER_IS_STICKY'=>TRUE,
 		'HAS_LOGIN'=>FALSE,
 		'IS_ONLINE'=>FALSE,
-		//'IS_ONLINE'=>TRUE,
+		'IS_ONLINE'=>TRUE,
 		'LANG'=>"en",
 		'META_CONTENT'=>"width=device-width, initial-scale=1, shrink-to-fit=no",
 		'META_KEYWORDS'=>"Tanner Woody, Software Developer, Senior Developer, resume, technology blogs, vanillar php, vanilla javascript",
@@ -57,6 +57,7 @@ function get_config($ROOT=Null){
 		'DBPATH_INVENTORY'=> $PATHS['DB_INVENTORY'],
 		'DBPATH_RESOURCES'=> $PATHS['DB_RESOURCES'],
 		'DBTABLE_BLOG'=> 'blogs',
+		'DBTABLE_COMMENTS'=> 'comments',
 		'USERS_VERSION'=>1.00,
 		
 		/* ----- ----- BOOTSTRAP REQUIRED PARAMETERS AND CONFIGURATION ----- ----- */
