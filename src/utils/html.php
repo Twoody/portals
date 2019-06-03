@@ -249,24 +249,21 @@ function get_checkout_table($cart, $CONFIG){
 	}
 	return $table;
 }
-function get_comment_box($id, $CONFIG){
-	//TODO
+function get_comment_box($blog_id, $html_id, $CONFIG){
+	//TODO: If blog_id has disabled comments, do not show;
+	$STRINGS		= get_config_strings($CONFIG);
 	$label_arr	= Array(
-		'for'=>$id,
-		'content'=>$STRINGS['COMMENT_HERE'],
+		'for'=>$html_id,
+		'content'=>$STRINGS['BLOG_COMMENTS'],
 	);
 	$text_arr	= Array(
 		'class'=>'form-control',
 		'rows'=>'5',
-		'id'=>$id,
+		'id'=>$html_id,
 	);
 	$label		= make_tag('label', $label_arr, $CONFIG);
 	$textarea	= make_tag('textarea', $text_arr, $CONFIG);
 	return $label . "\n\t" . $textarea;
-}
-function get_comments($CONFIG){
-	//TODO
-	return '';
 }
 function get_css($CONFIG=Null){
 	if($CONFIG === Null)
@@ -908,6 +905,130 @@ function make_css($REL, $LINK, $INTEGRITY="", $ORIGIN=""){
 	$css .= "\n\t</link>";
 	return $css;
 }
+function make_comment_container($blog_id, $html_id, $CONFIG){
+	$col_content	= "";
+	if ($CONFIG['HAS_COMMENTS'] === TRUE){
+		echo "\n<!-- INFO 629: BLOG ID: `".$blog_id."` -->";
+		//Blog post or something where we are having feedback or conversation;
+		if(is_logged_in($CONFIG)){
+			// WYSIWIG for replying...
+			$col_content	.= get_comment_box($blog_id, $html_id, $CONFIG);
+		}
+		else
+			$col_content	.= "\n\t<p>Please login to leave a reply</p>";//TODO
+		$col_content .= '<br/>'.make_comments($blog_id, $CONFIG);	// Already written comments
+	}
+	$col_arr	= Array(
+		'class'=>"col-12 col-sm-8 col-md-9 col-lg-10 m-0 p-0 pb-5 fit-screen",
+		'content'=>$col_content,
+	);
+	$col		= make_tag('div', $col_arr, $CONFIG);
+	$row_arr	= Array(
+				'class'=>" row pl-3 pr-3 m-0",
+				'style'=>$style,
+				'content'=>$col,
+	);
+	$row	= make_tag("div", $row_arr, $CONFIG) . "<!-- END ROW -->";
+	$container_arr	= Array(
+		'class'=>" container-fluid pl-3 pr-3 m-0",
+		//'style'=>$style,
+		'style'=>"",
+		'content'=>$row,
+	);
+	$container	= make_tag('div', $container_arr, $CONFIG);
+	return $container;
+}
+function make_comments($blog_id, $CONFIG){
+	//Make the comment layer to the blogs;
+	//Author, date, comment
+	$html				= '';
+	$comments		= get_comments($blog_id, $CONFIG);
+	$comment_cards = '';
+	if ($comments && $comments->fetchArray()){
+		$comments->reset();
+		$cnt	= 0;
+		while($comment	= $comments->fetchArray( SQLITE3_ASSOC)){
+			$date_posted	= "Posted: ".get_blog_date($comment['date_posted']);
+			$author			= $comment['author'];
+			$date_posted	= make_tag('small', Array('content'=>$date_posted), $CONFIG);
+			$author			= make_tag('small', Array('content'=>$author), $CONFIG);
+			$date_arr		= Array(
+				'class'=> 'comment-date text-muted',
+				'content'=> $date_posted,
+			);
+			$author_arr	= Array(
+				'class'=> 'comment-author',
+				'content'=> $author,
+			);
+			$text_arr	= Array(
+				'class'=> 'comment-text',
+				'content'=> $comment['content'],
+			);
+			$date				= make_tag('span', $date_arr, $CONFIG);
+			$author			= make_tag('span', $author_arr, $CONFIG);
+			$text				= make_tag('div', $text_arr, $CONFIG);
+			$header_id		= "card-header-".$cnt;
+			$collapse_id	= "collapse-".$cnt;
+			$aria_expanded	= 'true';
+			$aria_controls	= $collapse_id;
+			$card_header_content	= $author . $date;
+			if ($cnt !== 0)
+				$aria_expanded	= 'false';
+			$toggle_btn_arr	= Array(
+				'class'=>'btn btn-link btn-block',
+				'type'=>'button',
+				'data-toggle'=>'collapse',
+				'data-target'=>'#'.$collapse_id,
+				'content'=> $card_header_content,
+				'aria-expanded'=>$aria_expanded,
+				'aria-controls'=>$aria_controls,
+			);
+			$toggle_btn	= make_tag('button', $toggle_btn_arr, $CONFIG);
+			$card_header_arr	= Array(
+				'class'=>"card-header",
+				'id'=>$header_id,
+				'content'=>make_tag(
+					'h5', 
+					Array('content'=>$toggle_btn), 
+					$CONFIG
+				),
+			);
+			$card_header	= make_tag('div', $card_header_arr, $CONFIG);
+			$card_body_arr	= Array(
+				'class'=>'card-body',
+				'content'=>$text,
+			);
+			$card_body				= make_tag('div', $card_body_arr, $CONFIG);
+			$card_collapse_arr	= Array(
+				'id'=>$collapse_id,
+				'class'=>'collapse show',
+				'aria-labelledby'=>$header_id,
+				'data-parent'=>$accordion_id,
+				'content'=>$card_body,
+				//'aria-expanded'=>$aria_expanded,
+			);
+			$card_collapse	= make_tag('div', $card_collapse_arr, $CONFIG);
+			$comment_card_arr	= Array(
+				'class'=>'card',
+				'content'=>$card_header . $card_collapse,
+			);
+			$comment_cards .= make_tag('div', $comment_card_arr, $CONFIG);
+			$cnt +=1;
+		}//end while
+	}
+	else{
+		$comment_cards .= "Be the first to comment!";
+	}
+	$accordion_arr	= Array(
+		'class'=>'accordion',
+		'id'=>$accordion_id,
+		'content'=>$comment_cards,
+	);
+	$accordion	= "<hr class=\"thick-line\">";
+	$accordion	.= make_tag('h3', Array('content'=>"Comments"), $CONFIG);	//TODO
+	$accordion	.= make_tag('div', $accordion_arr, $CONFIG);
+	return $accordion;
+}
 function make_gen_col($c, $CONFIG){
 	$col = "";
 	$col .= "\n\t\t\t\t" . $CONFIG['GEN_COL'];
@@ -986,9 +1107,11 @@ function make_recent_blogs($limit=5, $CONFIG=Null){
 		$blogs->reset();
 		$PATHS	= get_paths($CONFIG['ROOT']);
 		while($blog	= $blogs->fetchArray( SQLITE3_ASSOC)){
+			$href			= $PATHS['GET_BLOGS']."?blog_post=".$blog['filepath'];
+			$href			.= "&blog_id=".$blog['id'];;
 			$a_arr		= Array(
-				'content'=>$blog['title'],
-				'href'	=>$PATHS['GET_BLOGS']."?blog_post=".$blog['filepath']
+				'content'=> $blog['title'],
+				'href'	=> $href,
 			);
 			$li_content	= make_tag('a', $a_arr, $CONFIG);
 			$li	= make_tag('li', Array('content'=>$li_content), $CONFIG);
