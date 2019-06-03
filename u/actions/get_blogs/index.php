@@ -31,10 +31,10 @@ $ROOT = '../../..';
 require_once($ROOT.'/config/imports.php');
 make_imports($ROOT);
 
-$CONFIG	= get_config($ROOT);
-$PATHS	= get_paths($ROOT);
-$STRINGS	= get_config_strings($CONFIG);
-$car_id	= "demo-carousel";
+$CONFIG			= get_config($ROOT);
+$PATHS			= get_paths($ROOT);
+$STRINGS			= get_config_strings($CONFIG);
+$comments_id	= "comment-section";
 require_once($PATHS['TEMPLATES_B']);
 
 $CONFIG['CUSTOM_STYLES'] .= "\n<style>";
@@ -49,7 +49,7 @@ $CONFIG['TITLE']				= $STRINGS['BLOGS_TITLE'];;
 $CONFIG['DISPLAY_HEADER']	= FALSE;
 $CONFIG['HAS_COMMENTS']		= TRUE;
 
-echo "<!-- LANDED ON: Features Index-->";
+echo "<!-- LANDED ON: Get-Blog Index-->";
 
 $ad_not_sm_content	= get_ad($CONFIG);	//Show WHEN NOT X-SMALL
 
@@ -69,8 +69,10 @@ $quote_bottom_arr		= Array(
 $quote_bottom		= make_tag('blockquote', $quote_bottom_arr, $CONFIG);
 $quote_top			= make_tag('blockquote', $quote_top_arr, $CONFIG);
 $collapse_blog		= "";
+$container2			= "";
 if(isset($_GET['blog_post'])){
 	$blog_post	= $_GET['blog_post'];
+	$blog_id		= $_GET['blog_id'];
 	$blogpath	= $PATHS['BLOG_DIR'] ."/".$blog_post;
 	if(file_exists($blogpath)){
 		$blog_content	= file_get_contents($blogpath);
@@ -78,8 +80,8 @@ if(isset($_GET['blog_post'])){
 		$blog_arr		= Array(
 			'id'=>"blog",
 			'class'=>'collapse show',
-			'aria-labelledby'=>"Main Blog Content",
-			'content'=>$blog_content,
+			'aria-labelledby'=>"Main Blog Content",				//TODO
+			'content'=>$blog_content ."<br/>". $quote_bottom,
 		);
 		$main_content			= make_tag('div', $blog_arr, $CONFIG);
 		$collapse_blog_arr	= Array(
@@ -93,28 +95,30 @@ if(isset($_GET['blog_post'])){
 		);
 		$collapse_blog	= make_tag('button', $collapse_blog_arr, $CONFIG);
 		$collapse_blog .="\n\t<br/>";
+		$container2	= make_comment_container($blog_id, $comments_id, $CONFIG);
 	}
 	else{
 		//File not found
-		$disclaimer_txt	= $STRINGS["BLOG_404"];
-		$disclaimer_arr	= Array('content'=>$disclaimer_txt,);
-		$disclaimer			= make_tag('p', $disclaimer_arr, $CONFIG);
-		$disclaimer			.= "\n<hr class=\"thick-line\">";
-		$main_content		= $disclaimer . $quote_top;
+		$CONFIG['HAS_COMMENTS']		= FALSE;
+		$disclaimer_txt				= $STRINGS["BLOG_404"];
+		$disclaimer_arr				= Array('content'=>$disclaimer_txt,);
+		$disclaimer						= make_tag('p', $disclaimer_arr, $CONFIG);
+		$disclaimer						.= "\n<hr class=\"thick-line\">";
+		$main_content					= $disclaimer . $quote_top;
+		$main_content					.= $quote_bottom;
 	}
 }
 else{
 	//No request was made;
-	$main_content	= "\n<!-- Start to recent Blogs -->";
-	$recent_blogs	= make_recent_blogs(5, $CONFIG);
+	$CONFIG['HAS_COMMENTS']		= FALSE;
+	$main_content					= "\n<!-- Start to recent Blogs -->";
+	$recent_blogs					= make_recent_blogs(5, $CONFIG);
 	if ($recent_blogs === "")
 		$main_content	= "<p>Sorry, nothing found.</p>";	//TODO
 	else
 		$main_content	.= $recent_blogs;
 	$main_content	.= "\n<!-- End to recent Blogs -->";
-	//$main_content	= $quote_top . make_lorem_ipsum(5);
 }
-
 
 $col0_arr	= Array(
 				'class'=>"col-12 col-sm-8 col-md-9 col-lg-10 m-0 p-0 fit-screen",
@@ -126,30 +130,26 @@ $col1_arr	= Array(
 				'content'=>$ad_not_sm,
 		);
 $col2_arr				= $col0_arr;
-$col2_arr['content']	= $quote_bottom;
 $col0	= make_tag("div", $col0_arr, $CONFIG) . "<!-- END COL -->";
 $col1	= make_tag("div", $col1_arr, $CONFIG) . "<!-- END COL -->";
-$col2	= make_tag("div", $col2_arr, $CONFIG) . "<!-- END COL -->";
 
 $row0_arr	= Array(
 				'class'=>" row pl-3 pr-3 m-0",
 				'style'=>$style,
 				'content'=>$col0.$col1,
 		);
-$row1_arr	= $row0_arr;
-$row1_arr['content']	= $col2;
 
 $row0	= make_tag("div", $row0_arr, $CONFIG) . "<!-- END ROW -->";
-$row1	= make_tag("div", $row1_arr, $CONFIG) . "<!-- END ROW -->";
 $container0_arr =  Array(
 				'class'=>" container-fluid pl-3 pr-3 m-0",
 				'style'=>$style,
-				'content'=>$row0.$row1,
+				'content'=>$row0,
 		);
 $container0	= make_tag("div", $container0_arr, $CONFIG);
 $container1	= make_gen_container(get_ads_sm($CONFIG), $CONFIG);
 $body .= $container0;
 $body .= $container1;
+$body .= $container2;
 
 $CONFIG['BODY'] = $body;
 echo template_b($CONFIG) . "\n";
