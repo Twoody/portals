@@ -68,7 +68,12 @@ blockquote:after {
 	background:#000000;
 	font-size:10px;
 }
-
+.comment-date{
+	float:right;
+}
+.comment-author{
+	float:left;
+}
 .git-red{
 	color:#ff3300;
 	background:#000000;
