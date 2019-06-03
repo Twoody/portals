@@ -141,6 +141,38 @@ function get_cart_total($userid, $CONFIG){
 	return $total;
 
 }
+function get_comments($blog_id, $CONFIG){
+	//TODO
+	$dbpath	= $CONFIG['DBPATH_RESOURCES'];
+	$table	= $CONFIG['DBTABLE_COMMENTS'];
+	$sql		= 'SELECT * FROM '.$table.' WHERE blog_id = :blog_id';
+	echo "\n<!-- INFO 630: BLOG ID: `".$blog_id."` -->";
+	try{
+		$db		= new SQLite3($dbpath);
+		$prepare = $db->prepare($sql);
+		$prepare->bindValue(':blog_id', $blog_id);
+		$comments	= $prepare->execute();
+		if ($comments && $comments->fetchArray()){
+			$comments->reset();
+			$comment	= $comments->fetchArray(SQLITE3_ASSOC);
+			echo "\n<!-- INFO 631: `".count($comment)."` -->";
+			echo "\n<!-- INFO 632: `".$comment['author']."` -->";
+			$comments->reset();
+		}
+		else
+			echo "\n<!-- INFO 633: `NO RESULTS` -->";
+		//Did you know that you cannot just close the db
+		//while working with the sql results?
+		//Closing the db will nuke all results tied to it!
+		//$db->close();
+	}
+	catch(Exception $exception){
+		if (!$FLAGS['is_quite'])
+			echo clog("\"". $exception->getMessage() ."\"");
+		$comments = Array();
+	}
+	return $comments;
+}
 function get_notification_count($userid){
 	//TODO: IDT this works yet...
 	//TODO: We do not have notifications setup at this point;
