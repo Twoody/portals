@@ -1,8 +1,8 @@
 Major Projects to Implement
-	0. Probably rebuild resources.db and verify everything works after adding 
-				is_sponsored column...
 	0.		Implement a coule of screen focused on skill sets;
 				//STATUS: Cloud computing done;
+	0.		Validate blog_post filename matches blog_id on _GET with:
+				https://passtow.com/u/actions/get_blogs/index.php?blog_post=typical-git-process.html&blog_id=4
 	1.		Pencils on all of the items for owners to edit their shops content
 	2. 	Image uploader
 	3.A	News Feed
