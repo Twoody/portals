@@ -70,14 +70,6 @@ function template_b($CONFIG=Null, $PATHS=Null){
 	$html .= "\n\t\t</div>";
 	$html .= "\n\t</div>";
 	$html .= $CONFIG['BODY'];
-	if ($CONFIG['HAS_COMMENTS'] === TRUE){
-		//Blog post or something where we are having feedback or conversation;
-		if(is_logged_in($CONFIG))
-			$html	.= get_comment_box($CONFIG);	// WYSIWIG for replying...
-		else
-			$html	.= "\n\t<p>Please login to leave a reply</p>";
-		$html .= get_comments($CONFIG);			// Already written comments
-	}
 	$html .= get_js($CONFIG);
 	$html .=	"\n\t<!-- Optional JavaScript -->\n";
 	$html .= get_footer($CONFIG);
