@@ -252,18 +252,53 @@ function get_checkout_table($cart, $CONFIG){
 function get_comment_box($blog_id, $html_id, $CONFIG){
 	//TODO: If blog_id has disabled comments, do not show;
 	$STRINGS		= get_config_strings($CONFIG);
+	$PATHS		= get_paths($CONFIG['ROOT']);
+	$hidden_arr	= Array(
+		'type'=>'hidden',
+		'name'=>'blog_id',
+		'value'=>$blog_id,
+	);
 	$label_arr	= Array(
 		'for'=>$html_id,
 		'content'=>$STRINGS['BLOG_COMMENTS'],
 	);
 	$text_arr	= Array(
 		'class'=>'form-control',
-		'rows'=>'5',
+		'rows'=>'3',
+		'name'=>'inputComment',
+		'id'=>"inputComment",
+		'placeholder'=>"Write a comment...",//TODO
 		'id'=>$html_id,
+		'required'=>'',
+		'ARGS'=>Array('SKIP_WHITESPACE'=>TRUE),
 	);
-	$label		= make_tag('label', $label_arr, $CONFIG);
-	$textarea	= make_tag('textarea', $text_arr, $CONFIG);
-	return $label . "\n\t" . $textarea;
+	$invalid_comment_arr	= Array(
+		'class'=>'invalid-feedback',
+		'content'=>$STRINGS['NO_COMMENT'],
+	);
+	$submit_arr	= Array(
+	//$button .= "\n\t\t\t\t\t<button type=\"submit\" class=\"btn btn-primary btn-block\" name=\"form_submit\">Submit</button>";
+		'type'=>'submit',
+		'class'=>'btn btn-primary btn-block',
+		'name'=>'form_submit',
+		'content'=>'Submit',
+	);
+	$label				= make_tag('label', $label_arr, $CONFIG);
+	$textarea			= make_tag('textarea', $text_arr, $CONFIG);
+	$invalid_comment	= make_tag('div', $invalid_comment_arr, $CONFIG);
+	$form_group_arr	= Array(
+		'class'=>'form-group',
+		'content'=>$label . "\n\t" . $textarea,
+	);
+	$form_group	= make_tag('div', $form_group_arr, $CONFIG);
+	$submit		= make_tag('button', $submit_arr, $CONFIG);
+	$form_arr	= Array(
+		'action'=>$PATHS['GET_BLOGS'],
+		'method'=>'post',
+		'content'=>$form_group . "\n\t" . $submit,
+	);
+	$form	= make_tag('form', $form_arr, $CONFIG);
+	return $form;
 }
 function get_css($CONFIG=Null){
 	if($CONFIG === Null)
@@ -1129,6 +1164,12 @@ function make_recent_blogs($limit=5, $CONFIG=Null){
 function make_tag($tag, $arr, $CONFIG){
 	$keys	= array_keys($arr);
 	$ret	= "\n\t\t<".$tag." ";
+	$skip_whitespace	= FALSE;
+	if ($arr['ARGS'] && gettype($arr['ARGS'])===gettype(Array())){
+		$args	= $arr['ARGS'];
+		if($args['SKIP_WHITESPACE'] === TRUE)
+			$skip_whitespace	= TRUE;
+	}
 	foreach($keys as $key){
 		if ($key==='content')
 			continue;
@@ -1137,7 +1178,9 @@ function make_tag($tag, $arr, $CONFIG){
 	$ret .= ">";
 	if($arr['content'] !== Null)
 		$ret .= "\n\t\t\t" . $arr['content'];
-	$ret .= "\n\t\t</".$tag.">";
+	if($skip_whitespace === FALSE)
+		$ret .= "\n\t\t";
+	$ret .= "</".$tag.">";
 	return $ret;
 }
 function tab(){
