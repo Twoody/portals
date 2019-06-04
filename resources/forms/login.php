@@ -21,19 +21,22 @@ function get_login_form($CONFIG=Null, $PATHS=Null){
 	$html .= "\n\t\t<h1>Better dust off that Post-It</h1>";
 	$html .= "\n\t</div>";
 	$html .= "\n\t<form action=\"".$CONFIG['ACTION_LOGIN']."\" method=\"post\">";
+
 	$html .= "\n\t\t<div class=\"form-group row justify-content-center\">";
 	$html .= "\n\t\t\t<label for=\"inputEmail\"class=\"col-sm-2 col-form-label pl-5\">Email:</label>";
 	$html .= "\n\t\t\t<div class=\"col-sm-8 pl-5\">";
 	$html .= "\n\t\t\t\t<input type=\"email\" class=\"form-control\" name=\"inputEmail\" id=\"inputEmail\" placeholder=\"Email\">";
 	$html .= "\n\t\t\t</div>";
 	$html .= "\n\t\t</div>";
+
 	$html .= "\n\t\t<div class=\"form-group row justify-content-center\">";
 	$html .= "\n\t\t\t<label for=\"inputPassword\" class=\"col-sm-2 col-form-label pl-5\">Password:</label>";
 	$html .= "\n\t\t\t<div class=\"col-sm-8 pl-5\">";
 	$html .= "\n\t\t\t\t<input type=\"password\" class=\"form-control\" name=\"inputPassword\" id=\"inputPassword\" placeholder=\"Password\">";
-	$html .= "\n\t\t\t\t".$STRINGS['USER_PW_REQS']; //CONTAINS HTML
+	$html .= "\n\t\t\t\t".$STRINGS['USER_PW_REQS']; //TODO: CONTAINS HTML
 	$html .= "\n\t\t\t</div>";
 	$html .= "\n\t\t</div>";
+
 	$html .= "\n\t\t<fieldset class=\"form-group\">";
 	$html .= "\n\t\t\t<div class=\"row justify-content-center\">";
 	$html .= "\n\t\t\t\t<legend class=\"col-form-label col-sm-2 pt-0 pl-5\">User Level</legend>";
@@ -76,7 +79,7 @@ function get_login_form($CONFIG=Null, $PATHS=Null){
 	$html .= "\n\t\t<div class=\"row justify-content-center\">";
 	$html .= "\n\t\t\t<div class=\"form-group row justify-content-center\">";
 	$html .= "\n\t\t\t\t<div class=\"col-sm-6 pl-4 mb-5\">";
-	$html .= "\n\t\t\t\t\t<button type=\"submit\" class=\"btn btn-primary\" name=\"form_submit\">Sign in</button>";
+	$html .= "\n\t\t\t\t\t<button type=\"submit\" class=\"btn btn-primary\" name=\"form_submit\">Sign in</button>"; //TODO
 	$html .= "\n\t\t\t\t</div>";
 	$html .= "\n\t\t\t</div>";
 	$html .= "\n\t\t</div>";
