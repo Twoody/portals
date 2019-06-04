@@ -70,6 +70,7 @@ $quote_bottom		= make_tag('blockquote', $quote_bottom_arr, $CONFIG);
 $quote_top			= make_tag('blockquote', $quote_top_arr, $CONFIG);
 $collapse_blog		= "";
 $container2			= "";
+$comment				= "<!-- No Comments Submitted -->";
 if(isset($_GET['blog_post'])){
 	$blog_post	= $_GET['blog_post'];
 	$blog_id		= $_GET['blog_id'];
@@ -108,6 +109,52 @@ if(isset($_GET['blog_post'])){
 		$main_content					.= $quote_bottom;
 	}
 }
+else if(isset($_POST['form_submit'])){
+	//User posted a comment;
+	//Need to reload current blog and anchor them down at the bottom;
+	//TODO: Make an api call and just javascript the change in on user screen;
+	$blog_id		= $_POST['blog_id'];
+	$comment		= $_POST['input_comment'];
+	//$blog_post	= get_blog_filepath($blog_id, $CONFIG);
+	$blog_post	= "TODO";
+	$blogpath	= $PATHS['BLOG_DIR'] ."/".$blog_post;
+	if(file_exists($blogpath) || TRUE){
+		//$blog_content	= file_get_contents($blogpath);
+		$blog_content	= "<p>FOO BAR</p>";
+		$good_req		= True;
+		$comment			= "<p>COMMENT: `".$comment."`</p>";
+		$blog_arr		= Array(
+			'id'=>"blog",
+			'class'=>'collapse hide',
+			'aria-labelledby'=>"Main Blog Content",				//TODO
+			'content'=>$blog_content ."<br/>". $quote_bottom,
+		);
+		$main_content			= make_tag('div', $blog_arr, $CONFIG);
+		$collapse_blog_arr	= Array(
+			'class'=>'btn btn-info',
+			'id'=>'blog-collapser',
+			'data-toggle'=>'collapse',
+			'data-target'=>'#blog',
+			'aria-expanded'=>'false',
+			'aria-controls'=>'blog',
+			'content'=>'Show Blog',	//TODO
+		);
+		$collapse_blog	= make_tag('button', $collapse_blog_arr, $CONFIG);
+		$collapse_blog .="\n\t<br/>";
+		$container2	= make_comment_container($blog_id, $comments_id, $CONFIG);
+	}
+	else{
+		//File not found
+		$CONFIG['HAS_COMMENTS']		= FALSE;
+		$disclaimer_txt				= $STRINGS["BLOG_404"];
+		$disclaimer_arr				= Array('content'=>$disclaimer_txt,);
+		$disclaimer						= make_tag('p', $disclaimer_arr, $CONFIG);
+		$disclaimer						.= "\n<hr class=\"thick-line\">";
+		$main_content					= $disclaimer . $quote_top;
+		$main_content					.= $quote_bottom;
+	}
+
+}
 else{
 	//No request was made;
 	$CONFIG['HAS_COMMENTS']		= FALSE;
@@ -123,7 +170,7 @@ else{
 $col0_arr	= Array(
 				'class'=>"col-12 col-sm-8 col-md-9 col-lg-10 m-0 p-0 fit-screen",
 				'style'=>$style,
-				'content'=>$collapse_blog . $main_content,
+				'content'=>$comment . $collapse_blog . $main_content,
 		);
 $col1_arr	= Array(
 				'class'=>" col-sm-4 col-md-3 col-lg-2 pr-3 m-0",

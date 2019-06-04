@@ -265,8 +265,8 @@ function get_comment_box($blog_id, $html_id, $CONFIG){
 	$text_arr	= Array(
 		'class'=>'form-control',
 		'rows'=>'3',
-		'name'=>'inputComment',
-		'id'=>"inputComment",
+		'name'=>'input_comment',
+		'id'=>"input_comment",
 		'placeholder'=>"Write a comment...",//TODO
 		'id'=>$html_id,
 		'required'=>'',
