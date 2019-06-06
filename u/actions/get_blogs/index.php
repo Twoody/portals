@@ -110,17 +110,16 @@ if(isset($_GET['blog_post'])){
 	}
 }
 else if(isset($_POST['form_submit'])){
+	//TODO: setup for_submit in CONFIG to match html.php
 	//User posted a comment;
 	//Need to reload current blog and anchor them down at the bottom;
 	//TODO: Make an api call and just javascript the change in on user screen;
 	$blog_id		= $_POST['blog_id'];
 	$comment		= $_POST['input_comment'];
-	//$blog_post	= get_blog_filepath($blog_id, $CONFIG);
-	$blog_post	= "TODO";
+	$blog_post	= get_blog_filepath($blog_id, $CONFIG);
 	$blogpath	= $PATHS['BLOG_DIR'] ."/".$blog_post;
 	if(file_exists($blogpath) || TRUE){
-		//$blog_content	= file_get_contents($blogpath);
-		$blog_content	= "<p>FOO BAR</p>";
+		$blog_content	= file_get_contents($blogpath);
 		$good_req		= True;
 		$comment			= "<p>COMMENT: `".$comment."`</p>";
 		$blog_arr		= Array(
