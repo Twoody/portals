@@ -41,6 +41,34 @@ function delete_row($table, $where, $CONFIG=Null){
 	$db->exec($sql);
 	$db->close();
 }
+function get_blog_filepath($blog_id, $CONFIG){
+	//Return the blog filepath based of the blog id;
+	$dbpath	= $CONFIG['DBPATH_RESOURCES'];
+	$sql		= "SELECT filepath FROM blogs WHERE id = :blogid";
+	$result	= Array();
+	$blogpath	= '';
+			echo "\n<!-- MEAT 423: DO WORK -->\n";
+	try{
+		$db		= new SQLite3($dbpath);
+		$prepare	= $db->prepare($sql);
+		$prepare->bindValue(':blogid', $blog_id);
+		$result	= $prepare->execute();
+		if ($result && $result->fetchArray(SQLITE3_ASSOC)){
+			$row = $result->fetchArray(SQLITE3_ASSOC);
+			$blogpath	= $row['filepath'];
+			echo "\n<!-- MEAT 423: ".$blogpath." -->\n";
+		}
+		else
+			echo "\n<!-- MEAT 423: NO BLOG -->\n";
+		$db->close();
+	}
+	catch(Exception $exception){
+		if (!$FLAGS['is_quite'])
+			echo clog("\"". $exception->getMessage() ."\"");
+	}
+	return $blogpath;
+
+}
 function get_inventory_tables(){
 	$TABLES = Array(
 		'inventory'=>Array(
