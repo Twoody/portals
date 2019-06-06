@@ -283,12 +283,13 @@ function get_comment_box($blog_id, $html_id, $CONFIG){
 		'name'=>'form_submit',
 		'content'=>'Submit',
 	);
+	$hidden				= make_tag('input', $hidden_arr, $CONFIG);
 	$label				= make_tag('label', $label_arr, $CONFIG);
 	$textarea			= make_tag('textarea', $text_arr, $CONFIG);
 	$invalid_comment	= make_tag('div', $invalid_comment_arr, $CONFIG);
 	$form_group_arr	= Array(
 		'class'=>'form-group',
-		'content'=>$label . "\n\t" . $textarea,
+		'content'=>$hidden . "\n\t" . $label . "\n\t" . $textarea,
 	);
 	$form_group	= make_tag('div', $form_group_arr, $CONFIG);
 	$submit		= make_tag('button', $submit_arr, $CONFIG);

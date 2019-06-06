@@ -47,19 +47,21 @@ function get_blog_filepath($blog_id, $CONFIG){
 	$sql		= "SELECT filepath FROM blogs WHERE id = :blogid";
 	$result	= Array();
 	$blogpath	= '';
-			echo "\n<!-- MEAT 423: DO WORK -->\n";
 	try{
 		$db		= new SQLite3($dbpath);
 		$prepare	= $db->prepare($sql);
 		$prepare->bindValue(':blogid', $blog_id);
 		$result	= $prepare->execute();
 		if ($result && $result->fetchArray(SQLITE3_ASSOC)){
+			$result->reset();
 			$row = $result->fetchArray(SQLITE3_ASSOC);
 			$blogpath	= $row['filepath'];
 			echo "\n<!-- MEAT 423: ".$blogpath." -->\n";
 		}
-		else
+		else{
 			echo "\n<!-- MEAT 423: NO BLOG -->\n";
+			echo "\n<!-- MEAT 424: BLOG ID: ".$blog_id." -->\n";
+		}
 		$db->close();
 	}
 	catch(Exception $exception){
