@@ -29,6 +29,46 @@ require_once($PATHS['LIBPATH_HTML']);
 require_once($PATHS['LIBPATH_FA']);
 echo "\n<!-- " . $PATHS['LIBPATH_DB_HELPER'] . " imported -->\n";
 
+function add_comment($comment, $blog_id, $CONFIG){
+	if (!is_logged_in($CONFIG))
+		return False;
+	$dbpath	= $CONFIG['DBPATH_RESOURCES'];
+	$table	= $CONFIG['DBTABLE_COMMENTS'];
+	$ret		= FALSE;
+	$insert	= 'INSERT INTO '.$table. '(';
+	$insert	.= "blog_id, author, content, date_posted, last_edited, ";
+	$insert	.= "claps, rocks, edits, flags, is_deleted";
+	$insert	.=") VALUES(";
+	$insert	.= ":blog_id, :author, :content, :date_posted, :last_edited, ";
+	$insert	.= ":claps, :rocks, :edits, :flags, :is_deleted";
+	$insert	.= ")";
+	$author	= get_user_fname($CONFIG);	//TODO: Href author to a user profile...
+	$curdate	= get_todays_date();
+	try{
+		$db		= new SQLite3($dbpath);
+		$prepare	= $db->prepare($insert);
+		$prepare->bindValue(':blog_id'		, $blog_id);
+		$prepare->bindValue(':author'			, $author );
+		$prepare->bindValue(':content'		, $comment );
+		$prepare->bindValue(':date_posted'	, $curdate );
+		$prepare->bindValue(':last_edited'	, $curdate );
+		$prepare->bindValue(':claps'			, 0 );
+		$prepare->bindValue(':rocks'			, 0 );
+		$prepare->bindValue(':edits'			, 0 );
+		$prepare->bindValue(':flags'			, 0 );
+		$prepare->bindValue(':is_deleted'	, FALSE);
+		$result	= $prepare->execute();
+		if($result)
+			$ret = TRUE;
+		$db->close();
+	}
+	catch(Exception $exception){
+		if (!$FLAGS['is_quite'])
+			echo clog("\"". $exception->getMessage() ."\"");
+	}
+	return $ret;
+}
+
 function delete_row($table, $where, $CONFIG=Null){
 	if ($CONFIG===Null){
 		$ROOT = '.';
@@ -40,6 +80,10 @@ function delete_row($table, $where, $CONFIG=Null){
 	$sql	= "DELETE FROM ".$table. " WHERE 1=1 AND ".$where;
 	$db->exec($sql);
 	$db->close();
+}
+function get_author($CONFIG){
+	//Return the current author or user logged in;
+
 }
 function get_blog_filepath($blog_id, $CONFIG){
 	//Return the blog filepath based of the blog id;
@@ -56,7 +100,6 @@ function get_blog_filepath($blog_id, $CONFIG){
 			$result->reset();
 			$row = $result->fetchArray(SQLITE3_ASSOC);
 			$blogpath	= $row['filepath'];
-			echo "\n<!-- MEAT 423: ".$blogpath." -->\n";
 		}
 		else{
 			echo "\n<!-- MEAT 423: NO BLOG -->\n";
@@ -176,7 +219,6 @@ function get_comments($blog_id, $CONFIG){
 	$dbpath	= $CONFIG['DBPATH_RESOURCES'];
 	$table	= $CONFIG['DBTABLE_COMMENTS'];
 	$sql		= 'SELECT * FROM '.$table.' WHERE blog_id = :blog_id';
-	echo "\n<!-- INFO 630: BLOG ID: `".$blog_id."` -->";
 	try{
 		$db		= new SQLite3($dbpath);
 		$prepare = $db->prepare($sql);
@@ -185,8 +227,6 @@ function get_comments($blog_id, $CONFIG){
 		if ($comments && $comments->fetchArray()){
 			$comments->reset();
 			$comment	= $comments->fetchArray(SQLITE3_ASSOC);
-			echo "\n<!-- INFO 631: `".count($comment)."` -->";
-			echo "\n<!-- INFO 632: `".$comment['author']."` -->";
 			$comments->reset();
 		}
 		else
@@ -311,14 +351,10 @@ function get_recent_blogs($limit=5, $CONFIG){
 		$db		= new SQLite3($dbpath);
 		$prepare = $db->prepare($sql);
 		$blogs	= $prepare->execute();
-		if ($blogs && $blogs->fetchArray()){
+		if ($blogs && $blogs->fetchArray())
 			$blogs->reset();
-			while($blog	= $blogs->fetchArray( SQLITE3_ASSOC)){
-				echo "\n<!-- INFO 333: `".count($blog)."` -->";
-				echo "\n<!-- INFO 333: `".$blog['title']."` -->";
-			}
-			$blogs->reset();
-		}
+		else
+			$blogs = Array();
 		//Did you know that you cannot just close the db
 		//while working with the sql results?
 		//Closing the db will nuke all results tied to it!
@@ -365,7 +401,6 @@ function get_user_fname($CONFIG){
 	}
 	return $ret;
 }
-
 function get_user_id($email, $CONFIG){
 	$dbpath	= $CONFIG['DBPATH_USERS'];
 	$sql		= "SELECT id FROM users WHERE email=:email";
