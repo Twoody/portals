@@ -70,6 +70,17 @@ function get_hash($email, $aLevel, $CONFIG=Null){
 	$db->close();
 	return $hash;
 }
+function is_admin($CONFIG=Null){
+	if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === TRUE){
+		if(isset($_SESSION['alevel']) && $_SESSION['alevel'] === 'admin'){
+			return TRUE;
+		}
+		return FALSE;
+	}
+	else{
+		return FALSE;
+	}
+}
 function is_logged_in($CONFIG=Null){
 	if ($CONFIG === Null)
 		$CONFIG = get_config();
@@ -79,6 +90,13 @@ function is_logged_in($CONFIG=Null){
 	else{
 		return FALSE;
 	}
+}
+function is_users_comment($commentObj, $CONFIG){
+	//TODO: Add authorid to comment table;
+	$userid	= $_SESSION['userid'];
+	if($commentObj['authorid'] === $userid)
+		return True;
+	return False;
 }
 function is_valid_access($email, $access, $CONFIG=Null){
 	if($CONFIG === Null)
