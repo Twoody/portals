@@ -69,6 +69,7 @@ function add_comment($comment, $blog_id, $CONFIG){
 	return $ret;
 }
 function delete_comment($commentid, $CONFIG=Null){
+	//TODO: Do not delete comment, but provide support for is_deleting and not showing comments that are deleted...
 	$dbpath	= $CONFIG['DBPATH_RESOURCES'];
 	$table	= $CONFIG['DBTABLE_COMMENTS'];
 	$ret		= FALSE;
