@@ -810,7 +810,7 @@ function get_table_from_owner_query($dbpath, $query, $CONFIG){
 	$CUR_TABLE	= parse_from($query);
 	$table   	= "";
 	$QUERY_PAGE	= $CONFIG['QUERY_PAGE'];
-	$TABLE_ID	= $CONFIG['TABLE_ID'];
+	$TABLE_ID	= $CONFIG['TABLE_ID'];		//TODO: MOVE TO A PARAM!
 	$db->enableExceptions(true);
 	try{
 		$prepare = $db->prepare($query);
@@ -844,10 +844,10 @@ function get_table_from_owner_query($dbpath, $query, $CONFIG){
 						$row_key	= $row_keys[$i];
 						$row_val	= $row[$row_key];
 						if ($i === 0){
-							$dHref = $QUERY_PAGE."?delete_val=".$row_val."&delete_table=".$CUR_TABLE;
-							$dHref .= "&delete_key=".$row_key."&is_deleting=TRUE";
-
-							$href_arr = Array(
+							$dHref		= $QUERY_PAGE."?delete_val=".$row_val;
+							$dHref		.= "&delete_table=".$CUR_TABLE;
+							$dHref		.= "&delete_key=".$row_key."&is_deleting=TRUE";
+							$href_arr	= Array(
 								'content'=> $ICONS['DELETE_TRASH'],
 								'href'=>$dHref,
 								'style'=>'color:black;',
@@ -980,21 +980,43 @@ function make_comments($blog_id, $CONFIG){
 	$html				= '';
 	$comments		= get_comments($blog_id, $CONFIG);
 	$comment_cards = '';
+	$cnt				= 0;
+	$ICONS			= get_config_icons($CONFIG);
+	$PATHS			= get_paths($CONFIG['ROOT']);
+	$CUR_TABLE		= 'comments';		//TODO: just pull table over from config
+	$QUERY_PAGE		= $PATHS['GET_BLOGS'];		//TODO: check if this is right;
 	if ($comments && $comments->fetchArray()){
 		$comments->reset();
-		$cnt	= 0;
 		while($comment	= $comments->fetchArray( SQLITE3_ASSOC)){
-			$date_posted	= "Posted: ".get_blog_date($comment['date_posted']);
-			$author			= $comment['author'];
-			$date_posted	= make_tag('small', Array('content'=>$date_posted), $CONFIG);
-			$author			= make_tag('small', Array('content'=>$author), $CONFIG);
+			//TODO: Authenticate if ADMIN or userid
+			$blog_post		= get_blog_filepath($blog_id, $CONFIG);
+			$dHref			= $QUERY_PAGE."?";
+			$dHref			.= "blog_id=".$blog_id;
+			$dHref			.= "&blog_post=".$blog_post;
+			$dHref			.= "&delete_id=".$comment['id'];
+			$dHref			.= "&is_deleting_comment=TRUE";
+			$tashcan_arr	= Array(
+				'content'=> $ICONS['DELETE_TRASH'],
+				'href'=>$dHref,
+				'style'=>'color:black;',
+				'title'=>$STRINGS['DELETE_ENTRY'],
+			);
+			$trashcan				= make_tag('a', $tashcan_arr, $CONFIG);
+			$date_posted			= "Posted: ".get_blog_date($comment['date_posted']);
+			$comment_author_arr	= Array('content'=>$comment['author']);
+			$date_posted_arr		= Array('content'=>$date_posted);
+			$date_posted			= make_tag('small', $date_posted_arr, $CONFIG);
+			$comment_author		= make_tag('small', $comment_author_arr, $CONFIG);
+			$author_content		= $comment_author;
+			if (is_admin($CONFIG) || is_users_comment($comment, $CONFIG))
+				$author_content = $trashcan ."&nbsp;". $comment_author;
 			$date_arr		= Array(
 				'class'=> 'comment-date text-muted',
 				'content'=> $date_posted,
 			);
 			$author_arr	= Array(
 				'class'=> 'comment-author',
-				'content'=> $author,
+				'content'=> $author_content,
 			);
 			$text_arr	= Array(
 				'class'=> 'comment-text',
