@@ -115,10 +115,9 @@ else if(isset($_POST['form_submit'])){
 	//Need to reload current blog and anchor them down at the bottom;
 	//TODO: Make an api call and just javascript the change in on user screen;
 	$blog_id		= $_POST['blog_id'];
-			echo "\n<!-- MEAT 525: BLOG ID: `".$blog_id."` -->\n";
 	$comment		= $_POST['input_comment'];
+	$suc			= add_comment($comment, $blog_id, $CONFIG);
 	$blog_post	= get_blog_filepath($blog_id, $CONFIG);
-			echo "\n<!-- MEAT 526: BLOG ID: `".$blog_id."` -->\n";
 	$blogpath	= $PATHS['BLOG_DIR'] ."/".$blog_post;
 	if(file_exists($blogpath) || TRUE){
 		$blog_content	= file_get_contents($blogpath);
