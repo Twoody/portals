@@ -68,7 +68,26 @@ function add_comment($comment, $blog_id, $CONFIG){
 	}
 	return $ret;
 }
-
+function delete_comment($commentid, $CONFIG=Null){
+	$dbpath	= $CONFIG['DBPATH_RESOURCES'];
+	$table	= $CONFIG['DBTABLE_COMMENTS'];
+	$ret		= FALSE;
+	$delete	= 'DELETE FROM '.$table. ' WHERE id = :commentid';
+	try{
+		$db		= new SQLite3($dbpath);
+		$prepare	= $db->prepare($delete);
+		$prepare->bindValue(':commentid', $commentid);
+		$result	= $prepare->execute();
+		if($result)
+			$ret = TRUE;
+		$db->close();
+	}
+	catch(Exception $exception){
+		if (!$FLAGS['is_quite'])
+			echo clog("\"". $exception->getMessage() ."\"");
+	}
+	return $ret;
+}
 function delete_row($table, $where, $CONFIG=Null){
 	if ($CONFIG===Null){
 		$ROOT = '.';
