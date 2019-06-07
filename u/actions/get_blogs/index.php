@@ -72,6 +72,12 @@ $collapse_blog		= "";
 $container2			= "";
 $comment				= "<!-- No Comments Submitted -->";
 if(isset($_GET['blog_post'])){
+	//First check if redirect from comment delete;
+	if(isset($_GET['is_deleting_comment'])){
+		//TODO: Check if requested comment is owners or if admin
+		$comment_id	= $_GET['delete_id'];
+		$suc			= delete_comment($comment_id, $CONFIG);
+	}
 	$blog_post	= $_GET['blog_post'];
 	$blog_id		= $_GET['blog_id'];
 	$blogpath	= $PATHS['BLOG_DIR'] ."/".$blog_post;
@@ -153,7 +159,6 @@ else if(isset($_POST['form_submit'])){
 		$main_content					= $disclaimer . $quote_top;
 		$main_content					.= $quote_bottom;
 	}
-
 }
 else{
 	//No request was made;
