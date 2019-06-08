@@ -34,8 +34,10 @@ require_once($PATHS['FORMS_ADMIN_VIEWPORT']);
 require_once($PATHS['LIBPATH_FA']);
 require_once($PATHS['LIBPATH_DB_HELPER']);
 
-$CONFIG	= get_config($ROOT);
-$CONFIG['TABLE_ID'] = "real_time";
+$CONFIG					= get_config($ROOT);
+$CONFIG['TABLE_ID']	= "real_time";
+$is_admin				= is_admin($CONFIG);
+$access_level			= get_user_access_level($CONFIG);;
 
 	
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
@@ -57,12 +59,12 @@ echo '<!-- RUNNING '.$PATHS['ADMIN_VIEWPORT'].' -->';
 if (!is_logged_in($CONFIG)){
 	$CONFIG['BODY'] .= $STRINGS['USER_NOT_LOGGED_IN'];
 }
-else if($_SESSION['alevel'] !== 'admin'){
+else if(!$is_admin){
 	$CONFIG['BODY'] .= $STRINGS['USER_INVALID_PERMISSION'];
 	$CONFIG['BODY'] .= $CONFIG['GEN_CONTAINER'];
 	$CONFIG['BODY'] .= $CONFIG['GEN_ROW'];
 	$CONFIG['BODY'] .= $CONFIG['GEN_INFO'];
-	$CONFIG['BODY'] .= "You are logged in as a " . $_SESSION['alevel'] . ".";
+	$CONFIG['BODY'] .= "You are logged in as a " . $access_level . ".";
 	$CONFIG['BODY'] .= "\n\t\t\t\t</div><!-- END COL -->";
 	$CONFIG['BODY'] .= "\n\t\t\t</div><!-- END ROW -->";
 	$CONFIG['BODY'] .= "\n\t\t</div><!-- End container -->";
