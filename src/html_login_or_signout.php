@@ -11,6 +11,8 @@ USAGE:
 Purpose:
     Find whether to display login form or signout form;
 
+TODO:
+	Maybe show a maintenance screen if tables and dbs are missing;
 ******************************************************************************/
 function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 	if($CONFIG === Null){
@@ -30,29 +32,12 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 	require_once($PATHS['LIBPATH_DB_HELPER']);
 	echo "\n<!-- RUNNING: ".$PATHS['HTML_LOGIN_OR_SIGNOUT']." -->\n";
 
-	$html 		= '';
-	$dbpath		= $PATHS['DB_USERS'];
-	$show_login	= true;
-	if(!is_db($dbpath, $CONFIG)){
-		//TODO: Alert site is in maintenance;
-		//			Make tables; Populate Users; Ask for user to refresh;
-		echo clog('"No DB"');	//TODO: Error messages from .../strings/errors.json
-	}
-	else if(!has_table("users", $dbpath, $CONFIG)){
-		//TODO: Alert site is in maintenance;
-		//			Make tables; Populate Users; Ask for user to refresh;
-		echo clog('"No tables"');	//TODO: Error messages from .../strings/errors.json
-	}
-	/*
-	TODO:
-	else if (!has_users()){
-		//TODO: Alert site is in maintenance;
-		//			Populate Users; Ask for user to refresh;
-	}
-	*/
-	else if($_SESSION['loggedin'] && $_SESSION['loggedin'] === TRUE){
+	$html 					= '';
+	$dbpath					= $PATHS['DB_USERS'];
+	$show_login				= true;
+	$already_logged_in	= is_logged_in($CONFIG);
+	if($already_logged_in === TRUE){
 		$show_login = FALSE;
-		$already_logged_in = TRUE;
 	}
 	else if(isset($_POST['form_submit'])){
 		//TODO: Authenticate user...
@@ -61,7 +46,7 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 		$user					= strstr($email, '@', true); //strip everything after `@`
 		$pw					= sanitize_input( $_POST["inputPassword"] );
 		$access				= sanitize_input( $_POST["userLevel"] );
-		$is_valid_email	= users_has_email($email, $CONFIG);
+		$is_valid_email	= users_has_email($email, $CONFIG);	//If email already exists in table;
 		if ($access === "isMember")
 			$access = "member";
 		else if ($access === "isOwner")
@@ -90,21 +75,37 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 					echo alert('"Bad Login"');
 				$show_login = TRUE;
 			}
+			else{
+				//set user id
+				$userdb_path	= $CONFIG['DBPATH_USERS'];
+				$userid_sql		= 'SELECT id FROM ' . $CONFIG['DBTABLE_USERS'];
+				$userid_sql		.= " WHERE email=:email";
+				$userdb			= new SQLite3($userdb_path);
+				$prepare			= $userdb->prepare($userid_sql);
+				$prepare->bindValue(':email', $email);
+				$rows		= $prepare->execute();
+				$row		= $rows->fetchArray(SQLITE3_ASSOC);
+				$userid	= $row['id'];
+				$userdb->close();
+			}
 		}
 		else{
+			//TODO: Might be bad access too;
 			echo alert("\"Bad Email\"");
 			$show_login = TRUE;
 		}
 	}
+
 	if ($show_login){
 		$html .= get_login_form($CONFIG);
 	}
 	else if($already_logged_in === TRUE){
 		//TODO: Offer logout button;
+		$username	= get_username($CONFIG);
 		$html .= $CONFIG['GEN_CONTAINER'];
 		$html .= $CONFIG['GEN_ROW'];
 		$html .= "\n\t\t<div class=\"col-12 pl-4 pr-4 pb-0 pt-0\">";
-		$html .= "\n\t\t\tWelcome, ".$_SESSION['username'].".";
+		$html .= "\n\t\t\tWelcome, ".$username.".";
 		$html .= "\n\t\t</div>";
 		$html .= "\n\t</div><!-- END ROW -->";
 		$html .= $CONFIG['GEN_ROW'];
@@ -113,24 +114,26 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 		$html .= "\n\t\t</div>";
 		$html .= "\n\t</div><!-- END ROW -->";
 		$html .= "\n</div><!-- END CONTAINER -->";
-		$html .= clog("\"USER: \" + JSON.stringify(\"".$_SESSION['username']. "\")");
 	}
 	else{
 		//Good Login
-		$_SESSION['username']	= $user;
-		$_SESSION['loggedin']	= TRUE;
-		$_SESSION['alevel']		= $access;
-		$_SESSION['email']		= $email;
-		$_SESSION['userid']		= get_user_id($CONFIG);
+		$access_token					= make_salt($CONFIG);
+		$_SESSION['ACCESS_TOKEN']	= $access_token;
+		$suc								= update_users_token(
+													$access_token, 
+													$userid, 
+													$CONFIG
+												);
+		$username						= get_username($CONFIG);
 		$html .= $CONFIG['GEN_CONTAINER'];
 		$html .= $CONFIG['GEN_ROW'];
 		$html .= "\n\t\t<div class=\"col-12 pl-4 pr-4 pb-0 pt-0\">";
-		$html .= "Welcome, ".$_SESSION['username'].".";
+		$html .= "Welcome, ".$username.".";
 		$html .= "\n\t\t</div>";
 		$html .= "\n\t</div><!-- END ROW -->";
 		$html .= $CONFIG['GEN_ROW'];
 		$html .= "\n\t\t<div class=\"col-12 pl-4 pr-4 pb-0 pt-0\">";
-		$html .= "You are logged in as a ".$_SESSION['alevel'].".";
+		$html .= "You are logged in as a " . $access . ".";
 		$html .= "\n\t\t</div>";
 	}
 	$CONFIG['BODY'] .= $html;
