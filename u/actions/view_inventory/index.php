@@ -61,7 +61,7 @@ $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t})";
 
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n</script>";
 
-$userid		= $_SESSION['userid'];
+$userid		= get_user_id($CONFIG);
 $cart			= get_cart($userid, $CONFIG);
 $table		= get_checkout_table($cart, $CONFIG);
 $cart_total	= get_cart_total($userid, $CONFIG);
