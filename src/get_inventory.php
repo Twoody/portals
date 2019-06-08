@@ -16,7 +16,7 @@ function html_get_inventory($CONFIG){
 	$CONFIG['MCONFIG']	= $MCONFIG;
 	if(isset($_POST['form_submit']) && $processed_form !== TRUE){
 		//if modal form submitted, update db and refresh this page again...
-		$userid			= $_SESSION["userid"];
+		$userid			= get_user_id($CONFIG);
 		$productid		= sanitize_input( $_POST["productid"] );
 		$product_name	= sanitize_input( $_POST["product_name"] );
 		$quantity		= sanitize_input( $_POST["quantity"] );
