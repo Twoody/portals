@@ -549,6 +549,8 @@ function get_nav($CONFIG=Null, $PATHS=Null){
 function get_nav_items($CONFIG){
 	$CONFIG['FA_STACK_SIZE'] = "fa-md";
 	$STRINGS			= get_config_strings($CONFIG);
+	$is_logged_in	= is_logged_in($CONFIG);
+	$access_level	= get_user_access_level($CONFIG);
 	$nav_item_tag	= 'li';
 	$nav_item_arr	= Array(
 		'id'=>'',
@@ -558,33 +560,46 @@ function get_nav_items($CONFIG){
 	);
 	//TODO: Find out what active page is;
 	//TODO: Wrap all of elements in an Arr;
-	$home_arr							= $nav_item_arr;
-	$home_arr['content'] 			= get_href_nav_home($CONFIG, $STRINGS);
-	$home_arr['class']				.= ' active';
-	$home									= make_tag($nav_item_tag, $home_arr, $CONFIG);
-	$item2_arr							= $nav_item_arr;
-	$item2_arr['content']			= get_href_nav_features($CONFIG, $STRINGS);
-	$item2								= make_tag($nav_item_tag, $item2_arr, $CONFIG);
-	$item3_arr							= $nav_item_arr;
-	$item3_arr['content']			= get_href_nav_pricing($CONFIG, $STRINGS);
-	$item3								= make_tag($nav_item_tag, $item3_arr, $CONFIG);
-	$item4_arr							= $nav_item_arr;
-	$item4_arr['content']			= get_href_nav_item4($CONFIG, $STRINGS);
-	$item4								= make_tag($nav_item_tag, $item4_arr, $CONFIG);
-	if(is_logged_in($CONFIG) === TRUE && !$CONFIG['IS_LOGGING_OUT']){
-		$shopping_cart	=  make_font_awesome_stack(Array(
-			'backdrop-usd fas fa-circle',
-			'fas fa-tw fa-shopping-cart'), $CONFIG);
+	$home_arr					= $nav_item_arr;
+	$home_arr['content'] 	= get_href_nav_home($CONFIG, $STRINGS);
+	$home_arr['class']		.= ' active';
+	$home							= make_tag($nav_item_tag, $home_arr, $CONFIG);
+	$item2_arr					= $nav_item_arr;
+	$item2_arr['content']	= get_href_nav_features($CONFIG, $STRINGS);
+	$item2						= make_tag($nav_item_tag, $item2_arr, $CONFIG);
+	$item3_arr					= $nav_item_arr;
+	$item3_arr['content']	= get_href_nav_pricing($CONFIG, $STRINGS);
+	$item3						= make_tag($nav_item_tag, $item3_arr, $CONFIG);
+	$item4_arr					= $nav_item_arr;
+	$item4_arr['content']	= get_href_nav_item4($CONFIG, $STRINGS);
+	$item4						= make_tag($nav_item_tag, $item4_arr, $CONFIG);
+	if($is_logged_in === TRUE && !$CONFIG['IS_LOGGING_OUT']){
+		$userid			= get_user_id($CONFIG);
+		$shopping_cart	=  make_font_awesome_stack(
+										Array(
+											'backdrop-usd fas fa-circle',
+											'fas fa-tw fa-shopping-cart'
+										), 
+										$CONFIG
+									);
 		$shopping_cart 					.= "<span class=\"badge badge-primary\">";
-		$shopping_cart 					.= get_cart_count($_SESSION['userid'], $CONFIG);
+		$shopping_cart 					.= get_cart_count($userid, $CONFIG);
 		$shopping_cart 					.= "</span>";
 		$shopping_cart_arr				= $nav_item_arr;
-		$shopping_cart_arr['content']	= get_href_nav_shopping_cart($shopping_cart, $CONFIG, $STRINGS);
-		$shopping_cart_li					= make_tag($nav_item_tag, $shopping_cart_arr, $CONFIG);
+		$shopping_cart_arr['content']	= get_href_nav_shopping_cart(
+														$shopping_cart, 
+														$CONFIG, 
+														$STRINGS
+													);
+		$shopping_cart_li					= make_tag(
+														$nav_item_tag, 
+														$shopping_cart_arr, 
+														$CONFIG
+													);
 	}
 	else
 		$shopping_cart_li	= "<!-- NO SHOPPING CART TO SHOW -->";
-	if(is_logged_in($CONFIG) === TRUE && $_SESSION['alevel'] === 'admin' && !$CONFIG['IS_LOGGING_OUT']){
+	if($is_logged_in === TRUE && $access_level === 'admin' && !$CONFIG['IS_LOGGING_OUT']){
 		$admin_arr					= $nav_item_arr;
 		$admin_arr['content']	= get_href_nav_admin($CONFIG, $STRINGS);
 		$admin_dash					= make_tag($nav_item_tag, $admin_arr, $CONFIG);
