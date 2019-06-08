@@ -45,22 +45,20 @@ if (!is_logged_in($CONFIG)){
 	$body .= $container_0;
 }
 else{
-	$fname = get_user_fname($CONFIG);
-	if(
-		$_SESSION['alevel'] === 'member'
-		|| $_SESSION['alevel'] === 'owner' 
-		|| $_SESSION['alevel'] === 'admin'
-	){
+	$fname		= get_user_fname($CONFIG);
+	$is_admin	= is_admin($CONFIG);
+	$is_owner	= is_owner($CONFIG);
+	$is_member	= is_member($CONFIG);
+	if($is_admin || $is_owner || $is_member){
 		$list_items = Array();
-
 		array_push($list_items, get_href_user_dash0($CONFIG, $STRINGS));
 		array_push($list_items, get_href_user_inv($CONFIG, $STRINGS));
 		array_push($list_items, get_href_user_go_shop($CONFIG, $STRINGS));
-		if($_SESSION['alevel'] === 'owner' || $_SESSION['alevel'] === 'admin'){
+		if($is_owner || $is_admin){
 			$shop_construction = "Shop Management: ".$STRINGS["UNDER_CONSTRUCTION"];
 			array_push($list_items,	make_list_item($shop_construction));
 		}
-		if($_SESSION['alevel'] === 'admin'){
+		if($is_admin){
 			array_push($list_items,	get_href_admin_dash1($CONFIG, $STRINGS));
 			array_push($list_items,	get_href_admin_users_mgmt($CONFIG, $STRINGS));
 		}
