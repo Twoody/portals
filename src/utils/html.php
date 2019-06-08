@@ -1033,7 +1033,7 @@ function make_comments($blog_id, $CONFIG){
 			if ($cnt !== 0)
 				$aria_expanded	= 'false';
 			$toggle_btn_arr	= Array(
-				'class'=>'btn btn-link btn-block',
+				'class'=>'btn btn-link btn-block p-1 m-0',
 				'type'=>'button',
 				'data-toggle'=>'collapse',
 				'data-target'=>'#'.$collapse_id,
@@ -1043,11 +1043,11 @@ function make_comments($blog_id, $CONFIG){
 			);
 			$toggle_btn	= make_tag('button', $toggle_btn_arr, $CONFIG);
 			$card_header_arr	= Array(
-				'class'=>"card-header",
+				'class'=>"card-header p-0 m-0",
 				'id'=>$header_id,
 				'content'=>make_tag(
 					'h5', 
-					Array('content'=>$toggle_btn), 
+					Array('content'=>$toggle_btn, 'class'=>'p-0 m-0'), 
 					$CONFIG
 				),
 			);
