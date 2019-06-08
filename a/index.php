@@ -26,9 +26,10 @@ Links:
 $ROOT = "..";
 require_once($ROOT.'/config/imports.php');
 make_imports($ROOT);
-$PATHS	= get_paths($ROOT);
-$CONFIG	= get_config($ROOT);
-$STRINGS	= get_config_strings($CONFIG);
+$PATHS		= get_paths($ROOT);
+$CONFIG		= get_config($ROOT);
+$STRINGS		= get_config_strings($CONFIG);
+$is_admin	= is_admin($CONFIG);
 
 require_once($PATHS['TEMPLATES_B']);
 
@@ -38,13 +39,12 @@ $CONFIG['DISPLAY_HEADER']	= FALSE;
 $body								= "";
 
 echo '<!-- RUNNING '.$PATHS['ADMIN_DASH'].' -->';
-
 if (!is_logged_in($CONFIG)){
 	$col_0			= make_gen_warning($STRINGS['USER_NOT_LOGGED_IN'], $CONFIG);
 	$container_0	= make_gen_container(make_gen_row($col_0, $CONFIG), $CONFIG);
 	$body .= $container_0;
 }
-else if($_SESSION['alevel'] !== 'admin'){
+else if(!$is_admin){
 	$col_0			= make_gen_warning($STRINGS['USER_INVALID_PERMISSION'], $CONFIG);
 	$container_0	= make_gen_container(make_gen_row($col_0, $CONFIG), $CONFIG);
 	$col_1			= make_gen_info($STRINGS['USER_ACCESS_LEVEL'], $CONFIG);
