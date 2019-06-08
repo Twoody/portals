@@ -37,7 +37,16 @@ if (php_sapi_name() === "cli"){
 	__init_auth_user__();
 }
 echo "\n<!-- " . $PATHS['LIBPATH_AUTH_USER'] . " imported -->\n";
+function get_access_token($CONFIG){
+	//Return the current author or user logged in;
+	if(isset($_SESSION['ACCESS_TOKEN']) && $_SESSION['ACCESS_TOKEN'] !== "")
+		return $_SESSION['ACCESS_TOKEN'];
+	return "";
+}
+function get_author($CONFIG){
+	//Return the current author or user logged in;
 
+}
 function get_salt($email, $aLevel, $CONFIG=Null){
 	/* Get preexisting salt from users db */
 	/* Different from make_salt() */
@@ -70,30 +79,112 @@ function get_hash($email, $aLevel, $CONFIG=Null){
 	$db->close();
 	return $hash;
 }
+function get_user_id($CONFIG){
+	$dbpath	= $CONFIG['DBPATH_USERS'];
+	$table	= $CONFIG['DBTABLE_USERS'];
+	$sql		= "SELECT id FROM ".$table." WHERE token=:token;";
+	$ret		= 0;
+	try{
+		$db	= new SQLite3($dbpath);
+		$prepare = $db->prepare($sql);
+		$prepare->bindValue(':email', $email);
+		$result	= $prepare->execute();
+		$row		= $result->fetchArray();
+		if ($row && $row['id'] !== "")
+			$ret = $row[0];
+		$db->close();
+	}
+	catch(Exception $exception){
+		if (!$FLAGS['is_quite'])
+			echo clog("\"". $exception->getMessage() ."\"");
+		$ret = -1;
+	}
+	return $ret;
+}
+function get_user_access_level($CONFIG){
+	$dbpath	= $CONFIG['DBPATH_USERS'];
+	$table	= $CONFIG['DBTABLE_USERS'];
+	$sql		= "SELECT accessLevel FROM ".$table." WHERE token=:token;";
+	$ret		= "";
+	$token	= get_access_token($CONFIG);
+	try{
+		$db	= new SQLite3($dbpath);
+		$prepare = $db->prepare($sql);
+		$prepare->bindValue(':token', $token);
+		$result	= $prepare->execute();
+		$row		= $result->fetchArray();
+		$ret = $row[0];
+		$db->close();
+	}
+	catch(Exception $exception){
+		if (!$FLAGS['is_quite'])
+			echo clog("\"". $exception->getMessage() ."\"");
+		$ret = '';
+	}
+	return $ret;
+
+}
+function get_username($CONFIG){
+	$dbpath	= $CONFIG['DBPATH_USERS'];
+	$table	= $CONFIG['DBTABLE_USERS'];
+	$sql		= "SELECT id FROM ".$table." WHERE token=:token;";
+	$ret		= "";
+	$token	= get_access_token($CONFIG);
+	try{
+		$db	= new SQLite3($dbpath);
+		$prepare = $db->prepare($sql);
+		$prepare->bindValue(':token', $token);
+		$result	= $prepare->execute();
+		$row		= $result->fetchArray();
+		$ret = $row[0];
+		$db->close();
+	}
+	catch(Exception $exception){
+		if (!$FLAGS['is_quite'])
+			echo clog("\"". $exception->getMessage() ."\"");
+		$ret = -1;
+	}
+	return $ret;
+}
 function is_admin($CONFIG=Null){
-	if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === TRUE){
-		if(isset($_SESSION['alevel']) && $_SESSION['alevel'] === 'admin'){
-			return TRUE;
-		}
-		return FALSE;
-	}
-	else{
-		return FALSE;
-	}
+	$access_level	= get_user_access_level($CONFIG);
+	if ($access_level === 'admin')
+		return True;
+	return False;
+}
+function is_owner($CONFIG=Null){
+	$access_level	= get_user_access_level($CONFIG);
+	if ($access_level === 'owner')
+		return True;
+	return False;
+}
+function is_member($CONFIG=Null){
+	$access_level	= get_user_access_level($CONFIG);
+	if ($access_level === 'member')
+		return True;
+	return False;
 }
 function is_logged_in($CONFIG=Null){
 	if ($CONFIG === Null)
 		$CONFIG = get_config();
-	if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === TRUE){
-		return TRUE;
+	$token	= get_access_token($CONFIG);
+	if($token !== ""){
+		$dbpath	= $CONFIG['DBPATH_USERS'];
+		$table	= $CONFIG['DBTABLE_USERS'];
+		$query	= 'SELECT id FROM '.$table.' WHERE token=:token';
+		$db		= new SQLite3($dbpath);
+		$prepare	= $db->prepare($query);
+		$prepare->bindValue(':token', $token);
+		$result	= $prepare->execute();
+		$row		= $result->fetchArray();
+		if ($row && $row['token'] !== "")
+			return TRUE;
 	}
-	else{
-		return FALSE;
-	}
+	return FALSE;
 }
 function is_users_comment($commentObj, $CONFIG){
 	//TODO: Add authorid to comment table;
-	$userid	= $_SESSION['userid'];
+	$userid	= get_user_id($CONFIG);
 	if($commentObj['authorid'] === $userid)
 		return True;
 	return False;
@@ -170,7 +261,18 @@ function users_has_email($email, $CONFIG=Null){
 	$db->close();
 	return $ret;
 }
+function update_users_token($access_token, $userid, $CONFIG){
+	$dbpath			= $CONFIG['DBPATH_USERS'];
+	$table			= $CONFIG['DBTABLE_USERS'];
+	$db				= new SQLite3($dbpath);
+	$update			= "UPDATE " . $table . " SET token=:token WHERE id=:userid";
+	$prepare 		= $db->prepare($update);
+	$prepare->bindValue(':token', $access_token);
+	$prepare->bindValue(':userid', $userid);
+	$result	= $prepare->execute();
+}
 function users_has_handle($handle, $CONFIG=Null){
+	//"Does username exist in db already";
 	if (!$handle || $handle === "")
 		return FALSE;
 	if($CONFIG === Null)

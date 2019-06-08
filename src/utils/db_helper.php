@@ -103,10 +103,6 @@ function delete_row($table, $where, $CONFIG=Null){
 	$db->exec($sql);
 	$db->close();
 }
-function get_author($CONFIG){
-	//Return the current author or user logged in;
-
-}
 function get_blog_filepath($blog_id, $CONFIG){
 	//Return the blog filepath based of the blog id;
 	$dbpath	= $CONFIG['DBPATH_RESOURCES'];
@@ -395,7 +391,6 @@ function get_user_fname($CONFIG){
 	$dbpath	= $CONFIG['DBPATH_USERS'];
 	$sql		= "SELECT fname FROM userinfo WHERE userid=:userid";
 	$ret		= "";
-	//$userid	= $_SESSION['userid'];
 	$userid	= "";
 	try{
 		$db	= new SQLite3($dbpath);
@@ -405,14 +400,7 @@ function get_user_fname($CONFIG){
 		$row		= $result->fetchArray();
 		$ret = $row[0];
 		if (!$ret){
-			if ($_SESSION['alevel'] === 'member')
-				$ret = "Member";
-			else if ($_SESSION['alevel'] === 'owner')
-				$ret = "Owner";
-			else if ($_SESSION['alevel'] === 'admin')
-				$ret = "Admin";
-			else
-				$ret = "HACKER";
+			$ret	= get_user_access_level($CONFIG);
 		}
 		$db->close();
 	}
@@ -420,37 +408,6 @@ function get_user_fname($CONFIG){
 		if (!$FLAGS['is_quite'])
 			echo clog("\"". $exception->getMessage() ."\"");
 		$ret = "";
-	}
-	return $ret;
-}
-function get_user_id($CONFIG){
-	$dbpath	= $CONFIG['DBPATH_USERS'];
-	$table	= $CONFIG['DBTABLE_USERS'];
-	$sql		= "SELECT id FROM ".$table." WHERE token=:token;";
-	$ret		= 0;
-	try{
-		$db	= new SQLite3($dbpath);
-		$prepare = $db->prepare($sql);
-		$prepare->bindValue(':email', $email);
-		$result	= $prepare->execute();
-		$row		= $result->fetchArray();
-		$ret = $row[0];
-		if (!$ret){
-			if ($_SESSION['alevel'] === 'member')
-				$ret = "Member";
-			else if ($_SESSION['alevel'] === 'owner')
-				$ret = "Owner";
-			else if ($_SESSION['alevel'] === 'admin')
-				$ret = "Admin";
-			else
-				$ret = "HACKER";
-		}
-		$db->close();
-	}
-	catch(Exception $exception){
-		if (!$FLAGS['is_quite'])
-			echo clog("\"". $exception->getMessage() ."\"");
-		$ret = -1;
 	}
 	return $ret;
 }
