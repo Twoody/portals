@@ -121,7 +121,7 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 		$_SESSION['loggedin']	= TRUE;
 		$_SESSION['alevel']		= $access;
 		$_SESSION['email']		= $email;
-		$_SESSION['userid']		= get_user_id($email, $CONFIG);
+		$_SESSION['userid']		= get_user_id($CONFIG);
 		$html .= $CONFIG['GEN_CONTAINER'];
 		$html .= $CONFIG['GEN_ROW'];
 		$html .= "\n\t\t<div class=\"col-12 pl-4 pr-4 pb-0 pt-0\">";
