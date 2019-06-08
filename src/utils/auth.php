@@ -37,6 +37,69 @@ if (php_sapi_name() === "cli"){
 	__init_auth_user__();
 }
 echo "\n<!-- " . $PATHS['LIBPATH_AUTH_USER'] . " imported -->\n";
+function add_comment($comment, $blog_id, $CONFIG){
+	if (!is_logged_in($CONFIG))
+		return False;
+	$comment	= sanitize_input($comment);
+	$dbpath	= $CONFIG['DBPATH_RESOURCES'];
+	$table	= $CONFIG['DBTABLE_COMMENTS'];
+	$ret		= FALSE;
+	$insert	= 'INSERT INTO '.$table. '(';
+	$insert	.= "blog_id, author, content, date_posted, last_edited, ";
+	$insert	.= "claps, rocks, edits, flags, is_deleted";
+	$insert	.=") VALUES(";
+	$insert	.= ":blog_id, :author, :content, :date_posted, :last_edited, ";
+	$insert	.= ":claps, :rocks, :edits, :flags, :is_deleted";
+	$insert	.= ")";
+	$author	= get_user_fname($CONFIG);	//TODO: Href author to a user profile...
+	$curdate	= get_todays_date();
+	try{
+		$db		= new SQLite3($dbpath);
+		$prepare	= $db->prepare($insert);
+		$prepare->bindValue(':blog_id'		, $blog_id);
+		$prepare->bindValue(':author'			, $author );
+		$prepare->bindValue(':content'		, $comment );
+		$prepare->bindValue(':date_posted'	, $curdate );
+		$prepare->bindValue(':last_edited'	, $curdate );
+		$prepare->bindValue(':claps'			, 0 );
+		$prepare->bindValue(':rocks'			, 0 );
+		$prepare->bindValue(':edits'			, 0 );
+		$prepare->bindValue(':flags'			, 0 );
+		$prepare->bindValue(':is_deleted'	, FALSE);
+		$result	= $prepare->execute();
+		if($result)
+			$ret = TRUE;
+		$db->close();
+	}
+	catch(Exception $exception){
+		if (!$FLAGS['is_quite'])
+			echo clog("\"". $exception->getMessage() ."\"");
+	}
+	return $ret;
+}
+function delete_comment($commentid, $CONFIG=Null){
+	//TODO: Do not delete comment, but provide support for is_deleting and not showing comments that are deleted...
+	$dbpath	= $CONFIG['DBPATH_RESOURCES'];
+	$table	= $CONFIG['DBTABLE_COMMENTS'];
+	$ret		= FALSE;
+	$delete	= 'DELETE FROM '.$table. ' WHERE id = :commentid';
+	try{
+		$db		= new SQLite3($dbpath);
+		$prepare	= $db->prepare($delete);
+		$prepare->bindValue(':commentid', $commentid);
+		$result	= $prepare->execute();
+		if($result)
+			$ret = TRUE;
+		$db->close();
+	}
+	catch(Exception $exception){
+		if (!$FLAGS['is_quite'])
+			echo clog("\"". $exception->getMessage() ."\"");
+	}
+	return $ret;
+}
+
+
 function get_access_token($CONFIG){
 	//Return the current author or user logged in;
 	if(isset($_SESSION['ACCESS_TOKEN']) && $_SESSION['ACCESS_TOKEN'] !== "")
@@ -101,6 +164,35 @@ function get_user_id($CONFIG){
 	}
 	return $ret;
 }
+function get_user_fname($CONFIG){
+	if (!is_logged_in($CONFIG))
+		return "";
+	$dbpath		= $CONFIG['DBPATH_USERS'];
+	$table		= $CONFIG['DBTABLE_USERINFO'];
+	$userid		= get_user_id($CONFIG);
+	$sql			= "SELECT fname FROM ".$table." WHERE userid=:userid";
+	$ret			= "";
+	$userid		= "";
+	try{
+		$db	= new SQLite3($dbpath);
+		$prepare = $db->prepare($sql);
+		$prepare->bindValue(':userid', $userid);
+		$result	= $prepare->execute();
+		$row		= $result->fetchArray();
+		$ret = $row[0];
+		if (!$ret){
+			$ret	= get_user_access_level($CONFIG);
+		}
+		$db->close();
+	}
+	catch(Exception $exception){
+		if (!$FLAGS['is_quite'])
+			echo clog("\"". $exception->getMessage() ."\"");
+		$ret = "";
+	}
+	return $ret;
+}
+
 function get_user_access_level($CONFIG){
 	$dbpath	= $CONFIG['DBPATH_USERS'];
 	$table	= $CONFIG['DBTABLE_USERS'];
