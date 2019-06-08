@@ -42,10 +42,9 @@ $CONFIG['DISPLAY_HEADER']	= FALSE;
 echo '<!-- RUNNING '.$PATHS['USER_LOGOUT'].' -->';
 
 if (is_logged_in($CONFIG)){
-	$_SESSIONS['username']		= Null;
-	$_SESSIONS['loggedin']		= Null;
-	$_SESSIONS['alevel']			= Null;
-	$_SESSIONS['email']			= Null;
+	$userid							= get_user_id($CONFIG);
+	$_SESSIONS['ACCESS_TOKEN']	= Null;
+	$suc								= update_users_token('', $userid, $CONFIG);
 	$CONFIG['IS_LOGGING_OUT']	= TRUE;
 	session_destroy();
 
