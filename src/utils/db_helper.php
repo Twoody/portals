@@ -32,6 +32,7 @@ echo "\n<!-- " . $PATHS['LIBPATH_DB_HELPER'] . " imported -->\n";
 function add_comment($comment, $blog_id, $CONFIG){
 	if (!is_logged_in($CONFIG))
 		return False;
+	$comment	= sanitize_input($comment);
 	$dbpath	= $CONFIG['DBPATH_RESOURCES'];
 	$table	= $CONFIG['DBTABLE_COMMENTS'];
 	$ret		= FALSE;
@@ -597,9 +598,9 @@ function parse_from($query){
 	return "";
 }
 function sanitize_input($unsafe){
-	//$unsafe		= filter_var($input, FILTER_SANITIZE_STRING);	// HTML Sanitize
-	//$sanitized	= SQLite3::escapeString($unsafe);						// SQL sanitize
-	$sanitized	= $unsafe;
+	$unsafe		= filter_var($unsafe, FILTER_SANITIZE_STRING);	// HTML Sanitize
+	$sanitized	= SQLite3::escapeString($unsafe);						// SQL sanitize
+	//$sanitized	= $unsafe;
 	return $sanitized;
 }
 function update_cart($userid, $productid, $quantity, $CONFIG){
