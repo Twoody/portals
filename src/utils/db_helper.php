@@ -44,6 +44,7 @@ function add_comment($comment, $blog_id, $CONFIG){
 	$insert	.= ":claps, :rocks, :edits, :flags, :is_deleted";
 	$insert	.= ")";
 	$author	= get_user_fname($CONFIG);	//TODO: Href author to a user profile...
+	$author	= get_user_id($CONFIG);	//TODO: Href author to a user profile...
 	$curdate	= get_todays_date();
 	try{
 		$db		= new SQLite3($dbpath);
@@ -422,9 +423,10 @@ function get_user_fname($CONFIG){
 	}
 	return $ret;
 }
-function get_user_id($email, $CONFIG){
+function get_user_id($CONFIG){
 	$dbpath	= $CONFIG['DBPATH_USERS'];
-	$sql		= "SELECT id FROM users WHERE email=:email";
+	$table	= $CONFIG['DBTABLE_USERS'];
+	$sql		= "SELECT id FROM ".$table." WHERE token=:token;";
 	$ret		= 0;
 	try{
 		$db	= new SQLite3($dbpath);
@@ -433,6 +435,16 @@ function get_user_id($email, $CONFIG){
 		$result	= $prepare->execute();
 		$row		= $result->fetchArray();
 		$ret = $row[0];
+		if (!$ret){
+			if ($_SESSION['alevel'] === 'member')
+				$ret = "Member";
+			else if ($_SESSION['alevel'] === 'owner')
+				$ret = "Owner";
+			else if ($_SESSION['alevel'] === 'admin')
+				$ret = "Admin";
+			else
+				$ret = "HACKER";
+		}
 		$db->close();
 	}
 	catch(Exception $exception){
@@ -442,17 +454,20 @@ function get_user_id($email, $CONFIG){
 	}
 	return $ret;
 }
-function get_users_tables(){
+function get_users_tables($CONFIG){
+	$user_table			= $CONFIG['DBTABLE_USERS'];
+	$userinfo_table	= $CONFIG['DBTABLE_USERINFO'];
 	$TABLES = Array(
-		'users'=>Array(
+		$user_table=>Array(
 			'id'=>			'INTEGER PRIMARY KEY',
+			'token'=>		'TEXT',
 			'email'=>		'TEXT',
 			'handle'=>		'TEXT',
 			'salt'=>			'TEXT',
 			'password'=>	'TEXT',
 			'accessLevel'=>'TEXT'
 		),
-		'userinfo'=> Array(
+		$userinfo_table=> Array(
 			'id'=>						'INTEGER PRIMARY KEY',
 			'userid'=>					'INTEGER',
 			'email'=>					'TEXT',
@@ -577,7 +592,7 @@ function make_users_tables($CONFIG=Null){
 		$CONFIG = get_config($ROOT);
 	}
 	$ret    = 0;
-	$TABLES = get_users_tables();
+	$TABLES = get_users_tables($CONFIG);
 	$PATHS  = get_paths($CONFIG['ROOT']);
 	$dbpath = $CONFIG['DBPATH_USERS'];
 	foreach($TABLES as $TNAME=>$TABLE){
