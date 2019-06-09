@@ -101,7 +101,40 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 	else if($already_logged_in === TRUE){
 		$username		= get_username($CONFIG);
 		$logout_button	= get_href_logout_button($CONFIG, $STRINGS);
-
+		$col0_arr	= Array(
+			'class'=>"col-12 pl-4 pr-4 pb-0 pt-0",
+			'content'=>$STRINGS['NAV_WELCOME'],
+		);
+		$col1_arr	= Array(
+			'class'=>"col-12 pl-4 pr-4 pb-0 pt-0",
+			'content'=>$STRINGS['ALREADY_LOGGED_IN'],
+		);
+		$col2_arr	= Array(
+			'class'=>"col-12 pl-4 pr-4 pb-0 pt-0 mt-4",
+			'content'=>$logout_button,
+		);
+		$col0					= make_tag('div', $col0_arr, $CONFIG);
+		$col1					= make_tag('div', $col1_arr, $CONFIG);
+		$col2					= make_tag('div', $col2_arr, $CONFIG);
+		$row0_arr			= Array(
+			'class'=>"row pl-3 pr-3 m-0",
+			'content'=> $col0 . $col1 . $col2,
+		);
+		$row0					= make_tag('div', $row0_arr, $CONFIG);
+		$container0_arr	= Array(
+			'class'=>"container-fluid pr-3 pl-3 m-0",
+			'content'=> $row0,
+		);
+		$container0			= make_tag('div', $container0_arr, $CONFIG);
+		$html .= $container0;
+	}
+	else{
+		//Good Login
+		$access_token					= make_salt($CONFIG);
+		$_SESSION['ACCESS_TOKEN']	= $access_token;
+		$suc			= update_users_token( $access_token, $userid, $CONFIG);
+		$username	= get_username($CONFIG);
+		$STRINGS		= get_config_strings($CONFIG); //Strings use SESSIONS
 		$html .= $CONFIG['GEN_CONTAINER'];
 		$html .= $CONFIG['GEN_ROW'];
 		$html .= "\n\t\t<div class=\"col-12 pl-4 pr-4 pb-0 pt-0\">";
@@ -110,38 +143,7 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 		$html .= "\n\t</div><!-- END ROW -->";
 		$html .= $CONFIG['GEN_ROW'];
 		$html .= "\n\t\t<div class=\"col-12 pl-4 pr-4 pb-0 pt-0\">";
-		$html .= $STRINGS['ALREADY_LOGGED_IN'];;
-		$html .= "\n\t\t</div>";
-		$html .= "\n\t</div><!-- END ROW -->";
-
-
-		$html .= $CONFIG['GEN_ROW'];
-		$html .= "\n\t\t<div class=\"col-12 pl-4 pr-4 pb-0 pt-0\">";
-		$html	.= $logout_button;
-		$html .= "\n\t\t</div>";
-		$html .= "\n\t</div><!-- END ROW -->";
-
-		$html .= "\n</div><!-- END CONTAINER -->";
-	}
-	else{
-		//Good Login
-		$access_token					= make_salt($CONFIG);
-		$_SESSION['ACCESS_TOKEN']	= $access_token;
-		$suc								= update_users_token(
-													$access_token, 
-													$userid, 
-													$CONFIG
-												);
-		$username						= get_username($CONFIG);
-		$html .= $CONFIG['GEN_CONTAINER'];
-		$html .= $CONFIG['GEN_ROW'];
-		$html .= "\n\t\t<div class=\"col-12 pl-4 pr-4 pb-0 pt-0\">";
-		$html .= "Welcome, ".$username.".";
-		$html .= "\n\t\t</div>";
-		$html .= "\n\t</div><!-- END ROW -->";
-		$html .= $CONFIG['GEN_ROW'];
-		$html .= "\n\t\t<div class=\"col-12 pl-4 pr-4 pb-0 pt-0\">";
-		$html .= "You are logged in as a " . $access . ".";
+		$html .= $STRINGS['USER_ACCESS_LEVEL'];
 		$html .= "\n\t\t</div>";
 	}
 	$CONFIG['BODY'] .= $html;

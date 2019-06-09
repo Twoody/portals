@@ -79,7 +79,7 @@ function get_config_strings($CONFIG=Null){
 		"UNDER_CONSTRUCTION"=>'Sorry, this page is under consturction;',
 		"UNDER_CONSTRUCTION_TITLE"=>'IN CONSTRUCTION',
 		"UNDER_CONSTRUCTION_HEADER"=>'PAGE IN CONSTRUCTION',
-		"USER_ACCESS_LEVEL"=> "You are logged in as a ".$_SESSION['alevel'].".",
+		"USER_ACCESS_LEVEL"=> "You are logged in as a ".get_user_access_level($CONFIG).".",
 		"USER_INVALID_PERMISSION"=> "Warning: Access Denied;",
 		"USER_NOT_LOGGED_IN"=> "Warning, not logged in;",
 //TODO: Get rid of html...
