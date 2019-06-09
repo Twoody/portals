@@ -59,6 +59,7 @@ function get_config($ROOT=Null){
 		'DBTABLE_BLOG'=> 'blogs',
 		'DBTABLE_COMMENTS'=> 'comments',
 		'DBTABLE_ERRORS'=> 'errors',
+		'DBTABLE_INVENTORY'=> 'inventory',
 		'DBTABLE_USERS'=> 'users',
 		'DBTABLE_USERINFO'=> 'userinfo',
 		'USERS_VERSION'=>1.00,
@@ -122,8 +123,6 @@ function get_config($ROOT=Null){
 		'HREF_LINK'=>'',
 		'HREF_ROLE'=>'',
 
-		/* ----- ----- MODAL CONFIGURATION ----- ----- */
-		'MCONFIG'=>'',
 	);
 }
 ?>

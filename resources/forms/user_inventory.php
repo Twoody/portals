@@ -1,5 +1,5 @@
 <?php
-function display_inventory_form($CONFIG=Null){
+function display_inventory_form($product_name, $CONFIG=Null){
 	//aka display_inventory_modal() ...
 	if ($CONFIG === Null){
 		$ROOT = ".";
@@ -34,7 +34,7 @@ function display_inventory_form($CONFIG=Null){
 	$html .= "\n\t\t\t\t</div><!-- END ROW -->";
 
 	$html .= "\n\t\t\t\t<div class=\"".$CONFIG['ROW_DIV']."\">";
-	$html .= "<input class=\"form-control text-center\" type=\"text\" name=\"product_name\" id=\"product_name\" value=\"".$CONFIG['PRODUCT_NAME']."\" readonly>";
+	$html .= "<input class=\"form-control text-center\" type=\"text\" name=\"product_name\" id=\"product_name\" value=\"".$product_name."\" readonly>";
 	$html .= "<small class=\"form-check-label text-muted\" for=\"product_name\">";
 	$html .= "Product Name";
 	$html .= "</small>";

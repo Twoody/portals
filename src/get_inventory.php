@@ -7,13 +7,12 @@ function html_get_inventory($CONFIG){
 	require_once($PATHS['LIBPATH_DB_HELPER']);
 
 	$MCONFIG = ARRAY(
-		'ID' => 'inv_modal',
-		'STYLE' => 'color:black;background:transparent;',
-		'TITLE' => 'Purchase Item',
-		'ITEM'  => $row['name'],
+		'ID'		=> 'inv_modal',
+		'STYLE'	=> 'color:black;background:transparent;',
+		'TITLE'	=> 'Purchase Item',
+		'ITEM'	=> $row['name'],
 	);
 	$table					= '';
-	$CONFIG['MCONFIG']	= $MCONFIG;
 	if(isset($_POST['form_submit'])){
 		//if modal form submitted, update db and refresh this page again...
 		$userid			= get_user_id($CONFIG);
@@ -29,7 +28,7 @@ function html_get_inventory($CONFIG){
 	$container_0	= make_gen_container($row_0, $CONFIG);
 
 	$col_1			= make_gen_col(
-								get_table_from_inventory($CONFIG), 
+								get_table_from_inventory($MCONFIG, $CONFIG), 
 								$CONFIG
 							);
 	$row_1			= make_gen_row($col_1, $CONFIG);

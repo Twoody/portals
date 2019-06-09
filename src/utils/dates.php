@@ -28,6 +28,12 @@ function get_todays_date(){
 	$date = date('Y-m-d');
 	return $date;
 }
+function get_todays_time(){
+	//$date = date('Y-m-d H:i:s')
+	$time = date('H:i:s');
+	return $time;
+}
+
 function get_blog_date($date){
 	$date_arr	= date_to_arr($date);
 	$y				= $date_arr[0];

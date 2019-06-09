@@ -70,6 +70,37 @@ function get_blog_filepath($blog_id, $CONFIG){
 	return $blogpath;
 
 }
+
+function get_inventory_product_name($prod_id, $CONFIG){
+	$dbpath	= $CONFIG['DBPATH_INVENTORY'];
+	$table	= $CONFIG['DBTABLE_INVENTORY'];
+	$sql		= "SELECT name FROM ".$table." WHERE id = :prod_id";
+	$ret		= "NOT FOUND";
+	try{
+		$db		= new SQLite3($dbpath);
+		$prepare	= $db->prepare($sql);
+		$prepare->bindValue(':prod_id', $prod_id);
+		$result	= $prepare->execute();
+		if ($result){
+			$row	= $result->fetchArray(SQLITE3_ASSOC);
+			echo "<!--ROWS: ".count($row)." -->";
+			echo "<!-- ID: ".$prod_id." -->";
+			if ($row && $row['name'] !== "")
+				$ret = $row['name'];
+			else{
+				$msg	= "NO RESULTS FOUND WITH PRODUCT ID `".$prod_id."`";
+				update_errors_db($msg, $CONFIG);
+			}
+		}
+		//$db->close();
+	}
+	catch(Exception $exception){
+		if (!$FLAGS['is_quite'])
+			echo clog("\"". $exception->getMessage() ."\"");
+	}
+	return $ret;
+
+}
 function get_inventory_tables(){
 	$TABLES = Array(
 		'inventory'=>Array(
@@ -526,15 +557,19 @@ function update_cart($userid, $productid, $quantity, $CONFIG){
 }
 function update_errors_db($msg, $CONFIG){
 	//TODO: GET A STACK TRACE IF WE CAN;
-	$userid	= get_user_id($CONFIG);
+	$userid	= get_user_id($CONFIG) ?? "-1";
 	$date		= get_todays_date();
+	$time		= get_todays_time();
 	$dbpath	= $CONFIG['DBPATH_RESOURCES'];
 	$table	= $CONFIG['DBTABLE_ERRORS'];
-	$update	= 'INSERT INTO ' . $table . " (messages, userid, date_reported)";
-	$update	.= " VALUES(" .$msg. "," .$userid. "," .$date. ")";
+	$update	= 'INSERT INTO ' . $table . " (message, userid, date_reported)";
+	$update	.= " VALUES(:msg, :userid, :date)";
 	try{
 		$db		= new SQLite3($dbpath);
 		$prepare	= $db->prepare($update);
+		$prepare->bindValue(':msg'		, $msg );
+		$prepare->bindValue(':userid'	, $userid );
+		$prepare->bindValue(':date'	, $date."_".$time );
 		$result	= $prepare->execute();
 		if($result)
 			$ret = TRUE;

@@ -428,10 +428,11 @@ function get_header($CONFIG=Null){
 	$s .=	"\n</head>\n";
 	return $s;
 }
-function get_inventory_modal($CONFIG){
-	$MCONFIG = $CONFIG['MCONFIG'];
-	$PATHS	= get_paths($CONFIG['ROOT']);
-	$STRINGS	= get_config_strings($CONFIG);
+function get_inventory_modal($prod_id, $modal_id, $CONFIG){
+	$product_name	= get_inventory_product_name($prod_id, $CONFIG);
+	//$product_name	= "TEMPORARY";
+	$PATHS			= get_paths($CONFIG['ROOT']);
+	$STRINGS			= get_config_strings($CONFIG);
 	require_once($PATHS['FORMS_INVENTORY']);
 	$mtitle_arr		= Array(
 		'class'=>'modal-title',
@@ -446,7 +447,7 @@ function get_inventory_modal($CONFIG){
 	);
 	$mbody_arr	= Array(
 		'class'=>"modal-body",
-		'content'=>display_inventory_form($CONFIG),
+		'content'=>display_inventory_form($product_name, $CONFIG),
 		'style'=>"",
 	);
 	$mfooter_arr	= Array(
@@ -473,7 +474,7 @@ function get_inventory_modal($CONFIG){
 	$modal_arr	= Array(
 		'class'=>"modal fade",
 		'content'=>$mdialog,
-		'id'=>$MCONFIG['ID'],
+		'id'=>$modal_id,
 		'role'=>'dialog',
 		'style'=>"",
 	);
@@ -648,7 +649,7 @@ function get_passtow_css($CONFIG){
 	);
 	return make_tag("link", $css_arr, $CONFIG);
 }
-function get_table_from_inventory($CONFIG){
+function get_table_from_inventory($MCONFIG, $CONFIG){
 	$PATHS			= get_paths($CONFIG['ROOT']);
 	$ICONS			= get_config_icons($CONFIG);
 	$dbpath			= $PATHS['DB_INVENTORY'];
@@ -687,21 +688,23 @@ function get_table_from_inventory($CONFIG){
 							continue;
 						if($row_key === 'name'){
 							//Modal formatting: id is productid
-						 	$MCONFIG	= $CONFIG['MCONFIG'];
-							$button = '';
-							$button_arr = Array(
+							$prod_id		= $row['id'];
+							$modal_id	= $MCONFIG['ID'] . $row['id'];
+							$button		= '';
+							$button_arr	= Array(
 								'class'=>'btn inventory-modal',
 								'content'=>$ICONS['CURRENCY_CIRCLE'],
-								'data-target'=>"#".$MCONFIG['ID'],
+	//							'data-target'=>"#".$MCONFIG['ID'].$prod_id,
+								'data-target'=>"#".$modal_id,
 								'data-toggle'=>'modal',
-								'id'=>$row['id'],
+								'id'=>$prod_id,
 								'style'=>$MCONFIG['STYLE'],
 								'title'=>$MCONFIG['TITLE'],
 								'type'=>'button',
 							);
 							$button	= make_tag('button', $button_arr, $CONFIG);
 							$cell_content = $button;
-							$cell_content .= get_inventory_modal($CONFIG);
+							$cell_content .= get_inventory_modal($prod_id, $modal_id, $CONFIG);
 							$cell_content .= $row['name'];
 						}
 						else
