@@ -54,8 +54,8 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 			$access = "admin";
 		else{
 			$access = "error";
-			//TODO: Get error pulled from $ERRORS parsed obj of errors.json file;
-			$html.= clog("ERROR 234234: BAD ACCESS LEVEL");
+			//WARNING: This has not been tested yet;
+			update_errors_db('unknown access level', $CONFIG);
 			$show_login = TRUE;
 		}
 		if ($access !== 'error' && $is_valid_email){
@@ -66,10 +66,10 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 			$has_access		= is_valid_access($email, $access, $CONFIG);
 			$db->close();														// CLOSING DB;
 			if (!$has_access || !$is_valid_pw){
-				if (!$is_valid_pw)
-					echo alert("'Bad Password'");
-				else if (!$has_access)
+				if (!$has_access)
 					echo alert('"Bad Access Level"');
+				else if (!$is_valid_pw)
+					echo alert("'Bad Password'");
 				else
 					echo alert('"Bad Login"');
 				$show_login = TRUE;
@@ -89,7 +89,6 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 			}
 		}
 		else{
-			//TODO: Might be bad access too;
 			echo alert("\"Bad Email\"");
 			$show_login = TRUE;
 		}
