@@ -122,8 +122,6 @@ function get_config($ROOT=Null){
 		'HREF_LINK'=>'',
 		'HREF_ROLE'=>'',
 
-		/* ----- ----- MODAL CONFIGURATION ----- ----- */
-		'MCONFIG'=>'',
 	);
 }
 ?>
