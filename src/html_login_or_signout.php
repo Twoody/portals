@@ -40,7 +40,6 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 		$show_login = FALSE;
 	}
 	else if(isset($_POST['form_submit'])){
-		//TODO: Authenticate user...
 		$show_login			= FALSE;
 		$email				= sanitize_input( $_POST["inputEmail"] );
 		$user					= strstr($email, '@', true); //strip everything after `@`
