@@ -105,12 +105,12 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 		$html .= $CONFIG['GEN_CONTAINER'];
 		$html .= $CONFIG['GEN_ROW'];
 		$html .= "\n\t\t<div class=\"col-12 pl-4 pr-4 pb-0 pt-0\">";
-		$html .= "\n\t\t\tWelcome, ".$username.".";
+		$html .= $STRINGS['NAV_WELCOME'];
 		$html .= "\n\t\t</div>";
 		$html .= "\n\t</div><!-- END ROW -->";
 		$html .= $CONFIG['GEN_ROW'];
 		$html .= "\n\t\t<div class=\"col-12 pl-4 pr-4 pb-0 pt-0\">";
-		$html .= "You are ALREADY logged in.";
+		$html .= $STRINGS['ALREADY_LOGGED_IN'];;
 		$html .= "\n\t\t</div>";
 		$html .= "\n\t</div><!-- END ROW -->";
 
