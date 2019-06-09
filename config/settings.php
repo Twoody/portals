@@ -58,6 +58,7 @@ function get_config($ROOT=Null){
 		'DBPATH_RESOURCES'=> $PATHS['DB_RESOURCES'],
 		'DBTABLE_BLOG'=> 'blogs',
 		'DBTABLE_COMMENTS'=> 'comments',
+		'DBTABLE_ERRORS'=> 'errors',
 		'DBTABLE_USERS'=> 'users',
 		'DBTABLE_USERINFO'=> 'userinfo',
 		'USERS_VERSION'=>1.00,
