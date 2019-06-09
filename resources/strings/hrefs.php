@@ -113,6 +113,18 @@ function get_href_close_x_modal($CONFIG, $STRINGS){
 	$href = make_tag('a', $href_arr, $CONFIG);
 	return $href;
 }
+function get_href_logout_button($CONFIG, $STRINGS){
+	$PATHS		= get_paths($CONFIG['ROOT']);
+	$button_arr	= Array(
+		'class'=>'btn btn-primary btn-block btn-lg',
+		'content'=>$STRINGS['LOGOUT'],
+		'href'=>$PATHS['USER_LOGOUT'],
+		'role'=>'button',
+	);
+	$button		= make_tag('a', $button_arr, $CONFIG);
+	return $button;
+
+}
 function get_href_nav_admin($CONFIG, $STRINGS){
 	$PATHS = get_paths($CONFIG['ROOT']);
 	$href_arr	= Array(

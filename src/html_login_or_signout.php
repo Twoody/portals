@@ -99,14 +99,8 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 		$html .= get_login_form($CONFIG);
 	}
 	else if($already_logged_in === TRUE){
-		$username	= get_username($CONFIG);
-		$button_arr	= Array(
-			'class'=>'btn btn-primary btn-block btn-lg',
-			'content'=>$STRINGS['LOGOUT'],
-			'href'=>$PATHS['USER_LOGOUT'],
-			'role'=>'button',
-		);
-		$button		= make_tag('a', $button_arr, $CONFIG);
+		$username		= get_username($CONFIG);
+		$logout_button	= get_href_logout_button($CONFIG, $STRINGS);
 
 		$html .= $CONFIG['GEN_CONTAINER'];
 		$html .= $CONFIG['GEN_ROW'];
@@ -123,7 +117,7 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 
 		$html .= $CONFIG['GEN_ROW'];
 		$html .= "\n\t\t<div class=\"col-12 pl-4 pr-4 pb-0 pt-0\">";
-		$html	.= $button;
+		$html	.= $logout_button;
 		$html .= "\n\t\t</div>";
 		$html .= "\n\t</div><!-- END ROW -->";
 
