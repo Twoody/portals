@@ -24,7 +24,8 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 		require_once($PATHS['LIBPATH_HTML']);
 	}
 	$ROOT = $CONFIG['ROOT'];
-	$CONFIG['ACTION_LOGIN']					= $PATHS["USER_LOGIN"];
+	$STRINGS	= get_config_strings($CONFIG);
+	$CONFIG['ACTION_LOGIN']	= $PATHS["USER_LOGIN"];
 	if($PATHS === Null)
 		$PATHS	= get_paths($ROOT);
 	require_once($PATHS['FORMS_LOGIN']);
@@ -98,8 +99,15 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 		$html .= get_login_form($CONFIG);
 	}
 	else if($already_logged_in === TRUE){
-		//TODO: Offer logout button;
 		$username	= get_username($CONFIG);
+		$button_arr	= Array(
+			'class'=>'btn btn-primary btn-block btn-lg',
+			'content'=>$STRINGS['LOGOUT'],
+			'href'=>$PATHS['USER_LOGOUT'],
+			'role'=>'button',
+		);
+		$button		= make_tag('a', $button_arr, $CONFIG);
+
 		$html .= $CONFIG['GEN_CONTAINER'];
 		$html .= $CONFIG['GEN_ROW'];
 		$html .= "\n\t\t<div class=\"col-12 pl-4 pr-4 pb-0 pt-0\">";
@@ -111,6 +119,14 @@ function html_login_or_signout($CONFIG=Null, $PATHS=Null){
 		$html .= "You are ALREADY logged in.";
 		$html .= "\n\t\t</div>";
 		$html .= "\n\t</div><!-- END ROW -->";
+
+
+		$html .= $CONFIG['GEN_ROW'];
+		$html .= "\n\t\t<div class=\"col-12 pl-4 pr-4 pb-0 pt-0\">";
+		$html	.= $button;
+		$html .= "\n\t\t</div>";
+		$html .= "\n\t</div><!-- END ROW -->";
+
 		$html .= "\n</div><!-- END CONTAINER -->";
 	}
 	else{
