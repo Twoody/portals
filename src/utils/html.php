@@ -654,9 +654,7 @@ function get_table_from_inventory($CONFIG){
 	$dbpath			= $PATHS['DB_INVENTORY'];
 	$query			= "SELECT id, name, quantity, price FROM inventory";
 	$db				= new SQLite3($dbpath);
-	$CUR_TABLE		= 'inventory';
-	$table   		= "";
-	$QUERY_PAGE		= $CONFIG['QUERY_PAGE'];
+	$table   		= "";	//To be returned;
 	$TABLE_ID		= $CONFIG['TABLE_ID'];
 	$columns_items	= Array(
 		'Name',
