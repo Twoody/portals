@@ -524,4 +524,27 @@ function update_cart($userid, $productid, $quantity, $CONFIG){
 	$db->close();
 	return $ret;
 }
+function update_errors_db($msg, $CONFIG){
+	//TODO: GET A STACK TRACE IF WE CAN;
+	$userid	= get_user_id($CONFIG);
+	$date		= get_todays_date();
+	$dbpath	= $CONFIG['DBPATH_RESOURCES'];
+	$table	= $CONFIG['DBTABLE_ERRORS'];
+	$update	= 'INSERT INTO ' . $table . " (messages, userid, date_reported)";
+	$update	.= " VALUES(" .$msg. "," .$userid. "," .$date. ")";
+	try{
+		$db		= new SQLite3($dbpath);
+		$prepare	= $db->prepare($update);
+		$result	= $prepare->execute();
+		if($result)
+			$ret = TRUE;
+		$db->close();
+	}
+	catch(Exception $exception){
+		if (!$FLAGS['is_quite'])
+			echo clog("\"". $exception->getMessage() ."\"");
+	}
+	return $ret;
+
+}
 ?>
