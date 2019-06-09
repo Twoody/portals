@@ -14,7 +14,7 @@ function html_get_inventory($CONFIG){
 	);
 	$table					= '';
 	$CONFIG['MCONFIG']	= $MCONFIG;
-	if(isset($_POST['form_submit']) && $processed_form !== TRUE){
+	if(isset($_POST['form_submit'])){
 		//if modal form submitted, update db and refresh this page again...
 		$userid			= get_user_id($CONFIG);
 		$productid		= sanitize_input( $_POST["productid"] );
@@ -23,20 +23,15 @@ function html_get_inventory($CONFIG){
 		$suc 				= update_cart($userid, $productid, $quantity, $CONFIG);
 		if (!$suc)
 			$table .= clog("\"ERROR 82393: BAD CART UPDATE\"");
-
-//http_response_code( 303 );
-//header( "Location: {$_SERVER['REQUEST_URI']}" );
-//exit;
-
-		// Redirect to this page.
-//		header("Location: " . $_SERVER['REQUEST_URI']);
-//		exit();
 	}
 	$col_0			= make_gen_info("The start to the table.", $CONFIG);
 	$row_0			= make_gen_row($col_0, $CONFIG);
 	$container_0	= make_gen_container($row_0, $CONFIG);
 
-	$col_1			= make_gen_col(get_table_from_inventory($CONFIG), $CONFIG);;
+	$col_1			= make_gen_col(
+								get_table_from_inventory($CONFIG), 
+								$CONFIG
+							);
 	$row_1			= make_gen_row($col_1, $CONFIG);
 	$container_1	= make_gen_container($row_1, $CONFIG);
 
