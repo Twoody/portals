@@ -6,6 +6,13 @@
 ******************************************************************************/
 
 Tanner.L.Woody@gmail.com
+2019-06-08 5pm 
+	Lots of changes since the last message;
+	Right now I am working on getting the TODOs generally marked off and 
+	completed to get rid of some of this spaghetti code;
+
+
+Tanner.L.Woody@gmail.com
 2019-05-19 5pm 
 	Major bug fix with make_tags() at if(arr['content']);
 	Has Been resolved, but did not mention in commit log :|
