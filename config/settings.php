@@ -57,6 +57,7 @@ function get_config($ROOT=Null){
 		'DBPATH_INVENTORY'=> $PATHS['DB_INVENTORY'],
 		'DBPATH_RESOURCES'=> $PATHS['DB_RESOURCES'],
 		'DBTABLE_BLOG'=> 'blogs',
+		'DBTABLE_CARTS'=> 'carts',
 		'DBTABLE_COMMENTS'=> 'comments',
 		'DBTABLE_ERRORS'=> 'errors',
 		'DBTABLE_INVENTORY'=> 'inventory',

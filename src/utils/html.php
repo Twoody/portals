@@ -761,7 +761,9 @@ function get_table_from_inventory($MCONFIG, $CONFIG){
 }
 function get_table_body($cart, $CONFIG){
 	//TODO: IF adding modals, add a MCONFIG param instead of plugging into CONFIG
-	$row_cnt			= 1;
+	$row_cnt		= 1;
+	$ICONS		= get_config_icons($CONFIG);
+	$QUERY_PAGE	= $PATHS['USER_VIEW_INVENTORY'];
 	while ($row = $cart->fetchArray(SQLITE3_ASSOC)){
 		$row_class = "";
 		if ($row_cnt%2 === 1)
@@ -772,10 +774,23 @@ function get_table_body($cart, $CONFIG){
 			$row_class .= "first ";
 		$productid		= $row['productid'];
 		$quantity		= $row['quantity'];
+		$dHref			= $QUERY_PAGE."?";
+		$dHref			.= "delete_id=".$productid;
+		$dHref			.= "&is_deleting_product=TRUE";
+		$trashcan_arr	= Array(
+			'content'=> $ICONS['DELETE_TRASH'],
+			'href'=>$dHref,
+			'style'=>'color:black;',
+			'title'=>$STRINGS['DELETE_ENTRY'],
+		);
+		$trashcan		= make_tag('a', $trashcan_arr, $CONFIG);
 		$product_name	= get_product_name($productid, $CONFIG);;
 		$price			= get_product_price($productid, $CONFIG);
 		$cols 			= Array(
-			 $product_name, $quantity, $price, ($price*$quantity),
+			 $trashcan . $product_name, 
+			 $quantity, 
+			 $price, 
+			 ($price*$quantity),
 		);
 		$row_content = '';
 		for($i=0; $i<count($cols); $i++){
