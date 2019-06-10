@@ -32,6 +32,7 @@ make_imports($ROOT);
 $PATHS	= get_paths($ROOT);
 $CONFIG	= get_config($ROOT);
 $STRINGS = get_config_strings($CONFIG);
+$userid	= get_user_id($CONFIG);
 require_once($PATHS['HTML_LOGIN_OR_SIGNOUT']);
 require_once($PATHS['HTML_GET_INVENTORY']);
 require_once($PATHS['TEMPLATES_B']);
@@ -58,14 +59,15 @@ $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\tmymodal.modal(\"show\");";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t\t";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t});";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t})";
-
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n</script>";
 
-$userid		= get_user_id($CONFIG);
+if(isset($_GET['is_deleting_product']) && isset($_GET['delete_id'])){
+	$product_id	= $_GET['delete_id'];
+	$suc			= delete_product_from_cart($product_id, $userid, $CONFIG);
+}
 $cart			= get_cart($userid, $CONFIG);
 $table		= get_checkout_table($cart, $CONFIG);
 $cart_total	= get_cart_total($userid, $CONFIG);
-
 $col0			= make_gen_info($STRINGS['VIEW_INV_TEXT'], $CONFIG);
 $row0			= make_gen_row($col0, $CONFIG);
 $container0	= make_gen_container($row0, $CONFIG);

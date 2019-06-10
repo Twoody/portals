@@ -146,20 +146,30 @@ function get_user_id($CONFIG){
 	$dbpath	= $CONFIG['DBPATH_USERS'];
 	$table	= $CONFIG['DBTABLE_USERS'];
 	$sql		= "SELECT id FROM ".$table." WHERE token=:token;";
-	$ret		= 0;
+	$token	= get_access_token($CONFIG);
+	$ret		= -1;
 	try{
-		$db	= new SQLite3($dbpath);
+		$db		= new SQLite3($dbpath);
 		$prepare = $db->prepare($sql);
-		$prepare->bindValue(':email', $email);
+		$prepare->bindValue(':token', $token);
 		$result	= $prepare->execute();
 		$row		= $result->fetchArray();
-		if ($row && $row['id'] !== "")
+		if ($row && $row["id"] !== "")
 			$ret = $row[0];
+		else{	
+			$msg	= "BAD QUERY OR CODE WHILE EXTRACTING USER ID";
+			$msg .= " TOKEN:`".$token."`";
+			update_errors_db($msg, $CONFIG, -1);
+			$msg2	= "SQL: `".$sql."`";
+			update_errors_db($msg2, $CONFIG, -1);
+			
+		}
 		$db->close();
+
 	}
 	catch(Exception $exception){
-		if (!$FLAGS['is_quite'])
-			echo clog("\"". $exception->getMessage() ."\"");
+		$msg	= "NO USER ID FOUND FOR TOKEN `".$token."`";
+		update_errors_db($msg, $CONFIG);
 		$ret = -1;
 	}
 	return $ret;

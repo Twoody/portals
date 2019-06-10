@@ -41,6 +41,32 @@ function delete_row($table, $where, $CONFIG=Null){
 	$db->exec($sql);
 	$db->close();
 }
+function delete_product_from_cart($product_id, $user_id, $CONFIG){
+	if($user_id === -1){
+		$msg	= "NO USER ID WHILE TRYING TO REMOVE PRODUCT FROM CART";
+		update_errors_db($msg, $CONFIG);
+		return FALSE;
+	};
+	$dbpath	= $CONFIG['DBPATH_INVENTORY'];
+	$table	= $CONFIG['DBTABLE_CARTS'];
+	$ret		= FALSE;
+	$delete	= 'DELETE FROM '.$table. ' WHERE productid = :productid AND userid = :userid';
+	try{
+		$db		= new SQLite3($dbpath);
+		$prepare	= $db->prepare($delete);
+		$prepare->bindValue(':productid'	, $product_id);
+		$prepare->bindValue(':userid'		, $user_id);
+		$result	= $prepare->execute();
+		if($result)
+			$ret = TRUE;
+		$db->close();
+	}
+	catch(Exception $exception){
+		$msg	= "FAILED ATTEMPT TO REMOVE ITEM FROM CART";
+		update_errors_db($msg, $CONFIG);
+	}
+	return $ret;
+}
 function get_blog_filepath($blog_id, $CONFIG){
 	//Return the blog filepath based of the blog id;
 	$dbpath	= $CONFIG['DBPATH_RESOURCES'];
@@ -70,7 +96,6 @@ function get_blog_filepath($blog_id, $CONFIG){
 	return $blogpath;
 
 }
-
 function get_inventory_product_name($prod_id, $CONFIG){
 	$dbpath	= $CONFIG['DBPATH_INVENTORY'];
 	$table	= $CONFIG['DBTABLE_INVENTORY'];
@@ -555,9 +580,10 @@ function update_cart($userid, $productid, $quantity, $CONFIG){
 	$db->close();
 	return $ret;
 }
-function update_errors_db($msg, $CONFIG){
+function update_errors_db($msg, $CONFIG, $userid=""){
 	//TODO: GET A STACK TRACE IF WE CAN;
-	$userid	= get_user_id($CONFIG) ?? "-1";
+	if ($userid==="")	//userid typically optional; Mainly here if recurssion hell;
+		$userid	= get_user_id($CONFIG);
 	$date		= get_todays_date();
 	$time		= get_todays_time();
 	$dbpath	= $CONFIG['DBPATH_RESOURCES'];
