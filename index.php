@@ -47,6 +47,7 @@ $body		= "";
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
 $CONFIG['TITLE']				= $STRINGS['HOME_TITLE'];;
 $CONFIG['DISPLAY_HEADER']	= TRUE;
+$CONFIG['ACTIVE_PAGE']		= $PATHS['NAV_HOME'];
 $pic1 = Array(
 			"src"=>		$PATHS['IMAGE_CAROUSEL_1'],
 			"class"=>	"d-block",
@@ -76,28 +77,31 @@ $ad_not_sm	= "";	//Show WHEN NOT X-SMALL
 $ad_not_sm	.= "\n\t\t\t\t\t<span class=\"d-none d-sm-block\">";
 $ad_not_sm	.= get_ad($CONFIG);
 $ad_not_sm	.= "\n\t\t\t\t\t</span>";
+$page_views	= make_page_views($CONFIG['ACTIVE_PAGE'], $CONFIG);
+
 $col0	= Array(
-				'class'=>"col-12 col-sm-8 col-md-9 col-lg-10 m-0 p-0 fit-screen",
-				'content'=>"<hr class=\"thick-line\">".get_carousel($pics, $car_id, $CONFIG),
-		);
+	'class'=>"col-12 col-sm-8 col-md-9 col-lg-10 m-0 p-0 fit-screen",
+	'content'=>"<hr class=\"thick-line\">".get_carousel($pics, $car_id, $CONFIG),
+);
 $col1	= Array(
-				'class'=>" col-sm-4 col-md-3 col-lg-2 pr-3 m-0",
-				'content'=>$ad_not_sm,
-		);
+	'class'=>" col-sm-4 col-md-3 col-lg-2 pr-3 m-0",
+	'content'=>$ad_not_sm,
+);
 $col_0	= make_tag("div", $col0, $CONFIG) . "<!-- END COL -->";
 $col_1	= make_tag("div", $col1, $CONFIG) . "<!-- END COL -->";
 
 $row0	= Array(
-				'class'=>" row pl-3 pr-3 m-0",
-				'content'=>$col_0.$col_1,
-		);
+	'class'=>" row pl-3 pr-3 m-0",
+	'content'=>$col_0.$col_1,
+);
 $row_0	= make_tag("div", $row0, $CONFIG) . "<!-- END ROW -->";
 $container0 =  Array(
-				'class'=>" container-fluid pl-3 pr-3 m-0",
-				'content'=>$row_0,
-		);
+	'class'=>" container-fluid pl-3 pr-3 m-0",
+	'content'=>$row_0,
+);
 $container_0	= make_tag("div", $container0, $CONFIG);
 $container_1	= make_gen_container(get_ads_sm($CONFIG), $CONFIG);
+$body .= $page_views;
 $body .= $container_0;
 $body .= $container_1;
 
