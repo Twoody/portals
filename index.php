@@ -35,19 +35,14 @@ $STRINGS	= get_config_strings($CONFIG);
 $car_id	= "demo-carousel";
 require_once($PATHS['TEMPLATES_B']);
 
+/*
 $CONFIG['CUSTOM_STYLES'] .= "\n<style>";
 $CONFIG['CUSTOM_STYLES'] .= "\n</style>";
-/*
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n<script>";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t$(document).ready(function(){";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t\t$('.".$car_id."').height($(window).height());";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t});";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n</script>";
 */
+
 $body		= "";
-$style	= "height:100vh;overflow-y:auto;";
-$style	= "height:100vh;";
-$style	= "";
 	
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
 $CONFIG['TITLE']				= $STRINGS['HOME_TITLE'];;
@@ -83,7 +78,6 @@ $ad_not_sm	.= get_ad($CONFIG);
 $ad_not_sm	.= "\n\t\t\t\t\t</span>";
 $col0	= Array(
 				'class'=>"col-12 col-sm-8 col-md-9 col-lg-10 m-0 p-0 fit-screen",
-				'style'=>$style,
 				'content'=>"<hr class=\"thick-line\">".get_carousel($pics, $car_id, $CONFIG),
 		);
 $col1	= Array(
@@ -95,13 +89,11 @@ $col_1	= make_tag("div", $col1, $CONFIG) . "<!-- END COL -->";
 
 $row0	= Array(
 				'class'=>" row pl-3 pr-3 m-0",
-				'style'=>$style,
 				'content'=>$col_0.$col_1,
 		);
 $row_0	= make_tag("div", $row0, $CONFIG) . "<!-- END ROW -->";
 $container0 =  Array(
 				'class'=>" container-fluid pl-3 pr-3 m-0",
-				'style'=>$style,
 				'content'=>$row_0,
 		);
 $container_0	= make_tag("div", $container0, $CONFIG);
