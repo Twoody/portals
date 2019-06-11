@@ -151,7 +151,7 @@ function get_ads_sm($CONFIG){
 function get_carousel($pics, $car_id, $CONFIG){
 	$_car			= "";
 	$_slideshow	= get_carousel_items($pics, $CONFIG);
-	$controls	= get_carousel_controls($pics, $car_id, $CONFIG);
+	$controls	= get_carousel_controls($car_id, $CONFIG);
 	$indicators	= get_carousel_indicators($pics, $car_id, $CONFIG);
 	$style		= "height:100vh;overflow-y:auto;";
 	$style		= "";
@@ -173,7 +173,7 @@ function get_carousel($pics, $car_id, $CONFIG){
 	$car	= make_tag("div",$car, $CONFIG);
 	return $car;
 }
-function get_carousel_controls($pics, $id, $CONFIG){
+function get_carousel_controls($id, $CONFIG){
 	$STRINGS		= get_config_strings($CONFIG);
 	$controls	= '';
 	$controls	.= get_href_carousel_prev($CONFIG, $id);
@@ -1182,6 +1182,25 @@ function make_lorem_ipsum($cnt=1){
 		$ret	.= make_tag('p', $ipsum_arr, $CONFIG);
 	}
 	return $ret;
+}
+function make_page_views($page_path, $CONFIG){
+	//Make a container for page-views on a page;
+	$page_views	= process_page_views($page_path, $CONFIG) . " total views";
+	$col_page_views_arr	= Array(
+		'class'=>'pr-3 pl-3 m-0',
+		'content'=>$page_views,
+	);
+	$flex_page_views_arr	= Array(
+		'class'=>" d-flex pl-3 pr-3 m-0 justify-content-end",
+		'content'=>make_tag('div', $col_page_views_arr, $CONFIG),
+	);
+	$flex_page_views	= make_tag('div', $flex_page_views_arr, $CONFIG);
+	$container_page_views_arr	=  Array(
+		'class'=>" container pl-3 pr-3 m-0",
+		'content'=>$flex_page_views,
+	);
+	$container_page_views	= make_tag('div', $container_page_views_arr, $CONFIG);
+	return $container_page_views;
 }
 function make_recent_blogs($limit=5, $CONFIG=Null){
 	//Return html rows of most recent blogs
