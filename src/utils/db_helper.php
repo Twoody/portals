@@ -58,6 +58,11 @@ function add_page_to_pages($page_path, $CONFIG){
 	return $ret;
 }
 function process_page_views($page_path, $CONFIG){
+	if(is_dir($page_path)){
+		if(substr($page_path, -1) !== "/") //if path ends in slash
+			$page_path	.= "/";
+		$page_path	.= "index.php";
+	}
 	$cur_views	= get_page_views($page_path, $CONFIG);
 	if ($cur_views === -1){
 		$msg	= "*** PAGE NOT FOUND AT `".$page_path."`: ";
