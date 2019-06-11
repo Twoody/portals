@@ -1,4 +1,7 @@
 Major Projects to Implement
+	0.		Add page count to blog posts
+				Just throw in a getter and setter when blog is loaded;
+	0.		Move all of the inventory items from db_helper to inv.php or something;
 	0.		Implement a coule of screen focused on skill sets;
 				//STATUS: Cloud computing done;
 	0.		Validate blog_post filename matches blog_id on _GET with:
