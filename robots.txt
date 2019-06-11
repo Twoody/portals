@@ -1,0 +1,7 @@
+User-agent: *
+Disallow:/resources/
+Disallow:/logs/
+Disallow:/src/
+Disallow:/tests/
+Disallow:/templates/
+
