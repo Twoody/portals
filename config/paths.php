@@ -54,6 +54,7 @@ function get_paths($ROOT=Null){
 		'LIBPATH_AUTH_USER'				=> $ROOT.'/src/utils/auth.php',
 		'LIBPATH_DATES'					=> $ROOT.'/src/utils/dates.php',
 		'LIBPATH_DB_HELPER'				=> $ROOT.'/src/utils/db_helper.php',
+		'LIBPATH_DB_BLOGS'				=> $ROOT.'/src/utils/db_blogs.php',
 		'LIBPATH_FA'						=> $ROOT.'/src/utils/font_awesome.php',
 		'LIBPATH_HTML'						=> $ROOT.'/src/utils/html.php',
 		'LIBPATH_JSON'						=> $ROOT.'/src/utils/json_helper.php',

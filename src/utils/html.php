@@ -1183,6 +1183,26 @@ function make_lorem_ipsum($cnt=1){
 	}
 	return $ret;
 }
+function make_blog_views($blog_id, $CONFIG){
+	//Make a container for page-views on a page;
+	$blog_views	= process_blog_views($blog_id, $CONFIG) . " total views";
+	$col_blog_views_arr	= Array(
+		'class'=>'pr-3 pl-3 m-0',
+		'content'=>$blog_views,
+	);
+	$flex_blog_views_arr	= Array(
+		'class'=>" d-flex pl-3 pr-3 m-0 justify-content-end",
+		'content'=>make_tag('div', $col_blog_views_arr, $CONFIG),
+	);
+	$flex_blog_views	= make_tag('div', $flex_blog_views_arr, $CONFIG);
+	$container_blog_views_arr	=  Array(
+		'class'=>" container pl-3 pr-3 m-0",
+		'content'=>$flex_blog_views,
+	);
+	$container_blog_views	= make_tag('div', $container_blog_views_arr, $CONFIG);
+	return $container_blog_views;
+}
+
 function make_page_views($page_path, $CONFIG){
 	//Make a container for page-views on a page;
 	$page_views	= process_page_views($page_path, $CONFIG) . " total views";

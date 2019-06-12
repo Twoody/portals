@@ -36,6 +36,7 @@ $PATHS			= get_paths($ROOT);
 $STRINGS			= get_config_strings($CONFIG);
 $comments_id	= "comment-section";
 require_once($PATHS['TEMPLATES_B']);
+require_once($PATHS['LIBPATH_DB_BLOGS']);
 
 $CONFIG['CUSTOM_STYLES'] .= "\n<style>";
 $CONFIG['CUSTOM_STYLES'] .= "\n</style>";
@@ -48,7 +49,6 @@ $style	= "";
 $CONFIG['TITLE']				= $STRINGS['BLOGS_TITLE'];;
 $CONFIG['DISPLAY_HEADER']	= FALSE;
 $CONFIG['HAS_COMMENTS']		= TRUE;
-
 echo "<!-- LANDED ON: Get-Blog Index-->";
 
 $ad_not_sm_content	= get_ad($CONFIG);	//Show WHEN NOT X-SMALL
@@ -70,7 +70,8 @@ $quote_bottom		= make_tag('blockquote', $quote_bottom_arr, $CONFIG);
 $quote_top			= make_tag('blockquote', $quote_top_arr, $CONFIG);
 $collapse_blog		= "";
 $container2			= "";
-$comment				= "<!-- No Comments Submitted -->";
+$comment				= "\n\t<!-- No Comments Submitted -->";
+$blog_views			= "\n\t<!-- No blog views to show -->";
 if(isset($_GET['blog_post'])){
 	//First check if redirect from comment delete;
 	if(isset($_GET['is_deleting_comment'])){
@@ -81,6 +82,7 @@ if(isset($_GET['blog_post'])){
 	$blog_post	= $_GET['blog_post'];
 	$blog_id		= $_GET['blog_id'];
 	$blogpath	= $PATHS['BLOG_DIR'] ."/".$blog_post;
+	$blog_views	= make_blog_views($blog_id, $CONFIG);
 	if(file_exists($blogpath)){
 		$blog_content	= file_get_contents($blogpath);
 		$good_req		= True;
@@ -199,6 +201,7 @@ $container0_arr =  Array(
 		);
 $container0	= make_tag("div", $container0_arr, $CONFIG);
 $container1	= make_gen_container(get_ads_sm($CONFIG), $CONFIG);
+$body .= $blog_views;
 $body .= $container0;
 $body .= $container1;
 $body .= $container2;
