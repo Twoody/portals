@@ -25,7 +25,7 @@ Links:
 	https://www.w3schools.com/bootstrap4/bootstrap_carousel.asp
 	https://stackoverflow.com/questions/12172177/set-div-height-equal-to-screen-size
 ******************************************************************************/
-$ROOT = '..';
+$ROOT = '../..';
 require_once($ROOT.'/config/imports.php');
 make_imports($ROOT);
 
@@ -52,7 +52,7 @@ $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<!-- Load Babel for JSX. -->";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"https://unpkg.com/babel-standalone@6/babel.min.js\"></script>";
 
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<!-- Load our React component. -->";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script type=\"text/babel\" src=\"hello_world.js\"></script>";
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"hello_world.js\"></script>";
 
 $body		= "";
 	
