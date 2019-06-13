@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Node Related #
+######################
+node_modules/
+
 # Logs and databases #
 ######################
 *.db
