@@ -29,36 +29,26 @@ $ROOT = '../..';
 require_once($ROOT.'/config/imports.php');
 make_imports($ROOT);
 
-$CONFIG	= get_config($ROOT);
-$PATHS	= get_paths($ROOT);
-$STRINGS	= get_config_strings($CONFIG);
-require_once($PATHS['LIBPATH_DB_PAGES']);
-require_once($PATHS['TEMPLATES_B']);
+$CONFIG			= get_config($ROOT);
+$PATHS			= get_paths($ROOT);
+$STRINGS			= get_config_strings($CONFIG);
+$body				= "";
+$div_react_id	= 'props-example';
+$div_react		= make_tag('div', Array('id'=>$div_react_id), $CONFIG);
 
-/*
-$CONFIG['CUSTOM_STYLES'] .= "\n<style>";
-$CONFIG['CUSTOM_STYLES'] .= "\n</style>";
-*/
-
-//$CONFIG['CUSTOM_SCRIPTS'] .= "\n<script>";
-//$CONFIG['CUSTOM_SCRIPTS'] .= "\n</script>";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<!-- Load React. -->";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<!-- Note: when deploying, replace \"development.js\" with \"production.min.js\". -->";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"https://unpkg.com/react@16/umd/react.development.js\" crossorigin></script>";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"https://unpkg.com/react-dom@16/umd/react-dom.development.js\" crossorigin></script>";
-
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<!-- Load Babel for JSX. -->";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"https://unpkg.com/babel-standalone@6/babel.min.js\"></script>";
-
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<!-- Load our React component. -->";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script type=\"text/babel\" src=\"props_example.js\"></script>";
-
-$body		= "";
-	
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
 $CONFIG['TITLE']				= "A Clock Example";;
 $CONFIG['DISPLAY_HEADER']	= TRUE;
 $CONFIG['ACTIVE_PAGE']		= $PATHS['NAV_HOME'];
+$CONFIG['HAS_REACT']		= TRUE;
+require_once($PATHS['LIBPATH_DB_PAGES']);
+require_once($PATHS['TEMPLATES_B']);
+
+//$CONFIG['CUSTOM_STYLES'] .= "\n<style>";
+//$CONFIG['CUSTOM_STYLES'] .= "\n</style>";
+
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<!-- Load our React component. -->";
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script type=\"text/babel\" src=\"props_example.js\"></script>";
 
 $ad_not_sm	= "";	//Show WHEN NOT X-SMALL
 $ad_not_sm	.= "\n\t\t\t\t\t<span class=\"d-none d-sm-block\">";
@@ -66,7 +56,6 @@ $ad_not_sm	.= get_ad($CONFIG);
 $ad_not_sm	.= "\n\t\t\t\t\t</span>";
 
 $page_views	= make_page_views($CONFIG['ACTIVE_PAGE'], $CONFIG);
-$div_react	= "<div id=\"props-example\"></div>";
 $col0	= Array(
 	'class'=>"col-12 col-sm-8 col-md-9 col-lg-10 m-0 p-0 fit-screen",
 	'content'=>"<hr class=\"thick-line\">". $div_react,
