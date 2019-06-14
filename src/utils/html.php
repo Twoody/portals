@@ -494,6 +494,8 @@ function get_js($CONFIG=Null){
 		$s .= get_datatables_scripts($CONFIG);
 	if($CONFIG['HAS_FONT_AWESOME'])
 		$s .= get_font_awesome_scripts($CONFIG);
+	if($CONFIG['HAS_REACT'])
+		$s .= get_react_scripts($CONFIG);
 	if($CONFIG['CUSTOM_SCRIPTS']){
 		$s .= "\n\t<!-- Optional JavaScript -->\n";
 		$s .= $CONFIG['CUSTOM_SCRIPTS'];
