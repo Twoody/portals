@@ -29,37 +29,28 @@ $ROOT = '../..';
 require_once($ROOT.'/config/imports.php');
 make_imports($ROOT);
 
-$CONFIG	= get_config($ROOT);
-$PATHS	= get_paths($ROOT);
-$STRINGS	= get_config_strings($CONFIG);
-$car_id	= "demo-carousel";
+$CONFIG			= get_config($ROOT);
+$PATHS			= get_paths($ROOT);
+$STRINGS			= get_config_strings($CONFIG);
+$react_div_id	= "hello_world_container";
+$react_div		= make_tag('div', Array('id'=>$react_div_id), $CONFIG);
+$car_id			= "demo-carousel";
+
+/* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
+$CONFIG['TITLE']				= "React Hello-World Exmaple 3";;
+$CONFIG['DISPLAY_HEADER']	= TRUE;
+$CONFIG['ACTIVE_PAGE']		= $PATHS['NAV_HOME'];
+$CONFIG['HAS_REACT']			= TRUE;
 require_once($PATHS['LIBPATH_DB_PAGES']);
 require_once($PATHS['TEMPLATES_B']);
 
-/*
-$CONFIG['CUSTOM_STYLES'] .= "\n<style>";
-$CONFIG['CUSTOM_STYLES'] .= "\n</style>";
-*/
-
-//$CONFIG['CUSTOM_SCRIPTS'] .= "\n<script>";
-//$CONFIG['CUSTOM_SCRIPTS'] .= "\n</script>";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<!-- Load React. -->";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<!-- Note: when deploying, replace \"development.js\" with \"production.min.js\". -->";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"https://unpkg.com/react@16/umd/react.development.js\" crossorigin></script>";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"https://unpkg.com/react-dom@16/umd/react-dom.development.js\" crossorigin></script>";
-
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<!-- Load Babel for JSX. -->";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"https://unpkg.com/babel-standalone@6/babel.min.js\"></script>";
-
+//$CONFIG['CUSTOM_STYLES'] .= "\n<style>";
+//$CONFIG['CUSTOM_STYLES'] .= "\n</style>";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<!-- Load our React component. -->";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"hello_world.js\"></script>";
 
 $body		= "";
 	
-/* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
-$CONFIG['TITLE']				= $STRINGS['HOME_TITLE'];;
-$CONFIG['DISPLAY_HEADER']	= TRUE;
-$CONFIG['ACTIVE_PAGE']		= $PATHS['NAV_HOME'];
 $pic1 = Array(
 			"src"=>		$PATHS['IMAGE_CAROUSEL_1'],
 			"class"=>	"d-block",
@@ -114,7 +105,7 @@ $container0 =  Array(
 $container_0	= make_tag("div", $container0, $CONFIG);
 $container_1	= make_gen_container(get_ads_sm($CONFIG), $CONFIG);
 $body .= $page_views;
-$body .= "<div id=\"hello_world_container\"></div>";
+$body .= $react_div;
 $body .= $container_0;
 $body .= $container_1;
 
