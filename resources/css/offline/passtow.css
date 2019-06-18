@@ -33,7 +33,8 @@ blockquote:after {
 	text-align:center;
 	*/
 	justify-content:center;
-} 
+}
+.bg-black { background-color:#000;}
 .carousel-inner img {max-height: 100%;display:block;}
 .content-slider{
 	display:flex;
@@ -41,7 +42,11 @@ blockquote:after {
 	text-align:center;
 	*/
 	justify-content:center;
-} 
+}
+.sticky{
+	position:sticky;
+	top:0;
+}
 .thick-line{
 	height:5px;
 	border:none;
