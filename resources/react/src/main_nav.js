@@ -28,6 +28,7 @@ function NavBrand(props){
 	);
 }
 function ListItem(props){
+	'use strict';
 	const href		= props.href;
 	const content	= props.content;
 	const isActive	= props.isActive
@@ -35,26 +36,20 @@ function ListItem(props){
 	if (isActive && isActive === true)
 		liClass += " active";
 	return(
-		<div>
 			<li className={liClass}>
 				<a className="nav-link" href={href}>
 					{content}
 				</a>
 			</li>
-		</div>
 	);
 }
-function ShoppingCart(props){
-	return '';
-}
-
 function NavText(props){
 	'use strict';
-	const isLoggedIn	= props.isLoggedIn;
-	const cartCount	= props.cartCount;
-	const logout		= props.root + '/u/actions/logout/index.php';
-	const login			= props.root + '/u/actions/login/index.php';
-	const register		= props.root + '/u/actions/register/index.php';
+	const isLoggedIn		= props.isLoggedIn;
+	//const shoppingCart	= props.shoppingCart;
+	const logout			= props.root + '/u/actions/logout/index.php';
+	const login				= props.root + '/u/actions/login/index.php';
+	const register			= props.root + '/u/actions/register/index.php';
 	if (isLoggedIn && isLoggedIn === "1"){
 		//TODO: get shopping cart count
 		//cartCount	= props.cartCount;
@@ -83,6 +78,28 @@ function NavText(props){
 
 	}
 }
+function ShoppingCart(props){
+	'use strict';
+	if (props.isLoggedIn && props.isLoggedIn === "1"){
+		return(
+			<li className="nav-item">
+				<a  className="nav-link" title="Shopping Cart" href={props.userDash}>
+					<span className="fa-stack ">
+						<i className="fa-stack-2x backdrop-usd fas fa-circle"></i>
+						<i className="fa-stack-1x fas fa-tw fa-shopping-cart"></i>
+					</span>
+					<span className="badge badge-primary">
+						{props.cartCount}
+					</span>
+				</a>
+			</li>
+		);
+	}
+	else{
+		return (<li/>);
+	}
+}
+
 class MainNav extends React.Component{
 	'use strict';
 	constructor(props){
@@ -94,9 +111,10 @@ class MainNav extends React.Component{
 		this.features		= this.props.root + '/features/index.php';
 		this.pricing		= this.props.root + '/pricing/index.php';
 		this.blog			= this.props.root + '/u/actions/get_blogs/index.php';
-		this.isLoggedIn	= this.props.is_logged_in;
-		this.cartCount		= this.props.cart_count;
-		this.fname			= this.props.fname;
+		this.userDash		= this.props.root + '/u/actions/index.php';
+		this.fname			= this.props.fname;				//DataSet
+		this.isLoggedIn	= this.props.is_logged_in;		//DataSet
+		this.cartCount		= this.props.cartCount;			//DataSet
 	}
 	render(){
 		return(
@@ -111,6 +129,11 @@ class MainNav extends React.Component{
 						<ListItem href={this.features} content="Features" />
 						<ListItem href={this.pricing} content="Pricing" />
 						<ListItem href={this.blog} content="Blog" />
+						<ShoppingCart 
+							cartCount={this.cartCount} 
+							isLoggedIn={this.isLoggedIn}
+							href={this.userDash}
+						/>
 					</ul>
 					<NavText 
 						isLoggedIn={this.isLoggedIn}

@@ -40,34 +40,28 @@ function NavBrand(props) {
 	);
 }
 function ListItem(props) {
+	'use strict';
+
 	var href = props.href;
 	var content = props.content;
 	var isActive = props.isActive;
 	var liClass = "nav-item";
 	if (isActive && isActive === true) liClass += " active";
 	return React.createElement(
-		"div",
-		null,
+		"li",
+		{ className: liClass },
 		React.createElement(
-			"li",
-			{ className: liClass },
-			React.createElement(
-				"a",
-				{ className: "nav-link", href: href },
-				content
-			)
+			"a",
+			{ className: "nav-link", href: href },
+			content
 		)
 	);
 }
-function ShoppingCart(props) {
-	return '';
-}
-
 function NavText(props) {
 	'use strict';
 
 	var isLoggedIn = props.isLoggedIn;
-	var cartCount = props.cartCount;
+	//const shoppingCart	= props.shoppingCart;
 	var logout = props.root + '/u/actions/logout/index.php';
 	var login = props.root + '/u/actions/login/index.php';
 	var register = props.root + '/u/actions/register/index.php';
@@ -105,6 +99,33 @@ function NavText(props) {
 		);
 	}
 }
+function ShoppingCart(props) {
+	'use strict';
+
+	if (props.isLoggedIn && props.isLoggedIn === "1") {
+		return React.createElement(
+			"li",
+			{ className: "nav-item" },
+			React.createElement(
+				"a",
+				{ className: "nav-link", title: "Shopping Cart", href: props.userDash },
+				React.createElement(
+					"span",
+					{ className: "fa-stack " },
+					React.createElement("i", { className: "fa-stack-2x backdrop-usd fas fa-circle" }),
+					React.createElement("i", { className: "fa-stack-1x fas fa-tw fa-shopping-cart" })
+				),
+				React.createElement(
+					"span",
+					{ className: "badge badge-primary" },
+					props.cartCount
+				)
+			)
+		);
+	} else {
+		return React.createElement("li", null);
+	}
+}
 
 var MainNav = function (_React$Component) {
 	_inherits(MainNav, _React$Component);
@@ -122,9 +143,10 @@ var MainNav = function (_React$Component) {
 		_this.features = _this.props.root + '/features/index.php';
 		_this.pricing = _this.props.root + '/pricing/index.php';
 		_this.blog = _this.props.root + '/u/actions/get_blogs/index.php';
-		_this.isLoggedIn = _this.props.is_logged_in;
-		_this.cartCount = _this.props.cart_count;
-		_this.fname = _this.props.fname;
+		_this.userDash = _this.props.root + '/u/actions/index.php';
+		_this.fname = _this.props.fname; //DataSet
+		_this.isLoggedIn = _this.props.is_logged_in; //DataSet
+		_this.cartCount = _this.props.cartCount; //DataSet
 		return _this;
 	}
 
@@ -147,7 +169,12 @@ var MainNav = function (_React$Component) {
 						React.createElement(ListItem, { href: this.home, content: "Home" }),
 						React.createElement(ListItem, { href: this.features, content: "Features" }),
 						React.createElement(ListItem, { href: this.pricing, content: "Pricing" }),
-						React.createElement(ListItem, { href: this.blog, content: "Blog" })
+						React.createElement(ListItem, { href: this.blog, content: "Blog" }),
+						React.createElement(ShoppingCart, {
+							cartCount: this.cartCount,
+							isLoggedIn: this.isLoggedIn,
+							href: this.userDash
+						})
 					),
 					React.createElement(NavText, {
 						isLoggedIn: this.isLoggedIn,
