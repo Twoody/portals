@@ -14,9 +14,9 @@ function get_react_scripts($CONFIG=Null, $ROOT=Null){
 	if (!$CONFIG['HAS_REACT'])
 		return "";
 	if($CONFIG['IS_ONLINE']){
-		$react_src		= $CONFIG['REACT_JS_SRC'];
-		$react_dom_src	= $CONFIG['REACT_JS_SRC'];
-		$babel_src		= $CONFIG['REACT_JS_SRC'];
+		$react_src		= $CONFIG['REACT_DEV_SRC'];
+		$react_dom_src	= $CONFIG['REACT_DOM_DEV_SRC'];
+		$babel_src		= $CONFIG['BABEL_SRC'];
 	}
 	else{
 		$react_src		= $PATHS['LOCAL_JS_REACT'];
