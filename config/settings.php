@@ -15,7 +15,7 @@ function get_config($ROOT=Null){
 		'FOOTER_IS_STICKY'=>TRUE,
 		'HAS_LOGIN'=>FALSE,
 		'IS_ONLINE'=>FALSE,
-		//'IS_ONLINE'=>TRUE,
+		'IS_ONLINE'=>TRUE,
 		'LANG'=>"en",
 		'META_CONTENT'=>"width=device-width, initial-scale=1, shrink-to-fit=no",
 		'META_KEYWORDS'=>"Tanner Woody, Software Developer, Senior Developer, resume, technology blogs, vanillar php, vanilla javascript",
