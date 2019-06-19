@@ -33,22 +33,6 @@ $CONFIG			= get_config($ROOT);
 $PATHS			= get_paths($ROOT);
 $STRINGS			= get_config_strings($CONFIG);
 $body				= "";
-$userid			= get_user_id($CONFIG);
-$is_logged_in	= is_logged_in($CONFIG);
-$cart_count		= get_cart_count($userid, $CONFIG);
-$fname			= get_user_fname($CONFIG);
-
-$path_react_js	= $ROOT . "/resources/react";
-$div_react_id	= "main_nav";
-$div_react_js	= $path_react_js. "/main_nav.js";
-$div_react_arr	= Array(
-	'id'=>$div_react_id,
-	'data-root'=>$ROOT,
-	'data-fname'=>$fname,
-	'data-cart_count'=>$cart_count,
-	'data-is_logged_in'=>$is_logged_in,
-);
-$div_react		= make_tag('div', $div_react_arr, $CONFIG);
 
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
 $CONFIG['TITLE']				= "A List Example";;
@@ -58,10 +42,8 @@ $CONFIG['HAS_REACT']			= TRUE;
 require_once($PATHS['LIBPATH_DB_PAGES']);
 require_once($PATHS['TEMPLATES_B']);
 
-//$CONFIG['CUSTOM_STYLES'] .= "\n<style>";
-//$CONFIG['CUSTOM_STYLES'] .= "\n</style>";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<!-- Load our React component. -->";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script type=\"text/babel\" src=\"".$div_react_js."\"></script>";
+//$CONFIG['CUSTOM_STYLES'] .= "\n<style></style>";
+//$CONFIG['CUSTOM_SCRIPTS'] .= "\n<script></script>";
 
 $ad_not_sm	= "";	//Show WHEN NOT X-SMALL
 $ad_not_sm	.= "\n\t\t\t\t\t<span class=\"d-none d-sm-block\">";
