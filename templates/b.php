@@ -29,29 +29,47 @@ function template_b($CONFIG=Null, $PATHS=Null){
 		$CONFIG = get_config($ROOT);
 	if ($ROOT === Null)
 		$ROOT = $CONFIG['ROOT'];
-
 	require_once($PATHS['DATATABLES_CSS_PATH']);
 	require_once($PATHS['DATATABLES_JS_PATH']);
 	require_once($PATHS['LIBPATH_FA']);
 
 
 	echo "\n<!-- TEMPLATE: " . $PATHS['TEMPLATES_B'] . "-->\n";
+
+	$userid			= get_user_id($CONFIG);
+	$is_logged_in	= is_logged_in($CONFIG);
+	$cart_count		= get_cart_count($userid, $CONFIG);
+	$fname			= get_user_fname($CONFIG);
+	$path_react_js	= $ROOT . "/resources/react";		//TODO: main_nav in CONFIG;
+	$div_react_id	= "main_nav";
+	$div_react_js	= $path_react_js. "/main_nav.js";
+	$div_react_arr	= Array(
+		'id'=>$div_react_id,
+		'data-root'=>$ROOT,
+		'data-fname'=>$fname,
+		'data-is_logged_in'=>$is_logged_in,
+		'data-cart_count'=>$cart_count,
+	);
+	$div_react		= make_tag('div', $div_react_arr, $CONFIG);
+
 	if ($CONFIG['TITLE'] === "")
 		$CONFIG['TITLE'] = $PATHS['TEMPLATES_B'];
-	/* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
+	/* ----- ----- GENERAL CHANGES AFTER MAIN IMPORT ----- ----- */
 	$CONFIG['HAS_DATATABLES']		= TRUE;
 	$CONFIG['HAS_FONT_AWESOME']	= TRUE;
 	$CONFIG['FA_STACK_SIZE']		= 'fa-2x';
-	//$CONFIG['FOOTER_IS_STICKY'] = False;
-	
-	$CONFIG['CUSTOM_STYLES'] .= get_font_awesome_style_guide($CONFIG);
+	$CONFIG['HAS_REACT']				= TRUE;
+	$CONFIG['CUSTOM_STYLES']		.= get_font_awesome_style_guide($CONFIG);
+	$CONFIG['CUSTOM_SCRIPTS']		.= "\n\t<!-- Load our React component. -->";
+	$CONFIG['CUSTOM_SCRIPTS']		.= "\n\t<script type=\"text/babel\" src=\"".$div_react_js."\"></script>";
 
 	$html = '';
 	$html .= get_header($CONFIG);
 	$html .= "\n";
 	$html .= "\n<body>";
-	$html .= get_nav($CONFIG, $PATHS);
+	//$html .= get_nav($CONFIG, $PATHS);
 //TODO: Col + row + container make_tag() calls;
+	$html	.= $div_react;
 	$html .= "\n\t<div class=\"container-fluid pt-3\">";
 	$html .= "\n\t\t<div class=\"row justify-content-start\">";
 	$html .= "\n\t\t\t<div class=\"col-12 pl-3 \">";
