@@ -1,4 +1,5 @@
 Major Projects to Implement
+	0. MAJOR BUG WITH IS_ONLINE NOT WORKING WITH NEW REACT FILES IN /nav-test/
 	0.		Move all of the inventory items from db_helper to inv.php or something;
 	0.		Implement a coule of screen focused on skill sets;
 				//STATUS: Cloud computing done;
