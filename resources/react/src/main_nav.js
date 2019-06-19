@@ -83,7 +83,11 @@ function ShoppingCart(props){
 	if (props.isLoggedIn && props.isLoggedIn === "1"){
 		return(
 			<li className="nav-item">
-				<a  className="nav-link" title="Shopping Cart" href={props.userDash}>
+				<a  
+					className="nav-link" 
+					title="Shopping Cart" 
+					href={props.href}
+				>
 					<span className="fa-stack ">
 						<i className="fa-stack-2x backdrop-usd fas fa-circle"></i>
 						<i className="fa-stack-1x fas fa-tw fa-shopping-cart"></i>
@@ -114,7 +118,7 @@ class MainNav extends React.Component{
 		this.userDash		= this.props.root + '/u/actions/index.php';
 		this.fname			= this.props.fname;				//DataSet
 		this.isLoggedIn	= this.props.is_logged_in;		//DataSet
-		this.cartCount		= this.props.cartCount;			//DataSet
+		this.cartCount		= this.props.cart_count;			//DataSet
 	}
 	render(){
 		return(
@@ -130,9 +134,9 @@ class MainNav extends React.Component{
 						<ListItem href={this.pricing} content="Pricing" />
 						<ListItem href={this.blog} content="Blog" />
 						<ShoppingCart 
+							href={this.userDash}
 							cartCount={this.cartCount} 
 							isLoggedIn={this.isLoggedIn}
-							href={this.userDash}
 						/>
 					</ul>
 					<NavText 

@@ -108,7 +108,11 @@ function ShoppingCart(props) {
 			{ className: "nav-item" },
 			React.createElement(
 				"a",
-				{ className: "nav-link", title: "Shopping Cart", href: props.userDash },
+				{
+					className: "nav-link",
+					title: "Shopping Cart",
+					href: props.href
+				},
 				React.createElement(
 					"span",
 					{ className: "fa-stack " },
@@ -146,7 +150,7 @@ var MainNav = function (_React$Component) {
 		_this.userDash = _this.props.root + '/u/actions/index.php';
 		_this.fname = _this.props.fname; //DataSet
 		_this.isLoggedIn = _this.props.is_logged_in; //DataSet
-		_this.cartCount = _this.props.cartCount; //DataSet
+		_this.cartCount = _this.props.cart_count; //DataSet
 		return _this;
 	}
 
@@ -171,9 +175,9 @@ var MainNav = function (_React$Component) {
 						React.createElement(ListItem, { href: this.pricing, content: "Pricing" }),
 						React.createElement(ListItem, { href: this.blog, content: "Blog" }),
 						React.createElement(ShoppingCart, {
+							href: this.userDash,
 							cartCount: this.cartCount,
-							isLoggedIn: this.isLoggedIn,
-							href: this.userDash
+							isLoggedIn: this.isLoggedIn
 						})
 					),
 					React.createElement(NavText, {
