@@ -19,6 +19,25 @@ function get_icon_nav_toggle($CONFIG){
 	);
 	return make_tag('span', $i_arr, $CONFIG);
 }
+function get_icon_shopping_cart($CONFIG, $STRINGS){
+	$shopping_cart	= '';
+	$is_logged_in	= is_logged_in($CONFIG);
+	if($is_logged_in === TRUE && !$CONFIG['IS_LOGGING_OUT']){
+		$userid			= get_user_id($CONFIG);
+		$shopping_cart	.=  make_font_awesome_stack(
+										Array(
+											'backdrop-usd fas fa-circle',
+											'fas fa-tw fa-shopping-cart'
+										), 
+										$CONFIG
+									);
+		$shopping_cart 					.= "<span class=\"badge badge-primary\">";
+		$shopping_cart 					.= get_cart_count($userid, $CONFIG);
+		$shopping_cart 					.= "</span>";
+		$shopping_cart_arr				= $nav_item_arr;
+	}
+	return $shopping_cart;
+}
 
 function get_config_icons($CONFIG){
 	$CONFIG['FA_STACK_SIZE'] = 'fa-md';

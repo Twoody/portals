@@ -206,13 +206,13 @@ function get_href_nav_register($CONFIG, $STRINGS){
 	$href = make_tag('a', $href_arr, $CONFIG);
 	return $href;
 }
-function get_href_nav_shopping_cart($shopping_cart, $CONFIG, $STRINGS){
+function get_href_nav_shopping_cart($CONFIG, $STRINGS){
 	$PATHS = get_paths($CONFIG['ROOT']);
 	$href_arr	= Array(
 		'class'	=> "nav-link",
 		'title'	=> $STRINGS['NAV_SHOPPING_CART'], 
 		'href'	=> $PATHS['USER_DASH'],
-		'content'=> $shopping_cart,
+		'content'=> get_icon_shopping_cart($CONFIG, $STRINGS),
 	);
 	$href = make_tag('a', $href_arr, $CONFIG);
 	return $href;
