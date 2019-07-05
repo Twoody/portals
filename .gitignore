@@ -16,7 +16,7 @@ __pycache__/
 .DS_Store?
 .*.swp*
 ._*
-*error_log
+*error_log*
 
 #Sandboxing
 tests/sandbox/
