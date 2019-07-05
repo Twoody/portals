@@ -16,10 +16,10 @@ USAGE:
 			clear & php -S localhost:8000 templates/login.php
 		With APACHE:
 			sudo apachectl start
+	Third, change ROOT to corresponding dir path;
 
 Purpose:
-    Display the general layout expected of a login page;
-	 Display the locations where possible params and configs can take place;
+	Quickly copy this file over to start developing a new page.
 
 Links:
 	https://www.w3schools.com/bootstrap4/bootstrap_carousel.asp
@@ -35,10 +35,9 @@ $STRINGS			= get_config_strings($CONFIG);
 $body				= "";
 
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
-$CONFIG['TITLE']				= "A List Example";;
+$CONFIG['TITLE']				= "CHANGE ME";;
 $CONFIG['DISPLAY_HEADER']	= TRUE;
 $CONFIG['ACTIVE_PAGE']		= $PATHS['NAV_HOME'];
-$CONFIG['HAS_REACT']			= TRUE;
 require_once($PATHS['LIBPATH_DB_PAGES']);
 require_once($PATHS['TEMPLATES_B']);
 

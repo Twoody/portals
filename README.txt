@@ -72,6 +72,7 @@ Glossary:
 
 Helpful commands:
 	scp foo passtowc@162.241.216.71:/home3/public_html/foo
+	npx babel --watch src --out-dir . --presets react-app/prod
 
 React:
 	Dir:
