@@ -45,15 +45,6 @@ function template_b($CONFIG=Null, $PATHS=Null){
 	//$CONFIG['FOOTER_IS_STICKY'] = False;
 	
 	$CONFIG['CUSTOM_STYLES'] .= get_font_awesome_style_guide($CONFIG);
-	$CONFIG['CUSTOM_STYLES'] .= "\n<style>";
-	//TODO: Move to $CONFIG and get_css()
-	$CONFIG['CUSTOM_STYLES'] .= "\n\t.sticky{position: sticky; top: 0;}";
-//	$CONFIG['CUSTOM_STYLES'] .= "\n\t.bg-primary { background-color: #000 !important; display:flex;}";
-//	$CONFIG['CUSTOM_STYLES'] .= "\n\t.bg-secondary { background-color: #000 !important;}";
-//	$CONFIG['CUSTOM_STYLES'] .= "\n\t.bg-faded { background-color:#ada316  !important;}";
-	$CONFIG['CUSTOM_STYLES'] .= "\n\t.bg-black { background-color:#000;}";
-	$CONFIG['CUSTOM_STYLES'] .= "\n</style>";
-	
 
 	$html = '';
 	$html .= get_header($CONFIG);

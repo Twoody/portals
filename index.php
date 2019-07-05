@@ -33,6 +33,7 @@ $CONFIG	= get_config($ROOT);
 $PATHS	= get_paths($ROOT);
 $STRINGS	= get_config_strings($CONFIG);
 $car_id	= "demo-carousel";
+require_once($PATHS['LIBPATH_DB_PAGES']);
 require_once($PATHS['TEMPLATES_B']);
 
 /*

@@ -72,3 +72,17 @@ Glossary:
 
 Helpful commands:
 	scp foo passtowc@162.241.216.71:/home3/public_html/foo
+
+React:
+	Dir:
+		react/
+	Links:
+		https://reactjs.org/docs/add-react-to-a-website.html
+	Notes:
+		hello-world-1/ is strictly standalone and non compiled (?) babel;
+		hello-world-2/ is meant for:
+			"""
+				We’re using npm here only to install the JSX preprocessor; 
+				you won’t need it for anything else. 
+				Both React and the application code can stay as <script> tags with no changes.
+			"""
