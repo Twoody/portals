@@ -1,7 +1,6 @@
 'use strict';
-
 const navClass	= "navbar fixed-top navbar-expand-sm navbar-light bg-light pl-3 pr-3 pb-0 pt-0";
-const navID	= "navbar_b";
+const navID		= "navbar_b";
 
 function NavBrand(props){
 	'use strict';
@@ -110,7 +109,15 @@ class MainNav extends React.Component{
 		//TODO: Probably read the paths from a json file;
 		//TODO: Pull over shopping cart from nav-test and data-*
 		super(props);
+		let PATHS = fetch(this.props.root + '/config/paths.json')
+			.then(response => response.json())
+			.then(resData =>{
+				console.log(resData['ADMIN_DASH'])
+			});
+
 		this.state			= {open:false, isLoggedIn: false};
+		this.PATHS			= PATHS;
+		console.log('MEAT:' + this.PATHS['ADMIN_DASH']);
 		this.home			= this.props.root + '/index.php';
 		this.features		= this.props.root + '/features/index.php';
 		this.pricing		= this.props.root + '/pricing/index.php';

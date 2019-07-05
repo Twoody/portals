@@ -142,7 +142,15 @@ var MainNav = function (_React$Component) {
 		//TODO: Pull over shopping cart from nav-test and data-*
 
 
+		var PATHS = fetch(_this.props.root + '/config/paths.json').then(function (response) {
+			return response.json();
+		}).then(function (resData) {
+			console.log(resData['ADMIN_DASH']);
+		});
+
 		_this.state = { open: false, isLoggedIn: false };
+		_this.PATHS = PATHS;
+		console.log('MEAT:' + _this.PATHS['ADMIN_DASH']);
 		_this.home = _this.props.root + '/index.php';
 		_this.features = _this.props.root + '/features/index.php';
 		_this.pricing = _this.props.root + '/pricing/index.php';
