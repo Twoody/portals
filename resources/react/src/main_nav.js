@@ -117,7 +117,6 @@ class MainNav extends React.Component{
 
 		this.state			= {open:false, isLoggedIn: false};
 		this.PATHS			= PATHS;
-		console.log('MEAT:' + this.PATHS['ADMIN_DASH']);
 		this.home			= this.props.root + '/index.php';
 		this.features		= this.props.root + '/features/index.php';
 		this.pricing		= this.props.root + '/pricing/index.php';
