@@ -15,7 +15,6 @@ Purpose:
 ******************************************************************************/
 function get_paths($ROOT=Null){
 	if ($ROOT === Null){
-		$ROOT = "/Users/tannerleewoody/Workspace/testdir/php/bootstrap";
 		$ROOT = ".";
 	}
 	return Array(
