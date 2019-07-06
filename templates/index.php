@@ -37,7 +37,7 @@ $body				= "";
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
 $CONFIG['TITLE']				= "CHANGE ME";;
 $CONFIG['DISPLAY_HEADER']	= TRUE;
-$CONFIG['ACTIVE_PAGE']		= $PATHS['NAV_HOME'];
+$CONFIG['ACTIVE_PAGE']		= __FILE__;
 require_once($PATHS['LIBPATH_DB_PAGES']);
 require_once($PATHS['TEMPLATES_B']);
 
