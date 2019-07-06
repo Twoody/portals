@@ -114,7 +114,8 @@ class MainNav extends React.Component{
 			features:	"#",
 			pricing:		"#",
 			blog:			"#",
-			userDash:	"#"
+			userDash:	"#",
+			adminDash:	"#"
 		};
 		let PATHS	= fetch(this.props.root + '/config/paths.json')
 			.then(response => response.json())
@@ -124,11 +125,13 @@ class MainNav extends React.Component{
 				this.setState({pricing:		resData['NAV_ITEM3']});
 				this.setState({blog:			resData['NAV_ITEM4']});
 				this.setState({userDash:	resData['NAV_CART']});
+				this.setState({adminDash:	resData['ADMIN_DASH']});
 			});
 
 		this.PATHS			= PATHS;
-		this.fname			= this.props.fname;				//DataSet
+		this.isAdmin		= this.props.is_admin;			//DataSet
 		this.isLoggedIn	= this.props.is_logged_in;		//DataSet
+		this.fname			= this.props.fname;				//DataSet
 		this.cartCount		= this.props.cart_count;		//DataSet
 	}
 	render(){
@@ -149,6 +152,12 @@ class MainNav extends React.Component{
 							cartCount={this.cartCount} 
 							isLoggedIn={this.isLoggedIn}
 						/>
+						{this.isAdmin && this.isAdmin === "1" ?(
+								<ListItem href={this.state.adminDash} content="Admin" />
+							):(
+								<div />
+							)
+						}
 					</ul>
 					<NavText 
 						isLoggedIn={this.isLoggedIn}

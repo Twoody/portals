@@ -148,7 +148,8 @@ var MainNav = function (_React$Component) {
 			features: "#",
 			pricing: "#",
 			blog: "#",
-			userDash: "#"
+			userDash: "#",
+			adminDash: "#"
 		};
 		var PATHS = fetch(_this.props.root + '/config/paths.json').then(function (response) {
 			return response.json();
@@ -158,11 +159,13 @@ var MainNav = function (_React$Component) {
 			_this.setState({ pricing: resData['NAV_ITEM3'] });
 			_this.setState({ blog: resData['NAV_ITEM4'] });
 			_this.setState({ userDash: resData['NAV_CART'] });
+			_this.setState({ adminDash: resData['ADMIN_DASH'] });
 		});
 
 		_this.PATHS = PATHS;
-		_this.fname = _this.props.fname; //DataSet
+		_this.isAdmin = _this.props.is_admin; //DataSet
 		_this.isLoggedIn = _this.props.is_logged_in; //DataSet
+		_this.fname = _this.props.fname; //DataSet
 		_this.cartCount = _this.props.cart_count; //DataSet
 		return _this;
 	}
@@ -191,7 +194,8 @@ var MainNav = function (_React$Component) {
 							href: this.userDash,
 							cartCount: this.cartCount,
 							isLoggedIn: this.isLoggedIn
-						})
+						}),
+						this.isAdmin && this.isAdmin === "1" ? React.createElement(ListItem, { href: this.state.adminDash, content: "Admin" }) : React.createElement("div", null)
 					),
 					React.createElement(NavText, {
 						isLoggedIn: this.isLoggedIn,

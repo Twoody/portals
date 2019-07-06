@@ -40,6 +40,7 @@ function template_b($CONFIG=Null, $PATHS=Null){
 	$is_logged_in	= is_logged_in($CONFIG);
 	$cart_count		= get_cart_count($userid, $CONFIG);
 	$fname			= get_user_fname($CONFIG);
+	$is_admin		= is_admin($CONFIG);
 	$path_react_js	= $ROOT . "/resources/react";		//TODO: main_nav in CONFIG;
 	$nav_react_id	= "main_nav";
 	$nav_react_js	= $path_react_js. "/main_nav.js";
@@ -49,6 +50,7 @@ function template_b($CONFIG=Null, $PATHS=Null){
 		'data-fname'=>$fname,
 		'data-is_logged_in'=>$is_logged_in,
 		'data-cart_count'=>$cart_count,
+		'data-is_admin'=>$is_admin,
 	);
 	$nav_react		= make_tag('div', $nav_react_arr, $CONFIG);
 
