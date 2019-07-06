@@ -41,16 +41,16 @@ function template_b($CONFIG=Null, $PATHS=Null){
 	$cart_count		= get_cart_count($userid, $CONFIG);
 	$fname			= get_user_fname($CONFIG);
 	$path_react_js	= $ROOT . "/resources/react";		//TODO: main_nav in CONFIG;
-	$div_react_id	= "main_nav";
-	$div_react_js	= $path_react_js. "/main_nav.js";
-	$div_react_arr	= Array(
-		'id'=>$div_react_id,
+	$nav_react_id	= "main_nav";
+	$nav_react_js	= $path_react_js. "/main_nav.js";
+	$nav_react_arr	= Array(
+		'id'=>$nav_react_id,
 		'data-root'=>$ROOT,
 		'data-fname'=>$fname,
 		'data-is_logged_in'=>$is_logged_in,
 		'data-cart_count'=>$cart_count,
 	);
-	$div_react		= make_tag('div', $div_react_arr, $CONFIG);
+	$nav_react		= make_tag('div', $nav_react_arr, $CONFIG);
 
 	if ($CONFIG['TITLE'] === "")
 		$CONFIG['TITLE'] = $PATHS['TEMPLATES_B'];
@@ -61,7 +61,7 @@ function template_b($CONFIG=Null, $PATHS=Null){
 	$CONFIG['HAS_REACT']				= TRUE;
 	$CONFIG['CUSTOM_STYLES']		.= get_font_awesome_style_guide($CONFIG);
 	$CONFIG['CUSTOM_SCRIPTS']		.= "\n\t<!-- Load our React component. -->";
-	$CONFIG['CUSTOM_SCRIPTS']		.= "\n\t<script type=\"text/babel\" src=\"".$div_react_js."\"></script>";
+	$CONFIG['CUSTOM_SCRIPTS']		.= "\n\t<script type=\"text/babel\" src=\"".$nav_react_js."\"></script>";
 
 	$html = '';
 	$html .= get_header($CONFIG);
@@ -69,7 +69,7 @@ function template_b($CONFIG=Null, $PATHS=Null){
 	$html .= "\n<body>";
 	//$html .= get_nav($CONFIG, $PATHS);
 //TODO: Col + row + container make_tag() calls;
-	$html	.= $div_react;
+	$html	.= $nav_react;
 	$html .= "\n\t<div class=\"container-fluid pt-3\">";
 	$html .= "\n\t\t<div class=\"row justify-content-start\">";
 	$html .= "\n\t\t\t<div class=\"col-12 pl-3 \">";
