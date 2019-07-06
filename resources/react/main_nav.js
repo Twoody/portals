@@ -66,7 +66,7 @@ function NavText(props) {
 	var login = props.root + '/u/actions/login/index.php';
 	var register = props.root + '/u/actions/register/index.php';
 	if (isLoggedIn && isLoggedIn === "1") {
-		//TODO: get shopping cart count
+		//TODO: get shopping cart count here to keep out of nav-collapse;
 		//cartCount	= props.cartCount;
 		return React.createElement(
 			"span",
@@ -142,19 +142,25 @@ var MainNav = function (_React$Component) {
 		//TODO: Pull over shopping cart from nav-test and data-*
 
 
+		_this.state = {
+			collapseIsOpen: false,
+			home: "#",
+			features: "#",
+			pricing: "#",
+			blog: "#",
+			userDash: "#"
+		};
 		var PATHS = fetch(_this.props.root + '/config/paths.json').then(function (response) {
 			return response.json();
 		}).then(function (resData) {
-			console.log(resData['ADMIN_DASH']);
+			_this.setState({ home: resData['NAV_HOME'] });
+			_this.setState({ features: resData['NAV_ITEM2'] });
+			_this.setState({ pricing: resData['NAV_ITEM3'] });
+			_this.setState({ blog: resData['NAV_ITEM4'] });
+			_this.setState({ userDash: resData['NAV_CART'] });
 		});
 
-		_this.state = { open: false, isLoggedIn: false };
 		_this.PATHS = PATHS;
-		_this.home = _this.props.root + '/index.php';
-		_this.features = _this.props.root + '/features/index.php';
-		_this.pricing = _this.props.root + '/pricing/index.php';
-		_this.blog = _this.props.root + '/u/actions/get_blogs/index.php';
-		_this.userDash = _this.props.root + '/u/actions/index.php';
 		_this.fname = _this.props.fname; //DataSet
 		_this.isLoggedIn = _this.props.is_logged_in; //DataSet
 		_this.cartCount = _this.props.cart_count; //DataSet
@@ -177,10 +183,10 @@ var MainNav = function (_React$Component) {
 					React.createElement(
 						"ul",
 						{ className: "navbar-nav mr-auto" },
-						React.createElement(ListItem, { href: this.home, content: "Home" }),
-						React.createElement(ListItem, { href: this.features, content: "Features" }),
-						React.createElement(ListItem, { href: this.pricing, content: "Pricing" }),
-						React.createElement(ListItem, { href: this.blog, content: "Blog" }),
+						React.createElement(ListItem, { href: this.state.home, content: "Home" }),
+						React.createElement(ListItem, { href: this.state.features, content: "Features" }),
+						React.createElement(ListItem, { href: this.state.pricing, content: "Pricing" }),
+						React.createElement(ListItem, { href: this.state.blog, content: "Blog" }),
 						React.createElement(ShoppingCart, {
 							href: this.userDash,
 							cartCount: this.cartCount,

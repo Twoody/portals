@@ -50,7 +50,7 @@ function NavText(props){
 	const login				= props.root + '/u/actions/login/index.php';
 	const register			= props.root + '/u/actions/register/index.php';
 	if (isLoggedIn && isLoggedIn === "1"){
-		//TODO: get shopping cart count
+		//TODO: get shopping cart count here to keep out of nav-collapse;
 		//cartCount	= props.cartCount;
 		return(
 			<span className="navbar-text">
@@ -74,7 +74,6 @@ function NavText(props){
 				</a>
 			</span>
 		);
-
 	}
 }
 function ShoppingCart(props){
@@ -109,22 +108,28 @@ class MainNav extends React.Component{
 		//TODO: Probably read the paths from a json file;
 		//TODO: Pull over shopping cart from nav-test and data-*
 		super(props);
-		let PATHS = fetch(this.props.root + '/config/paths.json')
+		this.state	= {
+			collapseIsOpen:false,
+			home:			"#",
+			features:	"#",
+			pricing:		"#",
+			blog:			"#",
+			userDash:	"#"
+		};
+		let PATHS	= fetch(this.props.root + '/config/paths.json')
 			.then(response => response.json())
 			.then(resData =>{
-				console.log(resData['ADMIN_DASH'])
+				this.setState({home:			resData['NAV_HOME']});
+				this.setState({features:	resData['NAV_ITEM2']});
+				this.setState({pricing:		resData['NAV_ITEM3']});
+				this.setState({blog:			resData['NAV_ITEM4']});
+				this.setState({userDash:	resData['NAV_CART']});
 			});
 
-		this.state			= {open:false, isLoggedIn: false};
 		this.PATHS			= PATHS;
-		this.home			= this.props.root + '/index.php';
-		this.features		= this.props.root + '/features/index.php';
-		this.pricing		= this.props.root + '/pricing/index.php';
-		this.blog			= this.props.root + '/u/actions/get_blogs/index.php';
-		this.userDash		= this.props.root + '/u/actions/index.php';
 		this.fname			= this.props.fname;				//DataSet
 		this.isLoggedIn	= this.props.is_logged_in;		//DataSet
-		this.cartCount		= this.props.cart_count;			//DataSet
+		this.cartCount		= this.props.cart_count;		//DataSet
 	}
 	render(){
 		return(
@@ -135,10 +140,10 @@ class MainNav extends React.Component{
 				<div className="collapse navbar-collapse" id="navbarText">
 					<NavBrand root={this.props.root}/>
 					<ul className="navbar-nav mr-auto">
-						<ListItem href={this.home} content="Home" />
-						<ListItem href={this.features} content="Features" />
-						<ListItem href={this.pricing} content="Pricing" />
-						<ListItem href={this.blog} content="Blog" />
+						<ListItem href={this.state.home} content="Home" />
+						<ListItem href={this.state.features} content="Features" />
+						<ListItem href={this.state.pricing} content="Pricing" />
+						<ListItem href={this.state.blog} content="Blog" />
 						<ShoppingCart 
 							href={this.userDash}
 							cartCount={this.cartCount} 
