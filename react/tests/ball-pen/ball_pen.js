@@ -38,20 +38,20 @@ var Ball = function () {
 		value: function updateTrajectory(penHeight, penWidth) {
 			//Will need to update to allow for multiple heights and widths
 			//	and then find the best/only solution;
-			var xBound1 = this.xCord + this.radius;
-			var xBound2 = this.xCord - this.radius;
-			var yBound1 = this.yCord + this.radius;
-			var yBound2 = this.yCord - this.radius;
-			if (xBound2 <= 0) {
+			var rightBound = this.xCord + this.radius;
+			var leftBound = this.xCord - this.radius;
+			var bottomBound = this.yCord + this.radius;
+			var topBound = this.yCord - this.radius;
+			if (leftBound <= 0) {
 				this.xTrajectory = -this.xTrajectory;;
 				this.xCord = 0 + this.radius + 1;
-			} else if (xBound1 >= penWidth) {
+			} else if (rightBound >= penWidth) {
 				this.xTrajectory = -this.xTrajectory;;
 				this.xCord = penWidth - this.radius - 1;
-			} else if (yBound2 <= 0) {
+			} else if (topBound <= 0) {
 				this.yTrajectory = -this.yTrajectory;;
 				this.yCord = 0 + this.radius + 1;
-			} else if (yBound1 >= penHeight) {
+			} else if (bottomBound >= penHeight) {
 				this.acceleration += 1;
 				this.yTrajectory = -this.yTrajectory;;
 				this.yCord = penHeight - this.radius - 1;

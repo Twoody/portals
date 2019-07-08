@@ -28,23 +28,23 @@ class Ball{
 	updateTrajectory(penHeight, penWidth){
 		//Will need to update to allow for multiple heights and widths
 		//	and then find the best/only solution;
-		const xBound1	= this.xCord + this.radius;
-		const xBound2	= this.xCord - this.radius;
-		const yBound1	= this.yCord + this.radius;
-		const yBound2	= this.yCord - this.radius;
-		if (xBound2 <= 0){
+		const rightBound	= this.xCord + this.radius;
+		const leftBound	= this.xCord - this.radius;
+		const bottomBound	= this.yCord + this.radius;
+		const topBound		= this.yCord - this.radius;
+		if (leftBound <= 0){
 			this.xTrajectory = -this.xTrajectory;;
 			this.xCord	= 0 + this.radius + 1;
 		}
-		else if (xBound1 >= penWidth){
+		else if (rightBound >= penWidth){
 			this.xTrajectory = -this.xTrajectory;;
 			this.xCord	= penWidth - this.radius -1;
 		}
-		else if (yBound2 <= 0){
+		else if (topBound <= 0){
 			this.yTrajectory = -this.yTrajectory;;
 			this.yCord	= 0 + this.radius + 1;
 		}
-		else if (yBound1 >= penHeight){
+		else if (bottomBound >= penHeight){
 			this.acceleration += 1;
 			this.yTrajectory = -this.yTrajectory;;
 			this.yCord	= penHeight - this.radius - 1;
