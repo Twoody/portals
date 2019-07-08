@@ -15,8 +15,10 @@ var Ball = function () {
 		this.xCord = 21;
 		this.yCord = 21;
 		this.radius = 20;
-		this.trajectory = 120; //In degrees; 0 to 359
+		this.xTrajectory = 2;
+		this.yTrajectory = 2;
 		this.acceleration = 0;
+		this.gravity = 0.05;
 		this.color = "white";
 		this.ballId = props.ballId;
 		this.canvas = props.canvas;
@@ -40,67 +42,37 @@ var Ball = function () {
 			var xBound2 = this.xCord - this.radius;
 			var yBound1 = this.yCord + this.radius;
 			var yBound2 = this.yCord - this.radius;
-			if (xBound1 >= penWidth || xBound2 <= 0) {
-				this.trajectory += 180;
-				if (xBound2 < 0) this.xCord = 0 + this.radius + 1;else if (xBound1 > penWidth) this.xCord = penWidth - this.radius - 1;
-			} else if (yBound1 >= penHeight || yBound2 <= 0) {
-				//	if (this.yCord >= penHeight || this.yCord <= 0){
-				this.trajectory += 180;
-				if (yBound2 < 0) this.yCord = 0 + this.radius + 1;else if (yBound1 > penHeight) this.yCord = penHeight - this.radius - 1;
+			if (xBound2 <= 0) {
+				this.xTrajectory = -this.xTrajectory;;
+				this.xCord = 0 + this.radius + 1;
+			} else if (xBound1 >= penWidth) {
+				this.xTrajectory = -this.xTrajectory;;
+				this.xCord = penWidth - this.radius - 1;
+			} else if (yBound2 <= 0) {
+				this.yTrajectory = -this.yTrajectory;;
+				this.yCord = 0 + this.radius + 1;
+			} else if (yBound1 >= penHeight) {
+				this.acceleration += 1;
+				this.yTrajectory = -this.yTrajectory;;
+				this.yCord = penHeight - this.radius - 1;
 			}
-			if (this.trajectory >= 360) this.trajectory -= 360; //reset back between 0 and 359;
 		}
 	}, {
 		key: 'updateCoordinates',
-		value: function updateCoordinates() {
-			if (this.trajectory >= 330 && this.trajectory < 360) {
-				//1
-				//up one;
-				this.yCord = this.yCord - 1;
-				this.xCord = this.xCord;
-			} else if (this.trajectory >= 0 && this.trajectory < 15) {
-				//1
-				//up one;
-				this.yCord = this.yCord - 1;
-				this.xCord = this.xCord;
-			} else if (this.trajectory >= 15 && this.trajectory < 60) {
-				//2
-				//up one; right one;
-				this.yCord = this.yCord - 1;
-				this.xCord = this.xCord + 1;
-			} else if (this.trajectory >= 60 && this.trajectory < 105) {
-				//3
-				//right one;
-				this.yCord = this.yCord;
-				this.xCord = this.xCord + 1;
-			} else if (this.trajectory >= 105 && this.trajectory < 150) {
-				//4
-				//down one; right one;
-				this.yCord = this.yCord + 1;
-				this.xCord = this.xCord + 1;
-			} else if (this.trajectory >= 150 && this.trajectory < 195) {
-				//5
-				//down one;
-				this.yCord = this.yCord + 1;
-				this.xCord = this.xCord;
-			} else if (this.trajectory >= 195 && this.trajectory < 240) {
-				//6
-				//down one; left one;
-				this.yCord = this.yCord + 1;
-				this.xCord = this.xCord - 1;
-			} else if (this.trajectory >= 240 && this.trajectory < 285) {
-				//7
-				//left one;
-				this.yCord = this.yCord;
-				this.xCord = this.xCord - 1;
-			} else if (this.trajectory >= 285 && this.trajectory < 330) {
-				//8
-				//up one; left one;
-				this.yCord = this.yCord - 1;
-				this.xCord = this.xCord - 1;
+		value: function updateCoordinates(maxHeight) {
+			//Commented out until we get acceleration and gravity on track;
+			//if (this.acceleration <= 0 && (this.yCord+this.radius >=maxHeight)){
+			//stuck on the floor with no movement;
+			//	return;
+			//}
+			if (this.yTrajectory > 0) {
+				//We are going down;
+				//Gravity increases;
 			} else {
-				console.log('BALL TRAJECTORY OUT OF BOUNDS');
-			}
+					//We are going up;
+				}
+			this.xCord += this.xTrajectory;
+			this.yCord += this.yTrajectory;
 		}
 	}]);
 
@@ -134,7 +106,7 @@ var BallPen = function (_React$Component) {
 			this.updateCanvas();
 			this.timerID = setInterval(function () {
 				return _this2.updateCanvas();
-			}, 10);
+			}, 25);
 			window.addEventListener('resize', this.updateWindowDimensions);
 		}
 	}, {
@@ -181,7 +153,7 @@ var BallPen = function (_React$Component) {
 				//animate balls
 				//Will need to refigure trajectory and acceleration;
 				this.ball.updateTrajectory(this.state.height, this.state.width);
-				this.ball.updateCoordinates();
+				this.ball.updateCoordinates(this.state.height);
 				this.ball.draw();
 			}
 		}
