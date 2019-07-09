@@ -48,7 +48,7 @@ var Ball = function () {
 		}
 	}, {
 		key: 'updateCoordinates',
-		value: function updateCoordinates(maxHeight) {
+		value: function updateCoordinates(maxHeight, otherBalls) {
 			if (this.yHasMomentum) {
 				//Still bouncing;
 				if (this.isGoingDown === true) {
@@ -61,7 +61,8 @@ var Ball = function () {
 				}
 			} else if (this.xSpeed <= 0) this.xHasMomentum = false;
 			if (this.xHasMomentum) {
-				if (!this.yHasMomentum) this.xSpeed -= this.friction;
+				if (!this.yHasMomentum) //Ball is stuck to the ground;
+					this.xSpeed -= this.friction;
 				if (this.xSpeed <= 0) this.xHasMomentum = false;else {
 					if (this.isGoingRight === true) this.xCord += this.xSpeed;else this.xCord -= this.xSpeed;
 				}
@@ -70,7 +71,7 @@ var Ball = function () {
 
 	}, {
 		key: 'updateTrajectory',
-		value: function updateTrajectory(penHeight, penWidth) {
+		value: function updateTrajectory(penHeight, penWidth, otherBalls) {
 			//Will need to update to allow for multiple heights and widths
 			//	and then find the best/only solution;
 			var rightBound = this.xCord + this.radius;
@@ -78,7 +79,7 @@ var Ball = function () {
 			var hitTop = this.hitTop();
 			var hitBottom = this.hitBottom(penHeight);
 			this.yHasMomentum = true;
-
+			//Container Check - Top/Bottom
 			if (hitBottom === true && this.ySpeed <= 0) {
 				this.yHasMomentum = false;
 				this.yCord = penHeight - this.radius;
@@ -96,6 +97,7 @@ var Ball = function () {
 				this.ySpeed -= this.friction;
 			}
 
+			//Container Check - Sides
 			if (leftBound <= 0) {
 				this.isGoingRight = true;
 				this.xCord = 0 + this.radius;
@@ -107,6 +109,16 @@ var Ball = function () {
 				this.ySpeed -= this.friction;
 				this.xSpeed -= this.friction;
 			}
+
+			//Check Other Balls
+			for (var i = 0; i < otherBalls.length; i++) {
+				var otherBall = otherBalls[i];
+				if (otherBall.ballID === this.ballID) continue;
+				var distanceBetween = this.getDistanceBetween(otherBall);
+				var minimumDistancePossible = this.radius + otherBall.radius;
+				var isTouching = distanceBetween < minimumDistancePossible;
+				if (isTouching) console.log(this.ballID + ' is touching ' + otherBall.ballID);else console.log('not touching: D1(' + distanceBetween + '); D2(' + minimumDistancePossible + ")");
+			} //end i-for
 		} //End updateTrajectory()
 
 	}, {
@@ -122,6 +134,15 @@ var Ball = function () {
 			var topBound = this.yCord - this.radius;
 			if (topBound <= 0) return true;
 			return false;
+		}
+	}, {
+		key: 'getDistanceBetween',
+		value: function getDistanceBetween(otherBall) {
+			//Get the distance between two different objects;
+			var xDiff = this.xCord - otherBall.xCord;
+			var yDiff = this.yCord - otherBall.yCord;
+			var distance = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
+			return distance;
 		}
 	}]);
 

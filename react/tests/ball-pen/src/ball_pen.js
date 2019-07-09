@@ -36,7 +36,7 @@ class Ball{
 		this.xHasMomentum = true;
 		this.yHasMomentum = true;
 	}
-	updateCoordinates(maxHeight){
+	updateCoordinates(maxHeight, otherBalls){
 		if(this.yHasMomentum){
 			//Still bouncing;
 			if(this.isGoingDown === true){
@@ -52,7 +52,7 @@ class Ball{
 		else if(this.xSpeed <= 0)
 			this.xHasMomentum = false;
 		if(this.xHasMomentum){
-			if(!this.yHasMomentum)
+			if(!this.yHasMomentum)	//Ball is stuck to the ground;
 				this.xSpeed -= this.friction
 			if(this.xSpeed <=0)
 				this.xHasMomentum = false;
@@ -65,7 +65,7 @@ class Ball{
 		}
 	}//End updateCoordinates()
 
-	updateTrajectory(penHeight, penWidth){
+	updateTrajectory(penHeight, penWidth, otherBalls){
 		//Will need to update to allow for multiple heights and widths
 		//	and then find the best/only solution;
 		const rightBound	= this.xCord + this.radius;
@@ -73,7 +73,7 @@ class Ball{
 		const hitTop		= this.hitTop();
 		const hitBottom	= this.hitBottom(penHeight);
 		this.yHasMomentum = true;
-
+		//Container Check - Top/Bottom
 		if(hitBottom === true && this.ySpeed <= 0){
 			this.yHasMomentum = false;
 			this.yCord	= penHeight - this.radius;
@@ -94,6 +94,7 @@ class Ball{
 			this.ySpeed -= this.friction;
 		}
 
+		//Container Check - Sides
 		if (leftBound <= 0){
 			this.isGoingRight	= true;
 			this.xCord	= 0 + this.radius;
@@ -106,6 +107,21 @@ class Ball{
 			this.ySpeed -= this.friction;
 			this.xSpeed -= this.friction;
 		}
+
+		//Check Other Balls
+		for( let i=0; i<otherBalls.length; i++){
+			const otherBall	= otherBalls[i];
+			if(otherBall.ballID	=== this.ballID)
+				continue;
+			const distanceBetween	= this.getDistanceBetween(otherBall);
+			const minimumDistancePossible	= this.radius + otherBall.radius;
+			const isTouching			= distanceBetween < minimumDistancePossible;
+			if(isTouching)
+				console.log(this.ballID + ' is touching ' + otherBall.ballID);
+			else
+				console.log('not touching: D1(' +distanceBetween+ '); D2(' + minimumDistancePossible + ")");
+
+		}//end i-for
 	}//End updateTrajectory()
 
 	hitBottom(penHeight){
@@ -119,6 +135,13 @@ class Ball{
 		if (topBound <= 0)
 			return true;
 		return false;
+	}
+	getDistanceBetween(otherBall){
+		//Get the distance between two different objects;
+		const xDiff		= this.xCord - otherBall.xCord;
+		const yDiff		= this.yCord - otherBall.yCord;
+		const distance	= Math.sqrt(xDiff*xDiff + yDiff*yDiff);
+		return distance;
 	}
 }
 class BallPen extends React.Component{
