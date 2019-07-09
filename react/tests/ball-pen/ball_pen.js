@@ -12,13 +12,17 @@ var Ball = function () {
 	function Ball(props) {
 		_classCallCheck(this, Ball);
 
+		this.isGoingRight = true;
+		this.isGoingDown = true;
+		this.yHasMomentum = true;
+		this.xHasMomentum = true;
 		this.xCord = 21;
-		this.yCord = 21;
+		this.yCord = 41;
 		this.radius = 20;
-		this.xTrajectory = 2;
-		this.yTrajectory = 2;
-		this.acceleration = 0;
-		this.gravity = 0.05;
+		this.xSpeed = 2;
+		this.ySpeed = 1.05;
+		this.gravity = 0.5;
+		this.friction = 0.1;
 		this.color = "white";
 		this.ballId = props.ballId;
 		this.canvas = props.canvas;
@@ -34,45 +38,79 @@ var Ball = function () {
 			ctx.fill();
 		}
 	}, {
+		key: 'updateCoordinates',
+		value: function updateCoordinates(maxHeight) {
+			if (this.yHasMomentum) {
+				//Still bouncing;
+				if (this.isGoingDown === true) {
+					this.ySpeed += this.gravity;
+					this.yCord += this.ySpeed;
+				} else {
+					//We are going up;
+					this.ySpeed -= this.gravity;
+					this.yCord -= this.ySpeed;
+				}
+			}
+			if (this.xHasMomentum) {
+				if (!this.yHasMomentum) this.xSpeed -= this.friction;
+				if (this.xSpeed <= 0) this.xHasMomentum = false;else {
+					if (this.isGoingRight === true) this.xCord += this.xSpeed;else this.xCord -= this.xSpeed;
+				}
+			}
+		} //End updateCoordinates()
+
+	}, {
 		key: 'updateTrajectory',
 		value: function updateTrajectory(penHeight, penWidth) {
 			//Will need to update to allow for multiple heights and widths
 			//	and then find the best/only solution;
 			var rightBound = this.xCord + this.radius;
 			var leftBound = this.xCord - this.radius;
-			var bottomBound = this.yCord + this.radius;
-			var topBound = this.yCord - this.radius;
-			if (leftBound <= 0) {
-				this.xTrajectory = -this.xTrajectory;;
-				this.xCord = 0 + this.radius + 1;
-			} else if (rightBound >= penWidth) {
-				this.xTrajectory = -this.xTrajectory;;
-				this.xCord = penWidth - this.radius - 1;
-			} else if (topBound <= 0) {
-				this.yTrajectory = -this.yTrajectory;;
-				this.yCord = 0 + this.radius + 1;
-			} else if (bottomBound >= penHeight) {
-				this.acceleration += 1;
-				this.yTrajectory = -this.yTrajectory;;
-				this.yCord = penHeight - this.radius - 1;
+			var hitTop = this.hitTop();
+			var hitBottom = this.hitBottom(penHeight);
+			this.yHasMomentum = true;
+
+			if (hitBottom === true && this.ySpeed <= 0) {
+				this.yHasMomentum = false;
+				this.yCord = penHeight - this.radius;
+			} else if (hitTop === false && this.ySpeed <= 0) {
+				//Lost momentum; Coming back down;
+				this.isGoingDown = true;
+				this.ySpeed -= this.friction;
+			} else if (hitTop === true) {
+				this.isGoingDown = true;
+				this.yCord = 0 + this.radius;
+				this.ySpeed -= this.friction;
+			} else if (hitBottom === true) {
+				this.isGoingDown = false;
+				this.yCord = penHeight - this.radius;
+				this.ySpeed -= this.friction;
 			}
+
+			if (leftBound <= 0) {
+				this.isGoingRight = true;
+				this.xCord = 0 + this.radius;
+				this.ySpeed -= this.friction;
+			} else if (rightBound >= penWidth) {
+				this.isGoingRight = false;
+				this.xCord = penWidth - this.radius;
+				this.ySpeed -= this.friction;
+			}
+		} //End updateTrajectory()
+
+	}, {
+		key: 'hitBottom',
+		value: function hitBottom(penHeight) {
+			var bottomBound = this.yCord + this.radius;
+			if (bottomBound >= penHeight) return true;
+			return false;
 		}
 	}, {
-		key: 'updateCoordinates',
-		value: function updateCoordinates(maxHeight) {
-			//Commented out until we get acceleration and gravity on track;
-			//if (this.acceleration <= 0 && (this.yCord+this.radius >=maxHeight)){
-			//stuck on the floor with no movement;
-			//	return;
-			//}
-			if (this.yTrajectory > 0) {
-				//We are going down;
-				//Gravity increases;
-			} else {
-					//We are going up;
-				}
-			this.xCord += this.xTrajectory;
-			this.yCord += this.yTrajectory;
+		key: 'hitTop',
+		value: function hitTop() {
+			var topBound = this.yCord - this.radius;
+			if (topBound <= 0) return true;
+			return false;
 		}
 	}]);
 
@@ -151,9 +189,8 @@ var BallPen = function (_React$Component) {
 				this.isStarted = true;
 			} else {
 				//animate balls
-				//Will need to refigure trajectory and acceleration;
-				this.ball.updateTrajectory(this.state.height, this.state.width);
 				this.ball.updateCoordinates(this.state.height);
+				this.ball.updateTrajectory(this.state.height, this.state.width);
 				this.ball.draw();
 			}
 		}
@@ -166,18 +203,6 @@ var BallPen = function (_React$Component) {
 			return React.createElement(
 				'div',
 				null,
-				React.createElement(
-					'h1',
-					null,
-					'Height:',
-					this.state.height
-				),
-				React.createElement(
-					'h1',
-					null,
-					'Width:',
-					this.state.width
-				),
 				React.createElement('canvas', {
 					ref: 'canvas',
 					width: this.state.width,
