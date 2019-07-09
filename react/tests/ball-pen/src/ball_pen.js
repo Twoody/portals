@@ -7,7 +7,7 @@ class Ball{
 		this.xHasMomentum	= true;
 		this.xCord			= 21;
 		this.yCord			= 41;
-		this.radius			= 20;
+		this.radius			= 60;
 		this.xSpeed			= 2;
 		this.ySpeed			= 1.05;
 		this.gravity		= 0.5;
