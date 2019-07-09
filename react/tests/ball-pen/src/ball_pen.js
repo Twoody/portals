@@ -5,9 +5,9 @@ class Ball{
 		this.isGoingDown	= true;
 		this.yHasMomentum	= true;
 		this.xHasMomentum	= true;
-		this.xCord			= 21;
-		this.yCord			= 41;
-		this.radius			= 60;
+		this.xCord			= props.xInit;
+		this.yCord			= props.yInit;
+		this.radius			= 30;
 		this.xSpeed			= 2;
 		this.ySpeed			= 1.05;
 		this.gravity		= 0.5;
@@ -128,7 +128,7 @@ class BallPen extends React.Component{
 			height: 0,
 			width: 0,
 		};
-		this.ball		= null;
+		this.balls		= [];
 		this.isStarted	= false;
 		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
 	}
@@ -175,15 +175,18 @@ class BallPen extends React.Component{
 		ctx.fill();
 		if (this.isStarted === false){
 			//init balls
-			this.ball = new Ball({canvas: canvas, ballID: "ball0"});
-			this.ball.draw();
+			this.balls.push(new Ball({canvas: canvas, ballID: "ball0", xInit:21, yInit:41}));
+			this.balls[0].draw();
 			this.isStarted = true;
 		}
 		else{
 			//animate balls
-			this.ball.updateCoordinates(this.state.height);
-			this.ball.updateTrajectory(this.state.height, this.state.width);
-			this.ball.draw();
+			for(let i=0; i<this.balls.length; i++){
+				const ball	= this.balls[i];
+				ball.updateCoordinates(this.state.height, this.balls);
+				ball.updateTrajectory(this.state.height, this.state.width, this.balls);
+				ball.draw();
+			}
 		}
 	}
 
@@ -204,17 +207,32 @@ class BallPen extends React.Component{
 							const yMousePos	= e.clientY;
 							const xCanvasPos	= xMousePos - rect.left;
 							const yCanvasPos	= yMousePos - rect.top;
-							const xBall			= this.ball.xCord;
-							const yBall			= this.ball.yCord;
-							const xDiff			= xCanvasPos - xBall;
-							const yDiff			= yCanvasPos - yBall;
-							const ballMouseDistance	= Math.sqrt(xDiff*xDiff + yDiff*yDiff);
-							const clickedBall = ballMouseDistance <= this.ball.radius;
-							if(clickedBall){
-									this.ball.accelerate();
-							}
-							else{
-								console.log(' did not clicked ball')
+							let didClickBall	= false;
+							for(let i=0; i<this.balls.length; i++){
+								const ball			= this.balls[i];
+								const xBall			= ball.xCord;
+								const yBall			= ball.yCord;
+								const xDiff			= xCanvasPos - xBall;
+								const yDiff			= yCanvasPos - yBall;
+								const ballMouseDistance	= Math.sqrt(xDiff*xDiff + yDiff*yDiff);
+								const clickedBall = ballMouseDistance <= ball.radius;
+								if(clickedBall){
+									ball.accelerate();
+									didClickBall	= true;
+									break;
+								}
+							}//end i-for
+							if(!didClickBall){
+								//Make new ball;
+								console.log('Making new ball' + this.balls.length)
+								const canvas	= this.canvasRef;
+								const newBall	= new Ball({
+									canvas:	canvas, 
+									ballID:	"ball" + this.balls.length, 
+									xInit:	xCanvasPos, 
+									yInit:	yCanvasPos
+								});
+								this.balls.push(newBall);
 							}
 						}
 					}

@@ -16,9 +16,9 @@ var Ball = function () {
 		this.isGoingDown = true;
 		this.yHasMomentum = true;
 		this.xHasMomentum = true;
-		this.xCord = 21;
-		this.yCord = 41;
-		this.radius = 60;
+		this.xCord = props.xInit;
+		this.yCord = props.yInit;
+		this.radius = 30;
 		this.xSpeed = 2;
 		this.ySpeed = 1.05;
 		this.gravity = 0.5;
@@ -140,7 +140,7 @@ var BallPen = function (_React$Component) {
 			height: 0,
 			width: 0
 		};
-		_this.ball = null;
+		_this.balls = [];
 		_this.isStarted = false;
 		_this.updateWindowDimensions = _this.updateWindowDimensions.bind(_this);
 		return _this;
@@ -195,14 +195,17 @@ var BallPen = function (_React$Component) {
 			ctx.fill();
 			if (this.isStarted === false) {
 				//init balls
-				this.ball = new Ball({ canvas: canvas, ballID: "ball0" });
-				this.ball.draw();
+				this.balls.push(new Ball({ canvas: canvas, ballID: "ball0", xInit: 21, yInit: 41 }));
+				this.balls[0].draw();
 				this.isStarted = true;
 			} else {
 				//animate balls
-				this.ball.updateCoordinates(this.state.height);
-				this.ball.updateTrajectory(this.state.height, this.state.width);
-				this.ball.draw();
+				for (var i = 0; i < this.balls.length; i++) {
+					var ball = this.balls[i];
+					ball.updateCoordinates(this.state.height, this.balls);
+					ball.updateTrajectory(this.state.height, this.state.width, this.balls);
+					ball.draw();
+				}
 			}
 		}
 	}, {
@@ -229,16 +232,32 @@ var BallPen = function (_React$Component) {
 						var yMousePos = e.clientY;
 						var xCanvasPos = xMousePos - rect.left;
 						var yCanvasPos = yMousePos - rect.top;
-						var xBall = _this3.ball.xCord;
-						var yBall = _this3.ball.yCord;
-						var xDiff = xCanvasPos - xBall;
-						var yDiff = yCanvasPos - yBall;
-						var ballMouseDistance = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
-						var clickedBall = ballMouseDistance <= _this3.ball.radius;
-						if (clickedBall) {
-							_this3.ball.accelerate();
-						} else {
-							console.log(' did not clicked ball');
+						var didClickBall = false;
+						for (var i = 0; i < _this3.balls.length; i++) {
+							var ball = _this3.balls[i];
+							var xBall = ball.xCord;
+							var yBall = ball.yCord;
+							var xDiff = xCanvasPos - xBall;
+							var yDiff = yCanvasPos - yBall;
+							var ballMouseDistance = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
+							var clickedBall = ballMouseDistance <= ball.radius;
+							if (clickedBall) {
+								ball.accelerate();
+								didClickBall = true;
+								break;
+							}
+						} //end i-for
+						if (!didClickBall) {
+							//Make new ball;
+							console.log('Making new ball' + _this3.balls.length);
+							var canvas = _this3.canvasRef;
+							var newBall = new Ball({
+								canvas: canvas,
+								ballID: "ball" + _this3.balls.length,
+								xInit: xCanvasPos,
+								yInit: yCanvasPos
+							});
+							_this3.balls.push(newBall);
 						}
 					}
 				})
