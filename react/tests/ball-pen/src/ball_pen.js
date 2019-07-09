@@ -11,9 +11,9 @@ class Ball{
 		this.xSpeed			= 2;
 		this.ySpeed			= 1.05;
 		this.gravity		= 0.5;
-		this.friction		= 0.1;
+		this.friction		= 0.15;
 		this.color			= "white";
-		this.ballId			= props.ballId;
+		this.ballID			= props.ballID;
 		this.canvas			= props.canvas;
 	}
 	draw(){
@@ -29,6 +29,13 @@ class Ball{
 		ctx.fillStyle = "blue";
 		ctx.fill();
 	}
+	accelerate(){
+		console.log('accelerating ball: ' + this.ballID);
+		this.ySpeed += 5;
+		this.xSpeed += 2;
+		this.xHasMomentum = true;
+		this.yHasMomentum = true;
+	}
 	updateCoordinates(maxHeight){
 		if(this.yHasMomentum){
 			//Still bouncing;
@@ -42,6 +49,8 @@ class Ball{
 				this.yCord -= this.ySpeed;
 			}
 		}
+		else if(this.xSpeed <= 0)
+			this.xHasMomentum = false;
 		if(this.xHasMomentum){
 			if(!this.yHasMomentum)
 				this.xSpeed -= this.friction
@@ -89,11 +98,13 @@ class Ball{
 			this.isGoingRight	= true;
 			this.xCord	= 0 + this.radius;
 			this.ySpeed -= this.friction;
+			this.xSpeed -= this.friction;
 		}
 		else if (rightBound >= penWidth){
 			this.isGoingRight	= false;
 			this.xCord	= penWidth - this.radius;
 			this.ySpeed -= this.friction;
+			this.xSpeed -= this.friction;
 		}
 	}//End updateTrajectory()
 
@@ -156,7 +167,7 @@ class BallPen extends React.Component{
 		return;
 	}
 	updateCanvas(){
-		const canvas	= this.refs.canvas;
+		const canvas	= this.canvasRef;
 		const ctx		= canvas.getContext('2d');
 		ctx.beginPath();
 		ctx.rect(0,0, this.state.width, this.state.height);
@@ -183,10 +194,30 @@ class BallPen extends React.Component{
 		return (
 			<div>
 				<canvas
-					ref="canvas"
+					ref={canvas => this.canvasRef = canvas}
 					width={this.state.width}
 					height={this.state.height}
 					style={penStyle}
+					onClick={e =>{
+							const rect = this.canvasRef.getBoundingClientRect();
+							const xMousePos	= e.clientX;
+							const yMousePos	= e.clientY;
+							const xCanvasPos	= xMousePos - rect.left;
+							const yCanvasPos	= yMousePos - rect.top;
+							const xBall			= this.ball.xCord;
+							const yBall			= this.ball.yCord;
+							const xDiff			= xCanvasPos - xBall;
+							const yDiff			= yCanvasPos - yBall;
+							const ballMouseDistance	= Math.sqrt(xDiff*xDiff + yDiff*yDiff);
+							const clickedBall = ballMouseDistance <= this.ball.radius;
+							if(clickedBall){
+									this.ball.accelerate();
+							}
+							else{
+								console.log(' did not clicked ball')
+							}
+						}
+					}
 				/>
 			</div>
 		);

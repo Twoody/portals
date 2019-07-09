@@ -22,9 +22,9 @@ var Ball = function () {
 		this.xSpeed = 2;
 		this.ySpeed = 1.05;
 		this.gravity = 0.5;
-		this.friction = 0.1;
+		this.friction = 0.15;
 		this.color = "white";
-		this.ballId = props.ballId;
+		this.ballID = props.ballID;
 		this.canvas = props.canvas;
 	}
 
@@ -36,6 +36,15 @@ var Ball = function () {
 			ctx.arc(this.xCord, this.yCord, this.radius, 2 * Math.PI, false);
 			ctx.fillStyle = "blue";
 			ctx.fill();
+		}
+	}, {
+		key: 'accelerate',
+		value: function accelerate() {
+			console.log('accelerating ball: ' + this.ballID);
+			this.ySpeed += 5;
+			this.xSpeed += 2;
+			this.xHasMomentum = true;
+			this.yHasMomentum = true;
 		}
 	}, {
 		key: 'updateCoordinates',
@@ -50,7 +59,7 @@ var Ball = function () {
 					this.ySpeed -= this.gravity;
 					this.yCord -= this.ySpeed;
 				}
-			}
+			} else if (this.xSpeed <= 0) this.xHasMomentum = false;
 			if (this.xHasMomentum) {
 				if (!this.yHasMomentum) this.xSpeed -= this.friction;
 				if (this.xSpeed <= 0) this.xHasMomentum = false;else {
@@ -91,10 +100,12 @@ var Ball = function () {
 				this.isGoingRight = true;
 				this.xCord = 0 + this.radius;
 				this.ySpeed -= this.friction;
+				this.xSpeed -= this.friction;
 			} else if (rightBound >= penWidth) {
 				this.isGoingRight = false;
 				this.xCord = penWidth - this.radius;
 				this.ySpeed -= this.friction;
+				this.xSpeed -= this.friction;
 			}
 		} //End updateTrajectory()
 
@@ -176,7 +187,7 @@ var BallPen = function (_React$Component) {
 	}, {
 		key: 'updateCanvas',
 		value: function updateCanvas() {
-			var canvas = this.refs.canvas;
+			var canvas = this.canvasRef;
 			var ctx = canvas.getContext('2d');
 			ctx.beginPath();
 			ctx.rect(0, 0, this.state.width, this.state.height);
@@ -197,6 +208,8 @@ var BallPen = function (_React$Component) {
 	}, {
 		key: 'render',
 		value: function render() {
+			var _this3 = this;
+
 			var penStyle = {
 				border: "1px solid #000000"
 			};
@@ -204,10 +217,30 @@ var BallPen = function (_React$Component) {
 				'div',
 				null,
 				React.createElement('canvas', {
-					ref: 'canvas',
+					ref: function ref(canvas) {
+						return _this3.canvasRef = canvas;
+					},
 					width: this.state.width,
 					height: this.state.height,
-					style: penStyle
+					style: penStyle,
+					onClick: function onClick(e) {
+						var rect = _this3.canvasRef.getBoundingClientRect();
+						var xMousePos = e.clientX;
+						var yMousePos = e.clientY;
+						var xCanvasPos = xMousePos - rect.left;
+						var yCanvasPos = yMousePos - rect.top;
+						var xBall = _this3.ball.xCord;
+						var yBall = _this3.ball.yCord;
+						var xDiff = xCanvasPos - xBall;
+						var yDiff = yCanvasPos - yBall;
+						var ballMouseDistance = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
+						var clickedBall = ballMouseDistance <= _this3.ball.radius;
+						if (clickedBall) {
+							_this3.ball.accelerate();
+						} else {
+							console.log(' did not clicked ball');
+						}
+					}
 				})
 			);
 		}
