@@ -51,11 +51,17 @@ $ad_not_sm	= "";	//Show WHEN NOT X-SMALL
 $ad_not_sm	.= "\n\t\t\t\t\t<span class=\"d-none d-sm-block\">";
 $ad_not_sm	.= get_ad($CONFIG);
 $ad_not_sm	.= "\n\t\t\t\t\t</span>";
+$instructions_content	=	"Click on a ball to accelerate it;<br/>";
+$instructions_content	.=	"Click on an empty space to init a new ball; <br/>";
+$instructions_content	.=	"New balls will only be made if there is room (e.g. ";
+$instructions_content	.=	"there are too many balls or new ball would be out of bounds)";
+$instructions	= make_tag('p', Array('content'=>$instructions_content), $CONFIG);
 
+$col0_content	= "<hr class=\"thick-line\">". $react_div . $instructions_content;
 $page_views	= make_page_views($CONFIG['ACTIVE_PAGE'], $CONFIG);
 $col0	= Array(
 	'class'=>"col-12 col-sm-8 col-md-9 col-lg-10 m-0 p-0 fit-screen",
-	'content'=>"<hr class=\"thick-line\">". $react_div,
+	'content'=>$col0_content,
 );
 $col1	= Array(
 	'class'=>" col-sm-4 col-md-3 col-lg-2 pr-3 m-0",
