@@ -3,8 +3,6 @@ class Ball{
 	constructor(props){
 		this.isGoingRight	= true;
 		this.isGoingDown	= true;
-		this.yHasMomentum	= true;
-		this.xHasMomentum	= true;
 		this.xCord			= props.xInit;
 		this.yCord			= props.yInit;
 		this.radius			= 30;
@@ -12,9 +10,13 @@ class Ball{
 		this.ySpeed			= 1.05;
 		this.gravity		= 0.5;
 		this.friction		= 0.15;
-		this.color			= "white";
+		this.kineticGain	= (1/3);
+		this.kineticLoss	= (2/3);
+		this.color			= "blue";
 		this.ballID			= props.ballID;
 		this.canvas			= props.canvas;
+		this.maxWidth		= props.maxWidth;
+		this.maxHeight		= props.maxHeight;
 	}
 	draw(){
 		const ctx		= this.canvas.getContext('2d');
@@ -26,57 +28,49 @@ class Ball{
 			2*Math.PI,
 			false
 		);
-		ctx.fillStyle = "blue";
+		ctx.fillStyle = this.color;
 		ctx.fill();
 	}
 	accelerate(){
 		console.log('accelerating ball: ' + this.ballID);
 		this.ySpeed += 5;
 		this.xSpeed += 2;
-		this.xHasMomentum = true;
-		this.yHasMomentum = true;
 	}
-	updateCoordinates(maxHeight, otherBalls){
-		if(this.yHasMomentum){
-			//Still bouncing;
-			if(this.isGoingDown === true){
-				this.ySpeed += this.gravity;
-				this.yCord += this.ySpeed;
-			}
-			else{
-				//We are going up;
-				this.ySpeed -= this.gravity;
-				this.yCord -= this.ySpeed;
-			}
-		}
-		else if(this.xSpeed <= 0)
-			this.xHasMomentum = false;
-		if(this.xHasMomentum){
-			if(!this.yHasMomentum)	//Ball is stuck to the ground;
-				this.xSpeed -= this.friction
-			if(this.xSpeed <=0)
-				this.xHasMomentum = false;
-			else{
-				if (this.isGoingRight === true)
-					this.xCord += this.xSpeed;
-				else
-					this.xCord -= this.xSpeed;
-			}
-		}
+	updateSpeed(){
+		if(this.isGoingDown)
+			this.ySpeed += this.gravity;
+		else
+			this.ySpeed -= this.gravity;
+	}
+	updateCoordinates(otherBalls){
+		if(this.isGoingDown === true)
+			this.yCord += this.ySpeed;
+		else //We are going up;
+			this.yCord -= this.ySpeed;
+		if (this.isGoingRight === true)
+			this.xCord += this.xSpeed;
+		else
+			this.xCord -= this.xSpeed;
 	}//End updateCoordinates()
 
-	updateTrajectory(penHeight, penWidth, otherBalls){
+	updateTrajectory(otherBalls){
 		//Will need to update to allow for multiple heights and widths
 		//	and then find the best/only solution;
 		const rightBound	= this.xCord + this.radius;
 		const leftBound	= this.xCord - this.radius;
 		const hitTop		= this.hitTop();
-		const hitBottom	= this.hitBottom(penHeight);
-		this.yHasMomentum = true;
+		const hitBottom	= this.hitBottom();
+		let isBouncing		= true;
 		//Container Check - Top/Bottom
 		if(hitBottom === true && this.ySpeed <= 0){
-			this.yHasMomentum = false;
-			this.yCord	= penHeight - this.radius;
+			//Hit bottom but no more bounce;
+			this.yCord	= this.maxHeight - this.radius;
+			if(this.xSpeed > 0)
+				this.xSpeed -= this.friction;
+			if(this.xSpeed < 0)
+				this.xSpeed = 0;
+			this.ySpeed = 0;
+			isBouncing	= false;
 		}
 		else if(hitTop === false && this.ySpeed <= 0){
 			//Lost momentum; Coming back down;
@@ -89,23 +83,28 @@ class Ball{
 			this.ySpeed -= this.friction;
 		}
 		else if (hitBottom === true){
+			//Hit Bottom but still bouncing up;
 			this.isGoingDown = false;
-			this.yCord	= penHeight - this.radius;
+			this.yCord	= this.maxHeight - this.radius;
 			this.ySpeed -= this.friction;
 		}
 
 		//Container Check - Sides
-		if (leftBound <= 0){
-			this.isGoingRight	= true;
-			this.xCord	= 0 + this.radius;
-			this.ySpeed -= this.friction;
-			this.xSpeed -= this.friction;
-		}
-		else if (rightBound >= penWidth){
-			this.isGoingRight	= false;
-			this.xCord	= penWidth - this.radius;
-			this.ySpeed -= this.friction;
-			this.xSpeed -= this.friction;
+		if (leftBound <= 0 || rightBound >= this.maxWidth){
+			if (leftBound <= 0){
+				this.isGoingRight	= true;
+				this.xCord	= 0 + this.radius;
+			}
+			else if (rightBound >= this.maxWidth){
+				this.isGoingRight	= false;
+				this.xCord	= this.maxWidth - this.radius;
+			}
+			if (isBouncing)
+				this.ySpeed -= this.friction;
+			if (this.xSpeed > 0)
+				this.xSpeed -= this.friction;
+			if(this.xSpeed <=0)
+				this.xSpeed = 0;
 		}
 
 		//Check Other Balls
@@ -113,20 +112,20 @@ class Ball{
 			const otherBall	= otherBalls[i];
 			if(otherBall.ballID	=== this.ballID)
 				continue;
-			const distanceBetween	= this.getDistanceBetween(otherBall);
+			const distanceBetween			= this.getDistanceBetween(otherBall);
 			const minimumDistancePossible	= this.radius + otherBall.radius;
-			const isTouching			= distanceBetween < minimumDistancePossible;
-			if(isTouching)
-				console.log(this.ballID + ' is touching ' + otherBall.ballID);
-			else
-				console.log('not touching: D1(' +distanceBetween+ '); D2(' + minimumDistancePossible + ")");
-
+			const isOverlapping				= distanceBetween < minimumDistancePossible;
+			if(isOverlapping){
+				console.log('overlapping');
+				this.diagnoseCollision(otherBall, distanceBetween);
+				//this.updateTrajectory(otherBalls);
+			}
 		}//end i-for
 	}//End updateTrajectory()
 
-	hitBottom(penHeight){
+	hitBottom(){
 		const bottomBound	= this.yCord + this.radius;
-		if (bottomBound >= penHeight)
+		if (bottomBound >= this.maxHeight)
 			return true;
 		return false;
 	}
@@ -137,13 +136,198 @@ class Ball{
 		return false;
 	}
 	getDistanceBetween(otherBall){
-		//Get the distance between two different objects;
+		//Get the distance between `this` and a different object;
 		const xDiff		= this.xCord - otherBall.xCord;
 		const yDiff		= this.yCord - otherBall.yCord;
 		const distance	= Math.sqrt(xDiff*xDiff + yDiff*yDiff);
 		return distance;
 	}
-}
+	getSlope(otherBall){
+		const xDiff		= this.xCord - otherBall.xCord;
+		const yDiff		= this.yCord - otherBall.yCord;
+		let slope		= yDiff/xDiff;
+		if (slope === -0 || slope === +0)
+			slope = 0;
+		return slope;
+	}
+	diagnoseCollision(otherBall, distanceBetween){
+		const requiredDistance	= this.radius + this.radius;
+		const missingDistance	= requiredDistance - distanceBetween;
+		const slope					= this.getSlope(otherBall);
+		//const missingDistance	= requiredDistance;
+
+		if(this.ySpeed <=0){
+			//Current Ball has no bounce;
+			if(otherBall.ySpeed <= 0)
+				this.isGoingDown = true;
+			else{
+				//Transfter bounce from other ball to current ball;
+				this.ySpeed					= otherBall.ySpeed * this.kineticGain;
+				otherBall.ySpeed			= otherBall.ySpeed * this.kineticLoss;
+				this.isGoingDown			= false;
+				otherBall.isGoingDown	= false;
+			}
+		}
+		else if(otherBall.ySpeed <=0){
+			//Transfter bounce from current ball to other ball;
+			otherBall.ySpeed			= this.ySpeed * this.kineticGain;
+			this.ySpeed					= this.ySpeed * this.kineticLoss;
+			otherBall.isGoingDown	= false;
+			this.isGoingDown			= false;
+		}
+		else if(this.isGoingDown === otherBall.isGoingDown){
+			//Both balls are in the same direction;
+			if(this.isGoingDown){
+				if(this.yCord > otherBall.yCord){
+					//Current ball is below other ball;
+					this.ySpeed			+= otherBall.ySpeed * this.kineticGain;
+					otherBall.ySpeed	=  otherBall.ySpeed * this.kineticLoss;
+					if(this.willChangeOnCollision_y(slope))
+						otherBall.isGoingDown = false;
+				}
+				else{
+					//Current ball is ontop of other ball;
+					otherBall.ySpeed	+= this.ySpeed * this.kineticGain;
+					this.ySpeed			=  this.ySpeed * this.kineticLoss;
+					if(this.willChangeOnCollision_y(slope))
+						this.isGoingDown = false;
+				}
+			}
+			else{
+				//Both balls are going up
+				if(this.yCord > otherBall.yCord){
+					//Current ball is below other ball
+					otherBall.ySpeed += this.ySpeed * this.kineticGain;
+					this.ySpeed			= this.ySpeed * this.kineticLoss;
+					if(this.willChangeOnCollision_y(slope))
+						this.isGoingDown = false;
+				}
+				else{
+					//Current ball is on top other ball
+					this.ySpeed			+= otherBall.ySpeed * this.kineticGain;
+					otherBall.ySpeed	=  otherBall.ySpeed * this.kineticLoss;
+					if(this.willChangeOnCollision_y(slope))
+						otherBall.isGoingDown = false;
+				}
+			}
+		}
+		else{
+			//Both balls are MOVING and headed in opposite direction;
+			//Just add friction and change direction;
+			this.ySpeed					-= this.friction;
+			otherBall.ySpeed			-= this.friction;
+			if( this.willChangeOnCollision_y(slope) ){
+				this.isGoingDown			= !this.isGoingDown;
+				otherBall.isGoingDown	= !otherBall.isGoingDown;
+			}
+			//Need to figure out what ball is on top and on bottom
+			//	so that we do not push it out of bounds;
+			if(this.yCord < otherBall.yCord){
+				//Current ball is ontop of otherball
+				const currOnBottom	= this.hitBottom();
+				if(currOnBottom){
+					//Update other ball, as we do not want to push this out of bounds;
+					otherBall.yCord	= this.yCord + (this.yCord - otherBall.yCord) / distanceBetween * missingDistance;
+				}
+				else{
+					//We can update the current ball instead
+					this.yCord	= otherBall.yCord + (otherBall.yCord - this.yCord) / distanceBetween * missingDistance;
+				}
+			}
+			else{
+				//Current ball is below otherball;
+				const currOnTop	= this.hitTop();
+				if(currOnTop){
+					//update other ball so we do not push this out of bounds;
+					otherBall.yCord	= this.yCord + (this.yCord - otherBall.yCord) / distanceBetween * missingDistance;
+				}
+				else{
+					//We can update the current ball instead
+					this.yCord	= otherBall.yCord + (otherBall.yCord - this.yCord) / distanceBetween * missingDistance;
+				}
+			}
+		}
+
+		if(this.xSpeed <= 0){
+			this.xSpeed			= otherBall.xSpeed * (2/3);
+			otherBall.xSpeed	= otherBall.xSpeed * (1/3);
+			this.isGoingRight 		= otherBall.isGoingRight;
+			otherBall.isGoingRight	= !otherBall.isGoingRight;
+			otherBall.xCord			= otherBall.xCord + (otherBall.xCord - this.xCord) / distanceBetween * missingDistance;
+		}
+		else if(otherBall.xSpeed <=0){
+			otherBall.xSpeed	= this.xSpeed * (2/3);
+			this.xSpeed			= this.xSpeed * (1/3);
+			otherBall.isGoingRight	= this.isGoingRight;
+			this.isGoingRight			= !this.isGoingRight;
+			this.xCord	= this.xCord + (this.xCord - otherBall.xCord) / distanceBetween * missingDistance;
+		}
+		else if(this.isGoingRight === otherBall.isGoingRight){
+			//	Both balls are MOVING in the same direction
+			//	If balls are going in same direction, then the inner ball
+			//	will receive speed while the other ball will lose speed;
+			if(this.isGoingRight){
+				//Both balls are going right
+				if(this.xCord > otherBall.xCord){
+					//Current ball is MOVING right of other ball;
+					//TODO: Check bounds;
+					this.xSpeed += otherBall.xSpeed*(2/3);
+					otherBall.xSpeed = otherBall.xSpeed*(1/3);
+					this.xCord	= this.xCord + (this.xCord - otherBall.xCord) / distanceBetween * missingDistance;
+					otherBall.isGoingRight	= !otherBall.isGoingRight;
+				}
+				else{
+					//Other ball is MOVING right of current ball;
+					//TODO: Check bounds;
+					otherBall.xSpeed += this.xSpeed*(2/3);
+					this.xSpeed			= this.xSpeed*(1/3);
+					otherBall.xCord	= otherBall.xCord + (otherBall.xCord - this.xCord) / distanceBetween * missingDistance;
+					this.isGoingRight	= !this.isGoingRight;
+				}
+		 }
+			else{
+				//Both balls are going left;
+				if(this.xCord > otherBall.xCord){
+					//Other ball is MOVING left of current ball;
+					//TODO: Check bounds;
+					otherBall.xSpeed	+= this.xSpeed*(2/3);
+					this.xSpeed			= this.xSpeed*(1/3);
+					otherBall.xCord	= otherBall.xCord + (otherBall.xCord - this.xCord) / distanceBetween * missingDistance;
+					this.isGoingRight	= !this.isGoingRight;
+				}
+				else{
+					//Current ball is MOVING right of other ball;
+					//TODO: Check bounds;
+					this.xSpeed			+= otherBall.xSpeed*(2/3);
+					otherBall.xSpeed	= otherBall.xSpeed*(1/3);
+					this.xCord			= this.xCord + (this.xCord - otherBall.xCord) / distanceBetween * missingDistance;
+					otherBall.isGoingRight	= !otherBall.isGoingRight;
+				}
+			}
+		}
+		else{
+			//	Balls are going in opposite directions;
+			//	If balls are goign in opposite directions, then both
+			//	balls switch direction while losing speed to friction;
+			if(this.xCord - this.radius <= 0)
+				otherBall.xCord = otherBall.xCord + (otherBall.xCord - this.xCord) / distanceBetween * missingDistance;
+			else if(this.xCord + this.radius >= this.maxWidth)
+				otherBall.xCord = otherBall.xCord + (otherBall.xCord - this.xCord) / distanceBetween * missingDistance;
+			else
+				this.xCord = this.xCord + (this.xCord - otherBall.xCord) / distanceBetween * missingDistance;
+			this.isGoingRight 		= !this.isGoingRight;
+			otherBall.isGoingRight	= !otherBall.isGoingRight;
+			this.xSpeed					-= this.friction;
+			otherBall.xSpeed			-= this.friction;
+		}
+	}//end diagnoseCollision()
+	willChangeOnCollision_y(slope){
+		if( (slope <= 1 && slope >= 0.65) || (slope >= -1 && slope > -0.65) )
+			return true;
+		return false;
+	}
+}//end Ball Class
+
 class BallPen extends React.Component{
 	constructor(props){
 		super(props);
@@ -187,6 +371,10 @@ class BallPen extends React.Component{
 			width: width, 
 			height: height
 		});
+		for(let i=0; i<this.balls.length; i++){
+			this.balls[i].maxHeight	= height;
+			this.balls[i].maxWidth	= width;
+		}
 		return;
 	}
 	updateCanvas(){
@@ -196,19 +384,31 @@ class BallPen extends React.Component{
 		ctx.rect(0,0, this.state.width, this.state.height);
 		ctx.fillStyle = "#FF0000";
 		ctx.fill();
-		if (this.isStarted === false){
-			//init balls
-			this.balls.push(new Ball({canvas: canvas, ballID: "ball0", xInit:21, yInit:41}));
-			this.balls[0].draw();
-			this.isStarted = true;
-		}
-		else{
-			//animate balls
-			for(let i=0; i<this.balls.length; i++){
-				const ball	= this.balls[i];
-				ball.updateCoordinates(this.state.height, this.balls);
-				ball.updateTrajectory(this.state.height, this.state.width, this.balls);
-				ball.draw();
+		if(this.state.width){
+			if (this.isStarted === false){
+				//init balls
+				this.balls.push(
+					new Ball({
+						canvas:		canvas, 
+						ballID:		"ball0", 
+						xInit:		41, 
+						yInit:		41,
+						maxHeight:	this.state.height,
+						maxWidth:	this.state.width
+					})
+				);
+				this.balls[0].draw();
+				this.isStarted = true;
+			}
+			else{
+				//animate balls
+				for(let i=0; i<this.balls.length; i++){
+					const ball	= this.balls[i];
+					ball.updateSpeed();
+					ball.updateCoordinates(this.state.height, this.balls);
+					ball.updateTrajectory(this.balls);
+					ball.draw();
+				}
 			}
 		}
 	}
@@ -230,6 +430,8 @@ class BallPen extends React.Component{
 							const yMousePos	= e.clientY;
 							const xCanvasPos	= xMousePos - rect.left;
 							const yCanvasPos	= yMousePos - rect.top;
+							const radius		= this.balls[0].radius;
+							let isLegalBall	= true;
 							let didClickBall	= false;
 							for(let i=0; i<this.balls.length; i++){
 								const ball			= this.balls[i];
@@ -238,24 +440,43 @@ class BallPen extends React.Component{
 								const xDiff			= xCanvasPos - xBall;
 								const yDiff			= yCanvasPos - yBall;
 								const ballMouseDistance	= Math.sqrt(xDiff*xDiff + yDiff*yDiff);
-								const clickedBall = ballMouseDistance <= ball.radius;
+								const clickedBall = ballMouseDistance <= radius;
+								if (isLegalBall)
+									isLegalBall			= ballMouseDistance >= (radius*2);
 								if(clickedBall){
 									ball.accelerate();
 									didClickBall	= true;
 									break;
 								}
 							}//end i-for
+							if(isLegalBall){
+								//Check with top, bottom, and sides;
+								if (xCanvasPos - radius < 0)
+									isLegalBall = false;
+								else if (xCanvasPos + radius > this.state.width)
+									isLegalBall = false;
+								else if (yCanvasPos - radius < 0)
+									isLegalBall = false;
+								else if (yCanvasPos + radius > this.state.height)
+									isLegalBall = false;
+							}
 							if(!didClickBall){
 								//Make new ball;
-								console.log('Making new ball' + this.balls.length)
-								const canvas	= this.canvasRef;
-								const newBall	= new Ball({
-									canvas:	canvas, 
-									ballID:	"ball" + this.balls.length, 
-									xInit:	xCanvasPos, 
-									yInit:	yCanvasPos
-								});
-								this.balls.push(newBall);
+								if(isLegalBall){
+									console.log('Making new ball' + this.balls.length)
+									const canvas	= this.canvasRef;
+									const newBall	= new Ball({
+										canvas:		canvas, 
+										ballID:		"ball" + this.balls.length, 
+										xInit:		xCanvasPos, 
+										yInit:		yCanvasPos,
+										maxHeight:	this.state.height,
+										maxWidth:	this.state.width
+									});
+									this.balls.push(newBall);
+								}
+								else
+									console.log('Not legal ball');
 							}
 						}
 					}
