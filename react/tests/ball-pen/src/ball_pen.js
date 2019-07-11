@@ -8,10 +8,12 @@ class Ball{
 		this.xCord			= props.xInit;
 		this.yCord			= props.yInit;
 		this.radius			= props.radius;;
-		this.mass			= Math.pow(this.radius, 3);
+		this.mass			= Math.pow(this.radius, 3) - this.index;
 		this.dy				= 2;
 		this.dx				= 1.05;
-		this.gravity		= 1;
+		this.gravity		= 1.05;
+		this.friction		= 0.1;
+		this.drag			= 0.01;
 	}
 	draw(){
 		const ctx		= this.canvas.getContext('2d');
@@ -39,6 +41,7 @@ class Ball{
 			const distance		= this.getDistanceBetween(otherBall);
 			if( distance > combinedR )
 				continue;
+			console.log('Static Collision: `'+this.ballID+'` & `'+otherBall.ballID+'`');
 			const theta				= this.getThetaBetween(otherBall);
 			const overlap			= this.getOverlap(otherBall);
 			//TODO: getSmallerBall();
@@ -64,7 +67,7 @@ class Ball{
 			if(distanceNextFrame >0){
 				continue;
 			}
-			console.log('Collsion: `'+this.ballID+'` & `'+otherBall.ballID+'`');
+			console.log('Active Collision: `'+this.ballID+'` & `'+otherBall.ballID+'`');
 			const theta		= this.getThetaBetween2(otherBall);
 			const angle1	= this.getAngle();
 			const angle2	= otherBall.getAngle();
@@ -74,7 +77,6 @@ class Ball{
 			const v2			= otherBall.getSpeed();
 			//TODO: Break this up and explain it;
 			const dx1F 		= (v1 * Math.cos(angle1 - theta) * (m1-m2) + 2*m2*v2*Math.cos(angle2 - theta)) / (m1+m2) * Math.cos(theta) + v1*Math.sin(angle1-theta) * Math.cos(theta+Math.PI/2);
-			//var dx1F =     (v1 * Math.cos(theta1 - phi)   * (m1-m2) + 2*m2*v2*Math.cos(theta2 - phi))   / (m1+m2) * Math.cos(phi)   + v1*Math.sin(theta1-phi)   * Math.cos(phi+Math.PI/2);
 			const dy1F		= (v1 * Math.cos(angle1 - theta) * (m1-m2) + 2*m2*v2*Math.cos(angle2 - theta)) / (m1+m2) * Math.sin(theta) + v1*Math.sin(angle1-theta) * Math.sin(theta+Math.PI/2);
 			const dx2F		= (v2 * Math.cos(angle2 - theta) * (m2-m1) + 2*m1*v1*Math.cos(angle1 - theta)) / (m1+m2) * Math.cos(theta) + v2*Math.sin(angle2-theta) * Math.cos(theta+Math.PI/2);
 			const dy2F		= (v2 * Math.cos(angle2 - theta) * (m2-m1) + 2*m1*v1*Math.cos(angle1 - theta)) / (m1+m2) * Math.sin(theta) + v2*Math.sin(angle2-theta) * Math.sin(theta+Math.PI/2);
@@ -90,32 +92,46 @@ class Ball{
 		let didHitWall = false;
 		if (this.xCord - this.radius + this.dx < 0 ||
 			this.xCord	+ this.radius + this.dx > width) {
+			//Will ball hit left or right side?
 			this.dx		*= -1;
 			didHitWall	= true;
 		}
 		if (this.yCord - this.radius + this.dy < 0 ||
 			this.yCord	+ this.radius + this.dy > height) {
+			//Will ball hit top or hit bottom?
 			this.dy		*= -1;
 			didHitWall	= true;
 		}
 		if (this.yCord + this.radius > height){
+			//Did ball hit bottom?
 			this.yCord	= height - this.radius;
 			didHitWall	= true;
 		}
 		if (this.yCord - this.radius < 0){
+			//Did ball hit top?
 			this.yCord	= this.radius;
 			didHitWall	= true;
 		}
 		if (this.xCord + this.radius > width){
+			//Did ball hit right?
 			this.xCord	= width - this.radius;
 			didHitWall	= true;
 		}
 		if (this.xCord - this.radius < 0){
+			//Did ball hit left?
 			this.xCord	= this.radius;
 			didHitWall	= true;
 		}
 		if(didHitWall){
 			//console.log('hit wall');
+			if(this.dy > 0)
+				this.dy -= this.friction;
+			else
+				this.dy += this.friction;
+			if(this.dx > 0)
+				this.dx -= this.friction;
+			else
+				this.dx += this.friction;
 		}
 		else{
 			//console.log('did not hit wall');
@@ -147,7 +163,7 @@ class Ball{
 			this.dy += 5;
 		else
 			this.dy -= 5;
-		if(this.xy > 0)
+		if(this.dx > 0)
 			this.dx += 2;
 		else
 			this.dx -= 2;
@@ -157,8 +173,8 @@ class Ball{
 			this.dy += this.gravity;
 	}
 	applyDrag(){
-		this.dx	*= 0.99;
-		this.dy	*= 0.99;
+		this.dx	-= this.drag;
+		this.dy	-= this.drag;
 	}
 	getDistanceBetween(otherBall){
 		//Get the distance between `this` and a different object;
@@ -274,8 +290,8 @@ class BallPen extends React.Component{
 				//animate balls
 				for(let i=0; i<this.balls.length; i++){
 					const ball	= this.balls[i];
-					if(ball.isStatic(this.state.height))
-						continue;
+	//				if(ball.isStatic(this.state.height))
+	//					continue;
 					ball.applyGravity(this.state.height);
 					ball.applyDrag();
 					ball.updateCoordinates();
