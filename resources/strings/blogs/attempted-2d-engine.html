@@ -1,0 +1,279 @@
+
+<!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
+<p>
+	<span class="first-word">Spoiler</span> alert: Making a 2d physics engine
+	is hard. After spending three days attempting to put together a "simple"
+	ball bouncing engine, I am here, to declare my defeat. Calling it a defeat
+	might be a little over dramatic. After all, I am a one-man team who desires
+	perfection! And I am no creator of universes. I am the creator of bugs and
+	lack-luster products: A software engineer.
+</p>
+
+<p>
+	In this "tutorial", I hope to explain to you the do's and do-not's of
+	starting your own physics engine by outlining all of the different
+	thoughts, struggles, and need-to-knows before you take on a similar 
+	endeavor.
+</p>
+<hr class="thickline">
+<p>
+	For me, this all started out after I shared my website on reddit. The 
+	developer community I shared it with had nothing positive to say about
+	the different mechanics I hand-built. And the biggest smack in the face
+	was how people were telling me my website looked like a half-assed
+	implementation of some template site.
+	<span class="highlighter">
+		I want my site to have a first great impression.  How can I accomplish 
+		this?
+	</span>
+</p>
+<!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
+
+<p>
+	Before I started doing anything, I first asked myself what it was that a 
+	good site must have to motivate the community to interact with it. I came
+	up with the following list:
+	<ol>
+		<li>
+			Content
+		</li>
+		<li>
+			User Interactivity
+		</li>
+		<li>
+			Design
+		</li>
+		<li>
+			Readability and Organization
+		</li>
+	</ol>
+	My site is readable, my site could be more organized, and the design is 
+	blatantly simple. The content is going to take time, as building a large
+	name blog does not happen over night. And the design is missing.
+</p>
+
+<p>
+	Thus, I decided that I was going to make something that catches the eye.
+	When someone lands on my site, I want them to feel like they found 
+	something cool. If they learn something, sure, that is great, too. But
+	sometimes the things we learn all like a little seed that just gets
+	planted and will grow over time.
+</p>
+<p>
+	<span class="highlighter">
+		This seed being planted and fostering over time is exactly how I am 
+		interpreting my experience with 2d physics engines.
+	</span>
+	Sure, I learned some more stuff about <code>reactjs</code>, but more
+	importantly, I was able to really dust off my mathematics, physics,
+	and alogrithm side of my brain. The nuts and bolts are why I got into
+	software development, but I rarely am using them between writing
+	<code>POST</code> and <code>GET</code> methods.
+</p>
+<!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
+<p>
+	The overview of learned items while exploring 2d physics engines consist
+	of:
+	<span class="highlighter">
+		<ol>
+			<li>
+				Keeping it simpler is always a good idea.
+			</li>
+			<li>
+				Mathematics are the simpler method in the long run.
+			</li>
+			<li>
+				Mathemtics and computers can get complex real fast.
+			</li>
+		</ol>
+	</span>
+	I found 
+	<a href="https://www.myphysicslab.com/develop/docs/Engine2D.html">
+		some great resources for learning about physics by Erik Newman
+	</a>
+	In a less abstract sense, the things that I learned are:
+	<ol>
+		<li>
+			Momentum
+		</li>
+		<li>
+			Gravity
+		</li>
+		<li>
+			Inertia
+		</li>
+		<li>
+			Velocity
+		</li>
+		<li>
+			Impulse
+		</li>
+		<li>
+			Matrices
+		</li>
+		<li>
+			Rendering frames
+		</li>
+		<li>
+			Angles, slopes, and distances
+		</li>
+		<li>
+			Transfering of force
+		</li>
+		<li>
+			Air resistance and drag
+		</li>
+	</ol>
+</p>
+<!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
+<p>
+	I first took the time to learn <code>javascript</code> and <code>html
+	</code> in terms of <code>Canvas</code>. The gist of learning these items 
+	was pretty simple. I quickly was able to take the react tutorials that I 
+	made live on my site and make a second rendering of the components that 
+	let react live on my website. This consisted of copying the general
+	template that I am using for this site and plugging a react div and id into
+	the specified bootstrap container. I also had to declare a new an <code>
+	CUSTOM_SCRIPT</code> of <code>ball_pen.js</code>.
+</p>
+<p>
+	Once I had the div with id <code>ball-pen</code>, I went to work on the
+	react file necessary to draw the ball-pen. This file was located in the same
+	directory at <code>./src/ball_pen.js</code>. In my setup, I execute the
+	following command to generate the javascript file from the react src code:
+	<pre class="terminal-block">
+		$&nbsp;<kbd class="bash-green">npx babel --watch src --out-dir . --presets react-app/prod </kbd>
+	</pre>
+	<!--See: https://reactjs.org/docs/add-react-to-a-website.html -->
+	As the above JSX watcher runs in one terminal, I am writing code in another.
+	As I save my changes, the JSX watcher will automatically update/generate 
+	<code>./ball_pen.js</code> from the changes I make to 
+	<code>./src/ball_pen.js</code>.
+</p>
+<!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
+<p>
+	The ball-pen is our main point of <code>render</code> for this code. Thus,
+	we put at the tail end of our file:
+	<pre class="terminal-block">
+		<kbd class="bash-green">
+			&nbsp;ReactDOM.render(
+			&nbsp;&nbsp;&nbsp;&nbsp;&lt;BallPen /&gt;,
+			&nbsp;&nbsp;&nbsp;&nbsp;document.getElementById('ball-pen')
+			&nbsp;);
+		</kbd>
+	</pre>
+	And we go on to declare the react component <code>BallPen</code> as:
+	<pre class="terminal-block">
+		<kbd class="bash-green">
+			class BallPen extends React.Component{
+			&nbsp;&nbsp;&nbsp;constructor(props){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super(props);
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.state&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= {
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;height: 0,
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;width:  0,
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;};
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+			&nbsp;&nbsp;&nbsp;}
+			&nbsp;&nbsp;&nbsp;
+			&nbsp;&nbsp;&nbsp;componentDidMount() {
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.updateWindowDimensions();
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.updateCanvas();
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.timerID&nbsp;&nbsp;&nbsp;= setInterval(
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;()=&gt;this.updateCanvas(),
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;25
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;window.addEventListener('resize', this.updateWindowDimensions);
+			&nbsp;&nbsp;&nbsp;}
+			&nbsp;&nbsp;&nbsp;componentWillUnmount(){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clearInterval(this.timerID);
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;window.removeEventListener('resize', this.updateWindowDimensions);
+			&nbsp;&nbsp;&nbsp;}
+			&nbsp;&nbsp;&nbsp;componentDidUpdate() {
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.updateCanvas();
+			&nbsp;&nbsp;&nbsp;}
+			
+			&nbsp;&nbsp;&nbsp;updateWindowDimensions() {
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let width&nbsp;&nbsp;&nbsp;= window.innerWidth;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (width && width &gt;575)
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;width -= 320;&nbsp;&nbsp;&nbsp;//Buffer for not x-small
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;width -= 120;&nbsp;&nbsp;&nbsp;//Buffer for x-small
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let height&nbsp;&nbsp;&nbsp;= window.innerHeight;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;height&nbsp;&nbsp;&nbsp;-= 280;&nbsp;&nbsp;&nbsp;//Buffer...
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (height &lt; 0)
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;height = 0;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.setState({
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;width: width, 
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;height: height
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;
+			&nbsp;&nbsp;&nbsp;}
+			&nbsp;&nbsp;&nbsp;updateCanvas(){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const canvas&nbsp;&nbsp;&nbsp;= this.canvasRef;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const ctx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= canvas.getContext('2d');
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctx.beginPath();
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctx.rect(0,0, this.state.width, this.state.height);
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctx.fillStyle = "#FF0000";
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctx.fill();
+			&nbsp;&nbsp;&nbsp;}
+			
+			&nbsp;&nbsp;&nbsp;render(){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const penStyle&nbsp;&nbsp;&nbsp;= {
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;border:&nbsp;&nbsp;&nbsp;"1px solid #000000"
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;};
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return (
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div&gt;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;canvas
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ref={canvas =&gt; this.canvasRef = canvas}
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;width={this.state.width}
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;height={this.state.height}
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;style={penStyle}
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&gt;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);
+			&nbsp;&nbsp;&nbsp;}
+			}
+		</kbd>
+	</pre>
+</p>
+<p>
+	The above code basically is using <code>states</code> and an <code>
+	EventListener</code> to update the screen size if the window is changed.
+	We put a couple of buffers in place for our current bootstrap container.
+	And we modify those buffers for mobile versions, as well (x-small).
+</p>
+<!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
+<p>
+	The other important thing that the above code is doing is adding a <code>
+	setInterval</code> for when to perform an action. In our case, this action
+	is going to be moving the ball.
+</p>
+<p>
+	The first thing we need to do for moving the ball is first declaring a ball
+	that we can move! In my case, I found that making a simple javascript class
+	and using those components to then inact a draw on our canvas was the 
+	easiest method. The reason for this choice was to make adding more balls
+	onto the screen an easier case. This is my personal preference in coding
+	style, as I like to have name classes and know what functions are working
+	with what items just by the name space.  Thus, we will create our ball
+	class at the head of our file:
+	<pre class="terminal-block">
+		<kbd class="bash-green">
+			
+		</kbd>
+	</pre>
+</p>
+<!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
+<p>
+</p>
+<p>
+	
+</p>
+<p>
+	<pre class="terminal-block">
+		$&nbsp;<kbd class="bash-green">passtow</kbd>
+		$&nbsp;<kbd class="bash-green">cd public_html</kbd>
+		$&nbsp;<kbd class="bash-green">git pull</kbd>
+	</pre>
+</p>
