@@ -265,13 +265,158 @@
 	class at the head of our file:
 	<pre class="terminal-block">
 		<kbd class="bash-green">
-			
+			class&nbsp;Ball{
+			&nbsp;&nbsp;&nbsp;constructor(properties){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.canvas&nbsp;&nbsp;=&nbsp;properties.canvas;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.ballId&nbsp;&nbsp;=&nbsp;properties.radius;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.xCord&nbsp;&nbsp;&nbsp;=&nbsp;properties.xCord;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.yCord&nbsp;&nbsp;&nbsp;=&nbsp;properties.yCord;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.radius&nbsp;&nbsp;=&nbsp;properties.radius;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.dx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;properties.dx;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.dy&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;properties.dy;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.color&nbsp;&nbsp;&nbsp;=&nbsp;"blue";
+			&nbsp;&nbsp;&nbsp;}//end constructor()
+			&nbsp;&nbsp;&nbsp;draw(){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const&nbsp;ctx&nbsp;=&nbsp;this.canvas.getContext('2d');
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctx.beginPath();
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctx.arc(
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.xCord,
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.yCord,&nbsp;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.radius,
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2*Math.PI,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//Start&nbsp;angle&nbsp;in&nbsp;radians
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//End&nbsp;angle&nbsp;in&nbsp;radians
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctx.fillStyle&nbsp;=&nbsp;this.color;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctx.fill();
+			&nbsp;&nbsp;&nbsp;}//end draw()
+			}//End&nbsp;Ball&nbsp;Class
 		</kbd>
 	</pre>
 </p>
 <!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
+
 <p>
+	And once we are done making the `Ball` class, we can initialize it and 
+	call draw on a `ball` within our `BallPen` class. The important things to
+	note about the code above are the constructors and our first introduction
+	to mathematics and physics in this whole thing: <code>this.dx</code> and 
+	<code>this.dy</code>. If you have studied calculus, this should not be that
+	foreign of a concept. The <code>d</code> representes <em>delta</em> and is
+	often spoken as "the change in" something. So, reading <code>this.dx</code>
 </p>
+	is the equivalent of reading "the change in x for this ball". Here is the 
+	code for making the <code>Ball</code> class:
+		<pre class="terminal-block">
+		<kbd class="bash-green">
+			class&nbsp;BallPen&nbsp;extends&nbsp;React.Component{
+			&nbsp;&nbsp;&nbsp;constructor(props){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super(props);
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.state&nbsp;=&nbsp;{
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;height:&nbsp;0,
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;width:&nbsp;&nbsp;0,
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;};
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.balls&nbsp;=&nbsp;[];
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...
+			&nbsp;&nbsp;&nbsp;}
+			   
+			&nbsp;&nbsp;&nbsp;updateCanvas(){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const&nbsp;canvas&nbsp;&nbsp;&nbsp;=&nbsp;this.canvasRef;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const&nbsp;ctx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;canvas.getContext('2d');
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctx.beginPath();
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctx.rect(0,0,&nbsp;this.state.width,&nbsp;this.state.height);
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctx.fillStyle&nbsp;=&nbsp;"#FF0000";
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctx.fill();
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(this.state.width&nbsp;!==&nbsp;0){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(this.balls.length&nbsp;===&nbsp;0){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;Init&nbsp;first&nbsp;ball    
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.balls.push(
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new&nbsp;Ball({             
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;canvas:&nbsp;canvas,
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ballId:&nbsp;0,
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xCord:&nbsp;&nbsp;41,
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yCord:&nbsp;&nbsp;41,
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;radius:&nbsp;30,
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dx:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2,
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dy:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;})
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}//&nbsp;End&nbsp;first&nbsp;ball&nbsp;init;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for(let&nbsp;i=0;&nbsp;i&lt;this.balls.length;&nbsp;i++){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;ball&nbsp;&nbsp;&nbsp;=&nbsp;this.balls[i];
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ball.draw();
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}//end&nbsp;i-for
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+
+		</kbd>
+	</pre>
+
+</p>
+<p>
+	Once we have the ball drawn, our screen should look something like:
+</p>
+
+<script type="text/babel" src="./../../../react/tests/ball-pen-2/ball_pen_2.js"></script>
+<div id="ball-pen-2"></div>
+
+<!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
+<p>
+	Ta-da! We have successfully drawn a ball!	But just a ball being drawn
+	is pretty boring, right? We could go ahead and add <code>gravity</code> to
+	our balls, but what about things like <em>bounds</em>, <em>direction</em>,
+	<em>air resistance</em>(aka <em>drag</em>), and <em>transfer of force</em>?
+</p>
+<p>
+	That is a lot to cover, and if we start one component, it is very easy
+	to get distracted and start the other component before we are done. In this
+	tutorial, I want to have working example of interactions. Thus, let's start
+	with <code>bounds</code> and then apply <code>gravity</code>. We will forgo
+	the focus on stopping the ball for now, and instead make a ball that were
+	bouncing as if in space with no friction and no transfering of force (we 
+	will get to that later).
+</p>
+<p>
+	We will declare four helper functions for the bounds:
+	<ol>
+		<li>
+			<code>ball.hitTop()</code>
+		</li>
+		<li>
+			<code>ball.hitBottom(maxHeight)</code>
+		</li>
+		<li>
+			<code>ball.hitLeft()</code>
+		</li>
+		<li>
+			<code>ball.hitRight(maxWidth)</code>
+		</li>
+	</ol>
+	It is at this point, if you have not realized it yet, that we might need to
+	change our thought process on how our <code>ball</code> is moving in 
+	regards to <code>dx</code>, <code>dy</code>, and the <code>BallPen</code>.
+	<span class="highlighter">
+		The bottom right most coordinates are the largest values possible.
+		When our slope is positive, the ball is in fact falling and going right.
+	</span>
+	If this is confusing, I would recommend taking the time out and drawing a
+	rectangle starting in the top-right at 0,0 and associating the other points
+	to whatever size container you are using. From there, I would recommend 
+	looking at lines and slopes (which make up <code>dx</code> and <code>dy
+	</code>) from different points on this grid.
+</p>
+<!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
+<p>
+	Back to the <code>bounds</code>, we will define them as such:
+	<pre class="terminal-block">
+		<kbd class="bash-green">
+		
+		</kbd>
+	</pre>
+
+</p>
+
+<script type="text/babel" src="./../../../react/tests/ball-pen-3/ball_pen_3.js"></script>
+<div id="ball-pen-3"></div>
+
 <p>
 	
 </p>
