@@ -1,5 +1,30 @@
 'use strict';
+class Ball{
+	constructor(properties){
+		this.canvas	= properties.canvas;
+		this.ballId	= properties.radius;
+		this.xCord	= properties.xCord;
+		this.yCord	= properties.yCord;
+		this.radius	= properties.radius;
+		this.dx 		= properties.dx;
+		this.dy		= properties.dy;
+		this.color	= "blue";
+	}
+	draw(){
+		const ctx = this.canvas.getContext('2d');
+		ctx.beginPath();
+		ctx.arc(
+			this.xCord,
+			this.yCord, 
+			this.radius,
+			2*Math.PI,		//Start angle in radians
+			0					//End angle in radians
+		);
+		ctx.fillStyle = this.color;
+		ctx.fill();
 
+	}
+}//End Ball Class
 class BallPen extends React.Component{
    constructor(props){
       super(props);
@@ -7,6 +32,7 @@ class BallPen extends React.Component{
          height: 0,
          width:  0,
       };
+		this.balls	= [];
       this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
    }
    
@@ -50,6 +76,26 @@ class BallPen extends React.Component{
       ctx.rect(0,0, this.state.width, this.state.height);
       ctx.fillStyle = "#FF0000";
       ctx.fill();
+		if(this.state.width !== 0){
+			if(this.balls.length === 0){
+				// Init first ball
+				this.balls.push(
+					new Ball({
+						canvas:	canvas,
+						ballId:	0,
+						xCord:	41,
+						yCord:	41,
+						radius:	30,
+						dx: 		2,
+						dy:		2
+					})
+				);
+			}// End first ball init;
+			for(let i=0; i<this.balls.length; i++){
+				let ball	= this.balls[i];
+				ball.draw();
+			}//end i-for
+		}
    }
 
    render(){

@@ -2,11 +2,42 @@
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Ball = function () {
+   function Ball(properties) {
+      _classCallCheck(this, Ball);
+
+      this.canvas = properties.canvas;
+      this.ballId = properties.radius;
+      this.xCord = properties.xCord;
+      this.yCord = properties.yCord;
+      this.radius = properties.radius;
+      this.dx = properties.dx;
+      this.dy = properties.dy;
+      this.color = "blue";
+   }
+
+   _createClass(Ball, [{
+      key: 'draw',
+      value: function draw() {
+         var ctx = this.canvas.getContext('2d');
+         ctx.beginPath();
+         ctx.arc(this.xCord, this.yCord, this.radius, 2 * Math.PI, //Start angle in radians
+         0 //End angle in radians
+         );
+         ctx.fillStyle = this.color;
+         ctx.fill();
+      }
+   }]);
+
+   return Ball;
+}(); //End Ball Class
+
 
 var BallPen = function (_React$Component) {
    _inherits(BallPen, _React$Component);
@@ -20,6 +51,7 @@ var BallPen = function (_React$Component) {
          height: 0,
          width: 0
       };
+      _this.balls = [];
       _this.updateWindowDimensions = _this.updateWindowDimensions.bind(_this);
       return _this;
    }
@@ -71,6 +103,24 @@ var BallPen = function (_React$Component) {
          ctx.rect(0, 0, this.state.width, this.state.height);
          ctx.fillStyle = "#FF0000";
          ctx.fill();
+         if (this.state.width !== 0) {
+            if (this.balls.length === 0) {
+               // Init first ball
+               this.balls.push(new Ball({
+                  canvas: canvas,
+                  ballId: 0,
+                  xCord: 41,
+                  yCord: 41,
+                  radius: 30,
+                  dx: 2,
+                  dy: 2
+               }));
+            } // End first ball init;
+            for (var i = 0; i < this.balls.length; i++) {
+               var ball = this.balls[i];
+               ball.draw();
+            } //end i-for
+         }
       }
    }, {
       key: 'render',
