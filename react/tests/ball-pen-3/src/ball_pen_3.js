@@ -9,6 +9,8 @@ class Ball{
 		this.dx 		= properties.dx;
 		this.dy		= properties.dy;
 		this.color	= "blue";
+		this.nextX	= this.xCord + this.dx;
+		this.nextY	= this.yCord + this.dy;
 	}
 	draw(){
 		const ctx = this.canvas.getContext('2d');
@@ -22,7 +24,77 @@ class Ball{
 		);
 		ctx.fillStyle = this.color;
 		ctx.fill();
+	}
+	this.updateCoordinates(){
+		this.xCord = this.nextX;
+		this.yCord = this.nextY;
+	}
+	handleWallCollisions(maxWidth, maxHeight){
+		const willOverlapBottom	= this.hitBottom(maxHeight);
+		const willOverlapTop		= this.hitTop();
+		const willOverlapRight	= this.hitRight(maxWidth);
+		const willOverlapLeft	= this.hitLeft();
+		if(willOverlapTop && willOverlapBottom){
+			//The screen is now to small for our ball;
+			//We will just keep the ball at it's current place and stop all movemnt;
+			this.nextX = this.xCord;
+			this.nextY = this.yCord;
+			this.dy = 0;
+			this.dx = 0;
+		}
+		else if(willOverlapBottom){
+			this.dy *= -1;
+		}
+		else if(willOverlapTop){
+			this.dy *= -1;
+		}
+		else{
+			//No collision
+		}
+		if(willOverlapRight && willOverlapBottom){
+			//The screen is now to small for our ball;
+			//We will just keep the ball at it's current place and stop all movemnt;
+			this.nextX = this.xCord;
+			this.nextY = this.yCord;
+			this.dy = 0;
+			this.dx = 0;
+		}
+		else if(willOverlapRight){
+			this.dx *= -1;
+		}
+		else if(willOverlapLeft){
+			this.dx *= -1;
+		}
+		else{
+			//No collision
+		}
 
+	}
+	hitBottom(maxHeight){
+		const ballMaxBottom = this.yCord + this.radius;
+		if(ballMaxBottom <= maxHeight)
+			return true;
+		return false;
+	
+	}
+	hitTop(){
+		const ballMaxTop = this.yCord - this.radius;
+		if(ballMaxTop <= 0)
+			return true;
+		return false;
+	}
+	hitRight(maxWidth){
+		const ballMaxRight = this.xCord + this.radius;
+		if(ballMaxRight <= maxWidth)
+			return true;
+		return false;
+	
+	}
+	hitLeft(){
+		const ballMaxLeft = this.xCord - this.radius;
+		if(ballMaxLeft <= 0)
+			return true;
+		return false;
 	}
 }//End Ball Class
 class BallPen extends React.Component{
@@ -93,6 +165,10 @@ class BallPen extends React.Component{
 			}// End first ball init;
 			for(let i=0; i<this.balls.length; i++){
 				let ball	= this.balls[i];
+				ball.nextX = this.x + this.dx;
+				ball.nextY = this.y + this.dy;
+				ball.handleWallCollisions(this.state.width, this.state.height);
+				ball.updateCoordinates();
 				ball.draw();
 			}//end i-for
 		}
