@@ -33,8 +33,8 @@ $CONFIG			= get_config($ROOT);
 $PATHS			= get_paths($ROOT);
 $STRINGS			= get_config_strings($CONFIG);
 $body				= "";
-$react_div		= "<div id=\"ball-pen\"></div>";
-$react_js		= "ball_pen.js";
+$react_div		= "<div id=\"ball-pen-1\"></div>";
+$react_js		= "ball_pen_1.js";
 
 /* ----- ----- GENERAL CHANGES BEFORE SECOND IMPORT ----- ----- */
 $CONFIG['TITLE']				= "CHANGE ME";;

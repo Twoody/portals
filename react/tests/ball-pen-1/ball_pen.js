@@ -18,13 +18,18 @@ var Ball = function () {
 		this.color = "blue";
 		this.xCord = props.xInit;
 		this.yCord = props.yInit;
+		this.xPrev = null;
+		this.yPrev = null;
 		this.radius = props.radius;;
-		this.mass = Math.pow(this.radius, 3) - this.index;
+		this.mass = Math.pow(this.radius, 3);
 		this.dy = 2;
 		this.dx = 1.05;
-		this.gravity = 1.05;
+		this.dxAllowed = this.dx; //Not always allowed to do full movement;
+		this.dyAllowed = this.dy;
+		this.gravity = 0.05;
 		this.friction = 0.1;
 		this.drag = 0.01;
+		this.isGoingRight = true;
 	}
 
 	_createClass(Ball, [{
@@ -39,197 +44,179 @@ var Ball = function () {
 	}, {
 		key: 'updateCoordinates',
 		value: function updateCoordinates() {
-			this.xCord += this.dx;
-			this.yCord += this.dy;
+			this.xPrev = this.xCord;
+			this.yPrev = this.yCord;
+			if (this.isGoingRight) this.xCord += this.dxAllowed;else this.xCord -= this.dxAllowed;
+			this.yCord += this.dyAllowed;
+			//console.log('y:' + this.yCord);
+			//console.log('x:' + this.xCord);
 		}
 	}, {
-		key: 'staticCollision',
-		value: function staticCollision(otherBalls) {
-			for (var i = 0; i < otherBalls.length; i++) {
-				var otherBall = otherBalls[i];
-				if (this.ballID === otherBall.ballID) continue;
-				var combinedR = this.radius + otherBall.radius;
-				var distance = this.getDistanceBetween(otherBall);
-				if (distance > combinedR) continue;
-				console.log('Static Collision: `' + this.ballID + '` & `' + otherBall.ballID + '`');
-				var theta = this.getThetaBetween(otherBall);
-				var overlap = this.getOverlap(otherBall);
-				//TODO: getSmallerBall();
-				var smallerBallID = this.radius <= otherBall.radius ? this.ballID : otherBall.ballID;
-				if (smallerBallID === this.ballID) {
-					this.xCord -= overlap * Math.cos(theta);
-					this.yCord -= overlap * Math.sin(theta);
-				} else {
-					otherBall.xCord -= overlap * Math.cos(theta);
-					otherBall.yCord -= overlap * Math.sin(theta);
-				}
-			} //end i-for
-		}
-	}, {
-		key: 'ballCollision',
-		value: function ballCollision(otherBalls) {
-			for (var i = 0; i < otherBalls.length; i++) {
-				var otherBall = otherBalls[i];
-				if (this.ballID === otherBall.ballID) {
-					continue;
-				}
-				var distanceNextFrame = this.getDistanceNextFrame(otherBall);
-				//console.log('distanceNextFrame: ' + distanceNextFrame);
-				if (distanceNextFrame > 0) {
-					continue;
-				}
-				console.log('Active Collision: `' + this.ballID + '` & `' + otherBall.ballID + '`');
-				var theta = this.getThetaBetween2(otherBall);
-				var angle1 = this.getAngle();
-				var angle2 = otherBall.getAngle();
-				var m1 = this.mass;
-				var m2 = otherBall.mass;
-				var v1 = this.getSpeed();
-				var v2 = otherBall.getSpeed();
-				//TODO: Break this up and explain it;
-				var dx1F = (v1 * Math.cos(angle1 - theta) * (m1 - m2) + 2 * m2 * v2 * Math.cos(angle2 - theta)) / (m1 + m2) * Math.cos(theta) + v1 * Math.sin(angle1 - theta) * Math.cos(theta + Math.PI / 2);
-				var dy1F = (v1 * Math.cos(angle1 - theta) * (m1 - m2) + 2 * m2 * v2 * Math.cos(angle2 - theta)) / (m1 + m2) * Math.sin(theta) + v1 * Math.sin(angle1 - theta) * Math.sin(theta + Math.PI / 2);
-				var dx2F = (v2 * Math.cos(angle2 - theta) * (m2 - m1) + 2 * m1 * v1 * Math.cos(angle1 - theta)) / (m1 + m2) * Math.cos(theta) + v2 * Math.sin(angle2 - theta) * Math.cos(theta + Math.PI / 2);
-				var dy2F = (v2 * Math.cos(angle2 - theta) * (m2 - m1) + 2 * m1 * v1 * Math.cos(angle1 - theta)) / (m1 + m2) * Math.sin(theta) + v2 * Math.sin(angle2 - theta) * Math.sin(theta + Math.PI / 2);
-
-				this.dx = dx1F;
-				this.dy = dy1F;
-				otherBall.dx = dx2F;
-				otherBall.dy = dy2F;
-			} //end i-for
-		} //end ballCollision()
+		key: 'handleCollisions',
+		value: function handleCollisions(width, height, otherBalls) {
+			/*
+   This physics engine is designed to prohibit objects penetrating each other, 
+   it works only on non-penetrating rigid bodies. Detecting a penetration 
+   (overlap) between objects means that a collision has occurred. We then back 
+   up in time to just before the collision – so the objects are not 
+   overlapping – and apply an impulse to reverse the collision.
+   	- https://www.myphysicslab.com/develop/docs/Engine2D.html#themathbehindthephysicsengine
+   */
+			this.handleWallCollisions(width, height);
+			this.handleBallCollisions(otherBalls);
+			this.handleScreenResize(width, height);
+		} //end handleCollisions()
 
 	}, {
-		key: 'wallCollision',
-		value: function wallCollision(width, height) {
-			var didHitWall = false;
-			if (this.xCord - this.radius + this.dx < 0 || this.xCord + this.radius + this.dx > width) {
-				//Will ball hit left or right side?
-				this.dx *= -1;
-				didHitWall = true;
+		key: 'handleWallCollisions',
+		value: function handleWallCollisions(width, height) {
+			var leftBound = this.xCord - this.radius + this.dxAllowed;
+			var rightBound = this.xCord + this.radius + this.dxAllowed;
+			var topBound = this.yCord - this.radius + this.dyAllowed;
+			var bottomBound = this.yCord + this.radius + this.dyAllowed;
+			if (leftBound < 0) {
+				//Overlapping containers left side;
+				this.updateAllowedMovement(0, this.yCord + this.dyAllowed, this.radius);
+				this.dx -= this.friction;
+				this.isGoingRight = !this.isGoingRight;
+				console.log('Hit Left');
 			}
-			if (this.yCord - this.radius + this.dy < 0 || this.yCord + this.radius + this.dy > height) {
-				//Will ball hit top or hit bottom?
+			if (rightBound > width) {
+				//Overlapping containers left side;
+				this.updateAllowedMovement(width, this.yCord + this.dyAllowed, this.radius);
+				this.dx -= this.friction;
+				this.isGoingRight = !this.isGoingRight;
+			}
+			if (topBound < 0) {
+				//Overlapping containers left side;
+				this.updateAllowedMovement(this.xCord + this.dxAllowed, 0, this.radius);
+				this.dy += this.friction;
 				this.dy *= -1;
-				didHitWall = true;
+				console.log('Hit top');
 			}
-			if (this.yCord + this.radius > height) {
-				//Did ball hit bottom?
-				this.yCord = height - this.radius;
-				didHitWall = true;
+			if (bottomBound > height) {
+				//Overlapping containers left side;
+				this.updateAllowedMovement(this.xCord + this.dxAllowed, height, this.radius);
+				this.dy -= this.friction;
+				if (this.dy < 0) {
+					//No more momemntum to go back up
+					this.dy = 0;
+					this.dx -= this.friction;
+					if (this.dx < 0) this.dx = 0;
+				} else {
+					this.dy *= -1;
+				}
 			}
-			if (this.yCord - this.radius < 0) {
-				//Did ball hit top?
-				this.yCord = this.radius;
-				didHitWall = true;
+		} //end handleWallCollisions()
+
+	}, {
+		key: 'updateAllowedMovement',
+		value: function updateAllowedMovement(xBound, yBound, minDistance) {
+			//Draw a line from current position to parameter positions;
+			//While line is greatere than minDistance, subtract from what is allowed;
+			var frames = 100;
+			var dxRatio = this.dxAllowed / frames;
+			var dyRatio = this.dyAllowed / frames;
+			var frameCount = 1;
+			var nextDistance = this.getNextDistance(xBound, yBound);
+			while (nextDistance < minDistance) {
+				if (this.isGoingRight) {
+					//Move back left
+					this.dxAllowed += dxRatio;
+				} else {
+					//Move backright 
+					this.dxAllowed -= dxRatio;
+				}
+				this.dyAllowed -= dyRatio;
+				nextDistance = this.getNextDistance(xBound, yBound);
 			}
-			if (this.xCord + this.radius > width) {
-				//Did ball hit right?
+		}
+	}, {
+		key: 'handleBallCollisions',
+		value: function handleBallCollisions(otherBalls) {
+			for (var i = 0; i < otherBalls.length; i++) {
+				var otherBall = otherBalls[i];
+				if (otherBall.ballID === this.ballID) continue;
+				var combinedR = this.radius + otherBall.radius;
+				var distance = this.getNextDistance(otherBall.xCord, otherBall.yCord);
+				if (combinedR >= distance) continue;
+				//Else, we have a collision;
+			}
+		} //end handleBallCollisions()
+
+	}, {
+		key: 'handleScreenResize',
+		value: function handleScreenResize(width, height) {
+			var leftBound = this.xCord - this.radius;
+			var rightBound = this.xCord + this.radius;
+			var topBound = this.yCord - this.radius;
+			var bottomBound = this.yCord + this.radius;
+			if (leftBound < 0) {
+				//Overlapping containers left side;
+				this.dxAllowed = 0;
+				this.xCord = 0 + this.radius;
+				this.dx -= this.friction;
+				this.isGoingRight = !this.isGoingRight;
+			}
+			if (rightBound > width) {
+				//Overlapping containers left side;
+				this.dxAllowed = 0;
 				this.xCord = width - this.radius;
-				didHitWall = true;
+				this.dx -= this.friction;
+				this.isGoingRight = !this.isGoingRight;
 			}
-			if (this.xCord - this.radius < 0) {
-				//Did ball hit left?
-				this.xCord = this.radius;
-				didHitWall = true;
+			if (topBound < 0) {
+				//Overlapping containers left side;
+				this.dyAllowed = 0;
+				this.yCord = 0 + this.radius;
+				this.dy += this.friction;
+				this.dy *= -1;
 			}
-			if (didHitWall) {
-				//console.log('hit wall');
-				if (this.dy > 0) this.dy -= this.friction;else this.dy += this.friction;
-				if (this.dx > 0) this.dx -= this.friction;else this.dx += this.friction;
-			} else {
-				//console.log('did not hit wall');
+			if (bottomBound > height) {
+				//Overlapping containers left side;
+				this.dyAllowed = 0;
+				this.yCord = height - this.radius;
+				this.dy -= this.friction;
+				this.dy *= -1;
 			}
 		}
 	}, {
-		key: 'getThetaBetween',
-		value: function getThetaBetween(otherBall) {
-			var theta = Math.atan2(this.yCord - otherBall.yCord, this.xCord - otherBall.xCord);
-			return theta;
-		}
-	}, {
-		key: 'getThetaBetween2',
-		value: function getThetaBetween2(otherBall) {
-			var theta = Math.atan2(otherBall.yCord - this.yCord, otherBall.xCord - this.xCord);
-			return theta;
-		}
-	}, {
-		key: 'getOverlap',
-		value: function getOverlap(otherBall) {
-			var distance = this.getDistanceBetween(otherBall);
-			var overlap = this.radius + otherBall.radius - distance;
-			return overlap;
-		}
-	}, {
-		key: 'getAngle',
-		value: function getAngle() {
-			return Math.atan2(this.dy, this.dx);
-		}
-	}, {
-		key: 'getSpeed',
-		value: function getSpeed() {
-			return Math.sqrt(Math.pow(this.dx, 2) + Math.pow(this.dy, 2));
-		}
-	}, {
-		key: 'accelerate',
-		value: function accelerate() {
-			console.log('accelerating ball: ' + this.ballID);
-			if (this.dy > 0) this.dy += 5;else this.dy -= 5;
-			if (this.dx > 0) this.dx += 2;else this.dx -= 2;
-		}
-	}, {
-		key: 'applyGravity',
-		value: function applyGravity(height) {
-			if (this.onGround(height) === false) this.dy += this.gravity;
-		}
-	}, {
-		key: 'applyDrag',
-		value: function applyDrag() {
-			this.dx -= this.drag;
-			this.dy -= this.drag;
-		}
-	}, {
-		key: 'getDistanceBetween',
-		value: function getDistanceBetween(otherBall) {
-			//Get the distance between `this` and a different object;
-			var xDiff = this.xCord - otherBall.xCord;
-			var yDiff = this.yCord - otherBall.yCord;
+		key: 'getNextDistance',
+		value: function getNextDistance(otherX, otherY) {
+			var xDiff = this.xCord + this.dxAllowed - otherX;
+			var yDiff = this.yCord + this.dyAllowed - otherY;
 			var distance = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
 			return distance;
 		}
 	}, {
-		key: 'getDistanceNextFrame',
-		value: function getDistanceNextFrame(otherBall) {
-			var nextX1 = this.xCord + this.dx;
-			var nextX2 = otherBall.xCord + otherBall.dx;
-			var nextY1 = this.yCord + this.dy;
-			var nextY2 = otherBall.yCord + otherBall.dy;
-			var xDiff = nextX1 - nextX2;
-			var yDiff = nextY1 - nextY2;
-			var combinedR = this.radius + otherBall.radius;
-			var distance = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2)) - combinedR;
+		key: 'getDistanceBetween',
+		value: function getDistanceBetween(otherX, otherY) {
+			var xDiff = this.xCord - otherX;
+			var yDiff = this.yCord - otherY;
+			var distance = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
 			return distance;
 		}
 	}, {
-		key: 'getSlope',
-		value: function getSlope(otherBall) {
-			var xDiff = this.xCord - otherBall.xCord;
-			var yDiff = this.yCord - otherBall.yCord;
-			var slope = yDiff / xDiff;
-			if (slope === -0 || slope === +0) slope = 0;
-			return slope;
-		}
-	}, {
-		key: 'onGround',
-		value: function onGround(height) {
-			return this.yCord + this.radius >= height;
-		}
-	}, {
 		key: 'isStatic',
-		value: function isStatic(height) {
-			if (this.dy <= 0 && this.yCord === height) return true;
-			return false;
+		value: function isStatic(width, height) {
+			//Ball is static if the friction from the container stops the movement
+			//	at the point we change directions.
+			// I.e. there is no more momentum after the friction interaction;
+			if (this.yCord - this.radius < height) {
+				return false;
+			}
+			if (this.dx > 0) return false;
+			console.log(this.ballID + ' IS STATIC');
+			return true;
 		}
+	}, {
+		key: 'applyGravity',
+		value: function applyGravity() {
+			this.dy += this.gravity;
+		}
+	}, {
+		key: 'isInBounds',
+		value: function isInBounds(width, height) {}
 	}]);
 
 	return Ball;
@@ -312,9 +299,7 @@ var BallPen = function (_React$Component) {
 						index: 0,
 						xInit: 61,
 						yInit: 41,
-						radius: 30,
-						maxHeight: this.state.height,
-						maxWidth: this.state.width
+						radius: 30
 					}));
 					this.balls[0].draw();
 					this.isStarted = true;
@@ -322,14 +307,15 @@ var BallPen = function (_React$Component) {
 					//animate balls
 					for (var i = 0; i < this.balls.length; i++) {
 						var ball = this.balls[i];
-						//				if(ball.isStatic(this.state.height))
-						//					continue;
-						ball.applyGravity(this.state.height);
-						ball.applyDrag();
+						if (ball.isStatic(this.state.width, this.state.height)) {
+							ball.draw();
+							continue;
+						}
+						ball.applyGravity();
+						ball.dxAllowed = ball.dx;
+						ball.dyAllowed = ball.dy;
+						ball.handleCollisions(this.state.width, this.state.height, this.balls);
 						ball.updateCoordinates();
-						ball.staticCollision(this.balls);
-						ball.ballCollision(this.balls);
-						ball.wallCollision(this.state.width, this.state.height);
 						ball.draw();
 					}
 				}
@@ -395,9 +381,7 @@ var BallPen = function (_React$Component) {
 									index: _this3.balls.length,
 									xInit: xCanvasPos,
 									yInit: yCanvasPos,
-									radius: 30,
-									maxHeight: _this3.state.height,
-									maxWidth: _this3.state.width
+									radius: 30
 								});
 								_this3.balls.push(newBall);
 							} else {
