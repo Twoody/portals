@@ -130,7 +130,7 @@ class Ball{
 		return false;
 	}
 	isBouncing(maxHeight, allBalls){
-		if(this.hitBottom(maxHeight) && this.dy > 0){
+		if(this.hitBottom(maxHeight) && this.dy >= 0){
 			//Positive dy implies ball still wants to go down;
 			//If we are on the bottom, the ball can no longer go down;
 			return false;
