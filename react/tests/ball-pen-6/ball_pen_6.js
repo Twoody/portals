@@ -23,7 +23,10 @@ var Ball = function () {
 		this.nextX = this.xCord + this.dx;
 		this.nextY = this.yCord + this.dy;
 		this.gravity = 0.05;
+		this.friction = 0.05;
 		this.isGoingRight = true;
+		this.isGoingDown = true;
+		this.isStatic = false;
 	}
 
 	_createClass(Ball, [{
@@ -46,13 +49,13 @@ var Ball = function () {
 	}, {
 		key: 'applyGravity',
 		value: function applyGravity() {
-			this.dy += this.gravity;
+			if (this.isGoingDown) this.dy += this.gravity;else this.dy -= this.gravity;
 		}
 	}, {
 		key: 'accelerate',
 		value: function accelerate() {
 			this.dx += 2;
-			if (this.dy <= 0) this.dy -= 2;else this.dy += 2;
+			this.dy += 2;
 		}
 	}, {
 		key: 'handleWindowResize',
@@ -83,12 +86,15 @@ var Ball = function () {
 				this.dx = 0;
 				console.log('WARNING: SCREEN NOT FITTED;');
 			} else if (willOverlapBottom) {
-				this.dy *= -1;
-				this.dy += friction;
+				this.dy -= friction;
+				if (this.dy <= 0) {
+					this.dy = 0;
+					this.isGoingDown = true;
+				} else this.isGoingDown = false;
 				this.nextY = maxHeight - this.radius;
 			} else if (willOverlapTop) {
-				this.dy *= -1;
-				this.dy -= friction;
+				this.dy += friction;
+				this.isGoingDown = true;
 				this.nextY = 0 + this.radius;
 			} else {
 				//No collision
@@ -110,6 +116,95 @@ var Ball = function () {
 			} else {
 				//No collision
 			}
+		}
+	}, {
+		key: 'handleBallCollisions',
+		value: function handleBallCollisions(allBalls) {
+			//Find out if NEXT coordinates overlap anything;
+			for (var i = 0; i < allBalls.length; i++) {
+				if (this.ballID === allBalls[i].ballID) continue;
+				var otherBall = allBalls[i];
+				var minDistance = otherBall.radius + this.radius;
+				var nextDistance = this.distanceTo(otherBall.xCord, otherBall.yCord);
+				var willOverlap = nextDistance < minDistance;
+				if (!willOverlap) continue;
+				//Else, we will need to adjust the next coordinates so that they do not 
+				//	overlap otherBall;
+				//We can do this by taking the ratio of dx and dy changes and "step back"
+				//	through time until we find a place the balls no longer overlap;
+				var timeRatio = 100;
+				var dyRatio = this.dy / timeRatio;
+				var dxRatio = this.dx / timeRatio;
+				var cnt = 0;
+				while (willOverlap) {
+					if (this.isGoingRight) this.nextX -= dxRatio; //Step back left
+					else this.nextX += dxRatio; //Step back right
+					if (this.isGoingDown) this.nextY -= dyRatio; //Step back up
+					else this.nextY += dyRatio; //Step back down
+					nextDistance = this.distanceTo(otherBall.xCord, otherBall.yCord);
+					willOverlap = nextDistance < minDistance;
+					cnt += 1;
+					if (cnt === timeRatio) {
+						this.nextX = this.xCord;
+						this.nextY = this.yCord;
+						break;
+					}
+				} //end while
+
+				//Change directions of balls for next iteration;
+				if (this.isGoingRight !== otherBall.isGoingRight) otherBall.isGoingRight = !otherBall.isGoingRight;
+				this.isGoingRight = !this.isGoingRight;
+				if (this.isGoingDown) {
+					if (!otherBall.isGoingDown) {
+						//Current ball needs to go up
+						this.isGoingDown = false;
+						otherBall.isGoingDown = true;
+					} else {
+						//Both balls are going down
+						//TODO:
+						//Make sure that the ball that ball on bottom is going 
+						//	faster than the ball on top;
+						if (otherBall.isStatic) this.isGoingDown = false;else this.isGoingDown = true;
+						otherBall.isGoingDown = true;
+					}
+				} else {
+					if (otherBall.isGoingDown) {
+						//Current ball is going up; Other ball is going down
+						//Upon collision, change directions;
+						this.isGoingDown = true;
+						otherBall.isGoingDown = false;
+					} else {
+						//Current ball is going down; other Ball is going up;
+						//Upon collision, change directions;
+						this.isGoingDown = false;
+						otherBall.isGoingDown = true;
+					}
+				}
+
+				//Apply friction between balls
+				if (this.dx) {
+					this.dx -= otherBall.friction;
+					if (this.dx < 0) this.dx = 0;
+				}
+				if (otherBall.dx) {
+					otherBall.dx -= this.friction;
+					if (otherBall.dx < 0) otherBall.dx = 0;
+				}
+				if (this.dy) {
+					this.dy -= otherBall.friction;
+				}
+				if (otherBall.dy) {
+					otherBall.dy -= this.friction;
+				}
+			} //end i-for
+		}
+	}, {
+		key: 'distanceTo',
+		value: function distanceTo(x, y) {
+			var xDiff = this.nextX - x;
+			var yDiff = this.nextY - y;
+			var distance = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
+			return distance;
 		}
 	}, {
 		key: 'hitBottom',
@@ -142,12 +237,13 @@ var Ball = function () {
 	}, {
 		key: 'isBouncing',
 		value: function isBouncing(maxHeight, allBalls) {
-			if (this.hitBottom(maxHeight) && this.dy >= 0) {
+			var ballMaxBottom = this.yCord + this.radius;
+			if (ballMaxBottom >= maxHeight && this.dy <= 0) {
 				//Positive dy implies ball still wants to go down;
 				//If we are on the bottom, the ball can no longer go down;
+				this.isGoingDown = true;
 				return false;
 			}
-			//TODO: For loop through allBalls
 			return true;
 		}
 	}]);
@@ -241,29 +337,45 @@ var BallPen = function (_React$Component) {
 				for (var i = 0; i < this.balls.length; i++) {
 					var ball = this.balls[i];
 					var isBouncing = ball.isBouncing(this.state.height, this.balls);
+					if (!ball.isGoingDown && ball.dy <= 0) ball.isGoingDown = true;
 					if (!isBouncing && ball.dx === 0) {
 						//Ball is static;
+						ball.isStatic = true;
 						ball.draw();
 						ctx.font = "15px Arial";
 						ctx.fillStyle = "white";
 						ctx.fillText("Static", ball.xCord - ball.radius + 1, ball.yCord + 1);
 						ball.dy = 0;
 						ball.dx = 0;
+						ball.nextY = ball.yCord;
+						ball.nextX = ball.xCord;
 						continue;
 					} else if (!isBouncing) {
+						ball.nextY = ball.yCord + ball.dy;
 						if (ball.isGoingRight) ball.nextX = ball.xCord + ball.dx;else ball.nextX = ball.xCord - ball.dx;
 						//Ball is rolling; Apply friction;
 						ball.dx -= this.friction;
 						if (ball.dx < 0) ball.dx = 0;
 						ball.dy = 0;
+						ball.handleWallCollisions(this.state.width, this.state.height, this.friction);
+						ball.handleBallCollisions(this.balls);
+						ball.updateCoordinates();
+						ball.draw();
+						ctx.font = "15px Arial";
+						ctx.fillStyle = "white";
+						ctx.fillText("Rolling", ball.xCord - ball.radius + 1, ball.yCord + 1);
 					} else {
 						ball.applyGravity();
-						ball.nextY = ball.yCord + ball.dy;
+						if (ball.isGoingDown) ball.nextY = ball.yCord + ball.dy;else ball.nextY = ball.yCord - ball.dy;
 						if (ball.isGoingRight) ball.nextX = ball.xCord + ball.dx;else ball.nextX = ball.xCord - ball.dx;
+						ball.handleWallCollisions(this.state.width, this.state.height, this.friction);
+						ball.handleBallCollisions(this.balls);
+						ball.updateCoordinates();
+						ball.draw();
+						ctx.font = "12px Arial";
+						ctx.fillStyle = "white";
+						ctx.fillText("Bouncing", ball.xCord - ball.radius + 1, ball.yCord + 1);
 					}
-					ball.handleWallCollisions(this.state.width, this.state.height, this.friction);
-					ball.updateCoordinates();
-					ball.draw();
 				} //end i-for
 			}
 		}
