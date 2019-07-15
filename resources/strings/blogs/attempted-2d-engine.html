@@ -268,7 +268,7 @@
 			class&nbsp;Ball{
 			&nbsp;&nbsp;&nbsp;constructor(properties){
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.canvas&nbsp;&nbsp;=&nbsp;properties.canvas;
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.ballId&nbsp;&nbsp;=&nbsp;properties.radius;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.ballID&nbsp;&nbsp;=&nbsp;properties.ballID;
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.xCord&nbsp;&nbsp;&nbsp;=&nbsp;properties.xCord;
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.yCord&nbsp;&nbsp;&nbsp;=&nbsp;properties.yCord;
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.radius&nbsp;&nbsp;=&nbsp;properties.radius;
@@ -332,7 +332,7 @@
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.balls.push(
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new&nbsp;Ball({             
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;canvas:&nbsp;canvas,
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ballId:&nbsp;0,
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ballID:&nbsp;0,
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xCord:&nbsp;&nbsp;41,
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yCord:&nbsp;&nbsp;41,
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;radius:&nbsp;30,
@@ -397,8 +397,8 @@
 		The bottom right most coordinates are the largest values possible.
 		When our slope is positive, the ball is in fact falling and going right.
 	</span>
-	If this is confusing, I would recommend taking the time out and drawing a
-	rectangle starting in the top-right at 0,0 and associating the other points
+	If this is confusing, I would recommend taking the time and drawing a
+	rectangle starting in the top-right at 0,0 and associating the other vertices
 	to whatever size container you are using. From there, I would recommend 
 	looking at lines and slopes (which make up <code>dx</code> and <code>dy
 	</code>) from different points on this grid.
@@ -408,15 +408,151 @@
 	Back to the <code>bounds</code>, we will define them as such:
 	<pre class="terminal-block">
 		<kbd class="bash-green">
-		
+			class&nbsp;Ball{
+			&nbsp;&nbsp;&nbsp;constructor(...){...}
+			&nbsp;&nbsp;&nbsp;hitBottom(maxHeight){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const&nbsp;ballMaxBottom&nbsp;=&nbsp;this.nextY&nbsp;+&nbsp;this.radius;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(ballMaxBottom&nbsp;&gt;=&nbsp;maxHeight)
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;true;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;false;
+			&nbsp;&nbsp;&nbsp;
+			&nbsp;&nbsp;&nbsp;}
+			&nbsp;&nbsp;&nbsp;hitTop(){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const&nbsp;ballMaxTop&nbsp;=&nbsp;this.nextY&nbsp;-&nbsp;this.radius;    
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(ballMaxTop&nbsp;&lt;=&nbsp;0)
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;true;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;false;
+			&nbsp;&nbsp;&nbsp;}
+			&nbsp;&nbsp;&nbsp;hitRight(maxWidth){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const&nbsp;ballMaxRight&nbsp;=&nbsp;this.nextX&nbsp;+&nbsp;this.radius;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(ballMaxRight&nbsp;&gt;=&nbsp;maxWidth)
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;true;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;false;
+			&nbsp;&nbsp;&nbsp;
+			&nbsp;&nbsp;&nbsp;}
+			&nbsp;&nbsp;&nbsp;hitLeft(){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const&nbsp;ballMaxLeft&nbsp;=&nbsp;this.nextX&nbsp;-&nbsp;this.radius;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(ballMaxLeft&nbsp;&lt;=&nbsp;0)
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;true;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;false;
+			&nbsp;&nbsp;&nbsp;}//End Ball Class;
 		</kbd>
 	</pre>
 
 </p>
-
+<p>
+	Next is to make a function that will handle the checks for the bounds and 
+	make any changes within that scope that we will need it to. Let us call 
+	this function <code>handleWallCollisions(maxWidth, maxHeight)</code>.
+	This new function will properly pause the states if the container sizes
+	are abused. And this function will change our directions as well as make
+	sure that are planned updated coordinates stay within our container.
+</p>
+<p>
+	Thus, this change brings about another change that we will need: <code>
+	ball.nextX</code> and <code>ball.nextY</code>. Instead of just updating 
+	the coordinates as we move along, we will say, "This is where we plan on
+	moving. Are there any problems with this?" And if there are problems, 
+	we update that frame before the problem ever existed. This change will take
+	place within the <code>BallPen</code> and also be added as constructors
+	for code clarity with the <code>Ball</code> class. Finally, our code 
+	should look something like this:
+	<pre class="terminal-block">
+		<kbd class="bash-green">
+			class&nbsp;Ball{
+			&nbsp;&nbsp;&nbsp;constructor(...){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.nextX&nbsp;&nbsp;&nbsp;=&nbsp;this.xCord&nbsp;+&nbsp;this.dx;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.nextY&nbsp;&nbsp;&nbsp;=&nbsp;this.yCord&nbsp;+&nbsp;this.dy;
+			&nbsp;&nbsp;&nbsp;}
+			&nbsp;&nbsp;&nbsp;hitBottom(maxHeight){...}
+			&nbsp;&nbsp;&nbsp;hitTop(){...}
+			&nbsp;&nbsp;&nbsp;hitRight(maxWidth){...}
+			&nbsp;&nbsp;&nbsp;hitLeft(){...}
+			&nbsp;&nbsp;&nbsp;updateCoordinates(){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.xCord&nbsp;=&nbsp;this.nextX;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.yCord&nbsp;=&nbsp;this.nextY;
+			&nbsp;&nbsp;&nbsp;}
+			&nbsp;&nbsp;&nbsp;handleWallCollisions(maxWidth,&nbsp;maxHeight){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const&nbsp;willOverlapBottom&nbsp;=&nbsp;this.hitBottom(maxHeight);
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const&nbsp;willOverlapTop&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;this.hitTop();
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const&nbsp;willOverlapRight&nbsp;&nbsp;=&nbsp;this.hitRight(maxWidth);
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const&nbsp;willOverlapLeft&nbsp;&nbsp;&nbsp;=&nbsp;this.hitLeft();
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(willOverlapTop&nbsp;&&&nbsp;willOverlapBottom){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//The&nbsp;screen&nbsp;is&nbsp;now&nbsp;to&nbsp;small&nbsp;for&nbsp;our&nbsp;ball;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//We&nbsp;will&nbsp;just&nbsp;keep&nbsp;the&nbsp;ball&nbsp;at&nbsp;it's&nbsp;current&nbsp;place&nbsp;and&nbsp;stop&nbsp;all&nbsp;movemnt;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.nextX&nbsp;=&nbsp;this.xCord;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.nextY&nbsp;=&nbsp;this.yCord;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.dy&nbsp;=&nbsp;0;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.dx&nbsp;=&nbsp;0;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log('WARNING:&nbsp;SCREEN&nbsp;NOT&nbsp;FITTED;');
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else&nbsp;if(willOverlapBottom){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.dy&nbsp;*=&nbsp;-1;&nbsp;&nbsp;&nbsp;//Change&nbsp;Direction
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.nextY&nbsp;=&nbsp;maxHeight&nbsp;-&nbsp;this.radius;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else&nbsp;if(willOverlapTop){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.dy&nbsp;*=&nbsp;-1;&nbsp;&nbsp;&nbsp;//Change&nbsp;Direction
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.nextY&nbsp;=&nbsp;0&nbsp;+&nbsp;this.radius;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else{
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//No&nbsp;collision
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(willOverlapRight&nbsp;&&&nbsp;willOverlapLeft){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//The&nbsp;screen&nbsp;is&nbsp;now&nbsp;to&nbsp;small&nbsp;for&nbsp;our&nbsp;ball;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//We&nbsp;will&nbsp;just&nbsp;keep&nbsp;the&nbsp;ball&nbsp;at&nbsp;it's&nbsp;current&nbsp;place&nbsp;and&nbsp;stop&nbsp;all&nbsp;movemnt;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.nextX&nbsp;=&nbsp;this.xCord;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.nextY&nbsp;=&nbsp;this.yCord;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.dy&nbsp;=&nbsp;0;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.dx&nbsp;=&nbsp;0;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log('WARNING:&nbsp;SCREEN&nbsp;NOT&nbsp;FITTED;');
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else&nbsp;if(willOverlapRight){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.dx&nbsp;*=&nbsp;-1;&nbsp;&nbsp;&nbsp;//Change&nbsp;Direction
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.nextX&nbsp;=&nbsp;maxWidth&nbsp;-&nbsp;this.radius;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else&nbsp;if(willOverlapLeft){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.dx&nbsp;*=&nbsp;-1;&nbsp;&nbsp;&nbsp;//Change&nbsp;Direction
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.nextX&nbsp;=&nbsp;0&nbsp;+&nbsp;this.radius;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else{
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//No&nbsp;collision
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+			
+			&nbsp;&nbsp;&nbsp;}
+			}//End&nbsp;Ball&nbsp;Class
+			
+			class&nbsp;BallPen&nbsp;extends&nbsp;React.Component{
+			&nbsp;&nbsp;&nbsp;...
+			&nbsp;&nbsp;&nbsp;updateCanvas(){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(this.state.width&nbsp;!==&nbsp;0){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for(let&nbsp;i=0;&nbsp;i&lt;this.balls.length;&nbsp;i++){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;ball&nbsp;&nbsp;&nbsp;=&nbsp;this.balls[i];
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ball.nextX&nbsp;=&nbsp;ball.xCord&nbsp;+&nbsp;ball.dx;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ball.nextY&nbsp;=&nbsp;ball.yCord&nbsp;+&nbsp;ball.dy;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ball.handleWallCollisions(this.state.width,&nbsp;this.state.height);
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ball.updateCoordinates();
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ball.draw();
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}//end&nbsp;i-for
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+			&nbsp;&nbsp;&nbsp;}//end&nbsp;updateCanvas()
+			}
+		</kbd>
+	</pre>
+</p>
+<p>
+	And finally, the "finished" product should looke like the following:
+</p>
+<!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
 <script type="text/babel" src="./../../../react/tests/ball-pen-3/ball_pen_3.js"></script>
 <div id="ball-pen-3"></div>
 
+<p>
+	Next, let us define a very important property of are ball: <code>
+	ball.isStatic</code>. 
+</p>
 <p>
 	
 </p>
