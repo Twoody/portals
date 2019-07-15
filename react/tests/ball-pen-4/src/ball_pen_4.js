@@ -1,16 +1,18 @@
 'use strict';
 class Ball{
 	constructor(properties){
-		this.canvas	= properties.canvas;
-		this.ballID	= properties.ballID;
-		this.xCord	= properties.xCord;
-		this.yCord	= properties.yCord;
-		this.radius	= properties.radius;
-		this.dx 		= properties.dx;
-		this.dy		= properties.dy;
-		this.color	= "blue";
-		this.nextX	= this.xCord + this.dx;
-		this.nextY	= this.yCord + this.dy;
+		this.canvas			= properties.canvas;
+		this.ballID			= properties.ballID;
+		this.xCord			= properties.xCord;
+		this.yCord			= properties.yCord;
+		this.radius			= properties.radius;
+		this.dx 				= properties.dx;
+		this.dy				= properties.dy;
+		this.color			= "blue";
+		this.nextX			= this.xCord + this.dx;
+		this.nextY			= this.yCord + this.dy;
+		this.gravity		= 0.05;
+		this.isGoingRight	= true;
 	}
 	draw(){
 		const ctx = this.canvas.getContext('2d');
@@ -29,7 +31,24 @@ class Ball{
 		this.xCord = this.nextX;
 		this.yCord = this.nextY;
 	}
-	handleWallCollisions(maxWidth, maxHeight){
+	applyGravity(){
+		this.dy += this.gravity;
+	}
+	handleWindowResize(maxWidth, maxHeight){
+		const ballBottom = this.yCord + this.radius;
+		const ballTop    = this.yCord - this.radius;
+		const ballRight  = this.xCord + this.radius;
+		const ballLeft   = this.xCord - this.radius;
+		if(ballBottom >= height)
+			this.yCord = height - this.radius;
+		if(ballTop <= 0)
+			this.yCord = 0 + this.radius;
+		if(ballRight >= width)
+			this.xCord = width - this.radius;
+		if(ballLeft <= 0)
+			this.xCord = 0 + this.radius;
+	}//end handleWindowResize()
+	handleWallCollisions(maxWidth, maxHeight, friction){
 		const willOverlapBottom	= this.hitBottom(maxHeight);
 		const willOverlapTop		= this.hitTop();
 		const willOverlapRight	= this.hitRight(maxWidth);
@@ -45,10 +64,12 @@ class Ball{
 		}
 		else if(willOverlapBottom){
 			this.dy *= -1;
+			this.dy += friction;
 			this.nextY = maxHeight - this.radius;
 		}
 		else if(willOverlapTop){
 			this.dy *= -1;
+			this.dy -= friction;
 			this.nextY = 0 + this.radius;
 		}
 		else{
@@ -64,17 +85,16 @@ class Ball{
 			console.log('WARNING: SCREEN NOT FITTED;');
 		}
 		else if(willOverlapRight){
-			this.dx *= -1;
+			this.isGoingRight = false;
 			this.nextX = maxWidth - this.radius;
 		}
 		else if(willOverlapLeft){
-			this.dx *= -1;
+			this.isGoingRight = true;
 			this.nextX = 0 + this.radius;
 		}
 		else{
 			//No collision
 		}
-
 	}
 	hitBottom(maxHeight){
 		const ballMaxBottom = this.nextY + this.radius;
@@ -102,6 +122,15 @@ class Ball{
 			return true;
 		return false;
 	}
+	isBouncing(maxHeight, allBalls){
+		if(this.hitBottom(maxHeight) && this.dy > 0){
+			//Positive dy implies ball still wants to go down;
+			//If we are on the bottom, the ball can no longer go down;
+			return false;
+		}
+		//TODO: For loop through allBalls
+		return true;
+	}
 }//End Ball Class
 class BallPen extends React.Component{
    constructor(props){
@@ -110,7 +139,8 @@ class BallPen extends React.Component{
          height: 0,
          width:  0,
       };
-		this.balls	= [];
+		this.balls    = [];
+		this.friction = 0.1;
       this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
    }
    
@@ -145,6 +175,10 @@ class BallPen extends React.Component{
          width: width, 
          height: height
       });
+		for(let i=0; i<this.balls.length; i++){
+			let ball = this.balls[i];
+			ball.handleWindowResize(width, height);
+		}//end i-for
       return;
    }
    updateCanvas(){
@@ -171,9 +205,34 @@ class BallPen extends React.Component{
 			}// End first ball init;
 			for(let i=0; i<this.balls.length; i++){
 				let ball	= this.balls[i];
-				ball.nextX = ball.xCord + ball.dx;
-				ball.nextY = ball.yCord + ball.dy;
-				ball.handleWallCollisions(this.state.width, this.state.height);
+				const isBouncing	= ball.isBouncing(this.state.height, this.balls);
+				if( !isBouncing && ball.dx === 0){
+					//Ball is static;
+					ball.draw();
+					ctx.font      = "15px Arial";
+					ctx.fillStyle = "white";
+					ctx.fillText("Static", ball.xCord-ball.radius+1, ball.yCord+1);
+					continue;
+				}
+				else if( !isBouncing){
+					if(ball.isGoingRight)
+						ball.nextX = ball.xCord + ball.dx;
+					else
+						ball.nextX = ball.xCord - ball.dx;
+					//Ball is rolling; Apply friction;
+					ball.dx -= this.friction;
+					if(ball.dx < 0)
+						ball.dx = 0;
+				}
+				else{
+					ball.applyGravity();
+					ball.nextY = ball.yCord + ball.dy;
+					if(ball.isGoingRight)
+						ball.nextX = ball.xCord + ball.dx;
+					else
+						ball.nextX = ball.xCord - ball.dx;
+				}
+				ball.handleWallCollisions(this.state.width, this.state.height, this.friction);
 				ball.updateCoordinates();
 				ball.draw();
 			}//end i-for

@@ -22,6 +22,8 @@ var Ball = function () {
 		this.color = "blue";
 		this.nextX = this.xCord + this.dx;
 		this.nextY = this.yCord + this.dy;
+		this.gravity = 0.05;
+		this.isGoingRight = true;
 	}
 
 	_createClass(Ball, [{
@@ -42,8 +44,26 @@ var Ball = function () {
 			this.yCord = this.nextY;
 		}
 	}, {
+		key: 'applyGravity',
+		value: function applyGravity() {
+			this.dy += this.gravity;
+		}
+	}, {
+		key: 'handleWindowResize',
+		value: function handleWindowResize(maxWidth, maxHeight) {
+			var ballBottom = this.yCord + this.radius;
+			var ballTop = this.yCord - this.radius;
+			var ballRight = this.xCord + this.radius;
+			var ballLeft = this.xCord - this.radius;
+			if (ballBottom >= height) this.yCord = height - this.radius;
+			if (ballTop <= 0) this.yCord = 0 + this.radius;
+			if (ballRight >= width) this.xCord = width - this.radius;
+			if (ballLeft <= 0) this.xCord = 0 + this.radius;
+		} //end handleWindowResize()
+
+	}, {
 		key: 'handleWallCollisions',
-		value: function handleWallCollisions(maxWidth, maxHeight) {
+		value: function handleWallCollisions(maxWidth, maxHeight, friction) {
 			var willOverlapBottom = this.hitBottom(maxHeight);
 			var willOverlapTop = this.hitTop();
 			var willOverlapRight = this.hitRight(maxWidth);
@@ -58,9 +78,11 @@ var Ball = function () {
 				console.log('WARNING: SCREEN NOT FITTED;');
 			} else if (willOverlapBottom) {
 				this.dy *= -1;
+				this.dy += friction;
 				this.nextY = maxHeight - this.radius;
 			} else if (willOverlapTop) {
 				this.dy *= -1;
+				this.dy -= friction;
 				this.nextY = 0 + this.radius;
 			} else {
 				//No collision
@@ -74,10 +96,10 @@ var Ball = function () {
 				this.dx = 0;
 				console.log('WARNING: SCREEN NOT FITTED;');
 			} else if (willOverlapRight) {
-				this.dx *= -1;
+				this.isGoingRight = false;
 				this.nextX = maxWidth - this.radius;
 			} else if (willOverlapLeft) {
-				this.dx *= -1;
+				this.isGoingRight = true;
 				this.nextX = 0 + this.radius;
 			} else {
 				//No collision
@@ -111,6 +133,17 @@ var Ball = function () {
 			if (ballMaxLeft <= 0) return true;
 			return false;
 		}
+	}, {
+		key: 'isBouncing',
+		value: function isBouncing(maxHeight, allBalls) {
+			if (this.hitBottom(maxHeight) && this.dy > 0) {
+				//Positive dy implies ball still wants to go down;
+				//If we are on the bottom, the ball can no longer go down;
+				return false;
+			}
+			//TODO: For loop through allBalls
+			return true;
+		}
 	}]);
 
 	return Ball;
@@ -130,6 +163,7 @@ var BallPen = function (_React$Component) {
 			width: 0
 		};
 		_this.balls = [];
+		_this.friction = 0.1;
 		_this.updateWindowDimensions = _this.updateWindowDimensions.bind(_this);
 		return _this;
 	}
@@ -170,6 +204,10 @@ var BallPen = function (_React$Component) {
 				width: width,
 				height: height
 			});
+			for (var i = 0; i < this.balls.length; i++) {
+				var ball = this.balls[i];
+				ball.handleWindowResize(width, height);
+			} //end i-for
 			return;
 		}
 	}, {
@@ -196,9 +234,25 @@ var BallPen = function (_React$Component) {
 				} // End first ball init;
 				for (var i = 0; i < this.balls.length; i++) {
 					var ball = this.balls[i];
-					ball.nextX = ball.xCord + ball.dx;
-					ball.nextY = ball.yCord + ball.dy;
-					ball.handleWallCollisions(this.state.width, this.state.height);
+					var isBouncing = ball.isBouncing(this.state.height, this.balls);
+					if (!isBouncing && ball.dx === 0) {
+						//Ball is static;
+						ball.draw();
+						ctx.font = "15px Arial";
+						ctx.fillStyle = "white";
+						ctx.fillText("Static", ball.xCord - ball.radius + 1, ball.yCord + 1);
+						continue;
+					} else if (!isBouncing) {
+						if (ball.isGoingRight) ball.nextX = ball.xCord + ball.dx;else ball.nextX = ball.xCord - ball.dx;
+						//Ball is rolling; Apply friction;
+						ball.dx -= this.friction;
+						if (ball.dx < 0) ball.dx = 0;
+					} else {
+						ball.applyGravity();
+						ball.nextY = ball.yCord + ball.dy;
+						if (ball.isGoingRight) ball.nextX = ball.xCord + ball.dx;else ball.nextX = ball.xCord - ball.dx;
+					}
+					ball.handleWallCollisions(this.state.width, this.state.height, this.friction);
 					ball.updateCoordinates();
 					ball.draw();
 				} //end i-for
