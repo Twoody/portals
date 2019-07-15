@@ -34,6 +34,13 @@ class Ball{
 	applyGravity(){
 		this.dy += this.gravity;
 	}
+	accelerate(){
+		this.dx += 2;
+		if(this.dy <= 0)
+			this.dy -= 2;
+		else
+			this.dy += 2;
+	}
 	handleWindowResize(maxWidth, maxHeight){
 		const ballBottom = this.yCord + this.radius;
 		const ballTop    = this.yCord - this.radius;
@@ -212,9 +219,11 @@ class BallPen extends React.Component{
 					ctx.font      = "15px Arial";
 					ctx.fillStyle = "white";
 					ctx.fillText("Static", ball.xCord-ball.radius+1, ball.yCord+1);
+					ball.dy = 0;
+					ball.dx = 0;
 					continue;
 				}
-				else if( !isBouncing){
+				else if( !isBouncing ){
 					if(ball.isGoingRight)
 						ball.nextX = ball.xCord + ball.dx;
 					else
@@ -223,6 +232,7 @@ class BallPen extends React.Component{
 					ball.dx -= this.friction;
 					if(ball.dx < 0)
 						ball.dx = 0;
+					ball.dy = 0;
 				}
 				else{
 					ball.applyGravity();
@@ -250,6 +260,63 @@ class BallPen extends React.Component{
                width={this.state.width}
                height={this.state.height}
                style={penStyle}
+					onClick={e =>{
+							const rect = this.canvasRef.getBoundingClientRect();
+							const xMousePos	= e.clientX;
+							const yMousePos	= e.clientY;
+							const xCanvasPos	= xMousePos - rect.left;
+							const yCanvasPos	= yMousePos - rect.top;
+							const radius		= this.balls[0].radius;
+							let isLegalBall	= true;
+							let didClickBall	= false;
+							for(let i=0; i<this.balls.length; i++){
+								const ball			= this.balls[i];
+								const xBall			= ball.xCord;
+								const yBall			= ball.yCord;
+								const xDiff			= xCanvasPos - xBall;
+								const yDiff			= yCanvasPos - yBall;
+								const ballMouseDistance	= Math.sqrt(xDiff**2 + yDiff**2);
+								const clickedBall = ballMouseDistance <= radius;
+								if (isLegalBall)
+									isLegalBall			= ballMouseDistance >= (radius*2);
+								if(clickedBall){
+									ball.accelerate();
+									didClickBall	= true;
+									break;
+								}
+							}//end i-for
+							if(isLegalBall){
+								//Check with top, bottom, and sides;
+								if (xCanvasPos - radius < 0)
+									isLegalBall = false;
+								else if (xCanvasPos + radius > this.state.width)
+									isLegalBall = false;
+								else if (yCanvasPos - radius < 0)
+									isLegalBall = false;
+								else if (yCanvasPos + radius > this.state.height)
+									isLegalBall = false;
+							}
+							if(!didClickBall){
+								//Make new ball;
+								if(isLegalBall){
+									console.log('Making new ball' + this.balls.length)
+									const canvas	= this.canvasRef;
+									const newBall	= new Ball({
+										canvas:		canvas,
+										ballID:		this.balls.length,
+										xCord:		xCanvasPos,
+										yCord:		yCanvasPos,
+										radius:	30,
+										dx: 		2,
+										dy:		2
+									});
+									this.balls.push(newBall);
+								}
+								else
+									console.log('Not legal ball');
+							}
+						}
+					}
             />
          </div>
       );

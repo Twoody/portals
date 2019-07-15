@@ -49,6 +49,12 @@ var Ball = function () {
 			this.dy += this.gravity;
 		}
 	}, {
+		key: 'accelerate',
+		value: function accelerate() {
+			this.dx += 2;
+			if (this.dy <= 0) this.dy -= 2;else this.dy += 2;
+		}
+	}, {
 		key: 'handleWindowResize',
 		value: function handleWindowResize(maxWidth, maxHeight) {
 			var ballBottom = this.yCord + this.radius;
@@ -241,12 +247,15 @@ var BallPen = function (_React$Component) {
 						ctx.font = "15px Arial";
 						ctx.fillStyle = "white";
 						ctx.fillText("Static", ball.xCord - ball.radius + 1, ball.yCord + 1);
+						ball.dy = 0;
+						ball.dx = 0;
 						continue;
 					} else if (!isBouncing) {
 						if (ball.isGoingRight) ball.nextX = ball.xCord + ball.dx;else ball.nextX = ball.xCord - ball.dx;
 						//Ball is rolling; Apply friction;
 						ball.dx -= this.friction;
 						if (ball.dx < 0) ball.dx = 0;
+						ball.dy = 0;
 					} else {
 						ball.applyGravity();
 						ball.nextY = ball.yCord + ball.dy;
@@ -275,7 +284,53 @@ var BallPen = function (_React$Component) {
 					},
 					width: this.state.width,
 					height: this.state.height,
-					style: penStyle
+					style: penStyle,
+					onClick: function onClick(e) {
+						var rect = _this3.canvasRef.getBoundingClientRect();
+						var xMousePos = e.clientX;
+						var yMousePos = e.clientY;
+						var xCanvasPos = xMousePos - rect.left;
+						var yCanvasPos = yMousePos - rect.top;
+						var radius = _this3.balls[0].radius;
+						var isLegalBall = true;
+						var didClickBall = false;
+						for (var i = 0; i < _this3.balls.length; i++) {
+							var ball = _this3.balls[i];
+							var xBall = ball.xCord;
+							var yBall = ball.yCord;
+							var xDiff = xCanvasPos - xBall;
+							var yDiff = yCanvasPos - yBall;
+							var ballMouseDistance = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
+							var clickedBall = ballMouseDistance <= radius;
+							if (isLegalBall) isLegalBall = ballMouseDistance >= radius * 2;
+							if (clickedBall) {
+								ball.accelerate();
+								didClickBall = true;
+								break;
+							}
+						} //end i-for
+						if (isLegalBall) {
+							//Check with top, bottom, and sides;
+							if (xCanvasPos - radius < 0) isLegalBall = false;else if (xCanvasPos + radius > _this3.state.width) isLegalBall = false;else if (yCanvasPos - radius < 0) isLegalBall = false;else if (yCanvasPos + radius > _this3.state.height) isLegalBall = false;
+						}
+						if (!didClickBall) {
+							//Make new ball;
+							if (isLegalBall) {
+								console.log('Making new ball' + _this3.balls.length);
+								var canvas = _this3.canvasRef;
+								var newBall = new Ball({
+									canvas: canvas,
+									ballID: _this3.balls.length,
+									xCord: xCanvasPos,
+									yCord: yCanvasPos,
+									radius: 30,
+									dx: 2,
+									dy: 2
+								});
+								_this3.balls.push(newBall);
+							} else console.log('Not legal ball');
+						}
+					}
 				})
 			);
 		}
