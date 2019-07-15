@@ -2,7 +2,7 @@
 class Ball{
 	constructor(properties){
 		this.canvas	= properties.canvas;
-		this.ballId	= properties.radius;
+		this.ballID	= properties.ballID;
 		this.xCord	= properties.xCord;
 		this.yCord	= properties.yCord;
 		this.radius	= properties.radius;
@@ -25,7 +25,7 @@ class Ball{
 		ctx.fillStyle = this.color;
 		ctx.fill();
 	}
-	this.updateCoordinates(){
+	updateCoordinates(){
 		this.xCord = this.nextX;
 		this.yCord = this.nextY;
 	}
@@ -41,29 +41,35 @@ class Ball{
 			this.nextY = this.yCord;
 			this.dy = 0;
 			this.dx = 0;
+			console.log('WARNING: SCREEN NOT FITTED;');
 		}
 		else if(willOverlapBottom){
 			this.dy *= -1;
+			this.nextY = maxHeight - this.radius;
 		}
 		else if(willOverlapTop){
 			this.dy *= -1;
+			this.nextY = 0 + this.radius;
 		}
 		else{
 			//No collision
 		}
-		if(willOverlapRight && willOverlapBottom){
+		if(willOverlapRight && willOverlapLeft){
 			//The screen is now to small for our ball;
 			//We will just keep the ball at it's current place and stop all movemnt;
 			this.nextX = this.xCord;
 			this.nextY = this.yCord;
 			this.dy = 0;
 			this.dx = 0;
+			console.log('WARNING: SCREEN NOT FITTED;');
 		}
 		else if(willOverlapRight){
 			this.dx *= -1;
+			this.nextX = maxWidth - this.radius;
 		}
 		else if(willOverlapLeft){
 			this.dx *= -1;
+			this.nextX = 0 + this.radius;
 		}
 		else{
 			//No collision
@@ -71,27 +77,27 @@ class Ball{
 
 	}
 	hitBottom(maxHeight){
-		const ballMaxBottom = this.yCord + this.radius;
-		if(ballMaxBottom <= maxHeight)
+		const ballMaxBottom = this.nextY + this.radius;
+		if(ballMaxBottom >= maxHeight)
 			return true;
 		return false;
 	
 	}
 	hitTop(){
-		const ballMaxTop = this.yCord - this.radius;
+		const ballMaxTop = this.nextY - this.radius;
 		if(ballMaxTop <= 0)
 			return true;
 		return false;
 	}
 	hitRight(maxWidth){
-		const ballMaxRight = this.xCord + this.radius;
-		if(ballMaxRight <= maxWidth)
+		const ballMaxRight = this.nextX + this.radius;
+		if(ballMaxRight >= maxWidth)
 			return true;
 		return false;
 	
 	}
 	hitLeft(){
-		const ballMaxLeft = this.xCord - this.radius;
+		const ballMaxLeft = this.nextX - this.radius;
 		if(ballMaxLeft <= 0)
 			return true;
 		return false;
@@ -154,7 +160,7 @@ class BallPen extends React.Component{
 				this.balls.push(
 					new Ball({
 						canvas:	canvas,
-						ballId:	0,
+						ballID:	0,
 						xCord:	41,
 						yCord:	41,
 						radius:	30,
@@ -165,8 +171,8 @@ class BallPen extends React.Component{
 			}// End first ball init;
 			for(let i=0; i<this.balls.length; i++){
 				let ball	= this.balls[i];
-				ball.nextX = this.x + this.dx;
-				ball.nextY = this.y + this.dy;
+				ball.nextX = ball.xCord + ball.dx;
+				ball.nextY = ball.yCord + ball.dy;
 				ball.handleWallCollisions(this.state.width, this.state.height);
 				ball.updateCoordinates();
 				ball.draw();

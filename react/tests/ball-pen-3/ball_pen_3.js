@@ -13,13 +13,15 @@ var Ball = function () {
 		_classCallCheck(this, Ball);
 
 		this.canvas = properties.canvas;
-		this.ballId = properties.radius;
+		this.ballID = properties.ballID;
 		this.xCord = properties.xCord;
 		this.yCord = properties.yCord;
 		this.radius = properties.radius;
 		this.dx = properties.dx;
 		this.dy = properties.dy;
 		this.color = "blue";
+		this.nextX = this.xCord + this.dx;
+		this.nextY = this.yCord + this.dy;
 	}
 
 	_createClass(Ball, [{
@@ -34,46 +36,78 @@ var Ball = function () {
 			ctx.fill();
 		}
 	}, {
+		key: 'updateCoordinates',
+		value: function updateCoordinates() {
+			this.xCord = this.nextX;
+			this.yCord = this.nextY;
+		}
+	}, {
 		key: 'handleWallCollisions',
 		value: function handleWallCollisions(maxWidth, maxHeight) {
-			if (this.hitBottom(maxHeight)) {
+			var willOverlapBottom = this.hitBottom(maxHeight);
+			var willOverlapTop = this.hitTop();
+			var willOverlapRight = this.hitRight(maxWidth);
+			var willOverlapLeft = this.hitLeft();
+			if (willOverlapTop && willOverlapBottom) {
+				//The screen is now to small for our ball;
+				//We will just keep the ball at it's current place and stop all movemnt;
+				this.nextX = this.xCord;
+				this.nextY = this.yCord;
+				this.dy = 0;
+				this.dx = 0;
+				console.log('WARNING: SCREEN NOT FITTED;');
+			} else if (willOverlapBottom) {
 				this.dy *= -1;
-			}
-			if (this.hitTop()) {
+				this.nextY = maxHeight - this.radius;
+			} else if (willOverlapTop) {
 				this.dy *= -1;
+				this.nextY = 0 + this.radius;
+			} else {
+				//No collision
 			}
-			if (this.hitRight(maxWidth)) {
+			if (willOverlapRight && willOverlapLeft) {
+				//The screen is now to small for our ball;
+				//We will just keep the ball at it's current place and stop all movemnt;
+				this.nextX = this.xCord;
+				this.nextY = this.yCord;
+				this.dy = 0;
+				this.dx = 0;
+				console.log('WARNING: SCREEN NOT FITTED;');
+			} else if (willOverlapRight) {
 				this.dx *= -1;
-			}
-			if (this.hitLeft()) {
+				this.nextX = maxWidth - this.radius;
+			} else if (willOverlapLeft) {
 				this.dx *= -1;
+				this.nextX = 0 + this.radius;
+			} else {
+				//No collision
 			}
 		}
 	}, {
 		key: 'hitBottom',
 		value: function hitBottom(maxHeight) {
-			var ballMaxBottom = this.yCord + this.radius;
-			if (ballMaxBottom <= maxHeight) return true;
+			var ballMaxBottom = this.nextY + this.radius;
+			if (ballMaxBottom >= maxHeight) return true;
 			return false;
 		}
 	}, {
 		key: 'hitTop',
 		value: function hitTop() {
-			var ballMaxTop = this.yCord - this.radius;
+			var ballMaxTop = this.nextY - this.radius;
 			if (ballMaxTop <= 0) return true;
 			return false;
 		}
 	}, {
 		key: 'hitRight',
 		value: function hitRight(maxWidth) {
-			var ballMaxRight = this.xCord + this.radius;
-			if (ballMaxRight <= maxWidth) return true;
+			var ballMaxRight = this.nextX + this.radius;
+			if (ballMaxRight >= maxWidth) return true;
 			return false;
 		}
 	}, {
 		key: 'hitLeft',
 		value: function hitLeft() {
-			var ballMaxLeft = this.xCord - this.radius;
+			var ballMaxLeft = this.nextX - this.radius;
 			if (ballMaxLeft <= 0) return true;
 			return false;
 		}
@@ -152,7 +186,7 @@ var BallPen = function (_React$Component) {
 					// Init first ball
 					this.balls.push(new Ball({
 						canvas: canvas,
-						ballId: 0,
+						ballID: 0,
 						xCord: 41,
 						yCord: 41,
 						radius: 30,
@@ -162,6 +196,10 @@ var BallPen = function (_React$Component) {
 				} // End first ball init;
 				for (var i = 0; i < this.balls.length; i++) {
 					var ball = this.balls[i];
+					ball.nextX = ball.xCord + ball.dx;
+					ball.nextY = ball.yCord + ball.dy;
+					ball.handleWallCollisions(this.state.width, this.state.height);
+					ball.updateCoordinates();
 					ball.draw();
 				} //end i-for
 			}
