@@ -39,12 +39,12 @@ class Ball{
 		const ballTop    = this.yCord - this.radius;
 		const ballRight  = this.xCord + this.radius;
 		const ballLeft   = this.xCord - this.radius;
-		if(ballBottom >= height)
-			this.yCord = height - this.radius;
+		if(ballBottom >= maxHeight)
+			this.yCord = maxHeight - this.radius;
 		if(ballTop <= 0)
 			this.yCord = 0 + this.radius;
-		if(ballRight >= width)
-			this.xCord = width - this.radius;
+		if(ballRight >= maxWidth)
+			this.xCord = maxWidth - this.radius;
 		if(ballLeft <= 0)
 			this.xCord = 0 + this.radius;
 	}//end handleWindowResize()
