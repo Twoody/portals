@@ -551,11 +551,203 @@
 
 <p>
 	Next, let us define a very important property of are ball: <code>
-	ball.isStatic</code>. 
+	ball.isBouncing</code>. The next step we are going to take is a multistep
+	process. In order to apply gravity, we also need to apply friction. And 
+	as we go into the logic, we will want to put some other failsafes into
+	place as our ball will now interact with the screen differently.
 </p>
 <p>
-	
+	This brings me to our first point, which is the wall interactions we just
+	put in place. The code in <code>handleWallCollisions()</code> handles what
+	happens when the ball is moving. It does not handle when the screen/window
+	is being manipulated. Thus, our first change is within <code>
+	updateWindowDimensions</code>. Append the following segment to the code:
+	<pre class="terminal-block">
+		<kbd class="bash-green">
+			&nbsp;&nbsp;&nbsp;updateWindowDimensions(){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for(let&nbsp;i=0;&nbsp;i&lt;this.balls.length;&nbsp;i++){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;ball&nbsp;=&nbsp;this.balls[i];
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ball.handleWindowResize(width,&nbsp;height);
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}//end&nbsp;i-for
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;
+			&nbsp;&nbsp;&nbsp;}//End&nbsp;updateWindowDimensions()
+		</kbd>
+	</pre>
+	And then to define <code>Ball.handleWindowResize</code>:
+
+	<pre class="terminal-block">
+		<kbd class="bash-green">
+			&nbsp;&nbsp;handleWindowResize(maxWidth,&nbsp;maxHeight){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const&nbsp;ballBottom&nbsp;=&nbsp;this.yCord&nbsp;+&nbsp;this.radius;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const&nbsp;ballTop&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;this.yCord&nbsp;-&nbsp;this.radius;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const&nbsp;ballRight&nbsp;&nbsp;=&nbsp;this.xCord&nbsp;+&nbsp;this.radius;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const&nbsp;ballLeft&nbsp;&nbsp;&nbsp;=&nbsp;this.xCord&nbsp;-&nbsp;this.radius;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(ballBottom&nbsp;&gt;=&nbsp;height)
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.yCord&nbsp;=&nbsp;height&nbsp;-&nbsp;this.radius;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(ballTop&nbsp;&lt;=&nbsp;0)
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.yCord&nbsp;=&nbsp;0&nbsp;+&nbsp;this.radius;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(ballRight&nbsp;&gt;=&nbsp;width)
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.xCord&nbsp;=&nbsp;width&nbsp;-&nbsp;this.radius;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(ballLeft&nbsp;&lt;=&nbsp;0)
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.xCord&nbsp;=&nbsp;0&nbsp;+&nbsp;this.radius;
+			&nbsp;&nbsp;}//end&nbsp;handleWindowResize()
+		</kbd>
+	</pre>
 </p>
+<!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
+<p>
+	Once we have our window resizing taken care of, we can move onto applying
+	<code>gravity</code> and <code>friction</code>. For right now, we will
+	first setup just the friction applied by the container. Within the
+	<code>BallPen</code> constructor add the property <code>friction</code>:
+	<pre class="terminal-block">
+		<kbd class="bash-green">
+			class&nbsp;BallPen&nbsp;extends&nbsp;React.Component{
+			&nbsp;&nbsp;&nbsp;constructor(props){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.friction&nbsp;=&nbsp;0.1;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.updateWindowDimensions&nbsp;=&nbsp;this.updateWindowDimensions.bind(this);
+			&nbsp;&nbsp;&nbsp;}
+		</kbd>
+	</pre>
+	Likewise, add <code>gravity</code> to the <code>Ball</code> constuctor.
+	We are also going to now switch up the way we implemented <code>ball.dx
+	</code>. We will now maintain an always positive value for the change in
+	x and rather see if we are going to subtract or add that value to a ball's
+	<code>nextX</code>. This property we will call <code>isGoingRight</code>.
+	<pre class="terminal-block">
+		<kbd class="bash-green">
+			class&nbsp;Ball{
+			&nbsp;&nbsp;&nbsp;constructor(properties){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.gravity&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;0.05;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.isGoingRight&nbsp;=&nbsp;true;
+			&nbsp;&nbsp;&nbsp;}
+		</kbd>
+	</pre>
+</p>
+<p>
+	The changes that <code>isGoingRight</code> will encompass <code>
+	updateCanvas()</code> and <code>handleWallCollisions</code>. Within <code>
+	updateCanvas</code> we will see this change on the larger update below. But
+	within <code>handleWallCollisions</code>, we need to set a "true" or "false"
+	values to the direction the ball is going when in contact with either the 
+	left or right wall. Remove the <code>this.dx *= -1</code> and setup the
+	boolean values as expected (yes, you can do this yourself).
+</p>
+<p>
+	And now the fun part... Gravity! Let us make a <code>Ball.applyGravity()
+	</code> method and <code>Ball.isBouncing()</code> method:
+	<pre class="terminal-block">
+		<kbd class="bash-green">applyGravity(){</kbd>
+		<kbd class="bash-green">&nbsp;&nbsp;&nbsp;this.dy += this.gravity;</kbd>
+		<kbd class="bash-green">}</kbd>
+		<kbd class="bash-green">
+			isBouncing(maxHeight, allBalls){
+			&nbsp;&nbsp;&nbsp;if(this.hitBottom(maxHeight) && this.dy > 0){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//Positive dy implies ball still wants to go down;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//If we are on the bottom, the ball can no longer go down;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;
+			&nbsp;&nbsp;&nbsp;}
+			&nbsp;&nbsp;&nbsp;//TODO: For loop through allBalls
+			&nbsp;&nbsp;&nbsp;return true;
+			}
+		</kbd>
+
+	</pre>
+	Okay, that wasn't that extreme. <em>C'est la programmin</em>. The <code>
+	Ball.isBouncing()</code> method is also not that interesting, but the cool
+	part is when it call comes together.
+</p>
+<p>
+	Next is to practically rewrite how we implemented <code>updateCanvas</code>
+	. We need to incorporate all of the changes up to this point:
+	<ol>
+		<li><code>
+			friction
+		</code></li>
+		<li><code>
+			gravity
+		</code></li>
+		<li><code>
+			isGoingRight
+		</code></li>
+		<li><code>
+			isBouncing
+		</code></li>
+	</ol>
+	The updated <code>updateCanvas()</code> follows. Be sure to closely analyze
+	the changes and <em>grok</em> the changes:
+
+	<pre class="terminal-block">
+		<kbd class="bash-green">
+			updateCanvas(){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const&nbsp;canvas&nbsp;&nbsp;&nbsp;=&nbsp;this.canvasRef;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const&nbsp;ctx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;canvas.getContext('2d');
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctx.beginPath();
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctx.rect(0,0,&nbsp;this.state.width,&nbsp;this.state.height);
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctx.fillStyle&nbsp;=&nbsp;"#FF0000";
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctx.fill();
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(this.state.width&nbsp;!==&nbsp;0){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(this.balls.length&nbsp;===&nbsp;0){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;Init&nbsp;first&nbsp;ball
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.balls.push(
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new&nbsp;Ball({
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;canvas:&nbsp;&nbsp;&nbsp;canvas,
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ballID:&nbsp;&nbsp;&nbsp;0,
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xCord:&nbsp;&nbsp;&nbsp;41,
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yCord:&nbsp;&nbsp;&nbsp;41,
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;radius:&nbsp;&nbsp;&nbsp;30,
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dx:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2,
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dy:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;})
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}//&nbsp;End&nbsp;first&nbsp;ball&nbsp;init;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for(let&nbsp;i=0;&nbsp;i&lt;this.balls.length;&nbsp;i++){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;ball&nbsp;&nbsp;&nbsp;=&nbsp;this.balls[i];
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const&nbsp;isBouncing&nbsp;&nbsp;&nbsp;=&nbsp;ball.isBouncing(this.state.height,&nbsp;this.balls);
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(&nbsp;!isBouncing&nbsp;&&&nbsp;ball.dx&nbsp;===&nbsp;0){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//Ball&nbsp;is&nbsp;static;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ball.draw();
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctx.font&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;"15px&nbsp;Arial";
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctx.fillStyle&nbsp;=&nbsp;"white";
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctx.fillText("Static",&nbsp;ball.xCord-ball.radius+1,&nbsp;ball.yCord+1);
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else&nbsp;if(&nbsp;!isBouncing){
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(ball.isGoingRight)
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ball.nextX&nbsp;=&nbsp;ball.xCord&nbsp;+&nbsp;ball.dx;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ball.nextX&nbsp;=&nbsp;ball.xCord&nbsp;-&nbsp;ball.dx;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//Ball&nbsp;is&nbsp;rolling;&nbsp;Apply&nbsp;friction;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ball.dx&nbsp;-=&nbsp;this.friction;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(ball.dx&nbsp;&lt;&nbsp;0)
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ball.dx&nbsp;=&nbsp;0;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else{
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ball.applyGravity();
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ball.nextY&nbsp;=&nbsp;ball.yCord&nbsp;+&nbsp;ball.dy;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(ball.isGoingRight)
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ball.nextX&nbsp;=&nbsp;ball.xCord&nbsp;+&nbsp;ball.dx;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ball.nextX&nbsp;=&nbsp;ball.xCord&nbsp;-&nbsp;ball.dx;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ball.handleWallCollisions(this.state.width,&nbsp;this.state.height,&nbsp;this.friction);
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ball.updateCoordinates();
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ball.draw();
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}//end&nbsp;i-for
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+			&nbsp;&nbsp;&nbsp;}
+		</kbd>
+	</pre>
+</p>
+<p>
+	And the finaly product should looke something like:
+</p>
+<script type="text/babel" src="./../../../react/tests/ball-pen-4/ball_pen_4.js"></script>
+<div id="ball-pen-4"></div>
+<!---- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ---->
 <p>
 	<pre class="terminal-block">
 		$&nbsp;<kbd class="bash-green">passtow</kbd>
