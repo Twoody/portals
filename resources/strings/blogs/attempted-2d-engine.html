@@ -751,12 +751,16 @@
 <p>
 	Unfortunately, this is the point where the coding comes to a close. For us
 	to go any further, we have to go into radians, angles, velocity, vectors, 
-	and more. The code that we have built up to this point would need to be 
-	completely rewritten to incorporate those things. 
+	and more. We could easily rewrite our code to econpmass these things,
+	however, after my own experimenting with it has lead me to believe that
+	even incorporating these features will not fully fix the bugs that are
+	present. As soon as we apply gravity and try to stack balls ontop of 
+	eachother, the layer of  confusion in the code piles up, which is evident
+	within the balls on the screen. That is why professional physics engines
+	use a certain number of sides for circles instead of calculating the cirle
+	as it's own entity.
 </p>
 <p>
-	My next project is to get the evil little balls behaving more efficiently
-	with better mathematics in the next blog.
 </p>
 <p>
 	<pre class="terminal-block">
