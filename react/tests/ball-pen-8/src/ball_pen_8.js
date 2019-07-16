@@ -1,27 +1,46 @@
 'use strict';
 class Ball{
 	constructor(properties){
-		this.canvas	= properties.canvas;
-		this.ballId	= properties.radius;
-		this.xCord	= properties.xCord;
-		this.yCord	= properties.yCord;
-		this.radius	= properties.radius;
-		this.dx 		= properties.dx;
-		this.dy		= properties.dy;
-		this.color	= "blue";
+		this.canvas		= properties.canvas;
+		this.ballId		= properties.ballID;
+		this.x			= properties.x;
+		this.y			= properties.y;
+		this.radius		= properties.radius;
+		this.color		= "blue";
+		this.speed		= 5;
+		this.angle		= 45;
+		this.radians	= this.angle * Math.PI/180;
+		this.dx	= Math.cos(this.radians) * this.speed;	//The change in our x coordinate
+		this.dy	= Math.sin(this.radians) * this.speed;	//The change in our y coordinate
 	}
 	draw(){
 		const ctx = this.canvas.getContext('2d');
 		ctx.beginPath();
 		ctx.arc(
-			this.xCord,
-			this.yCord, 
+			this.x,
+			this.y, 
 			this.radius,
 			2*Math.PI,		//Start angle in radians
 			0					//End angle in radians
 		);
 		ctx.fillStyle = this.color;
 		ctx.fill();
+	}
+	updateBall(maxWidth, maxHeight){
+		this.handleWallCollisions(maxWidth, maxHeight);
+		this.radians = this.angle * Math.PI/180;
+		this.dx	= Math.cos(this.radians) * this.speed;	//The change in our x coordinate
+		this.dy	= Math.sin(this.radians) * this.speed;	//The change in our y coordinate
+		this.x	+= this.dx;
+		this.y	+= this.dy;
+	}
+	handleWallCollisions(maxWidth, maxHeight){
+		if (this.x > maxWidth-this.radius || this.x < this.radius ){
+			this.angle = 180 - this.angle;	//Angle of reflection
+		} 
+		else if (this.y > maxHeight-this.radius || this.y < this.radius){
+			this.angle = 360 - this.angle;	//Angle of reflection
+		}
 
 	}
 }//End Ball Class
@@ -83,16 +102,15 @@ class BallPen extends React.Component{
 					new Ball({
 						canvas:	canvas,
 						ballId:	0,
-						xCord:	41,
-						yCord:	41,
+						x:			41,
+						y:			41,
 						radius:	30,
-						dx: 		2,
-						dy:		2
 					})
 				);
 			}// End first ball init;
 			for(let i=0; i<this.balls.length; i++){
 				let ball	= this.balls[i];
+				ball.updateBall(this.state.width, this.state.height);
 				ball.draw();
 			}//end i-for
 		}
