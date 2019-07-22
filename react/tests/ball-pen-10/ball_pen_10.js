@@ -20,15 +20,23 @@ var Ball = function () {
 		this.dx = properties.dx;
 		this.dy = properties.dy;
 		this.color = "blue";
-		this.nextX = this.xCord + this.dx;
-		this.nextY = this.yCord + this.dy;
 		this.gravity = 0.45;
 		this.friction = 0.05;
-		this.isGoingRight = true;
-		this.isGoingDown = true;
-		this.isStatic = false;
 		this.kineticLoss = 1 / 3;
 		this.kineticGain = 2 / 3;
+		//Direction variables;
+		this.isGoingRight = true;
+		this.isGoingDown = true;
+		this.isGoingLeft = false;
+		this.isGoingUp = false;
+		this.nextX = this.xCord + this.dx; //Ball starts going to the right;
+		this.nextY = this.yCord + this.dy; //Ball starts going down;
+		//Boundary variables;
+		this.canGoLeft = true;
+		this.canGoRight = true;
+		this.canGoDown = true;
+		this.canGoUp = true;
+		this.isStatic = false;
 	}
 
 	_createClass(Ball, [{
@@ -63,7 +71,6 @@ var Ball = function () {
 	}, {
 		key: 'handleWindowResize',
 		value: function handleWindowResize(maxWidth, maxHeight) {
-			this.isStatic = false;
 			var ballBottom = this.yCord + this.radius;
 			var ballTop = this.yCord - this.radius;
 			var ballRight = this.xCord + this.radius;
@@ -77,7 +84,6 @@ var Ball = function () {
 	}, {
 		key: 'handleWallCollisions',
 		value: function handleWallCollisions(maxWidth, maxHeight, friction) {
-			this.isStatic = false;
 			var willOverlapBottom = this.hitBottom(maxHeight);
 			var willOverlapTop = this.hitTop();
 			var willOverlapRight = this.hitRight(maxWidth);
@@ -94,12 +100,13 @@ var Ball = function () {
 				this.dy -= friction;
 				if (this.dy <= 0) {
 					this.dy = 0;
-					this.isGoingDown = true;
-				} else this.isGoingDown = false;
+					this.canGoUp = false;
+				}
+				this.canGoDown = false;
 				this.nextY = maxHeight - this.radius;
 			} else if (willOverlapTop) {
 				this.dy += friction;
-				this.isGoingDown = true;
+				this.canGoUp = false;
 				this.nextY = 0 + this.radius;
 			} else {
 				//No collision
@@ -113,10 +120,10 @@ var Ball = function () {
 				this.dx = 0;
 				console.log('WARNING: SCREEN NOT FITTED;');
 			} else if (willOverlapRight) {
-				this.isGoingRight = false;
+				this.canGoRight = false;
 				this.nextX = maxWidth - this.radius;
 			} else if (willOverlapLeft) {
-				this.isGoingRight = true;
+				this.canGoLeft = false;
 				this.nextX = 0 + this.radius;
 			} else {
 				//No collision
@@ -133,8 +140,17 @@ var Ball = function () {
 				var nextDistance = this.distanceTo(otherBall.xCord, otherBall.yCord);
 				var willOverlap = nextDistance <= minDistance;
 				if (!willOverlap) continue;
-				//Else, we will need to adjust the next coordinates so that they do not 
-				//	overlap otherBall;
+				//Set the directions that this ball cannot go;
+				if (this.nextX > otherBall.xCord) {
+					//Current ball is right of otherball
+					this.canGoLeft = false;
+				} else this.canGoRight = false;
+				if (this.nextY > otherBall.yCord) {
+					//Current ball is below of otherball
+					this.canGoUp = false;
+				} else this.canGoDown = false;
+
+				//Adjust the next coordinates so that they do not overlap otherBall;
 				//We can do this by taking the ratio of dx and dy changes and "step back"
 				//	through time until we find a place the balls no longer overlap;
 				var timeRatio = 50;
@@ -143,9 +159,9 @@ var Ball = function () {
 				var cnt = 0;
 				while (willOverlap) {
 					if (this.isGoingRight) this.nextX -= dxRatio; //Step back left
-					else this.nextX += dxRatio; //Step back right
+					else if (this.isGoingLeft) this.nextX += dxRatio; //Step back right
 					if (this.isGoingDown) this.nextY -= dyRatio; //Step back up
-					else this.nextY += dyRatio; //Step back down
+					else if (this.isGoingUp) this.nextY += dyRatio; //Step back down
 					nextDistance = this.distanceTo(otherBall.xCord, otherBall.yCord);
 					willOverlap = nextDistance < minDistance;
 					cnt += 1;
@@ -156,95 +172,14 @@ var Ball = function () {
 					}
 				} //end while
 
-				//Change directions of balls for next iteration;
-				if (!otherBall.isStatic) {
-					if (this.isGoingRight) {
-						if (otherBall.isGoingRight) {
-							//Both Balls are moving right; Change "inner" ball only;
-							if (this.nextX > otherBall.xCord) {
-								//outter ball is current ball
-								otherBall.isGoingRight = false;
-							} else {
-								this.isGoingRight = false;
-							}
-						} else {
-							//Balls are heading in opposite directions;
-							//Have left ball go left and right ball go right
-							//Current ball is going right;
-							this.isGoingRight = true;
-							otherBall.isGoingRight = false;
-						}
-					} else {
-						//Current ball is going left;
-						if (!otherBall.isGoingRight) {
-							//Both balls are going left;
-							//Have right most ball go right instead;
-							if (this.nextX > otherBall.xCord) {
-								//Right most balls is current ball
-								this.isGoingRight = true;
-							} else {
-								otherBall.isGoingRight = true;
-							}
-						} else {
-							//Other ball is going right;
-							//Have left ball go left and right ball go right;
-							this.isGoingRight = false;
-							otherBall.isGoingRight = true;
-						}
-					}
-				} else {
-					//Other ball is "static";
-					//See if we can roll off the ball;
-					if (this.nextX < otherBall.xCord) {
-						//Current ball is left of other ball;
-						this.isGoingRight = false;
-						otherBall.isGoingRight = true;
-					} else {
-						//Current ball is right of other ball;
-						this.isGoingRight = true;
-						otherBall.isGoingRight = false;
-					}
-				} //End handling left/right changes;
+				//TODO: A process of destroying balls if persistent overlap;
 
-				if (otherBall.isStatic) {
-					//Static ball is always going down;
-					//This implies some weird logic changes
-					if (this.nextY > otherBall.yCord) {
-						//Current ball is below otherBall
-						//This happens when other ball cannot move without touching
-						//	the current ball;
-						this.dx += this.friction;
-						otherBall.dy += this.friction;
-					} else if (this.nextY < otherBall.yCord) {
-						//Current ball is above otherball;
-						otherBall.isGoingDown = true;
-						this.isGoingDown = false;
-						this.dx += this.friction * 10;
-						otherBall.dy += this.friction * 2;
-						console.log("Nexty: " + this.nextY + ", curY: " + this.yCord);
-					} else {
-						//Y Cords are the same; Maybe they found the perfect balance;
-					}
-				} else {
-					//Other ball is NOT static;
-					if (this.nextY < otherBall.yCord) {
-						//Current ball is above otherball;
-						otherBall.isGoingDown = true;
-						this.isGoingDown = false;
-					} else {
-						//Current ball is below otherball;
-						this.isGoingDown = true;
-						otherBall.isGoingDown = false;
-					}
-				}
-
-				//Apply Kinetic Transfer
+				//Apply Kinetic Transfers
 				otherBall.dx += this.dx * this.kineticLoss;
 				this.dx *= this.kineticGain;
 				otherBall.dy += this.dy * this.kineticLoss;
 				this.dy *= this.kineticGain;
 				otherBall.isStatic = false;
-				this.isStatic = false;
 			} //end i-for
 		} //End handleBallCollision()
 
@@ -283,36 +218,6 @@ var Ball = function () {
 			var ballMaxLeft = this.nextX - this.radius;
 			if (ballMaxLeft <= 0) return true;
 			return false;
-		}
-	}, {
-		key: 'isBouncing',
-		value: function isBouncing(maxHeight, allBalls) {
-			var ballMaxBottom = this.yCord + this.radius;
-			if (ballMaxBottom >= maxHeight && this.dy <= 0) {
-				//Negative dy implies no more juice;
-				//If we are on the bottom, the ball can no longer go down;
-				this.isGoingDown = true;
-				return false;
-			} else if (this.isGoingDown === false) {
-				//console.log(this.ballID + " IS NOT GOING DOWN");
-				return true;
-			}
-			for (var i = 0; i < allBalls.length; i++) {
-				if (allBalls[i] === this.ball) continue;
-				var otherBall = allBalls[i];
-				var yOther = otherBall.yCord;
-				var xOther = otherBall.xCord;
-				if (yOther >= this.yCord) continue;
-				var xDiff = this.xCord - xOther;
-				var yDiff = this.yCord - yOther;
-				var distance = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
-				var minDistance = this.radius + otherBall.radius;
-				var buffer = 0.05;
-				if (distance > minDistance - buffer && distance < minDistance + buffer) {
-					if (this.yCord > otherBall.yCord) return false;
-				}
-			} //end i-for
-			return true;
 		}
 	}]);
 
@@ -401,73 +306,78 @@ var BallPen = function (_React$Component) {
 						dx: 2,
 						dy: 2
 					}));
-					//Init second ball for testing;
-					this.balls.push(new Ball({
-						canvas: canvas,
-						ballID: 1,
-						xCord: 141,
-						yCord: 41,
-						radius: 30,
-						dx: 0,
-						dy: 0
-					}));
+					//init second ball for testing;
+					//	this.balls.push(
+					//		new Ball({
+					//			canvas:	canvas,
+					//			ballID:	1,
+					//			xCord:	141,
+					//			yCord:	41,
+					//			radius:	30,
+					//			dx: 		0,
+					//			dy:		0
+					//		})
+					//	);
 				} // End first ball init;
 				for (var i = 0; i < this.balls.length; i++) {
 					var ball = this.balls[i];
-					var isBouncing = ball.isBouncing(this.state.height, this.balls);
-					if (!ball.isGoingDown && ball.dy <= 0) {
-						//Ball lost momentum last frame and needs to come back down;
+					ball.applyGravity();
+					//Assume we can go any direction first; Change values on `handle`*;
+					ball.canGoUp = true;
+					ball.canGoDown = true;
+					ball.canGoLeft = true;
+					ball.canGoRight = true;
+
+					//See if we lost momentum since last frame;
+					if (ball.isGoingUp && ball.dy <= 0) {
+						//Ball lost momentum last frame and cannot go up any further;
+						ball.isGoingUp = false;
 						ball.isGoingDown = true;
-						//ball.isStatic = false;
 					}
-					if (!isBouncing && ball.dx === 0) {
-						//Ball is static;
-						ball.isStatic = true;
-						ball.draw();
-						ctx.font = "15px Arial";
-						ctx.fillStyle = "white";
-						ctx.fillText("Static" + ball.ballID, ball.xCord - ball.radius + 1, ball.yCord + 1);
-						ball.dy = 0;
-						ball.dx = 0;
-						ball.nextY = ball.yCord;
-						ball.nextX = ball.xCord;
-					} else if (!isBouncing) {
-						ball.isStatic = false;
-						ball.nextY = ball.yCord + ball.dy;
-						if (ball.isGoingRight) ball.nextX = ball.xCord + ball.dx;else ball.nextX = ball.xCord - ball.dx;
-						//Ball is rolling; Apply friction;
+
+					//Set wanted coordinates based off of previous movement;
+					if (ball.isGoingUp) ball.nextY = ball.yCord - ball.dy;else if (ball.isGoingDown) ball.nextY = ball.yCord + ball.dy;
+					if (ball.isGoingLeft) ball.nextX = ball.xCord - ball.dx;else if (ball.isGoingRight) ball.nextX = ball.xCord + ball.dx;
+
+					//See if expected coordinates will prevent us from going certain directions;
+					ball.handleWallCollisions(this.state.width, this.state.height, this.friction);
+					ball.handleBallCollisions(this.balls);
+
+					// **** Handle Ball Movement ****
+					//Set directions for next movement based off of current collisions;
+					if (ball.canGoDown && ball.canGoUp) {
+						ball.isGoingUp = ball.isGoingUp;
+						ball.isGoingDown = ball.isGoingDown;
+					} else if (ball.canGoUp) {
+						if (ball.dy > 0) ball.isGoingUp = true;
+						ball.isGoingDown = false;
+					} else if (ball.canGoDown) {
+						ball.isGoingDown = true;
+						ball.isGoingUp = false;
+					} else {
+						ball.isGoingDown = false;
+						ball.isGoingUp = false;
 						ball.dx -= this.friction;
 						if (ball.dx < 0) ball.dx = 0;
-						ball.dy = 0;
-						ball.handleWallCollisions(this.state.width, this.state.height, this.friction);
-						ball.handleBallCollisions(this.balls);
-						ball.updateCoordinates();
-						ball.draw();
-						ctx.font = "15px Arial";
-						ctx.fillStyle = "white";
-						ctx.fillText("Rolling" + ball.ballID, ball.xCord - ball.radius + 1, ball.yCord + 1);
-					} else {
-						ball.isStatic = false;
-						if (isBouncing) ball.applyGravity();else {
-							console.log(ball.ballID + ": NOT BOUNCING");
-						}
-						if (ball.isGoingDown) ball.nextY = ball.yCord + ball.dy;else ball.nextY = ball.yCord - ball.dy;
-						if (ball.isGoingRight) ball.nextX = ball.xCord + ball.dx;else ball.nextX = ball.xCord - ball.dx;
-						ball.handleWallCollisions(this.state.width, this.state.height, this.friction);
-						ball.handleBallCollisions(this.balls);
-						var isLimbo = ball.xCord === ball.nextX && ball.yCord === ball.nextY;
-						ball.updateCoordinates();
-						ball.draw();
-						if (isLimbo) {
-							ctx.font = "12px Arial";
-							ctx.fillStyle = "white";
-							ctx.fillText("Limbo" + ball.ballID, ball.xCord - ball.radius + 1, ball.yCord + 1);
-						} else {
-							ctx.font = "12px Arial";
-							ctx.fillStyle = "white";
-							ctx.fillText("Bouncing" + ball.ballID, ball.xCord - ball.radius + 1, ball.yCord + 1);
-						}
 					}
+					if (ball.canGoRight && ball.canGoLeft) {
+						ball.isGoingRight = ball.isGoingRight;
+						ball.isGoingLeft = ball.isGoingLeft;
+					} else if (ball.canGoRight) {
+						ball.isGoingRight = true;
+						ball.isGoingLeft = false;
+					} else if (ball.canGoLeft) {
+						ball.isGoingRight = false;
+						ball.isGoingLeft = true;
+					} else {
+						ball.isGoingRight = false;
+						ball.isGoingLeft = false;
+					}
+
+					if (ball.isGoingUp && ball.isGoingDown) console.log('ERROR: BALL CANNOT GO UP AND DOWN');
+					if (ball.isGoingLeft && ball.isGoingRight) console.log('ERROR: BALL CANNOT GO LEFT AND RIGHT');
+					ball.updateCoordinates();
+					ball.draw();
 				} //end i-for
 			} //end if state.width clarity check;
 		}
