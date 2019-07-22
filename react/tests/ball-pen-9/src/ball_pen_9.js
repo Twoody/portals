@@ -158,6 +158,7 @@ class Ball{
 			if( !otherBall.isStatic ){
 				if(this.isGoingRight){
 					if(otherBall.isGoingRight){
+						//Both Balls are moving right; Change "inner" ball only;
 						if(this.nextX > otherBall.xCord){
 							//outter ball is current ball
 							otherBall.isGoingRight	= false;
@@ -179,12 +180,12 @@ class Ball{
 					if( !otherBall.isGoingRight ) {
 						//Both balls are going left;
 						//Have right most ball go right instead;
-						if(this.nextX < otherBall.xCord){
-							//outter left ball is current ball
-							otherBall.isGoingRight	= true;
+						if(this.nextX > otherBall.xCord){
+							//Right most balls is current ball
+							this.isGoingRight			= true;
 						}
 						else{
-							this.isGoingRight			= true;
+							otherBall.isGoingRight	= true;
 						}
 					}
 					else{
@@ -196,6 +197,7 @@ class Ball{
 				}
 			}
 			else{
+				//Other ball is "static";
 				//See if we can roll off the ball;
 				if(this.nextX < otherBall.xCord){
 					//Current ball is left of other ball;
@@ -232,16 +234,17 @@ class Ball{
 				}
 			}
 			else{
-						if(this.nextY < otherBall.yCord){
-							//Current ball is above otherball;
-							otherBall.isGoingDown = true;
-							this.isGoingDown      = false;
-						}
-						else{
-							//Current ball is below otherball;
-							this.isGoingDown = true;
-							otherBall.isGoingDown = false;
-						}
+				//Other ball is NOT static;
+				if(this.nextY < otherBall.yCord){
+					//Current ball is above otherball;
+					otherBall.isGoingDown = true;
+					this.isGoingDown      = false;
+				}
+				else{
+					//Current ball is below otherball;
+					this.isGoingDown = true;
+					otherBall.isGoingDown = false;
+				}
 			}
 			
 			//Apply Kinetic Transfer
@@ -251,9 +254,8 @@ class Ball{
 			this.dy			*= this.kineticGain;
 			otherBall.isStatic	= false;
 			this.isStatic			= false;
-
 		}//end i-for
-	}
+	}//End handleBallCollision()
 	distanceTo(x, y){
 		const xDiff 	= this.nextX - x;
 		const yDiff 	= this.nextY - y;

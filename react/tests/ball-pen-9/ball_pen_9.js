@@ -160,6 +160,7 @@ var Ball = function () {
 				if (!otherBall.isStatic) {
 					if (this.isGoingRight) {
 						if (otherBall.isGoingRight) {
+							//Both Balls are moving right; Change "inner" ball only;
 							if (this.nextX > otherBall.xCord) {
 								//outter ball is current ball
 								otherBall.isGoingRight = false;
@@ -178,11 +179,11 @@ var Ball = function () {
 						if (!otherBall.isGoingRight) {
 							//Both balls are going left;
 							//Have right most ball go right instead;
-							if (this.nextX < otherBall.xCord) {
-								//outter left ball is current ball
-								otherBall.isGoingRight = true;
-							} else {
+							if (this.nextX > otherBall.xCord) {
+								//Right most balls is current ball
 								this.isGoingRight = true;
+							} else {
+								otherBall.isGoingRight = true;
 							}
 						} else {
 							//Other ball is going right;
@@ -192,6 +193,7 @@ var Ball = function () {
 						}
 					}
 				} else {
+					//Other ball is "static";
 					//See if we can roll off the ball;
 					if (this.nextX < otherBall.xCord) {
 						//Current ball is left of other ball;
@@ -224,6 +226,7 @@ var Ball = function () {
 						//Y Cords are the same; Maybe they found the perfect balance;
 					}
 				} else {
+					//Other ball is NOT static;
 					if (this.nextY < otherBall.yCord) {
 						//Current ball is above otherball;
 						otherBall.isGoingDown = true;
@@ -243,7 +246,8 @@ var Ball = function () {
 				otherBall.isStatic = false;
 				this.isStatic = false;
 			} //end i-for
-		}
+		} //End handleBallCollision()
+
 	}, {
 		key: 'distanceTo',
 		value: function distanceTo(x, y) {
