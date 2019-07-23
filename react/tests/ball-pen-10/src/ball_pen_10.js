@@ -25,7 +25,6 @@ class Ball{
 		this.canGoRight	= true;
 		this.canGoDown		= true;
 		this.canGoUp		= true;
-		this.isStatic		= false;
 	}
 	draw(){
 		const ctx = this.canvas.getContext('2d');
@@ -51,9 +50,8 @@ class Ball{
 			this.dy -= this.gravity;
 	}
 	accelerate(){
-		this.isStatic = false;
 		this.dx += 2 * this.gravity;
-		this.dy += 10 * this.gravity;;
+		this.dy += 20 * this.gravity;;
 	}
 	handleWindowResize(maxWidth, maxHeight){
 		const ballBottom = this.yCord + this.radius;
@@ -62,6 +60,8 @@ class Ball{
 		const ballLeft   = this.xCord - this.radius;
 		if(ballBottom >= maxHeight)
 			this.yCord = maxHeight - this.radius;
+		else
+			this.canGoDown = true;
 		if(ballTop <= 0)
 			this.yCord = 0 + this.radius;
 		if(ballRight >= maxWidth)
@@ -85,7 +85,7 @@ class Ball{
 		}
 		else if(willOverlapBottom){
 			this.dy -= friction;
-			if(this.dy <= 0){
+			if(this.dy < 0){
 				this.dy = 0;
 				this.canGoUp = false;
 			}
@@ -179,7 +179,13 @@ class Ball{
 			this.dx			*= this.kineticGain;
 			otherBall.dy	+= this.dy * this.kineticLoss;
 			this.dy			*= this.kineticGain;
-			otherBall.isStatic	= false;
+			if(otherBall.isGoingDown === false && otherBall.isGoingUp === false){
+				otherBall.isGoingUp = true;
+			}
+			if(otherBall.isGoingLeft === false && otherBall.isGoingRight === false){
+				otherBall.isGoingRight = this.isGoingRight;
+				otherBall.isGoingLeft = this.isGoingLeft;
+			}
 		}//end i-for
 	}//End handleBallCollision()
 	distanceTo(x, y){
@@ -213,6 +219,10 @@ class Ball{
 		if(ballMaxLeft <= 0)
 			return true;
 		return false;
+	}
+	destruct(){
+		//Destroy Ball
+		this.radius	*= 0.5;
 	}
 }//End Ball Class
 class BallPen extends React.Component{
@@ -260,7 +270,6 @@ class BallPen extends React.Component{
       });
 		for(let i=0; i<this.balls.length; i++){
 			let ball = this.balls[i];
-			ball.handleWindowResize(width, height);
 		}//end i-for
       return;
    }
@@ -307,13 +316,6 @@ class BallPen extends React.Component{
 				ball.canGoLeft		= true;
 				ball.canGoRight	= true;
 
-				//See if we lost momentum since last frame;
-				if( ball.isGoingUp && ball.dy <= 0 ){
-					//Ball lost momentum last frame and cannot go up any further;
-					ball.isGoingUp		= false;
-					ball.isGoingDown	= true;
-				}
-
 				//Set wanted coordinates based off of previous movement;
 				if(ball.isGoingUp)
 					ball.nextY = ball.yCord - ball.dy;
@@ -332,8 +334,23 @@ class BallPen extends React.Component{
 				// **** Handle Ball Movement ****
 				//Set directions for next movement based off of current collisions;
 				if(ball.canGoDown && ball.canGoUp){
-					ball.isGoingUp		= ball.isGoingUp;
-					ball.isGoingDown	= ball.isGoingDown;
+					if(ball.isGoingUp && ball.dy <=0){
+						ball.dy = 0;
+						ball.isGoingUp		= false
+						ball.isGoingDown	= true;
+					}
+					else if(ball.isGoingDown){
+						ball.isGoingUp		= false;	
+						ball.isGoingDown	= true;
+					}
+					else if(ball.isGoingUp){
+						ball.isGoingUp		= true;
+						ball.isGoingDown	= false;
+					}
+					else{
+						ball.isGoingUp		= false;
+						ball.isGoingDown	= true;
+					}
 				}
 				else if(ball.canGoUp){
 					if(ball.dy > 0)
@@ -406,13 +423,17 @@ class BallPen extends React.Component{
 								const yDiff			= yCanvasPos - yBall;
 								const ballMouseDistance	= Math.sqrt(xDiff**2 + yDiff**2);
 								const clickedBall = ballMouseDistance <= radius;
-								if (isLegalBall)
-									isLegalBall			= ballMouseDistance >= (radius*2);
 								if(clickedBall){
+									console.log(ball.radius);
+									ball.destruct();
 									ball.accelerate();
 									didClickBall	= true;
+									if (isLegalBall)
+										isLegalBall			= ballMouseDistance >= (radius*2);
 									break;
 								}
+								if (isLegalBall)
+									isLegalBall			= ballMouseDistance >= (radius*2);
 							}//end i-for
 							if(isLegalBall){
 								//Check with top, bottom, and sides;

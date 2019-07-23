@@ -36,7 +36,6 @@ var Ball = function () {
 		this.canGoRight = true;
 		this.canGoDown = true;
 		this.canGoUp = true;
-		this.isStatic = false;
 	}
 
 	_createClass(Ball, [{
@@ -64,9 +63,8 @@ var Ball = function () {
 	}, {
 		key: 'accelerate',
 		value: function accelerate() {
-			this.isStatic = false;
 			this.dx += 2 * this.gravity;
-			this.dy += 10 * this.gravity;;
+			this.dy += 20 * this.gravity;;
 		}
 	}, {
 		key: 'handleWindowResize',
@@ -75,7 +73,7 @@ var Ball = function () {
 			var ballTop = this.yCord - this.radius;
 			var ballRight = this.xCord + this.radius;
 			var ballLeft = this.xCord - this.radius;
-			if (ballBottom >= maxHeight) this.yCord = maxHeight - this.radius;
+			if (ballBottom >= maxHeight) this.yCord = maxHeight - this.radius;else this.canGoDown = true;
 			if (ballTop <= 0) this.yCord = 0 + this.radius;
 			if (ballRight >= maxWidth) this.xCord = maxWidth - this.radius;
 			if (ballLeft <= 0) this.xCord = 0 + this.radius;
@@ -98,7 +96,7 @@ var Ball = function () {
 				console.log('WARNING: SCREEN NOT FITTED;');
 			} else if (willOverlapBottom) {
 				this.dy -= friction;
-				if (this.dy <= 0) {
+				if (this.dy < 0) {
 					this.dy = 0;
 					this.canGoUp = false;
 				}
@@ -179,7 +177,13 @@ var Ball = function () {
 				this.dx *= this.kineticGain;
 				otherBall.dy += this.dy * this.kineticLoss;
 				this.dy *= this.kineticGain;
-				otherBall.isStatic = false;
+				if (otherBall.isGoingDown === false && otherBall.isGoingUp === false) {
+					otherBall.isGoingUp = true;
+				}
+				if (otherBall.isGoingLeft === false && otherBall.isGoingRight === false) {
+					otherBall.isGoingRight = this.isGoingRight;
+					otherBall.isGoingLeft = this.isGoingLeft;
+				}
 			} //end i-for
 		} //End handleBallCollision()
 
@@ -218,6 +222,12 @@ var Ball = function () {
 			var ballMaxLeft = this.nextX - this.radius;
 			if (ballMaxLeft <= 0) return true;
 			return false;
+		}
+	}, {
+		key: 'destruct',
+		value: function destruct() {
+			//Destroy Ball
+			this.radius *= 0.5;
 		}
 	}]);
 
@@ -281,7 +291,6 @@ var BallPen = function (_React$Component) {
 			});
 			for (var i = 0; i < this.balls.length; i++) {
 				var ball = this.balls[i];
-				ball.handleWindowResize(width, height);
 			} //end i-for
 			return;
 		}
@@ -328,13 +337,6 @@ var BallPen = function (_React$Component) {
 					ball.canGoLeft = true;
 					ball.canGoRight = true;
 
-					//See if we lost momentum since last frame;
-					if (ball.isGoingUp && ball.dy <= 0) {
-						//Ball lost momentum last frame and cannot go up any further;
-						ball.isGoingUp = false;
-						ball.isGoingDown = true;
-					}
-
 					//Set wanted coordinates based off of previous movement;
 					if (ball.isGoingUp) ball.nextY = ball.yCord - ball.dy;else if (ball.isGoingDown) ball.nextY = ball.yCord + ball.dy;
 					if (ball.isGoingLeft) ball.nextX = ball.xCord - ball.dx;else if (ball.isGoingRight) ball.nextX = ball.xCord + ball.dx;
@@ -346,8 +348,20 @@ var BallPen = function (_React$Component) {
 					// **** Handle Ball Movement ****
 					//Set directions for next movement based off of current collisions;
 					if (ball.canGoDown && ball.canGoUp) {
-						ball.isGoingUp = ball.isGoingUp;
-						ball.isGoingDown = ball.isGoingDown;
+						if (ball.isGoingUp && ball.dy <= 0) {
+							ball.dy = 0;
+							ball.isGoingUp = false;
+							ball.isGoingDown = true;
+						} else if (ball.isGoingDown) {
+							ball.isGoingUp = false;
+							ball.isGoingDown = true;
+						} else if (ball.isGoingUp) {
+							ball.isGoingUp = true;
+							ball.isGoingDown = false;
+						} else {
+							ball.isGoingUp = false;
+							ball.isGoingDown = true;
+						}
 					} else if (ball.canGoUp) {
 						if (ball.dy > 0) ball.isGoingUp = true;
 						ball.isGoingDown = false;
@@ -416,12 +430,15 @@ var BallPen = function (_React$Component) {
 							var yDiff = yCanvasPos - yBall;
 							var ballMouseDistance = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
 							var clickedBall = ballMouseDistance <= radius;
-							if (isLegalBall) isLegalBall = ballMouseDistance >= radius * 2;
 							if (clickedBall) {
+								console.log(ball.radius);
+								ball.destruct();
 								ball.accelerate();
 								didClickBall = true;
+								if (isLegalBall) isLegalBall = ballMouseDistance >= radius * 2;
 								break;
 							}
+							if (isLegalBall) isLegalBall = ballMouseDistance >= radius * 2;
 						} //end i-for
 						if (isLegalBall) {
 							//Check with top, bottom, and sides;
