@@ -20,14 +20,13 @@ class Ball{
 		this.isGoingDown	= true;
 		this.isGoingLeft	= false;
 		this.isGoingUp		= false;
-		this.isStatic		= false;
 		this.nextX			= this.xCord + this.dx;	//Ball starts going to the right;
 		this.nextY			= this.yCord + this.dy;	//Ball starts going down;
 		//Boundary variables;
-		this.canGoLeft		= false;
-		this.canGoRight	= false;
-		this.canGoDown		= false;
-		this.canGoUp		= false;
+		this.canGoLeft					= false;
+		this.canGoRight				= false;
+		this.canGoDown					= false;
+		this.canGoUp					= false;
 	}
 	draw(ctx){
 		ctx.beginPath();
@@ -122,37 +121,33 @@ class Ball{
 		this.dy += 20 * this.gravity;;
 	}
 	handleBoundaries(width, height, allBalls){
-		const buffer	= this.gravity;
-		const yDown 	= this.yCord + buffer;
-		const yUp		= this.yCord - buffer;
-		const xL			= this.xCord - this.dx;
-		const xR			= this.xCord + this.dx;
+		const y 	= this.yCord;
+		const xL	= this.xCord - this.dx;
+		const xR	= this.xCord + this.dx;
 		for(let i=0; i<allBalls.length; i++){
 			let otherBall			= allBalls[i];
 			if(otherBall === this)
 				continue;
-			const minDistance			= this.radius + otherBall.radius; //Buffer;
-			const bottomDistance1	= this.distanceBetween(xL, yDown, otherBall.xCord, otherBall.yCord);
-			const bottomDistance2	= this.distanceBetween(xR, yDown, otherBall.xCord, otherBall.yCord);
-			const topDistance1		= this.distanceBetween(xL, yUp, otherBall.xCord, otherBall.yCord);
-			const topDistance2		= this.distanceBetween(xR, yUp, otherBall.xCord, otherBall.yCord);
-			if(bottomDistance1 < minDistance && bottomDistance2 < minDistance )
+			const minDistance		= this.radius + otherBall.radius; //Buffer;
+			const leftDistance	= this.distanceBetween(xL, y, otherBall.xCord, otherBall.yCord);
+			const rightDistance	= this.distanceBetween(xR, y, otherBall.xCord, otherBall.yCord);
+			if(rightDistance < minDistance && leftDistance < minDistance ){
 				this.canGoDown = false;
-			if(topDistance1 < minDistance && topDistance2 < minDistance)
 				this.canGoUp = false;
+			}
 		}//end i-for
-		if(yUp-this.radius <=0)
+		if(y-this.radius <=0)
 			this.canGoUp = false;
-		if(yDown+this.radius >= height)
+		if(y+this.radius >= height)
 			this.canGoDown = false;
-	}
+	}//end handleBoundaries
 	handleBallCollisions(allBalls){
 		//Find out if NEXT coordinates overlap anything;
 		for(let i=0; i<allBalls.length; i++){
 			if(this.ballID === allBalls[i].ballID)
 				continue;
 			let otherBall			= allBalls[i];
-			const minDistance		= otherBall.radius + this.radius + 0.01;	//Buffer
+			const minDistance		= otherBall.radius + this.radius;	//Buffer
 			let nextDistance		= this.distanceTo(otherBall.xCord, otherBall.yCord);
 			let willOverlap		= nextDistance <= minDistance;
 			if( !willOverlap ){
@@ -180,7 +175,6 @@ class Ball{
 			let dyRatio		= this.dy / timeRatio;
 			let dxRatio		= this.dx / timeRatio;
 			let cnt			= 0;
-			let isResolved = true;
 			while(willOverlap){
 				if(this.isGoingRight)
 					this.nextX -= dxRatio;	//Step back left
@@ -196,56 +190,30 @@ class Ball{
 				if(cnt === timeRatio){
 					//Problem not solved;
 					//We need to adjust the ball instead;
-					isResolved = false;
+					this.nextY = this.yCord;
+					this.nextX = this.xCord;
 					break;
 				}
 			}//end while
 
-			//TODO: A process of destroying balls if persistent overlap;
-
 			//Apply Kinetic Transfers & Friction
-			if(this.dx === 0 || otherBall.dx === 0){
-				if(otherBall.yCord < this.yCord){
-					//otherBall is above this ball
-					if(this.dx === 0){
-						this.dx += otherBall.friction;
-						if(!this.isGoingRight || !this.isGoingLeft){
-							if(this.canGoRight && otherBall.isGoingLeft)
-								this.isGoingRight = true
-							else if(this.canGoLeft && otherBall.isGoingRight)
-								this.isGoingLeft = true
-						}
-					}
-				}
-				else if(otherBall.dx === 0){
-					otherBall.dx += this.friction;
-					if(!otherBall.isGoingRight || !otherBall.isGoingLeft){
-						if(otherBall.canGoRight && this.isGoingLeft)
-							otherBall.isGoingRight = true
-						else if(otherBall.canGoLeft && this.isGoingRight)
-							otherBall.isGoingLeft = true
-					}
-				}
-			}
-			else{
-				otherBall.dx	+= this.dx * this.kineticLoss;
-				this.dx			*= this.kineticGain;
-				otherBall.dy	+= this.dy * this.kineticLoss;
-				this.dy			*= this.kineticGain;
-				otherBall.dy	-= this.friction;
-				this.dy			-= this.friction
-				otherBall.dx	-= this.friction;
-				this.dx			-= this.friction
-			}
-				
-				if(otherBall.dx <= 0)
-					otherBall.dx = 0;
-				if(otherBall.dy <= 0)
-					otherBall.dy = 0;
-				if(this.dx <= 0)
-					this.dx = 0;
-				if(this.dy <= 0)
-					this.dy = 0;
+			otherBall.dy	-= this.friction;
+			this.dy			-= this.friction
+			otherBall.dx	-= this.friction;
+			this.dx			-= this.friction
+			this.dy			*= this.kineticGain;
+			otherBall.dx	+= this.dx * this.kineticLoss;
+			this.dx			*= this.kineticGain;
+			otherBall.dy	+= this.dy * this.kineticLoss;
+			
+			if(otherBall.dx <= 0)
+				otherBall.dx = 0;
+			if(otherBall.dy <= 0)
+				otherBall.dy = 0;
+			if(this.dx <= 0)
+				this.dx = 0;
+			if(this.dy <= 0)
+				this.dy = 0;
 		}//end i-for
 	}//End handleBallCollision()
 	handleMovement(){
@@ -316,8 +284,23 @@ class Ball{
 		//END up/down movements;
 		if(this.dx <=0){
 			//If Ball has no momentum, it can go in neither direction;
-			this.isGoingRight = false;
-			this.isGoingLeft	= false;
+			//But if ball is "stuck", we need to give it a boost;
+			if(this.canGoDown){
+				if(this.dx === 0)
+					this.dx += this.gravity*4;	
+				if(this.canGoRight){
+					this.isGoingRight = true;
+					this.isGoingLeft	= false;
+				}
+				else if(this.canGoLeft){
+					this.isGoingRight = false;
+					this.isGoingLeft	= true;
+				}
+			}
+			else{
+				this.isGoingRight = false;
+				this.isGoingLeft	= false;
+			}
 		}
 		else if(!this.isGoingRight && !this.isGoingLeft){
 			//Ball had no momentum but just received momentum;
@@ -360,10 +343,6 @@ class Ball{
 			console.log('ERROR: BALL CANNOT GO UP AND DOWN');
 		if(this.isGoingLeft && this.isGoingRight){
 			console.log('ERROR: BALL CANNOT GO LEFT AND RIGHT');
-		if(!this.isGoingLeft && !this.isGoingRight && !this.isGoingUp && !this.isGoingDown)
-			this.isStatic = true;
-		else
-			this.isStatic = false;
 		}
 	}//End handleMovement()
 	handleWallCollisions(maxWidth, maxHeight, friction){
@@ -421,7 +400,6 @@ class Ball{
 		}
 	}//End handleWallCollision
 	handleWindowResize(maxWidth, maxHeight){
-		console.log('oops');
 		const ballBottom = this.yCord + this.radius;
 		const ballTop    = this.yCord - this.radius;
 		const ballRight  = this.xCord + this.radius;
@@ -551,33 +529,33 @@ class BallPen extends React.Component{
 			}// End first ball init;
 			for(let i=0; i<this.balls.length; i++){
 				let ball	= this.balls[i];
+
 				//Assume we can go any direction first; Change values on `handle`*;
-				if(!this.isStatic){
-					ball.canGoUp		= true;
-					ball.canGoDown		= true;
-					ball.canGoLeft		= true;
-					ball.canGoRight	= true;
+				ball.canGoUp		= true;
+				ball.canGoDown		= true;
+				ball.canGoLeft		= true;
+				ball.canGoRight	= true;
 
-					//Set wanted coordinates based off of previous movement;
-					if(ball.isGoingUp)
-						ball.nextY = ball.yCord - ball.dy;
-					else if(ball.isGoingDown)
-						ball.nextY = ball.yCord + ball.dy;
-					if(ball.isGoingLeft)
-						ball.nextX = ball.xCord - ball.dx;
-					else if(ball.isGoingRight)
-						ball.nextX = ball.xCord + ball.dx;
-					
-					//See if expected coordinates will prevent us from going certain directions;
-					ball.handleBoundaries(this.state.width, this.state.height, this.balls);
-					ball.handleWallCollisions(this.state.width, this.state.height, this.friction);
-					ball.handleBallCollisions(this.balls);
+				//Set wanted coordinates based off of previous movement;
+				if(ball.isGoingUp)
+					ball.nextY = ball.yCord - ball.dy;
+				else if(ball.isGoingDown)
+					ball.nextY = ball.yCord + ball.dy;
+				if(ball.isGoingLeft)
+					ball.nextX = ball.xCord - ball.dx;
+				else if(ball.isGoingRight)
+					ball.nextX = ball.xCord + ball.dx;
+				
+				//See if expected coordinates will prevent us from going certain directions;
+				ball.handleBoundaries(this.state.width, this.state.height, this.balls);
+				ball.handleWallCollisions(this.state.width, this.state.height, this.friction);
+				ball.handleBallCollisions(this.balls);
 
-					ball.handleMovement();
+				ball.handleMovement();
 
-					ball.updateCoordinates();
-					ball.applyGravity();
-				}
+				ball.updateCoordinates();
+				ball.applyGravity();
+
 				ball.draw(ctx);
 				ball.label(ctx);
 			}//end i-for
@@ -613,7 +591,6 @@ class BallPen extends React.Component{
 								const ballMouseDistance	= Math.sqrt(xDiff**2 + yDiff**2);
 								const clickedBall = ballMouseDistance <= radius;
 								if(clickedBall){
-	//								ball.destruct();
 									ball.accelerate();
 									didClickBall	= true;
 									if (isLegalBall)
