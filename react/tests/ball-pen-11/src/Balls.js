@@ -195,9 +195,9 @@ class Ball{
 
 			//Apply Kinetic Transfers & Friction
 			otherBall.dy	-= this.friction;
-			this.dy			-= this.friction
+			this.dy			-= otherBall.friction
 			otherBall.dx	-= this.friction;
-			this.dx			-= this.friction
+			this.dx			-= otherBall.friction
 			this.dy			*= this.kineticGain;
 			otherBall.dx	+= this.dx * this.kineticLoss;
 			this.dx			*= this.kineticGain;
@@ -213,7 +213,7 @@ class Ball{
 				this.dy = 0;
 		}//end i-for
 	}//End handleBallCollision()
-	handleMovement(){
+	handleMovement(friction){
 		//Set directions for next movement based off of current collisions;
 
 		if(this.dy <=0){
@@ -238,7 +238,7 @@ class Ball{
 				//Ball is just rolling and losing dx momentum;
 				this.isGoingUp		= false;
 				this.isGoingDown	= false;
-				this.dx -= this.friction;
+				this.dx -= friction;
 				if(this.dx < 0)
 					this.dx = 0;
 			}
@@ -273,7 +273,7 @@ class Ball{
 			else{
 				this.isGoingDown	= false;
 				this.isGoingUp		= false;
-				this.dx -= this.friction;
+				this.dx -= friction;
 				if(this.dx < 0)
 					this.dx = 0;
 			}

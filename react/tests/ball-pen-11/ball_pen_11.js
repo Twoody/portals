@@ -207,7 +207,7 @@ var BallPen = function (_React$Component) {
 					ball.handleWallCollisions(this.state.width, this.state.height, this.friction);
 					ball.handleBallCollisions(this.balls);
 
-					ball.handleMovement();
+					ball.handleMovement(this.friction);
 
 					ball.updateCoordinates();
 					if (this.state.hasGravity) {
