@@ -55,7 +55,7 @@ var Ball = function () {
 			if (this.radius < 30) return;
 			if (!this.isGoingDown && !this.isGoingUp) {
 				if (!this.isGoingRight && !this.isGoingLeft) {
-					ctx.font = "15px Arial";
+					ctx.font = "12px Arial";
 					ctx.fillStyle = "white";
 					ctx.fillText("Static" + this.ballID, this.xCord - this.radius + 1, this.yCord + 1);
 
@@ -67,7 +67,7 @@ var Ball = function () {
 					ctx.fillStyle = "white";
 					ctx.fillText("dy:" + this.dy.toFixed(2), this.xCord - this.radius + 10, this.yCord + 20);
 				} else {
-					ctx.font = "15px Arial";
+					ctx.font = "12px Arial";
 					ctx.fillStyle = "white";
 					ctx.fillText("Rolling" + this.ballID, this.xCord - this.radius + 1, this.yCord + 1);
 					if (this.isGoingRight) {
@@ -85,7 +85,7 @@ var Ball = function () {
 					ctx.fillText(this.dx.toFixed(2), this.xCord - this.radius + 10, this.yCord + 20);
 				}
 			} else {
-				ctx.font = "12px Arial";
+				ctx.font = "10px Arial";
 				ctx.fillStyle = "white";
 				ctx.fillText("Bouncing" + this.ballID, this.xCord - this.radius + 1, this.yCord + 1);
 				if (this.isGoingDown) {
@@ -120,7 +120,7 @@ var Ball = function () {
 		key: 'applyGravity',
 		value: function applyGravity() {
 			if (this.isGoingDown) this.dy += this.gravity;else if (this.isGoingUp) this.dy -= this.gravity;else if (this.canGoDown) {
-				console.log('BALL' + this.ballID + " CAN GO DOWN");
+				//		console.log('BALL' + this.ballID + " CAN GO DOWN");
 				this.dy += this.gravity;
 			}
 		}
@@ -139,7 +139,7 @@ var Ball = function () {
 			for (var i = 0; i < allBalls.length; i++) {
 				var otherBall = allBalls[i];
 				if (otherBall === this) continue;
-				var minDistance = this.radius + otherBall.radius; //Buffer;
+				var minDistance = this.radius + otherBall.radius;
 				var leftDistance = this.distanceBetween(xL, y, otherBall.xCord, otherBall.yCord);
 				var rightDistance = this.distanceBetween(xR, y, otherBall.xCord, otherBall.yCord);
 				if (rightDistance < minDistance && leftDistance < minDistance) {
@@ -158,7 +158,7 @@ var Ball = function () {
 			for (var i = 0; i < allBalls.length; i++) {
 				if (this.ballID === allBalls[i].ballID) continue;
 				var otherBall = allBalls[i];
-				var minDistance = otherBall.radius + this.radius; //Buffer
+				var minDistance = otherBall.radius + this.radius;
 				var nextDistance = this.distanceTo(otherBall.xCord, otherBall.yCord);
 				var willOverlap = nextDistance <= minDistance;
 				if (!willOverlap) {
@@ -336,11 +336,11 @@ var Ball = function () {
 			if (willOverlapTop && willOverlapBottom) {
 				//The screen is now to small for our ball;
 				//We will just keep the ball at it's current place and stop all movemnt;
-				this.nextX = this.xCord;
-				this.nextY = this.yCord;
-				this.dy = 0;
-				this.dx = 0;
-				console.log('WARNING: SCREEN NOT FITTED;');
+				//this.nextX = this.xCord;
+				//this.nextY = this.yCord;
+				//this.dy = 0;
+				//this.dx = 0;
+				//console.log('WARNING: SCREEN NOT FITTED;');
 			} else if (willOverlapBottom) {
 				this.dy -= friction;
 				if (this.dy < 0) {
@@ -383,10 +383,24 @@ var Ball = function () {
 			var ballTop = this.yCord - this.radius;
 			var ballRight = this.xCord + this.radius;
 			var ballLeft = this.xCord - this.radius;
-			if (ballBottom >= maxHeight) this.yCord = maxHeight - this.radius;else this.canGoDown = true;
-			if (ballTop <= 0) this.yCord = 0 + this.radius;
-			if (ballRight >= maxWidth) this.xCord = maxWidth - this.radius;
-			if (ballLeft <= 0) this.xCord = 0 + this.radius;
+			if (ballBottom >= maxHeight) {
+				this.yCord = maxHeight - this.radius;
+				this.accelerate();
+				this.destruct();
+			} else this.canGoDown = true;
+			if (ballTop <= 0) {
+				this.yCord = 0 + this.radius;
+				this.accelerate();
+				this.destruct();
+			}
+			if (ballRight >= maxWidth) {
+				this.xCord = maxWidth - this.radius;
+				this.destruct();
+			}
+			if (ballLeft <= 0) {
+				this.xCord = 0 + this.radius;
+				this.destruct();
+			}
 		} //end handleWindowResize()
 
 	}, {
@@ -437,7 +451,7 @@ var Ball = function () {
 		key: 'destruct',
 		value: function destruct() {
 			//Destroy Ball
-			this.radius *= 0.5;
+			this.radius *= 0.8;
 		}
 	}]);
 
@@ -499,8 +513,27 @@ var BallPen = function (_React$Component) {
 				width: width,
 				height: height
 			});
+
+			//Move balls around if conflict;
+			//Change radius if conflict;
 			for (var i = 0; i < this.balls.length; i++) {
 				var ball = this.balls[i];
+				var ballBottom = ball.yCord + ball.radius;
+				var ballTop = ball.yCord - ball.radius;
+				if (ballBottom > height) {
+					ball.yCord = height - ball.radius;
+					ball.accelerate();
+					ball.radius *= 0.9;
+				}
+				if (ballTop <= 0) {
+					ball.radius *= 0.9;
+				}
+				for (var j = i + 1; j < this.balls.length; j++) {
+					var otherBall = this.balls[j];
+					var minDistance = ball.radius + otherBall.radius;
+					var curDistance = ball.distanceBetween(ball.xCord, ball.yCord, otherBall.xCord, otherBall.yCord);
+					if (curDistance < minDistance) ball.radius *= 0.9;
+				}
 			} //end i-for
 			return;
 		}
@@ -577,28 +610,29 @@ var BallPen = function (_React$Component) {
 						var yMousePos = e.clientY;
 						var xCanvasPos = xMousePos - rect.left;
 						var yCanvasPos = yMousePos - rect.top;
-						var radius = _this3.balls[0].radius;
-						var isLegalBall = true;
+						var isLegalBall = true; //Will try to make false;
 						var didClickBall = false;
 						for (var i = 0; i < _this3.balls.length; i++) {
+							//See if ball is clicked;
+							//If ball not clicked, see if new ball is still possible;
 							var ball = _this3.balls[i];
 							var xBall = ball.xCord;
 							var yBall = ball.yCord;
 							var xDiff = xCanvasPos - xBall;
 							var yDiff = yCanvasPos - yBall;
+							var radius = _this3.balls[i].radius;
 							var ballMouseDistance = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
 							var clickedBall = ballMouseDistance <= radius;
+							if (isLegalBall) isLegalBall = ballMouseDistance >= radius + initRadius;
 							if (clickedBall) {
 								ball.accelerate();
 								didClickBall = true;
-								if (isLegalBall) isLegalBall = ballMouseDistance >= radius * 2;
 								break;
 							}
-							if (isLegalBall) isLegalBall = ballMouseDistance >= radius * 2;
 						} //end i-for
 						if (isLegalBall) {
 							//Check with top, bottom, and sides;
-							if (xCanvasPos - radius < 0) isLegalBall = false;else if (xCanvasPos + radius > _this3.state.width) isLegalBall = false;else if (yCanvasPos - radius < 0) isLegalBall = false;else if (yCanvasPos + radius > _this3.state.height) isLegalBall = false;
+							if (xCanvasPos - initRadius < 0) isLegalBall = false;else if (xCanvasPos + initRadius > _this3.state.width) isLegalBall = false;else if (yCanvasPos - initRadius < 0) isLegalBall = false;else if (yCanvasPos + initRadius > _this3.state.height) isLegalBall = false;
 						}
 						if (!didClickBall) {
 							//Make new ball;

@@ -23,10 +23,10 @@ class Ball{
 		this.nextX			= this.xCord + this.dx;	//Ball starts going to the right;
 		this.nextY			= this.yCord + this.dy;	//Ball starts going down;
 		//Boundary variables;
-		this.canGoLeft					= false;
-		this.canGoRight				= false;
-		this.canGoDown					= false;
-		this.canGoUp					= false;
+		this.canGoLeft		= false;
+		this.canGoRight	= false;
+		this.canGoDown		= false;
+		this.canGoUp		= false;
 	}
 	draw(ctx){
 		ctx.beginPath();
@@ -45,7 +45,7 @@ class Ball{
 			return;
 		if(!this.isGoingDown && !this.isGoingUp){
 			if(!this.isGoingRight && !this.isGoingLeft){
-				ctx.font      = "15px Arial";
+				ctx.font      = "12px Arial";
 				ctx.fillStyle = "white";
 				ctx.fillText("Static"+this.ballID, this.xCord - this.radius+1, this.yCord+1);
 
@@ -58,7 +58,7 @@ class Ball{
 				ctx.fillText("dy:" + this.dy.toFixed(2), this.xCord - this.radius+10, this.yCord+20);
 			}
 			else{
-				ctx.font      = "15px Arial";
+				ctx.font      = "12px Arial";
 				ctx.fillStyle = "white";
 				ctx.fillText("Rolling"+this.ballID, this.xCord - this.radius+1, this.yCord+1);
 				if(this.isGoingRight){
@@ -77,7 +77,7 @@ class Ball{
 			}
 		}
 		else{
-			ctx.font      = "12px Arial";
+			ctx.font      = "10px Arial";
 			ctx.fillStyle = "white";
 			ctx.fillText("Bouncing" + this.ballID, this.xCord - this.radius+1, this.yCord+1);
 			if(this.isGoingDown){
@@ -112,7 +112,7 @@ class Ball{
 		else if(this.isGoingUp)
 			this.dy -= this.gravity;
 		else if (this.canGoDown){
-			console.log('BALL' + this.ballID + " CAN GO DOWN");
+	//		console.log('BALL' + this.ballID + " CAN GO DOWN");
 			this.dy += this.gravity;
 		}
 	}
@@ -128,7 +128,7 @@ class Ball{
 			let otherBall			= allBalls[i];
 			if(otherBall === this)
 				continue;
-			const minDistance		= this.radius + otherBall.radius; //Buffer;
+			const minDistance		= this.radius + otherBall.radius;
 			const leftDistance	= this.distanceBetween(xL, y, otherBall.xCord, otherBall.yCord);
 			const rightDistance	= this.distanceBetween(xR, y, otherBall.xCord, otherBall.yCord);
 			if(rightDistance < minDistance && leftDistance < minDistance ){
@@ -147,7 +147,7 @@ class Ball{
 			if(this.ballID === allBalls[i].ballID)
 				continue;
 			let otherBall			= allBalls[i];
-			const minDistance		= otherBall.radius + this.radius;	//Buffer
+			const minDistance		= otherBall.radius + this.radius;
 			let nextDistance		= this.distanceTo(otherBall.xCord, otherBall.yCord);
 			let willOverlap		= nextDistance <= minDistance;
 			if( !willOverlap ){
@@ -353,11 +353,11 @@ class Ball{
 		if(willOverlapTop && willOverlapBottom){
 			//The screen is now to small for our ball;
 			//We will just keep the ball at it's current place and stop all movemnt;
-			this.nextX = this.xCord;
-			this.nextY = this.yCord;
-			this.dy = 0;
-			this.dx = 0;
-			console.log('WARNING: SCREEN NOT FITTED;');
+			//this.nextX = this.xCord;
+			//this.nextY = this.yCord;
+			//this.dy = 0;
+			//this.dx = 0;
+			//console.log('WARNING: SCREEN NOT FITTED;');
 		}
 		else if(willOverlapBottom){
 			this.dy -= friction;
@@ -404,16 +404,26 @@ class Ball{
 		const ballTop    = this.yCord - this.radius;
 		const ballRight  = this.xCord + this.radius;
 		const ballLeft   = this.xCord - this.radius;
-		if(ballBottom >= maxHeight)
+		if(ballBottom >= maxHeight){
 			this.yCord = maxHeight - this.radius;
+			this.accelerate();
+			this.destruct();
+		}
 		else
 			this.canGoDown = true;
-		if(ballTop <= 0)
+		if(ballTop <= 0){
 			this.yCord = 0 + this.radius;
-		if(ballRight >= maxWidth)
+			this.accelerate();
+			this.destruct();
+		}
+		if(ballRight >= maxWidth){
 			this.xCord = maxWidth - this.radius;
-		if(ballLeft <= 0)
+			this.destruct();
+		}
+		if(ballLeft <= 0){
 			this.xCord = 0 + this.radius;
+			this.destruct();
+		}
 	}//end handleWindowResize()
 	distanceTo(x, y){
 		const xDiff 	= this.nextX - x;
@@ -455,7 +465,7 @@ class Ball{
 	}
 	destruct(){
 		//Destroy Ball
-		this.radius	*= 0.5;
+		this.radius	*= 0.8;
 	}
 }//End Ball Class
 class BallPen extends React.Component{
@@ -501,8 +511,33 @@ class BallPen extends React.Component{
          width: width, 
          height: height
       });
+
+		//Move balls around if conflict;
+		//Change radius if conflict;
 		for(let i=0; i<this.balls.length; i++){
-			let ball = this.balls[i];
+			let ball			= this.balls[i];
+			let ballBottom	= ball.yCord + ball.radius;
+			let ballTop		= ball.yCord - ball.radius;
+			if(ballBottom > height){
+				ball.yCord = height - ball.radius;
+				ball.accelerate();
+				ball.radius *= 0.9;
+			}
+			if(ballTop <= 0){
+				ball.radius *= 0.9;
+			}
+			for(let j=i+1; j<this.balls.length; j++){
+				let otherBall = this.balls[j];
+				const minDistance = ball.radius + otherBall.radius;
+				const curDistance	= ball.distanceBetween(
+					ball.xCord,
+					ball.yCord,
+					otherBall.xCord,
+					otherBall.yCord,
+				);
+				if(curDistance < minDistance)
+					ball.radius *= 0.9;
+			}
 		}//end i-for
       return;
    }
@@ -579,36 +614,36 @@ class BallPen extends React.Component{
 							const yMousePos	= e.clientY;
 							const xCanvasPos	= xMousePos - rect.left;
 							const yCanvasPos	= yMousePos - rect.top;
-							const radius		= this.balls[0].radius;
-							let isLegalBall	= true;
+							let isLegalBall	= true;	//Will try to make false;
 							let didClickBall	= false;
 							for(let i=0; i<this.balls.length; i++){
+								//See if ball is clicked;
+								//If ball not clicked, see if new ball is still possible;
 								const ball			= this.balls[i];
 								const xBall			= ball.xCord;
 								const yBall			= ball.yCord;
 								const xDiff			= xCanvasPos - xBall;
 								const yDiff			= yCanvasPos - yBall;
+								const radius		= this.balls[i].radius;
 								const ballMouseDistance	= Math.sqrt(xDiff**2 + yDiff**2);
-								const clickedBall = ballMouseDistance <= radius;
+								const clickedBall			= ballMouseDistance <= radius;
+								if (isLegalBall)
+									isLegalBall = ballMouseDistance >= (radius + initRadius);
 								if(clickedBall){
 									ball.accelerate();
-									didClickBall	= true;
-									if (isLegalBall)
-										isLegalBall			= ballMouseDistance >= (radius*2);
+									didClickBall = true;
 									break;
 								}
-								if (isLegalBall)
-									isLegalBall			= ballMouseDistance >= (radius*2);
 							}//end i-for
 							if(isLegalBall){
 								//Check with top, bottom, and sides;
-								if (xCanvasPos - radius < 0)
+								if (xCanvasPos - initRadius < 0)
 									isLegalBall = false;
-								else if (xCanvasPos + radius > this.state.width)
+								else if (xCanvasPos + initRadius > this.state.width)
 									isLegalBall = false;
-								else if (yCanvasPos - radius < 0)
+								else if (yCanvasPos - initRadius < 0)
 									isLegalBall = false;
-								else if (yCanvasPos + radius > this.state.height)
+								else if (yCanvasPos + initRadius > this.state.height)
 									isLegalBall = false;
 							}
 							if(!didClickBall){
@@ -616,9 +651,9 @@ class BallPen extends React.Component{
 								if(isLegalBall){
 									console.log('Making new ball' + this.balls.length)
 									const newBall	= new Ball({
-										ballID:		this.balls.length,
-										xCord:		xCanvasPos,
-										yCord:		yCanvasPos,
+										ballID:	this.balls.length,
+										xCord:	xCanvasPos,
+										yCord:	yCanvasPos,
 										radius:	initRadius,
 										dx: 		2,
 										dy:		2
