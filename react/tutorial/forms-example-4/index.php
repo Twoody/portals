@@ -25,7 +25,7 @@ Links:
 	https://www.w3schools.com/bootstrap4/bootstrap_carousel.asp
 	https://stackoverflow.com/questions/12172177/set-div-height-equal-to-screen-size
 ******************************************************************************/
-$ROOT = '../..';
+$ROOT = '../../..';
 require_once($ROOT.'/config/imports.php');
 make_imports($ROOT);
 
