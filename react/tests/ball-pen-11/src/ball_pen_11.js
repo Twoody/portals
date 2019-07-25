@@ -1,5 +1,10 @@
 'use strict';
-const initRadius = 30;
+const initRadius			= 30;
+const initWallFriction	= 1.0;
+const initBallFriction	= 0.05;
+const initGravity			= 0.45;
+const initKineticLoss	= 1/3;
+const initKineticGain	= 2/3;
 
 class BallPen extends React.Component{
    constructor(props){
@@ -7,11 +12,26 @@ class BallPen extends React.Component{
       this.state      = {
          height: 0,
          width:  0,
+			hasGravity: true,
+			hasWallFriction: true,
+			hasBallFriction: true,
+			hasKineticTransfer: true,
       };
 		this.balls    = [];
-		this.friction = 1.0;
-      this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+		this.friction = initWallFriction;
+      this.updateWindowDimensions	= this.updateWindowDimensions.bind(this);
+		this.handleInputChange			= this.handleInputChange.bind(this);
    }
+	handleInputChange(event) {
+		const target	= event.target;
+		const value		= target.type === 'checkbox' ? target.checked : target.value;
+		const name		= target.name;
+
+		//Makes a POST element on submit;
+		this.setState({
+			[name]: value
+		});
+	}
 	handleCanvasClick(canvas, xClick, yClick){
 		const rect			= canvas;
 		const xMousePos	= xClick;
@@ -34,7 +54,7 @@ class BallPen extends React.Component{
 			if (isLegalBall)
 				isLegalBall = ballMouseDistance >= (radius + initRadius);
 			if(clickedBall){
-				ball.accelerate();
+				ball.accelerate(4*initGravity, 20*initGravity);
 				didClickBall = true;
 				break;
 			}
@@ -152,7 +172,24 @@ class BallPen extends React.Component{
 			}// End first ball init;
 			for(let i=0; i<this.balls.length; i++){
 				let ball	= this.balls[i];
+				if(!this.state.hasWallFriction)
+					this.friction = 0;
+				else
+					this.friction = initWallFriction;
 
+				if(!this.state.hasBallFriction)
+					ball.friction = 0;
+				else
+					ball.friction = initBallFriction;
+
+				if(!this.state.hasKineticTransfer){
+					ball.kineticGain = 1;
+					ball.kineticLoss = 0;
+				}
+				else{
+					ball.kineticLoss	= initKineticLoss;
+					ball.kineticGain	= initKineticGain;
+				}
 				//Assume we can go any direction first; Change values on `handle`*;
 				ball.canGoUp		= true;
 				ball.canGoDown		= true;
@@ -177,7 +214,13 @@ class BallPen extends React.Component{
 				ball.handleMovement();
 
 				ball.updateCoordinates();
-				ball.applyGravity();
+				if( this.state.hasGravity ){
+					ball.gravity = initGravity;
+					ball.applyGravity();
+				}
+				else{
+					ball.gravity = 0;
+				}
 
 				ball.draw(ctx);
 				ball.label(ctx);
@@ -203,6 +246,44 @@ class BallPen extends React.Component{
 						this.handleCanvasClick(canvas, xClick, yClick);
 					}}
             />
+				<label>
+					Has Gravity:&nbsp;&nbsp;
+					<input
+						name="hasGravity"
+						type="checkbox"
+						checked={this.state.hasGravity}
+						onChange={this.handleInputChange} />
+				</label>
+				<br/>
+				<label>
+					Has Wall Friction:&nbsp;&nbsp;
+					<input
+						name="hasWallFriction"
+						type="checkbox"
+						checked={this.state.hasWallFriction}
+						onChange={this.handleInputChange} />
+				</label>
+				<br/>
+				<label>
+					Has Ball Friction:&nbsp;&nbsp;
+					<input
+						name="hasBallFriction"
+						type="checkbox"
+						checked={this.state.hasBallFriction}
+						onChange={this.handleInputChange} />
+				</label>
+				<br/>
+				<label>
+					Has Kinetic Transfer:&nbsp;&nbsp;
+					<input
+						name="hasKineticTransfer"
+						type="checkbox"
+						checked={this.state.hasKineticTransfer}
+						onChange={this.handleInputChange} />
+				</label>
+
+
+
          </div>
       );
    }

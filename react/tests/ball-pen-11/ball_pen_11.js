@@ -2,6 +2,8 @@
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -9,6 +11,11 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var initRadius = 30;
+var initWallFriction = 1.0;
+var initBallFriction = 0.05;
+var initGravity = 0.45;
+var initKineticLoss = 1 / 3;
+var initKineticGain = 2 / 3;
 
 var BallPen = function (_React$Component) {
 	_inherits(BallPen, _React$Component);
@@ -20,15 +27,30 @@ var BallPen = function (_React$Component) {
 
 		_this.state = {
 			height: 0,
-			width: 0
+			width: 0,
+			hasGravity: true,
+			hasWallFriction: true,
+			hasBallFriction: true,
+			hasKineticTransfer: true
 		};
 		_this.balls = [];
-		_this.friction = 1.0;
+		_this.friction = initWallFriction;
 		_this.updateWindowDimensions = _this.updateWindowDimensions.bind(_this);
+		_this.handleInputChange = _this.handleInputChange.bind(_this);
 		return _this;
 	}
 
 	_createClass(BallPen, [{
+		key: 'handleInputChange',
+		value: function handleInputChange(event) {
+			var target = event.target;
+			var value = target.type === 'checkbox' ? target.checked : target.value;
+			var name = target.name;
+
+			//Makes a POST element on submit;
+			this.setState(_defineProperty({}, name, value));
+		}
+	}, {
 		key: 'handleCanvasClick',
 		value: function handleCanvasClick(canvas, xClick, yClick) {
 			var rect = canvas;
@@ -51,7 +73,7 @@ var BallPen = function (_React$Component) {
 				var clickedBall = ballMouseDistance <= radius;
 				if (isLegalBall) isLegalBall = ballMouseDistance >= radius + initRadius;
 				if (clickedBall) {
-					ball.accelerate();
+					ball.accelerate(4 * initGravity, 20 * initGravity);
 					didClickBall = true;
 					break;
 				}
@@ -159,7 +181,17 @@ var BallPen = function (_React$Component) {
 				} // End first ball init;
 				for (var i = 0; i < this.balls.length; i++) {
 					var ball = this.balls[i];
+					if (!this.state.hasWallFriction) this.friction = 0;else this.friction = initWallFriction;
 
+					if (!this.state.hasBallFriction) ball.friction = 0;else ball.friction = initBallFriction;
+
+					if (!this.state.hasKineticTransfer) {
+						ball.kineticGain = 1;
+						ball.kineticLoss = 0;
+					} else {
+						ball.kineticLoss = initKineticLoss;
+						ball.kineticGain = initKineticGain;
+					}
 					//Assume we can go any direction first; Change values on `handle`*;
 					ball.canGoUp = true;
 					ball.canGoDown = true;
@@ -178,7 +210,12 @@ var BallPen = function (_React$Component) {
 					ball.handleMovement();
 
 					ball.updateCoordinates();
-					ball.applyGravity();
+					if (this.state.hasGravity) {
+						ball.gravity = initGravity;
+						ball.applyGravity();
+					} else {
+						ball.gravity = 0;
+					}
 
 					ball.draw(ctx);
 					ball.label(ctx);
@@ -209,7 +246,50 @@ var BallPen = function (_React$Component) {
 						var yClick = e.clientY;
 						_this3.handleCanvasClick(canvas, xClick, yClick);
 					}
-				})
+				}),
+				React.createElement(
+					'label',
+					null,
+					'Has Gravity:\xA0\xA0',
+					React.createElement('input', {
+						name: 'hasGravity',
+						type: 'checkbox',
+						checked: this.state.hasGravity,
+						onChange: this.handleInputChange })
+				),
+				React.createElement('br', null),
+				React.createElement(
+					'label',
+					null,
+					'Has Wall Friction:\xA0\xA0',
+					React.createElement('input', {
+						name: 'hasWallFriction',
+						type: 'checkbox',
+						checked: this.state.hasWallFriction,
+						onChange: this.handleInputChange })
+				),
+				React.createElement('br', null),
+				React.createElement(
+					'label',
+					null,
+					'Has Ball Friction:\xA0\xA0',
+					React.createElement('input', {
+						name: 'hasBallFriction',
+						type: 'checkbox',
+						checked: this.state.hasBallFriction,
+						onChange: this.handleInputChange })
+				),
+				React.createElement('br', null),
+				React.createElement(
+					'label',
+					null,
+					'Has Kinetic Transfer:\xA0\xA0',
+					React.createElement('input', {
+						name: 'hasKineticTransfer',
+						type: 'checkbox',
+						checked: this.state.hasKineticTransfer,
+						onChange: this.handleInputChange })
+				)
 			);
 		}
 	}]);

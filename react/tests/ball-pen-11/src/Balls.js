@@ -113,9 +113,9 @@ class Ball{
 			this.dy += this.gravity;
 		}
 	}
-	accelerate(){
-		this.dx += 4 * this.gravity;
-		this.dy += 20 * this.gravity;;
+	accelerate(dxBoost, dyBoost){
+		this.dx += dxBoost;
+		this.dy += dyBoost;
 	}
 	handleBoundaries(width, height, allBalls){
 		const y 	= this.yCord;
@@ -282,7 +282,7 @@ class Ball{
 		if(this.dx <=0){
 			//If Ball has no momentum, it can go in neither direction;
 			//But if ball is "stuck", we need to give it a boost;
-			if(this.canGoDown){
+			if(this.canGoDown && this.gravity > 0){
 				if(this.dx === 0)
 					this.dx += this.gravity*4;	
 				if(this.canGoRight){
