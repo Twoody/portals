@@ -105,17 +105,25 @@ class Ball{
 	}
 	applyGravity(){
 		if(this.isGoingDown)
-			this.dy += this.gravity;
+			this.accelerate(0, this.gravity);
 		else if(this.isGoingUp)
-			this.dy -= this.gravity;
-		else if (this.canGoDown){
-			this.dy += this.gravity;
-		}
+			this.decelerate(0, this.gravity);
+		else if (this.canGoDown)
+			this.accelerate(0, this.gravity);
 	}
 	accelerate(dxBoost, dyBoost){
 		this.dx += dxBoost;
 		this.dy += dyBoost;
 	}
+	decelerate(dxLoss, dyLoss){
+		this.dx -= dxLoss;
+		this.dy -= dyLoss;
+		if(this.dx <=0)
+			this.dx = 0;
+		if(this.dy <=0)
+			this.dy = 0;
+	}
+
 	handleBoundaries(width, height, allBalls){
 		const y 	= this.yCord;
 		const xL	= this.xCord - this.dx;
@@ -193,23 +201,14 @@ class Ball{
 			}//end while
 
 			//Apply Kinetic Transfers & Friction
-			otherBall.dy	-= this.friction;
-			this.dy			-= otherBall.friction
-			otherBall.dx	-= this.friction;
-			this.dx			-= otherBall.friction
+			otherBall.decelerate(this.friction, this.friction);
+			this.decelerate(otherBall.friction, otherBall.friction);
+
+			otherBall.accelerate(this.dx * this.kineticLoss, 0)
+			otherBall.accelerate(0, this.dy * this.kineticLoss)
 			this.dy			*= this.kineticGain;
-			otherBall.dx	+= this.dx * this.kineticLoss;
 			this.dx			*= this.kineticGain;
-			otherBall.dy	+= this.dy * this.kineticLoss;
 			
-			if(otherBall.dx <= 0)
-				otherBall.dx = 0;
-			if(otherBall.dy <= 0)
-				otherBall.dy = 0;
-			if(this.dx <= 0)
-				this.dx = 0;
-			if(this.dy <= 0)
-				this.dy = 0;
 		}//end i-for
 	}//End handleBallCollision()
 	handleMovement(friction){
@@ -237,9 +236,7 @@ class Ball{
 				//Ball is just rolling and losing dx momentum;
 				this.isGoingUp		= false;
 				this.isGoingDown	= false;
-				this.dx -= friction;
-				if(this.dx < 0)
-					this.dx = 0;
+				this.decelerate(friction, 0);
 			}
 		}
 		else{
@@ -272,9 +269,7 @@ class Ball{
 			else{
 				this.isGoingDown	= false;
 				this.isGoingUp		= false;
-				this.dx -= friction;
-				if(this.dx < 0)
-					this.dx = 0;
+				this.decelerate(friction, 0);
 			}
 		}
 		//END up/down movements;
@@ -283,7 +278,7 @@ class Ball{
 			//But if ball is "stuck", we need to give it a boost;
 			if(this.canGoDown && this.gravity > 0){
 				if(this.dx === 0)
-					this.dx += this.gravity*4;	
+					this.accelerate(this.gravity*4, 0);
 				if(this.canGoRight){
 					this.isGoingRight = true;
 					this.isGoingLeft	= false;
@@ -356,18 +351,15 @@ class Ball{
 			//console.log('WARNING: SCREEN NOT FITTED;');
 		}
 		else if(willOverlapBottom){
-			this.dy -= friction;
-			if(this.dy < 0){
-				this.dy = 0;
+			this.decelerate(0, friction);
+			if(this.dy === 0){
 				this.canGoUp = false;
 			}
 			this.canGoDown = false;
 			this.nextY = maxHeight - this.radius;
 		}
 		else if(willOverlapTop){
-			this.dy -= friction;
-			if(this.dy < 0)
-				this.dy = 0;
+			this.decelerate(0, friction);
 			this.canGoUp = false;
 			this.nextY = 0 + this.radius;
 		}
