@@ -111,15 +111,21 @@ var Ball = function () {
 	}, {
 		key: "applyGravity",
 		value: function applyGravity() {
-			if (this.isGoingDown) this.dy += this.gravity;else if (this.isGoingUp) this.dy -= this.gravity;else if (this.canGoDown) {
-				this.dy += this.gravity;
-			}
+			if (this.isGoingDown) this.accelerate(0, this.gravity);else if (this.isGoingUp) this.decelerate(0, this.gravity);else if (this.canGoDown) this.accelerate(0, this.gravity);
 		}
 	}, {
 		key: "accelerate",
 		value: function accelerate(dxBoost, dyBoost) {
 			this.dx += dxBoost;
 			this.dy += dyBoost;
+		}
+	}, {
+		key: "decelerate",
+		value: function decelerate(dxLoss, dyLoss) {
+			this.dx -= dxLoss;
+			this.dy -= dyLoss;
+			if (this.dx <= 0) this.dx = 0;
+			if (this.dy <= 0) this.dy = 0;
 		}
 	}, {
 		key: "handleBoundaries",
@@ -191,19 +197,13 @@ var Ball = function () {
 				} //end while
 
 				//Apply Kinetic Transfers & Friction
-				otherBall.dy -= this.friction;
-				this.dy -= otherBall.friction;
-				otherBall.dx -= this.friction;
-				this.dx -= otherBall.friction;
-				this.dy *= this.kineticGain;
-				otherBall.dx += this.dx * this.kineticLoss;
-				this.dx *= this.kineticGain;
-				otherBall.dy += this.dy * this.kineticLoss;
+				otherBall.decelerate(this.friction, this.friction);
+				this.decelerate(otherBall.friction, otherBall.friction);
 
-				if (otherBall.dx <= 0) otherBall.dx = 0;
-				if (otherBall.dy <= 0) otherBall.dy = 0;
-				if (this.dx <= 0) this.dx = 0;
-				if (this.dy <= 0) this.dy = 0;
+				otherBall.accelerate(this.dx * this.kineticLoss, 0);
+				otherBall.accelerate(0, this.dy * this.kineticLoss);
+				this.dy *= this.kineticGain;
+				this.dx *= this.kineticGain;
 			} //end i-for
 		} //End handleBallCollision()
 
@@ -231,8 +231,7 @@ var Ball = function () {
 					//Ball is just rolling and losing dx momentum;
 					this.isGoingUp = false;
 					this.isGoingDown = false;
-					this.dx -= friction;
-					if (this.dx < 0) this.dx = 0;
+					this.decelerate(friction, 0);
 				}
 			} else {
 				//Ball Has Momenutm;
@@ -259,8 +258,7 @@ var Ball = function () {
 				} else {
 					this.isGoingDown = false;
 					this.isGoingUp = false;
-					this.dx -= friction;
-					if (this.dx < 0) this.dx = 0;
+					this.decelerate(friction, 0);
 				}
 			}
 			//END up/down movements;
@@ -268,7 +266,7 @@ var Ball = function () {
 				//If Ball has no momentum, it can go in neither direction;
 				//But if ball is "stuck", we need to give it a boost;
 				if (this.canGoDown && this.gravity > 0) {
-					if (this.dx === 0) this.dx += this.gravity * 4;
+					if (this.dx === 0) this.accelerate(this.gravity * 4, 0);
 					if (this.canGoRight) {
 						this.isGoingRight = true;
 						this.isGoingLeft = false;
@@ -333,16 +331,14 @@ var Ball = function () {
 				//this.dx = 0;
 				//console.log('WARNING: SCREEN NOT FITTED;');
 			} else if (willOverlapBottom) {
-				this.dy -= friction;
-				if (this.dy < 0) {
-					this.dy = 0;
+				this.decelerate(0, friction);
+				if (this.dy === 0) {
 					this.canGoUp = false;
 				}
 				this.canGoDown = false;
 				this.nextY = maxHeight - this.radius;
 			} else if (willOverlapTop) {
-				this.dy -= friction;
-				if (this.dy < 0) this.dy = 0;
+				this.decelerate(0, friction);
 				this.canGoUp = false;
 				this.nextY = 0 + this.radius;
 			} else {
