@@ -11,7 +11,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var initRadius = 30;
-var initWallFriction = 1.0;
+var initWallFriction = 0.075;
 var initBallFriction = 0.05;
 var initGravity = 0.45;
 var initKineticLoss = 1 / 3;
@@ -31,7 +31,8 @@ var BallPen = function (_React$Component) {
 			hasGravity: true,
 			hasWallFriction: true,
 			hasBallFriction: true,
-			hasKineticTransfer: true
+			hasKineticTransfer: true,
+			isLeavingTrails: false
 		};
 		_this.balls = [];
 		_this.friction = initWallFriction;
@@ -143,17 +144,17 @@ var BallPen = function (_React$Component) {
 				var ballTop = ball.yCord - ball.radius;
 				if (ballBottom > height) {
 					ball.yCord = height - ball.radius;
-					ball.accelerate();
-					ball.radius *= 0.9;
+					ball.accelerate(4 * initGravity, 20 * initGravity);
+					ball.shrink();
 				}
 				if (ballTop <= 0) {
-					ball.radius *= 0.9;
+					ball.shrink();
 				}
 				for (var j = i + 1; j < this.balls.length; j++) {
 					var otherBall = this.balls[j];
 					var minDistance = ball.radius + otherBall.radius;
 					var curDistance = ball.distanceBetween(ball.xCord, ball.yCord, otherBall.xCord, otherBall.yCord);
-					if (curDistance < minDistance) ball.radius *= 0.9;
+					if (curDistance < minDistance) ball.shrink();
 				}
 			} //end i-for
 			return;
@@ -163,12 +164,20 @@ var BallPen = function (_React$Component) {
 		value: function updateCanvas() {
 			var canvas = this.canvasRef;
 			var ctx = canvas.getContext('2d');
-			ctx.beginPath();
-			ctx.rect(0, 0, this.state.width, this.state.height);
-			ctx.fillStyle = "#FF0000";
-			ctx.fill();
+			if (this.state.isLeavingTrails === false) {
+				ctx.beginPath();
+				ctx.rect(0, 0, this.state.width, this.state.height);
+				ctx.fillStyle = "#FF0000";
+				ctx.fill();
+			}
 			if (this.state.width !== 0) {
 				if (this.balls.length === 0) {
+					// Init Canvas
+					ctx.beginPath();
+					ctx.rect(0, 0, this.state.width, this.state.height);
+					ctx.fillStyle = "#FF0000";
+					ctx.fill();
+
 					// Init first ball
 					this.balls.push(new Ball({
 						ballID: 0,
@@ -288,6 +297,17 @@ var BallPen = function (_React$Component) {
 						name: 'hasKineticTransfer',
 						type: 'checkbox',
 						checked: this.state.hasKineticTransfer,
+						onChange: this.handleInputChange })
+				),
+				React.createElement('br', null),
+				React.createElement(
+					'label',
+					null,
+					'Leave Trails:\xA0\xA0',
+					React.createElement('input', {
+						name: 'isLeavingTrails',
+						type: 'checkbox',
+						checked: this.state.isLeavingTrails,
 						onChange: this.handleInputChange })
 				)
 			);

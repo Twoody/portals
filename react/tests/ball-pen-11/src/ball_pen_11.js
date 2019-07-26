@@ -1,6 +1,6 @@
 'use strict';
 const initRadius			= 30;
-const initWallFriction	= 1.0;
+const initWallFriction	= 0.075;
 const initBallFriction	= 0.05;
 const initGravity			= 0.45;
 const initKineticLoss	= 1/3;
@@ -16,6 +16,7 @@ class BallPen extends React.Component{
 			hasWallFriction: true,
 			hasBallFriction: true,
 			hasKineticTransfer: true,
+			isLeavingTrails:false,
       };
 		this.balls    = [];
 		this.friction = initWallFriction;
@@ -128,11 +129,11 @@ class BallPen extends React.Component{
 			let ballTop		= ball.yCord - ball.radius;
 			if(ballBottom > height){
 				ball.yCord = height - ball.radius;
-				ball.accelerate();
-				ball.radius *= 0.9;
+				ball.accelerate(4*initGravity, 20*initGravity);
+				ball.shrink();
 			}
 			if(ballTop <= 0){
-				ball.radius *= 0.9;
+				ball.shrink();
 			}
 			for(let j=i+1; j<this.balls.length; j++){
 				let otherBall = this.balls[j];
@@ -144,7 +145,7 @@ class BallPen extends React.Component{
 					otherBall.yCord,
 				);
 				if(curDistance < minDistance)
-					ball.radius *= 0.9;
+					ball.shrink();
 			}
 		}//end i-for
       return;
@@ -152,12 +153,20 @@ class BallPen extends React.Component{
    updateCanvas(){
       const canvas   = this.canvasRef;
       const ctx      = canvas.getContext('2d');
-      ctx.beginPath();
-      ctx.rect(0,0, this.state.width, this.state.height);
-      ctx.fillStyle = "#FF0000";
-      ctx.fill();
+		if(this.state.isLeavingTrails === false){
+			ctx.beginPath();
+			ctx.rect(0,0, this.state.width, this.state.height);
+			ctx.fillStyle = "#FF0000";
+			ctx.fill();
+		}
 		if(this.state.width !== 0){
 			if(this.balls.length === 0){
+				// Init Canvas
+				ctx.beginPath();
+				ctx.rect(0,0, this.state.width, this.state.height);
+				ctx.fillStyle = "#FF0000";
+				ctx.fill();
+
 				// Init first ball
 				this.balls.push(
 					new Ball({
@@ -281,8 +290,15 @@ class BallPen extends React.Component{
 						checked={this.state.hasKineticTransfer}
 						onChange={this.handleInputChange} />
 				</label>
-
-
+				<br/>
+				<label>
+					Leave Trails:&nbsp;&nbsp;
+					<input
+						name="isLeavingTrails"
+						type="checkbox"
+						checked={this.state.isLeavingTrails}
+						onChange={this.handleInputChange} />
+				</label>
 
          </div>
       );
