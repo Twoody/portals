@@ -24,11 +24,15 @@ class BallPen extends React.Component{
 			hasBallFriction: true,
 			hasKineticTransfer: true,
 			isLeavingTrails:false,
+			isShowingLabels:false,
       };
 		this.balls    = [];
 		this.friction = initWallFriction;
       this.updateWindowDimensions	= this.updateWindowDimensions.bind(this);
 		this.handleInputChange			= this.handleInputChange.bind(this);
+		this.shrinkBalls					= this.shrinkBalls.bind(this);
+		this.accelerateBalls				= this.accelerateBalls.bind(this);
+		this.resetBalls					= this.resetBalls.bind(this);
    }
 	handleInputChange(event) {
 		const target	= event.target;
@@ -92,6 +96,9 @@ class BallPen extends React.Component{
 					dy:		2
 				});
 				this.balls.push(newBall);
+				this.setState({
+					ballCnt: this.state.ballCnt + 1,
+				});
 			}
 			else
 				console.log('Not legal ball');
@@ -196,6 +203,9 @@ class BallPen extends React.Component{
 						dy:		2
 					})
 				);
+				this.setState({
+					ballCnt: 1
+				});
 			}// End first ball init;
 			for(let i=0; i<this.balls.length; i++){
 				let ball	= this.balls[i];
@@ -250,17 +260,46 @@ class BallPen extends React.Component{
 				}
 
 				ball.draw(ctx);
-				ball.label(ctx);
+				if(this.state.isShowingLabels)
+					ball.label(ctx);
 			}//end i-for
 		}//end if state.width clarity check;
    }
+	shrinkBalls(event){
+		for(let i=0; i<this.balls.length; i++){
+			if(Math.random() >=0.5)
+				this.balls[i].shrink();
+		}//end i-for
+	}//end shrinkBalls
+	accelerateBalls(event){
+		for(let i=0; i<this.balls.length; i++){
+			this.balls[i].accelerate(6,30);
+		}//end i-for
+	}//end accelerateBalls
+	resetBalls(event){
+		this.balls							= [];
+		this.setState({
+			hasGravity:				true,
+			hasWallFriction:		true,
+			hasBallFriction:		true,
+			hasKineticTransfer:	true,
+			isLeavingTrails:		false,
+			isShowingLabels:		false,
+		});
+	}//end resetRalls
 
    render(){
-      const penStyle   = {
+      const penStyle		= {
          border:   "1px solid #000000"
       };
+		const totalStyle	= {
+			textAlign: "right"
+		};
       return (
          <div>
+				<p style={totalStyle}>
+					Ball Count: {this.state.ballCnt}
+				</p>
             <canvas
                ref={canvas => this.	canvasRef = canvas}
                width={this.state.width}
@@ -273,50 +312,90 @@ class BallPen extends React.Component{
 						this.handleCanvasClick(canvas, xClick, yClick);
 					}}
             />
-				<label>
-					Has Gravity:&nbsp;&nbsp;
-					<input
-						name="hasGravity"
-						type="checkbox"
-						checked={this.state.hasGravity}
-						onChange={this.handleInputChange} />
-				</label>
-				<br/>
-				<label>
-					Has Wall Friction:&nbsp;&nbsp;
-					<input
-						name="hasWallFriction"
-						type="checkbox"
-						checked={this.state.hasWallFriction}
-						onChange={this.handleInputChange} />
-				</label>
-				<br/>
-				<label>
-					Has Ball Friction:&nbsp;&nbsp;
-					<input
-						name="hasBallFriction"
-						type="checkbox"
-						checked={this.state.hasBallFriction}
-						onChange={this.handleInputChange} />
-				</label>
-				<br/>
-				<label>
-					Has Kinetic Transfer:&nbsp;&nbsp;
-					<input
-						name="hasKineticTransfer"
-						type="checkbox"
-						checked={this.state.hasKineticTransfer}
-						onChange={this.handleInputChange} />
-				</label>
-				<br/>
-				<label>
-					Leave Trails:&nbsp;&nbsp;
-					<input
-						name="isLeavingTrails"
-						type="checkbox"
-						checked={this.state.isLeavingTrails}
-						onChange={this.handleInputChange} />
-				</label>
+				<table width={this.state.width}>
+					<tr>
+						<td>
+							<label>
+								Has Gravity:&nbsp;&nbsp;
+								<input
+									name="hasGravity"
+									type="checkbox"
+									checked={this.state.hasGravity}
+									onChange={this.handleInputChange} />
+							</label>
+						</td>
+						<td>
+							<label>
+								Has Wall Friction:&nbsp;&nbsp;
+								<input
+									name="hasWallFriction"
+									type="checkbox"
+									checked={this.state.hasWallFriction}
+									onChange={this.handleInputChange} />
+							</label>
+						</td>
+						<td>
+							<label>
+								Has Ball Friction:&nbsp;&nbsp;
+								<input
+									name="hasBallFriction"
+									type="checkbox"
+									checked={this.state.hasBallFriction}
+									onChange={this.handleInputChange} />
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label>
+								Has Kinetic Transfer:&nbsp;&nbsp;
+								<input
+									name="hasKineticTransfer"
+									type="checkbox"
+									checked={this.state.hasKineticTransfer}
+									onChange={this.handleInputChange} />
+							</label>
+						</td>
+						<td>
+							<label>
+								Leave Trails:&nbsp;&nbsp;
+								<input
+									name="isLeavingTrails"
+									type="checkbox"
+									checked={this.state.isLeavingTrails}
+									onChange={this.handleInputChange} />
+							</label>
+						</td>
+						<td>
+							<label>
+								Turn on Lables:&nbsp;&nbsp;
+								<input
+									name="isShowingLabels"
+									type="checkbox"
+									checked={this.state.isShowingLabels}
+									onChange={this.handleInputChange} />
+							</label>
+
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<button onClick={this.shrinkBalls}>
+								Shrink Some Balls
+							</button>
+						</td>
+						<td>
+							<button onClick={this.accelerateBalls}>
+								Accelerate Balls
+							</button>
+						</td>
+						<td>
+							<button onClick={this.resetBalls}>
+								Reset Balls
+							</button>
+						</td>
+					</tr>
+				</table>
 
          </div>
       );
