@@ -32,15 +32,19 @@ make_imports($ROOT);
 $CONFIG	= get_config($ROOT);
 $PATHS	= get_paths($ROOT);
 $STRINGS	= get_config_strings($CONFIG);
-$car_id	= "demo-carousel";
+$react_div	= "<div id=\"ball-pen-11\"></div>";
+$react_dir	= $ROOT. "/react/tests/ball-pen-11";
+$react_js	= $react_dir. "/ball_pen_11.js";
+$balls_js	= $react_dir. "/Balls.js";
 require_once($PATHS['LIBPATH_DB_PAGES']);
 require_once($PATHS['TEMPLATES_B']);
+
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"".$balls_js."\"></script>";
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script type=\"text/babel\" src=\"".$react_js."\"></script>";
 
 /*
 $CONFIG['CUSTOM_STYLES'] .= "\n<style>";
 $CONFIG['CUSTOM_STYLES'] .= "\n</style>";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n<script>";
-$CONFIG['CUSTOM_SCRIPTS'] .= "\n</script>";
 */
 
 $body		= "";
@@ -49,28 +53,6 @@ $body		= "";
 $CONFIG['TITLE']				= $STRINGS['HOME_TITLE'];;
 $CONFIG['DISPLAY_HEADER']	= TRUE;
 $CONFIG['ACTIVE_PAGE']		= $PATHS['NAV_HOME'];
-$pic1 = Array(
-			"src"=>		$PATHS['IMAGE_CAROUSEL_1'],
-			"class"=>	"d-block",
-			"alt"=>		"Tanner Woody and Betsy Woody Model for Joshua Tree Wedding",
-			"width"=>	"100%",
-			"height"=>	"100%",
-		);
-$pic2 = Array(
-			"src"=>		$PATHS['IMAGE_CAROUSEL_2'],
-			"class"=>	"d-block",
-			"alt"=>		"Tanner Woody's Dogs at Yosemite",
-			"width"=>	"100%",
-			"height"=>	"100%",
-		);
-$pic3 = Array(
-			"src"=>		$PATHS['IMAGE_CAROUSEL_3'],
-			"class"=>	"d-block",
-			"alt"=>		"Tanner Woody's Bianchi Bicycle on the Beach",
-			"width"=>	"100%",
-			"height"=>	"100%",
-		);
-$pics = Array($pic1, $pic2, $pic3);
 
 echo "<!-- LANDED ON: HOME PAGE-->";
 
@@ -79,10 +61,17 @@ $ad_not_sm	.= "\n\t\t\t\t\t<span class=\"d-none d-sm-block\">";
 $ad_not_sm	.= get_ad($CONFIG);
 $ad_not_sm	.= "\n\t\t\t\t\t</span>";
 $page_views	= make_page_views($CONFIG['ACTIVE_PAGE'], $CONFIG);
+$instructions_content	=	"Click on a ball to accelerate it;<br/>";
+$instructions_content	.=	"Click on an empty space to init a new ball; <br/>";
+$instructions_content	.=	"New balls will only be made if there is room (e.g. ";
+$instructions_content	.=	"there are too many balls or new ball would be out of bounds)";
+$instructions	= make_tag('p', Array('content'=>$instructions_content), $CONFIG);
+
+$col0_content	= "<hr class=\"thick-line\">". $react_div . $instructions_content;
 
 $col0	= Array(
 	'class'=>"col-12 col-sm-8 col-md-9 col-lg-10 m-0 p-0 fit-screen",
-	'content'=>"<hr class=\"thick-line\">".get_carousel($pics, $car_id, $CONFIG),
+	'content'=>$col0_content,
 );
 $col1	= Array(
 	'class'=>" col-sm-4 col-md-3 col-lg-2 pr-3 m-0",
