@@ -16,6 +16,14 @@ var initBallFriction = 0.05;
 var initGravity = 0.45;
 var initKineticLoss = 1 / 3;
 var initKineticGain = 2 / 3;
+var rectangleColor = "black";
+function getRandomColor() {
+	var red = Math.floor(Math.random() * 3) * 127;
+	var green = Math.floor(Math.random() * 3) * 127;
+	var blue = Math.floor(Math.random() * 3) * 127;
+	var rc = "rgb(" + red + ", " + green + ", " + blue + ")";
+	return rc;
+}
 
 var BallPen = function (_React$Component) {
 	_inherits(BallPen, _React$Component);
@@ -42,7 +50,7 @@ var BallPen = function (_React$Component) {
 	}
 
 	_createClass(BallPen, [{
-		key: 'handleInputChange',
+		key: "handleInputChange",
 		value: function handleInputChange(event) {
 			var target = event.target;
 			var value = target.type === 'checkbox' ? target.checked : target.value;
@@ -52,7 +60,7 @@ var BallPen = function (_React$Component) {
 			this.setState(_defineProperty({}, name, value));
 		}
 	}, {
-		key: 'handleCanvasClick',
+		key: "handleCanvasClick",
 		value: function handleCanvasClick(canvas, xClick, yClick) {
 			var rect = canvas;
 			var xMousePos = xClick;
@@ -89,6 +97,7 @@ var BallPen = function (_React$Component) {
 					console.log('Making new ball' + this.balls.length);
 					var newBall = new Ball({
 						ballID: this.balls.length,
+						color: getRandomColor(),
 						xCord: xCanvasPos,
 						yCord: yCanvasPos,
 						radius: initRadius,
@@ -100,7 +109,7 @@ var BallPen = function (_React$Component) {
 			}
 		}
 	}, {
-		key: 'componentDidMount',
+		key: "componentDidMount",
 		value: function componentDidMount() {
 			var _this2 = this;
 
@@ -112,18 +121,18 @@ var BallPen = function (_React$Component) {
 			window.addEventListener('resize', this.updateWindowDimensions);
 		}
 	}, {
-		key: 'componentWillUnmount',
+		key: "componentWillUnmount",
 		value: function componentWillUnmount() {
 			clearInterval(this.timerID);
 			window.removeEventListener('resize', this.updateWindowDimensions);
 		}
 	}, {
-		key: 'componentDidUpdate',
+		key: "componentDidUpdate",
 		value: function componentDidUpdate() {
 			this.updateCanvas();
 		}
 	}, {
-		key: 'updateWindowDimensions',
+		key: "updateWindowDimensions",
 		value: function updateWindowDimensions() {
 			var width = window.innerWidth;
 			if (width && width > 575) width -= 320; //Buffer for not x-small
@@ -157,17 +166,26 @@ var BallPen = function (_React$Component) {
 					if (curDistance < minDistance) ball.shrink();
 				}
 			} //end i-for
+			if (this.state.isLeavingTrails === true) {
+				var canvas = this.canvasRef;
+				var ctx = canvas.getContext('2d');
+				// Init Canvas
+				ctx.beginPath();
+				ctx.rect(0, 0, this.state.width, this.state.height);
+				ctx.fillStyle = rectangleColor;
+				ctx.fill();
+			}
 			return;
 		}
 	}, {
-		key: 'updateCanvas',
+		key: "updateCanvas",
 		value: function updateCanvas() {
 			var canvas = this.canvasRef;
 			var ctx = canvas.getContext('2d');
 			if (this.state.isLeavingTrails === false) {
 				ctx.beginPath();
 				ctx.rect(0, 0, this.state.width, this.state.height);
-				ctx.fillStyle = "#FF0000";
+				ctx.fillStyle = rectangleColor;
 				ctx.fill();
 			}
 			if (this.state.width !== 0) {
@@ -175,12 +193,13 @@ var BallPen = function (_React$Component) {
 					// Init Canvas
 					ctx.beginPath();
 					ctx.rect(0, 0, this.state.width, this.state.height);
-					ctx.fillStyle = "#FF0000";
+					ctx.fillStyle = rectangleColor;
 					ctx.fill();
 
 					// Init first ball
 					this.balls.push(new Ball({
 						ballID: 0,
+						color: "blue",
 						xCord: 41,
 						yCord: 41,
 						radius: initRadius,
@@ -232,7 +251,7 @@ var BallPen = function (_React$Component) {
 			} //end if state.width clarity check;
 		}
 	}, {
-		key: 'render',
+		key: "render",
 		value: function render() {
 			var _this3 = this;
 
@@ -240,9 +259,9 @@ var BallPen = function (_React$Component) {
 				border: "1px solid #000000"
 			};
 			return React.createElement(
-				'div',
+				"div",
 				null,
-				React.createElement('canvas', {
+				React.createElement("canvas", {
 					ref: function ref(canvas) {
 						return _this3.canvasRef = canvas;
 					},
@@ -257,56 +276,56 @@ var BallPen = function (_React$Component) {
 					}
 				}),
 				React.createElement(
-					'label',
+					"label",
 					null,
-					'Has Gravity:\xA0\xA0',
-					React.createElement('input', {
-						name: 'hasGravity',
-						type: 'checkbox',
+					"Has Gravity:\xA0\xA0",
+					React.createElement("input", {
+						name: "hasGravity",
+						type: "checkbox",
 						checked: this.state.hasGravity,
 						onChange: this.handleInputChange })
 				),
-				React.createElement('br', null),
+				React.createElement("br", null),
 				React.createElement(
-					'label',
+					"label",
 					null,
-					'Has Wall Friction:\xA0\xA0',
-					React.createElement('input', {
-						name: 'hasWallFriction',
-						type: 'checkbox',
+					"Has Wall Friction:\xA0\xA0",
+					React.createElement("input", {
+						name: "hasWallFriction",
+						type: "checkbox",
 						checked: this.state.hasWallFriction,
 						onChange: this.handleInputChange })
 				),
-				React.createElement('br', null),
+				React.createElement("br", null),
 				React.createElement(
-					'label',
+					"label",
 					null,
-					'Has Ball Friction:\xA0\xA0',
-					React.createElement('input', {
-						name: 'hasBallFriction',
-						type: 'checkbox',
+					"Has Ball Friction:\xA0\xA0",
+					React.createElement("input", {
+						name: "hasBallFriction",
+						type: "checkbox",
 						checked: this.state.hasBallFriction,
 						onChange: this.handleInputChange })
 				),
-				React.createElement('br', null),
+				React.createElement("br", null),
 				React.createElement(
-					'label',
+					"label",
 					null,
-					'Has Kinetic Transfer:\xA0\xA0',
-					React.createElement('input', {
-						name: 'hasKineticTransfer',
-						type: 'checkbox',
+					"Has Kinetic Transfer:\xA0\xA0",
+					React.createElement("input", {
+						name: "hasKineticTransfer",
+						type: "checkbox",
 						checked: this.state.hasKineticTransfer,
 						onChange: this.handleInputChange })
 				),
-				React.createElement('br', null),
+				React.createElement("br", null),
 				React.createElement(
-					'label',
+					"label",
 					null,
-					'Leave Trails:\xA0\xA0',
-					React.createElement('input', {
-						name: 'isLeavingTrails',
-						type: 'checkbox',
+					"Leave Trails:\xA0\xA0",
+					React.createElement("input", {
+						name: "isLeavingTrails",
+						type: "checkbox",
 						checked: this.state.isLeavingTrails,
 						onChange: this.handleInputChange })
 				)

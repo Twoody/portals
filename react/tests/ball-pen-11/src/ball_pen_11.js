@@ -5,7 +5,14 @@ const initBallFriction	= 0.05;
 const initGravity			= 0.45;
 const initKineticLoss	= 1/3;
 const initKineticGain	= 2/3;
-
+const rectangleColor		= "black";
+function getRandomColor(){
+	let red = Math.floor(Math.random() * 3) * 127;
+	let green = Math.floor(Math.random() * 3) * 127;
+	let blue = Math.floor(Math.random() * 3) * 127;
+	let rc = "rgb(" + red + ", " + green + ", " + blue + ")";
+	return rc;
+}
 class BallPen extends React.Component{
    constructor(props){
       super(props);
@@ -77,6 +84,7 @@ class BallPen extends React.Component{
 				console.log('Making new ball' + this.balls.length)
 				const newBall	= new Ball({
 					ballID:	this.balls.length,
+					color:	getRandomColor(),
 					xCord:	xCanvasPos,
 					yCord:	yCanvasPos,
 					radius:	initRadius,
@@ -148,6 +156,15 @@ class BallPen extends React.Component{
 					ball.shrink();
 			}
 		}//end i-for
+		if(this.state.isLeavingTrails === true){
+      	const canvas   = this.canvasRef;
+      	const ctx      = canvas.getContext('2d');
+			// Init Canvas
+			ctx.beginPath();
+			ctx.rect(0,0, this.state.width, this.state.height);
+			ctx.fillStyle = rectangleColor;
+			ctx.fill();
+		}
       return;
    }
    updateCanvas(){
@@ -156,7 +173,7 @@ class BallPen extends React.Component{
 		if(this.state.isLeavingTrails === false){
 			ctx.beginPath();
 			ctx.rect(0,0, this.state.width, this.state.height);
-			ctx.fillStyle = "#FF0000";
+			ctx.fillStyle = rectangleColor;
 			ctx.fill();
 		}
 		if(this.state.width !== 0){
@@ -164,13 +181,14 @@ class BallPen extends React.Component{
 				// Init Canvas
 				ctx.beginPath();
 				ctx.rect(0,0, this.state.width, this.state.height);
-				ctx.fillStyle = "#FF0000";
+				ctx.fillStyle = rectangleColor;
 				ctx.fill();
 
 				// Init first ball
 				this.balls.push(
 					new Ball({
 						ballID:	0,
+						color:	"blue",
 						xCord:	41,
 						yCord:	41,
 						radius:	initRadius,

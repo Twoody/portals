@@ -7,12 +7,12 @@ var Ball = function () {
 		_classCallCheck(this, Ball);
 
 		this.ballID = properties.ballID;
+		this.color = properties.color;
 		this.xCord = properties.xCord;
 		this.yCord = properties.yCord;
 		this.radius = properties.radius;
 		this.dx = properties.dx;
 		this.dy = properties.dy;
-		this.color = "blue";
 		this.gravity = 0.45;
 		this.friction = 0.05;
 		this.kineticLoss = 1 / 3;
