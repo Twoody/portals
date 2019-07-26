@@ -6,11 +6,12 @@ const initGravity			= 0.45;
 const initKineticLoss	= 1/3;
 const initKineticGain	= 2/3;
 const rectangleColor		= "black";
+const initBallCnt			= 100;
 function getRandomColor(){
-	let red = Math.floor(Math.random() * 3) * 127;
-	let green = Math.floor(Math.random() * 3) * 127;
-	let blue = Math.floor(Math.random() * 3) * 127;
-	let rc = "rgb(" + red + ", " + green + ", " + blue + ")";
+	let red		= Math.floor(Math.random() * 3) * 127;
+	let green	= Math.floor(Math.random() * 3) * 127;
+	let blue		= Math.floor(Math.random() * 3) * 127;
+	let rc		= "rgb(" + red + ", " + green + ", " + blue + ")";
 	return rc;
 }
 function getRandomInt(min, max) {
@@ -25,12 +26,12 @@ class BallPen extends React.Component{
       this.state      = {
          height: 0,
          width:  0,
-			hasGravity: true,
-			hasWallFriction: true,
-			hasBallFriction: true,
-			hasKineticTransfer: true,
-			isLeavingTrails:false,
-			isShowingLabels:false,
+			hasGravity:				true,
+			hasWallFriction:		true,
+			hasBallFriction:		true,
+			hasKineticTransfer:	true,
+			isLeavingTrails:		false,
+			isShowingLabels:		false,
       };
 		this.balls    = [];
 		this.friction = initWallFriction;
@@ -38,18 +39,27 @@ class BallPen extends React.Component{
 		this.handleInputChange			= this.handleInputChange.bind(this);
 		this.shrinkBalls					= this.shrinkBalls.bind(this);
 		this.accelerateBalls				= this.accelerateBalls.bind(this);
+		this.decelerateBalls				= this.decelerateBalls.bind(this);
 		this.resetBalls					= this.resetBalls.bind(this);
    }
+	updateBackground(){
+     	const canvas   = this.canvasRef;
+     	const ctx      = canvas.getContext('2d');
+		ctx.beginPath();
+		ctx.fillStyle = rectangleColor;
+		ctx.fillRect(0,0, this.state.width, this.state.height);
+		ctx.closePath();
+	}
 	initDisplay(){
 		this.setState({
 			hasGravity:				false,
 			hasWallFriction:		false,
 			hasBallFriction:		false,
-			hasKineticTransfer:	false,
+			hasKineticTransfer:	true,
 			isLeavingTrails:		true,
 			isShowingLabels:		false,
 		});
-		for(let i=0; i<100; i++){
+		for(let i=0; i<initBallCnt; i++){
 			//Going to make 100 small balls and accelerate them;
 			let newBall = this.makeRandomBall();
 			let cnt		= 0;
@@ -63,7 +73,7 @@ class BallPen extends React.Component{
 		}//end i-for
 
 		this.setState({
-			ballCnt: 100
+			ballCnt: initBallCnt
 		});
 		return true;
 	}//End initDisplay
@@ -223,95 +233,80 @@ class BallPen extends React.Component{
 					ball.shrink();
 			}
 		}//end i-for
-		if(this.state.isLeavingTrails === true){
-      	const canvas   = this.canvasRef;
-      	const ctx      = canvas.getContext('2d');
-			// Init Canvas
-			ctx.beginPath();
-			ctx.rect(0,0, this.state.width, this.state.height);
-			ctx.fillStyle = rectangleColor;
-			ctx.fill();
+		if(this.state.isLeavingTrails === true && width && width >575){
+			//Do not change the size if on mobile;
+			this.updateBackground();
 		}
       return;
    }
    updateCanvas(){
       const canvas   = this.canvasRef;
       const ctx      = canvas.getContext('2d');
-		if(this.state.isLeavingTrails === false){
-			ctx.beginPath();
-			ctx.rect(0,0, this.state.width, this.state.height);
-			ctx.fillStyle = rectangleColor;
-			ctx.fill();
-		}
 		if(this.state.width !== 0){
 			if(this.balls.length === 0){
-				// Init Canvas
-				ctx.beginPath();
-				ctx.rect(0,0, this.state.width, this.state.height);
-				ctx.fillStyle = rectangleColor;
-				ctx.fill();
-				let displaySuccess = this.initDisplay();
-				if(displaySuccess === false)
-					console.log('init display failes');
+				this.updateBackground();
+				this.initDisplay();
 			}// End first ball init;
-			for(let i=0; i<this.balls.length; i++){
-				let ball	= this.balls[i];
-				if(!this.state.hasWallFriction)
-					this.friction = 0;
-				else
-					this.friction = initWallFriction;
-
-				if(!this.state.hasBallFriction)
-					ball.friction = 0;
-				else
-					ball.friction = initBallFriction;
-
-				if(!this.state.hasKineticTransfer){
-					ball.kineticGain = 1;
-					ball.kineticLoss = 0;
-				}
-				else{
-					ball.kineticLoss	= initKineticLoss;
-					ball.kineticGain	= initKineticGain;
-				}
-				//Assume we can go any direction first; Change values on `handle`*;
-				ball.canGoUp		= true;
-				ball.canGoDown		= true;
-				ball.canGoLeft		= true;
-				ball.canGoRight	= true;
-
-				//Set wanted coordinates based off of previous movement;
-				if(ball.isGoingUp)
-					ball.nextY = ball.yCord - ball.dy;
-				else if(ball.isGoingDown)
-					ball.nextY = ball.yCord + ball.dy;
-				if(ball.isGoingLeft)
-					ball.nextX = ball.xCord - ball.dx;
-				else if(ball.isGoingRight)
-					ball.nextX = ball.xCord + ball.dx;
-				
-				//See if expected coordinates will prevent us from going certain directions;
-				ball.handleBoundaries(this.state.width, this.state.height, this.balls);
-				ball.handleWallCollisions(this.state.width, this.state.height, this.friction);
-				ball.handleBallCollisions(this.balls);
-
-				ball.handleMovement(this.friction);
-
-				ball.updateCoordinates();
-				if( this.state.hasGravity ){
-					ball.gravity = initGravity;
-					ball.applyGravity();
-				}
-				else{
-					ball.gravity = 0;
-				}
-
-				ball.draw(ctx);
-				if(this.state.isShowingLabels)
-					ball.label(ctx);
-			}//end i-for
+		if(this.state.isLeavingTrails === false){
+			this.updateBackground();
+		}
 		}//end if state.width clarity check;
-   }
+		for(let i=0; i<this.balls.length; i++){
+			let ball	= this.balls[i];
+			if(!this.state.hasWallFriction)
+				this.friction = 0;
+			else
+				this.friction = initWallFriction;
+
+			if(!this.state.hasBallFriction)
+				ball.friction = 0;
+			else
+				ball.friction = initBallFriction;
+
+			if(!this.state.hasKineticTransfer){
+				ball.kineticGain = 1;
+				ball.kineticLoss = 0;
+			}
+			else{
+				ball.kineticLoss	= initKineticLoss;
+				ball.kineticGain	= initKineticGain;
+			}
+			//Assume we can go any direction first; Change values on `handle`*;
+			ball.canGoUp		= true;
+			ball.canGoDown		= true;
+			ball.canGoLeft		= true;
+			ball.canGoRight	= true;
+
+			//Set wanted coordinates based off of previous movement;
+			if(ball.isGoingUp)
+				ball.nextY = ball.yCord - ball.dy;
+			else if(ball.isGoingDown)
+				ball.nextY = ball.yCord + ball.dy;
+			if(ball.isGoingLeft)
+				ball.nextX = ball.xCord - ball.dx;
+			else if(ball.isGoingRight)
+				ball.nextX = ball.xCord + ball.dx;
+			
+			//See if expected coordinates will prevent us from going certain directions;
+			ball.handleBoundaries(this.state.width, this.state.height, this.balls);
+			ball.handleWallCollisions(this.state.width, this.state.height, this.friction);
+			ball.handleBallCollisions(this.balls);
+
+			ball.handleMovement(this.friction);
+			ball.updateCoordinates();
+			if( this.state.hasGravity ){
+				ball.gravity = initGravity;
+				ball.applyGravity();
+			}
+			else{
+				ball.gravity = 0;
+			}
+
+			ball.draw(ctx);
+			if(this.state.isShowingLabels)
+				ball.label(ctx);
+		}//end i-for
+   }//End updateCanvas()
 	shrinkBalls(event){
 		for(let i=0; i<this.balls.length; i++){
 			if(Math.random() >=0.5)
@@ -320,7 +315,12 @@ class BallPen extends React.Component{
 	}//end shrinkBalls
 	accelerateBalls(event){
 		for(let i=0; i<this.balls.length; i++){
-			this.balls[i].accelerate(6,30);
+			this.balls[i].accelerate( getRandomInt(5,12), getRandomInt(10,20) );
+		}//end i-for
+	}//end accelerateBalls
+	decelerateBalls(event){
+		for(let i=0; i<this.balls.length; i++){
+			this.balls[i].decelerate( getRandomInt(1,5), getRandomInt(5,10) );
 		}//end i-for
 	}//end accelerateBalls
 	resetBalls(event){
@@ -444,6 +444,13 @@ class BallPen extends React.Component{
 								Accelerate Balls
 							</button>
 						</td>
+						<td>
+							<button onClick={this.decelerateBalls}>
+								Decelerate Balls
+							</button>
+						</td>
+					</tr>
+					<tr>
 						<td>
 							<button onClick={this.resetBalls}>
 								Reset Balls
