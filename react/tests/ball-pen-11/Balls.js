@@ -112,7 +112,6 @@ var Ball = function () {
 		key: "applyGravity",
 		value: function applyGravity() {
 			if (this.isGoingDown) this.dy += this.gravity;else if (this.isGoingUp) this.dy -= this.gravity;else if (this.canGoDown) {
-				//		console.log('BALL' + this.ballID + " CAN GO DOWN");
 				this.dy += this.gravity;
 			}
 		}
@@ -377,21 +376,20 @@ var Ball = function () {
 			var ballLeft = this.xCord - this.radius;
 			if (ballBottom >= maxHeight) {
 				this.yCord = maxHeight - this.radius;
-				this.accelerate();
-				this.destruct();
+				this.shrink();
 			} else this.canGoDown = true;
 			if (ballTop <= 0) {
 				this.yCord = 0 + this.radius;
-				this.accelerate();
-				this.destruct();
+				this.accelerate(5, 20);
+				this.shrink();
 			}
 			if (ballRight >= maxWidth) {
 				this.xCord = maxWidth - this.radius;
-				this.destruct();
+				this.shrink();
 			}
 			if (ballLeft <= 0) {
 				this.xCord = 0 + this.radius;
-				this.destruct();
+				this.shrink();
 			}
 		} //end handleWindowResize()
 
@@ -438,6 +436,12 @@ var Ball = function () {
 			var ballMaxLeft = this.nextX - this.radius;
 			if (ballMaxLeft <= 0) return true;
 			return false;
+		}
+	}, {
+		key: "shrink",
+		value: function shrink() {
+			//Destroy Ball
+			this.radius *= 0.9;
 		}
 	}, {
 		key: "destruct",
