@@ -13,6 +13,12 @@ function getRandomColor(){
 	let rc = "rgb(" + red + ", " + green + ", " + blue + ")";
 	return rc;
 }
+function getRandomInt(min, max) {
+	min = Math.ceil(min);
+	max = Math.floor(max);
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 class BallPen extends React.Component{
    constructor(props){
       super(props);
@@ -34,6 +40,60 @@ class BallPen extends React.Component{
 		this.accelerateBalls				= this.accelerateBalls.bind(this);
 		this.resetBalls					= this.resetBalls.bind(this);
    }
+	initDisplay(){
+		this.setState({
+			hasGravity:				false,
+			hasWallFriction:		false,
+			hasBallFriction:		false,
+			hasKineticTransfer:	false,
+			isLeavingTrails:		true,
+			isShowingLabels:		false,
+		});
+		for(let i=0; i<100; i++){
+			//Going to make 100 small balls and accelerate them;
+			let newBall = this.makeRandomBall();
+			let cnt		= 0;
+			while(newBall === false){
+				newBall = this.makeRandomBall();
+				cnt += 1;
+				if(cnt === 50)
+					return false;
+			}
+			this.balls.push(newBall);
+		}//end i-for
+
+		this.setState({
+			ballCnt: 100
+		});
+		return true;
+	}//End initDisplay
+	makeRandomBall(){
+		const randomRadius	= getRandomInt(3,7);
+		const randomX			= getRandomInt(0+randomRadius, this.state.width  - randomRadius);
+		const randomY			= getRandomInt(0+randomRadius, this.state.height - randomRadius);
+		const randomDX			= getRandomInt(5, 20);
+		const randomDY			= getRandomInt(5, 20);
+		for(let i=0; i<this.balls.length; i++){
+			const otherBall = this.balls[i];
+			const minDistance		= otherBall.radius + randomRadius;
+			const currDistance	= otherBall.distanceTo(randomX, randomY);
+			if(currDistance < minDistance){
+				return false;
+			}
+		}
+		const newBall	= new Ball({
+			ballID:	this.balls.length,
+			color:	getRandomColor(),
+			xCord:	randomX,
+			yCord:	randomY,
+			radius:	randomRadius,
+			dx: 		randomDX,
+			dy:		randomDY,
+		});
+		return newBall;
+
+
+	}//end makeRandomBall
 	handleInputChange(event) {
 		const target	= event.target;
 		const value		= target.type === 'checkbox' ? target.checked : target.value;
@@ -190,22 +250,9 @@ class BallPen extends React.Component{
 				ctx.rect(0,0, this.state.width, this.state.height);
 				ctx.fillStyle = rectangleColor;
 				ctx.fill();
-
-				// Init first ball
-				this.balls.push(
-					new Ball({
-						ballID:	0,
-						color:	"blue",
-						xCord:	41,
-						yCord:	41,
-						radius:	initRadius,
-						dx: 		2,
-						dy:		2
-					})
-				);
-				this.setState({
-					ballCnt: 1
-				});
+				let displaySuccess = this.initDisplay();
+				if(displaySuccess === false)
+					console.log('init display failes');
 			}// End first ball init;
 			for(let i=0; i<this.balls.length; i++){
 				let ball	= this.balls[i];
@@ -284,9 +331,16 @@ class BallPen extends React.Component{
 			hasBallFriction:		true,
 			hasKineticTransfer:	true,
 			isLeavingTrails:		false,
-			isShowingLabels:		false,
+			isShowingLabels:		true,
 		});
-	}//end resetRalls
+		let newBall = this.makeRandomBall();
+		newBall.radius = 30;
+		newBall.color = "blue";
+		this.balls.push(newBall);
+		this.setState({
+			ballCnt: 1
+		});
+	}//end resetBalls
 
    render(){
       const penStyle		= {
@@ -313,6 +367,7 @@ class BallPen extends React.Component{
 					}}
             />
 				<table width={this.state.width}>
+					<tbody>
 					<tr>
 						<td>
 							<label>
@@ -395,6 +450,7 @@ class BallPen extends React.Component{
 							</button>
 						</td>
 					</tr>
+					</tbody>
 				</table>
 
          </div>

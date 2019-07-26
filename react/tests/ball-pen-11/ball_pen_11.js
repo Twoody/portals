@@ -24,6 +24,11 @@ function getRandomColor() {
 	var rc = "rgb(" + red + ", " + green + ", " + blue + ")";
 	return rc;
 }
+function getRandomInt(min, max) {
+	min = Math.ceil(min);
+	max = Math.floor(max);
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 var BallPen = function (_React$Component) {
 	_inherits(BallPen, _React$Component);
@@ -54,6 +59,63 @@ var BallPen = function (_React$Component) {
 	}
 
 	_createClass(BallPen, [{
+		key: "initDisplay",
+		value: function initDisplay() {
+			this.setState({
+				hasGravity: false,
+				hasWallFriction: false,
+				hasBallFriction: false,
+				hasKineticTransfer: false,
+				isLeavingTrails: true,
+				isShowingLabels: false
+			});
+			for (var i = 0; i < 100; i++) {
+				//Going to make 100 small balls and accelerate them;
+				var newBall = this.makeRandomBall();
+				var cnt = 0;
+				while (newBall === false) {
+					newBall = this.makeRandomBall();
+					cnt += 1;
+					if (cnt === 50) return false;
+				}
+				this.balls.push(newBall);
+			} //end i-for
+
+			this.setState({
+				ballCnt: 100
+			});
+			return true;
+		} //End initDisplay
+
+	}, {
+		key: "makeRandomBall",
+		value: function makeRandomBall() {
+			var randomRadius = getRandomInt(3, 7);
+			var randomX = getRandomInt(0 + randomRadius, this.state.width - randomRadius);
+			var randomY = getRandomInt(0 + randomRadius, this.state.height - randomRadius);
+			var randomDX = getRandomInt(5, 20);
+			var randomDY = getRandomInt(5, 20);
+			for (var i = 0; i < this.balls.length; i++) {
+				var otherBall = this.balls[i];
+				var minDistance = otherBall.radius + randomRadius;
+				var currDistance = otherBall.distanceTo(randomX, randomY);
+				if (currDistance < minDistance) {
+					return false;
+				}
+			}
+			var newBall = new Ball({
+				ballID: this.balls.length,
+				color: getRandomColor(),
+				xCord: randomX,
+				yCord: randomY,
+				radius: randomRadius,
+				dx: randomDX,
+				dy: randomDY
+			});
+			return newBall;
+		} //end makeRandomBall
+
+	}, {
 		key: "handleInputChange",
 		value: function handleInputChange(event) {
 			var target = event.target;
@@ -202,20 +264,8 @@ var BallPen = function (_React$Component) {
 					ctx.rect(0, 0, this.state.width, this.state.height);
 					ctx.fillStyle = rectangleColor;
 					ctx.fill();
-
-					// Init first ball
-					this.balls.push(new Ball({
-						ballID: 0,
-						color: "blue",
-						xCord: 41,
-						yCord: 41,
-						radius: initRadius,
-						dx: 2,
-						dy: 2
-					}));
-					this.setState({
-						ballCnt: 1
-					});
+					var displaySuccess = this.initDisplay();
+					if (displaySuccess === false) console.log('init display failes');
 				} // End first ball init;
 				for (var i = 0; i < this.balls.length; i++) {
 					var ball = this.balls[i];
@@ -286,9 +336,16 @@ var BallPen = function (_React$Component) {
 				hasBallFriction: true,
 				hasKineticTransfer: true,
 				isLeavingTrails: false,
-				isShowingLabels: false
+				isShowingLabels: true
 			});
-		} //end resetRalls
+			var newBall = this.makeRandomBall();
+			newBall.radius = 30;
+			newBall.color = "blue";
+			this.balls.push(newBall);
+			this.setState({
+				ballCnt: 1
+			});
+		} //end resetBalls
 
 	}, {
 		key: "render",
@@ -328,125 +385,129 @@ var BallPen = function (_React$Component) {
 					"table",
 					{ width: this.state.width },
 					React.createElement(
-						"tr",
+						"tbody",
 						null,
 						React.createElement(
-							"td",
+							"tr",
 							null,
 							React.createElement(
-								"label",
+								"td",
 								null,
-								"Has Gravity:\xA0\xA0",
-								React.createElement("input", {
-									name: "hasGravity",
-									type: "checkbox",
-									checked: this.state.hasGravity,
-									onChange: this.handleInputChange })
+								React.createElement(
+									"label",
+									null,
+									"Has Gravity:\xA0\xA0",
+									React.createElement("input", {
+										name: "hasGravity",
+										type: "checkbox",
+										checked: this.state.hasGravity,
+										onChange: this.handleInputChange })
+								)
+							),
+							React.createElement(
+								"td",
+								null,
+								React.createElement(
+									"label",
+									null,
+									"Has Wall Friction:\xA0\xA0",
+									React.createElement("input", {
+										name: "hasWallFriction",
+										type: "checkbox",
+										checked: this.state.hasWallFriction,
+										onChange: this.handleInputChange })
+								)
+							),
+							React.createElement(
+								"td",
+								null,
+								React.createElement(
+									"label",
+									null,
+									"Has Ball Friction:\xA0\xA0",
+									React.createElement("input", {
+										name: "hasBallFriction",
+										type: "checkbox",
+										checked: this.state.hasBallFriction,
+										onChange: this.handleInputChange })
+								)
 							)
 						),
 						React.createElement(
-							"td",
+							"tr",
 							null,
 							React.createElement(
-								"label",
+								"td",
 								null,
-								"Has Wall Friction:\xA0\xA0",
-								React.createElement("input", {
-									name: "hasWallFriction",
-									type: "checkbox",
-									checked: this.state.hasWallFriction,
-									onChange: this.handleInputChange })
+								React.createElement(
+									"label",
+									null,
+									"Has Kinetic Transfer:\xA0\xA0",
+									React.createElement("input", {
+										name: "hasKineticTransfer",
+										type: "checkbox",
+										checked: this.state.hasKineticTransfer,
+										onChange: this.handleInputChange })
+								)
+							),
+							React.createElement(
+								"td",
+								null,
+								React.createElement(
+									"label",
+									null,
+									"Leave Trails:\xA0\xA0",
+									React.createElement("input", {
+										name: "isLeavingTrails",
+										type: "checkbox",
+										checked: this.state.isLeavingTrails,
+										onChange: this.handleInputChange })
+								)
+							),
+							React.createElement(
+								"td",
+								null,
+								React.createElement(
+									"label",
+									null,
+									"Turn on Lables:\xA0\xA0",
+									React.createElement("input", {
+										name: "isShowingLabels",
+										type: "checkbox",
+										checked: this.state.isShowingLabels,
+										onChange: this.handleInputChange })
+								)
 							)
 						),
 						React.createElement(
-							"td",
+							"tr",
 							null,
 							React.createElement(
-								"label",
+								"td",
 								null,
-								"Has Ball Friction:\xA0\xA0",
-								React.createElement("input", {
-									name: "hasBallFriction",
-									type: "checkbox",
-									checked: this.state.hasBallFriction,
-									onChange: this.handleInputChange })
-							)
-						)
-					),
-					React.createElement(
-						"tr",
-						null,
-						React.createElement(
-							"td",
-							null,
+								React.createElement(
+									"button",
+									{ onClick: this.shrinkBalls },
+									"Shrink Some Balls"
+								)
+							),
 							React.createElement(
-								"label",
+								"td",
 								null,
-								"Has Kinetic Transfer:\xA0\xA0",
-								React.createElement("input", {
-									name: "hasKineticTransfer",
-									type: "checkbox",
-									checked: this.state.hasKineticTransfer,
-									onChange: this.handleInputChange })
-							)
-						),
-						React.createElement(
-							"td",
-							null,
+								React.createElement(
+									"button",
+									{ onClick: this.accelerateBalls },
+									"Accelerate Balls"
+								)
+							),
 							React.createElement(
-								"label",
+								"td",
 								null,
-								"Leave Trails:\xA0\xA0",
-								React.createElement("input", {
-									name: "isLeavingTrails",
-									type: "checkbox",
-									checked: this.state.isLeavingTrails,
-									onChange: this.handleInputChange })
-							)
-						),
-						React.createElement(
-							"td",
-							null,
-							React.createElement(
-								"label",
-								null,
-								"Turn on Lables:\xA0\xA0",
-								React.createElement("input", {
-									name: "isShowingLabels",
-									type: "checkbox",
-									checked: this.state.isShowingLabels,
-									onChange: this.handleInputChange })
-							)
-						)
-					),
-					React.createElement(
-						"tr",
-						null,
-						React.createElement(
-							"td",
-							null,
-							React.createElement(
-								"button",
-								{ onClick: this.shrinkBalls },
-								"Shrink Some Balls"
-							)
-						),
-						React.createElement(
-							"td",
-							null,
-							React.createElement(
-								"button",
-								{ onClick: this.accelerateBalls },
-								"Accelerate Balls"
-							)
-						),
-						React.createElement(
-							"td",
-							null,
-							React.createElement(
-								"button",
-								{ onClick: this.resetBalls },
-								"Reset Balls"
+								React.createElement(
+									"button",
+									{ onClick: this.resetBalls },
+									"Reset Balls"
+								)
 							)
 						)
 					)
