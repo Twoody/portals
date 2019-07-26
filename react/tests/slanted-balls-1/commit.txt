@@ -1,0 +1,6 @@
+initBallCnt init
+readability;
+decelerate() and decelerateBalls;
+updateBackground()
+random accelerate and decelerate;
+
