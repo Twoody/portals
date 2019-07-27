@@ -79,7 +79,7 @@ class BallPen extends React.Component{
 	initRectangles(){
 		const middleCords	= this.getMiddleOfCanvas();
 		const width			= 200;
-		const height		= 10;
+		const height		= 100;
 		const xLeft			= middleCords.x - width/2;
 		const yTop			= middleCords.y - height/2;
 		const rectangle	= new Rectangle({
@@ -377,31 +377,35 @@ class BallPen extends React.Component{
 				}
 
 				//Process Left/Right
-				let ballRightOverLapsLeft = ball.nextX + ball.radius >= rectangle.xLeft;
-				let ballLeftOverLapsRight = ball.nextX - ball.radius >= rectangle.xRight;
-				if(ball.nextX + ball.radius >= rectangle.xLeft){
+				let ballRightOverLapsLeft = ball.nextX + ball.radius > rectangle.xLeft;
+				let ballLeftOverLapsRight = ball.nextX - ball.radius < rectangle.xRight;
+
+				if(ball.nextX - ball.radius > rectangle.xLeft){
+					//If ball right is passed the left;
 					ballRightOverLapsLeft = false;
 				}
-				if(ball.nextX - ball.radius >= rectangle.xLeft){
+				if(ball.nextX + ball.radius < rectangle.xLeft){
 					ballLeftOverLapsRight = false;
 				}
 
-				if(ball.nextY-ball.radius >= rectangle.yBottom){
+				if(ball.nextY + ball.radius <= rectangle.yTop){
+					//If ball bottom is above rectangle top
 					ballRightOverLapsLeft = false;
 					ballLeftOverLapsRight = false;
 				}
-				else if(ball.nextYr+ball.radius <= rectangle.yTop){
+				else if(ball.nextY - ball.radius >= rectangle.yBottom){
+					//If ball top is below bottom
 					ballRightOverLapsLeft = false;
 					ballLeftOverLapsRight = false;
 				}
 				
 				if(ballRightOverLapsLeft){
-					ball.nextX		= rectangle.xLeft - ball.radius;
-					ball.canGoLeft	= false;
+					ball.nextX			= rectangle.xLeft - ball.radius;
+					ball.canGoRight	= false;
 				}
 				else if(ballLeftOverLapsRight){
 					ball.nextX		= rectangle.xRight + ball.radius;
-					ball.canGoRight	= false;
+					ball.canGoLeft	= false;
 				}
 			}//end j-for
 
