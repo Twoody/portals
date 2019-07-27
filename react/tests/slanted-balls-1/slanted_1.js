@@ -224,6 +224,13 @@ var BallPen = function (_React$Component) {
 					break;
 				}
 			} //end i-for
+			for (var _i2 = 0; _i2 < this.rectangles.length; _i2++) {
+				var rectangle = this.rectangles[_i2];
+				if (yCanvasPos > rectangle.yTop - initRadius && yCanvasPos < rectangle.yBottom + initRadius && xCanvasPos < rectangle.xRight + initRadius && xCanvasPos > rectangle.xLeft - initRadius) {
+					isLegalBall = false;
+					break;
+				}
+			} //end i-for
 			if (isLegalBall) {
 				//Check with top, bottom, and sides;
 				if (xCanvasPos - initRadius < 0) isLegalBall = false;else if (xCanvasPos + initRadius > this.state.width) isLegalBall = false;else if (yCanvasPos - initRadius < 0) isLegalBall = false;else if (yCanvasPos + initRadius > this.state.height) isLegalBall = false;

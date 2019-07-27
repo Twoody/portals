@@ -199,6 +199,15 @@ class BallPen extends React.Component{
 				break;
 			}
 		}//end i-for
+		for(let i=0; i<this.rectangles.length; i++){
+			let rectangle = this.rectangles[i];
+			if(yCanvasPos > rectangle.yTop-initRadius && yCanvasPos < rectangle.yBottom+initRadius
+				&& xCanvasPos < rectangle.xRight+initRadius && xCanvasPos > rectangle.xLeft-initRadius
+			){
+				isLegalBall = false;
+				break;
+			}
+		}//end i-for
 		if(isLegalBall){
 			//Check with top, bottom, and sides;
 			if (xCanvasPos - initRadius < 0)
