@@ -319,9 +319,9 @@ var Ball = function () {
 		key: "handleWallCollisions",
 		value: function handleWallCollisions(maxWidth, maxHeight, friction) {
 			var willOverlapBottom = this.hitBottom(maxHeight);
-			var willOverlapTop = this.hitTop();
+			var willOverlapTop = this.hitTop(0);
 			var willOverlapRight = this.hitRight(maxWidth);
-			var willOverlapLeft = this.hitLeft();
+			var willOverlapLeft = this.hitLeft(0);
 			if (willOverlapTop && willOverlapBottom) {
 				//The screen is now to small for our ball;
 				//We will just keep the ball at it's current place and stop all movemnt;
@@ -414,9 +414,9 @@ var Ball = function () {
 		}
 	}, {
 		key: "hitTop",
-		value: function hitTop() {
+		value: function hitTop(minHeight) {
 			var ballMaxTop = this.nextY - this.radius;
-			if (ballMaxTop <= 0) return true;
+			if (ballMaxTop <= minHeight) return true;
 			return false;
 		}
 	}, {
@@ -428,9 +428,9 @@ var Ball = function () {
 		}
 	}, {
 		key: "hitLeft",
-		value: function hitLeft() {
+		value: function hitLeft(minWidth) {
 			var ballMaxLeft = this.nextX - this.radius;
-			if (ballMaxLeft <= 0) return true;
+			if (ballMaxLeft <= minWidth) return true;
 			return false;
 		}
 	}, {

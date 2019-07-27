@@ -6,7 +6,7 @@ const initGravity			= 0.45;
 const initKineticLoss	= 1/3;
 const initKineticGain	= 2/3;
 const rectangleColor		= "black";
-const initBallCnt			= 5;
+const initBallCnt			= 1;
 function getRandomColor(){
 	let red		= Math.floor(Math.random() * 3) * 127;
 	let green	= Math.floor(Math.random() * 3) * 127;
@@ -19,7 +19,34 @@ function getRandomInt(min, max) {
 	max = Math.floor(max);
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
+function areRectangleAndBallColliding(rectangle, ball){
+	let xDistance = Math.abs(ball.xCord - rectangle.xCenter);
+	let yDistance = Math.abs(ball.yCord - rectangle.yCenter);
+	const xMinDistance = rectangle.width/2 + ball.radius;
+	const yMinDistance = rectangle.height/2 + ball.radius;
+	if(xDistance > xMinDistance || yDistance > yMinDistance)
+		return false;
+	if(xDistance <=  rectangle.width/2)
+		return true;
+	if(yDistance <=  rectangle.height/2)
+		return true;
+	//Check if corner collision using pythagorean theoem;
+	const xDistanceDiff = xDistance - rectangle.width/2;
+	const yDistanceDiff = yDistance - rectangle.height/2;
+	const radiusSquared = ball.radius**2;
+	if(yDistanceDiff**2 + xDistanceDiff**2 <= radiusSquared)
+		return true;
+	return false;
+}
+function isOverLapping(x1, y1, x2, y2, minDistance){
+	//Use Pythagorean Theorem to determine if points collide;
+	//minDistance will form the right angle of the triangle;
+	const xDiff = x1-x2;
+	const yDiff = y1-y2;
+	if(xDiff**2 + yDiff**2 >= minDistance**2)
+		return true;
+	return false;
+}
 class BallPen extends React.Component{
    constructor(props){
       super(props);
@@ -33,7 +60,8 @@ class BallPen extends React.Component{
 			isLeavingTrails:		false,
 			isShowingLabels:		false,
       };
-		this.balls    = [];
+		this.balls			= [];
+		this.rectangles	= [];
 		this.friction = initWallFriction;
       this.updateWindowDimensions	= this.updateWindowDimensions.bind(this);
 		this.handleInputChange			= this.handleInputChange.bind(this);
@@ -42,6 +70,28 @@ class BallPen extends React.Component{
 		this.decelerateBalls				= this.decelerateBalls.bind(this);
 		this.resetBalls					= this.resetBalls.bind(this);
    }
+	getMiddleOfCanvas(){
+		let cords = {};
+		cords.x = this.state.width/2;
+		cords.y = this.state.height/2;
+		return cords;
+	}
+	initRectangles(){
+		const middleCords	= this.getMiddleOfCanvas();
+		const width			= 200;
+		const height		= 10;
+		const xLeft			= middleCords.x - width/2;
+		const yTop			= middleCords.y - height/2;
+		const rectangle	= new Rectangle({
+			rectID:	0,
+			color:	'white',
+			xLeft:	xLeft,
+			yTop:		yTop,
+			width:	width,
+			height:	height,
+		});
+		this.rectangles.push(rectangle);
+	}
 	updateBackground(){
      	const canvas   = this.canvasRef;
      	const ctx      = canvas.getContext('2d');
@@ -49,8 +99,13 @@ class BallPen extends React.Component{
 		ctx.fillStyle = rectangleColor;
 		ctx.fillRect(0,0, this.state.width, this.state.height);
 		ctx.closePath();
+		for(let i=0; i<this.rectangles.length; i++){
+			let rectangle = this.rectangles[i];
+			rectangle.draw(ctx);
+		}
 	}
 	initDisplay(){
+		this.initRectangles();
 		this.setState({
 			hasGravity:				true,
 			hasWallFriction:		true,
@@ -81,8 +136,8 @@ class BallPen extends React.Component{
 		const randomRadius	= getRandomInt(30,30);
 		const randomX			= getRandomInt(0+randomRadius, this.state.width  - randomRadius);
 		const randomY			= getRandomInt(0+randomRadius, this.state.height - randomRadius);
-		const randomDX			= getRandomInt(5, 10);
-		const randomDY			= getRandomInt(5, 10);
+		const randomDX			= getRandomInt(5, 7);
+		const randomDY			= getRandomInt(5, 7);
 		for(let i=0; i<this.balls.length; i++){
 			const otherBall = this.balls[i];
 			const minDistance		= otherBall.radius + randomRadius;
@@ -100,6 +155,11 @@ class BallPen extends React.Component{
 			dx: 		randomDX,
 			dy:		randomDY,
 		});
+		for(let i=0; i<this.rectangles.length; i++){
+			let rectangle = this.rectangles[i];
+			if(rectangle.isOverLappingBall(newBall))
+				return false;
+		}//end i-for
 		return newBall;
 	}//end makeRandomBall
 	handleInputChange(event) {
@@ -177,7 +237,7 @@ class BallPen extends React.Component{
       this.updateCanvas();
       this.timerID   = setInterval(
          ()=>this.updateCanvas(),
-         25
+        25
       );
       window.addEventListener('resize', this.updateWindowDimensions);
    }
@@ -245,9 +305,9 @@ class BallPen extends React.Component{
 				this.updateBackground();
 				this.initDisplay();
 			}// End first ball init;
-		if(this.state.isLeavingTrails === false){
-			this.updateBackground();
-		}
+			if(this.state.isLeavingTrails === false){
+				this.updateBackground();
+			}
 		}//end if state.width clarity check;
 		for(let i=0; i<this.balls.length; i++){
 			let ball	= this.balls[i];
@@ -285,6 +345,68 @@ class BallPen extends React.Component{
 			else if(ball.isGoingRight)
 				ball.nextX = ball.xCord + ball.dx;
 			
+			for(let j=0; j<this.rectangles.length; j++){
+				//Handle rectangle objects
+				let rectangle	= this.rectangles[j];
+				let ballBottomOverLapsTop	= ball.nextY + ball.radius >= rectangle.yTop;
+				let ballTopOverLapsBottom	= ball.nextY - ball.radius <= rectangle.yBottom;
+				//Process Up/Down 
+				if(ball.nextY + ball.radius >= rectangle.yBottom){
+					ballBottomOverLapsTop = false;
+				}
+				if(ball.nextY - ball.radius <= rectangle.yTop){
+					ballTopOverLapsBottom = false;
+				}
+				if(ball.nextX-ball.radius >= rectangle.xRight){
+					//Is the ball within the rectangle bounds
+					ballBottomOverLapsTop = false;
+					ballTopOverLapsBottom = false;
+				}
+				else if(ball.nextX+ball.radius <= rectangle.xLeft){
+					//Is the ball within the rectangle bounds
+					ballBottomOverLapsTop = false;
+					ballTopOverLapsBottom = false;
+				}
+				if(ballBottomOverLapsTop){
+					ball.nextY		= rectangle.yTop - ball.radius;
+					ball.canGoDown = false;
+				}
+				else if(ballTopOverLapsBottom){
+					ball.nextY		= rectangle.yBottom + ball.radius;
+					ball.canGoUp	= false;
+				}
+
+				//Process Left/Right
+				let ballRightOverLapsLeft = ball.nextX + ball.radius >= rectangle.xLeft;
+				let ballLeftOverLapsRight = ball.nextX - ball.radius >= rectangle.xRight;
+				if(ball.nextX + ball.radius >= rectangle.xLeft){
+					ballRightOverLapsLeft = false;
+				}
+				if(ball.nextX - ball.radius >= rectangle.xLeft){
+					ballLeftOverLapsRight = false;
+				}
+
+				if(ball.nextY-ball.radius >= rectangle.yBottom){
+					ballRightOverLapsLeft = false;
+					ballLeftOverLapsRight = false;
+				}
+				else if(ball.nextYr+ball.radius <= rectangle.yTop){
+					ballRightOverLapsLeft = false;
+					ballLeftOverLapsRight = false;
+				}
+				
+				if(ballRightOverLapsLeft){
+					ball.nextX		= rectangle.xLeft - ball.radius;
+					ball.canGoLeft	= false;
+				}
+				else if(ballLeftOverLapsRight){
+					ball.nextX		= rectangle.xRight + ball.radius;
+					ball.canGoRight	= false;
+				}
+			}//end j-for
+
+
+
 			//See if expected coordinates will prevent us from going certain directions;
 			ball.handleBoundaries(this.state.width, this.state.height, this.balls);
 			ball.handleWallCollisions(this.state.width, this.state.height, this.friction);

@@ -338,9 +338,9 @@ class Ball{
 	}//End handleMovement()
 	handleWallCollisions(maxWidth, maxHeight, friction){
 		const willOverlapBottom	= this.hitBottom(maxHeight);
-		const willOverlapTop		= this.hitTop();
+		const willOverlapTop		= this.hitTop(0);
 		const willOverlapRight	= this.hitRight(maxWidth);
-		const willOverlapLeft	= this.hitLeft();
+		const willOverlapLeft	= this.hitLeft(0);
 		if(willOverlapTop && willOverlapBottom){
 			//The screen is now to small for our ball;
 			//We will just keep the ball at it's current place and stop all movemnt;
@@ -431,9 +431,9 @@ class Ball{
 		return false;
 	
 	}
-	hitTop(){
+	hitTop(minHeight){
 		const ballMaxTop = this.nextY - this.radius;
-		if(ballMaxTop <= 0)
+		if(ballMaxTop <= minHeight)
 			return true;
 		return false;
 	}
@@ -444,9 +444,9 @@ class Ball{
 		return false;
 	
 	}
-	hitLeft(){
+	hitLeft(minWidth){
 		const ballMaxLeft = this.nextX - this.radius;
-		if(ballMaxLeft <= 0)
+		if(ballMaxLeft <= minWidth)
 			return true;
 		return false;
 	}
