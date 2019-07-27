@@ -324,12 +324,7 @@ var Ball = function () {
 			var willOverlapLeft = this.hitLeft(0);
 			if (willOverlapTop && willOverlapBottom) {
 				//The screen is now to small for our ball;
-				//We will just keep the ball at it's current place and stop all movemnt;
-				//this.nextX = this.xCord;
-				//this.nextY = this.yCord;
-				//this.dy = 0;
-				//this.dx = 0;
-				//console.log('WARNING: SCREEN NOT FITTED;');
+				//This is now handles with  window resize;
 			} else if (willOverlapBottom) {
 				this.decelerate(0, friction);
 				if (this.dy === 0) {
@@ -347,6 +342,7 @@ var Ball = function () {
 			if (willOverlapRight && willOverlapLeft) {
 				//The screen is now to small for our ball;
 				//We will just keep the ball at it's current place and stop all movemnt;
+				//TODO: Handle this with window resize;
 				this.nextX = this.xCord;
 				this.nextY = this.yCord;
 				this.dy = 0;
