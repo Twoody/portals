@@ -1,13 +1,15 @@
 'use strict';
-const initRadius			= 30;
+const initRadius			= 10;
+const MIN_RADIUS			= 9;
+const MAX_RADIUS			= 9;
 const initWallFriction	= 0.075;
 const initBallFriction	= 0.05;
 const initGravity			= 0.45;
 const initKineticLoss	= 1/3;
 const initKineticGain	= 2/3;
 const rectangleColor		= "black";
-const MAX_SPEED			= 20;
-const initBallCnt			= 1;
+const MAX_SPEED			= 10;
+const initBallCnt			= 55;
 function getRandomColor(){
 	let red		= Math.floor(Math.random() * 3) * 127;
 	let green	= Math.floor(Math.random() * 3) * 127;
@@ -80,11 +82,11 @@ class BallPen extends React.Component{
 	initDisplay(){
 		this.initRectangles();
 		this.setState({
-			hasGravity:				true,
-			hasWallFriction:		true,
-			hasBallFriction:		true,
-			hasKineticTransfer:	true,
-			isLeavingTrails:		false,
+			hasGravity:				false,
+			hasWallFriction:		false,
+			hasBallFriction:		false,
+			hasKineticTransfer:	false,
+			isLeavingTrails:		true,
 			isShowingLabels:		true,
 		});
 		for(let i=0; i<initBallCnt; i++){
@@ -107,7 +109,7 @@ class BallPen extends React.Component{
 		return true;
 	}//End initDisplay
 	makeRandomBall(){
-		const randomRadius	= getRandomInt(30,30);
+		const randomRadius	= getRandomInt(MIN_RADIUS, MAX_RADIUS);
 		const randomX			= getRandomInt(0+randomRadius, this.state.width  - randomRadius);
 		const randomY			= getRandomInt(0+randomRadius, this.state.height - randomRadius);
 		const randomDX			= getRandomInt(5, 7);
@@ -424,6 +426,7 @@ class BallPen extends React.Component{
 				}
 				
 				if(ballRightOverLapsLeft){
+					ball.nextX		= rectangle.xLeft - ball.radius - 0.001;
 					ball.canGoRight	= false;
 				}
 				else if(ballLeftOverLapsRight){

@@ -10,15 +10,17 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var initRadius = 30;
+var initRadius = 10;
+var MIN_RADIUS = 9;
+var MAX_RADIUS = 9;
 var initWallFriction = 0.075;
 var initBallFriction = 0.05;
 var initGravity = 0.45;
 var initKineticLoss = 1 / 3;
 var initKineticGain = 2 / 3;
 var rectangleColor = "black";
-var MAX_SPEED = 20;
-var initBallCnt = 1;
+var MAX_SPEED = 10;
+var initBallCnt = 55;
 function getRandomColor() {
 	var red = Math.floor(Math.random() * 3) * 127;
 	var green = Math.floor(Math.random() * 3) * 127;
@@ -107,11 +109,11 @@ var BallPen = function (_React$Component) {
 		value: function initDisplay() {
 			this.initRectangles();
 			this.setState({
-				hasGravity: true,
-				hasWallFriction: true,
-				hasBallFriction: true,
-				hasKineticTransfer: true,
-				isLeavingTrails: false,
+				hasGravity: false,
+				hasWallFriction: false,
+				hasBallFriction: false,
+				hasKineticTransfer: false,
+				isLeavingTrails: true,
 				isShowingLabels: true
 			});
 			for (var i = 0; i < initBallCnt; i++) {
@@ -136,7 +138,7 @@ var BallPen = function (_React$Component) {
 	}, {
 		key: "makeRandomBall",
 		value: function makeRandomBall() {
-			var randomRadius = getRandomInt(30, 30);
+			var randomRadius = getRandomInt(MIN_RADIUS, MAX_RADIUS);
 			var randomX = getRandomInt(0 + randomRadius, this.state.width - randomRadius);
 			var randomY = getRandomInt(0 + randomRadius, this.state.height - randomRadius);
 			var randomDX = getRandomInt(5, 7);
@@ -418,6 +420,7 @@ var BallPen = function (_React$Component) {
 					}
 
 					if (ballRightOverLapsLeft) {
+						ball.nextX = rectangle.xLeft - ball.radius - 0.001;
 						ball.canGoRight = false;
 					} else if (ballLeftOverLapsRight) {
 						ball.nextX = rectangle.xRight + ball.radius - 0.001;
