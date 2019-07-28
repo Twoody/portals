@@ -122,6 +122,19 @@ var BallPen = function (_React$Component) {
 			for (var i = 0; i < this.rectangles.length; i++) {
 				var rectangle = this.rectangles[i];
 				rectangle.draw(ctx);
+				ctx.beginPath();
+				ctx.fillStyle = 'black';
+				ctx.arc(rectangle.xLeft, rectangle.yCenter, 10, 0, 2 * Math.PI);
+				ctx.arc(rectangle.xRight, rectangle.yCenter, 10, 0, 2 * Math.PI);
+				ctx.arc(rectangle.xCenter, rectangle.yCenter, 10, 0, 2 * Math.PI);
+				ctx.fill();
+				ctx.closePath();
+				ctx.beginPath();
+				ctx.fillStyle = 'black';
+				ctx.arc(rectangle.xCenter, rectangle.yBottom, 10, 0, 2 * Math.PI);
+				ctx.arc(rectangle.xCenter, rectangle.yTop, 10, 0, 2 * Math.PI);
+				ctx.fill();
+				ctx.closePath();
 			}
 		}
 	}, {
@@ -359,63 +372,107 @@ var BallPen = function (_React$Component) {
 				for (var j = 0; j < this.rectangles.length; j++) {
 					//Handle rectangle objects
 					var rectangle = this.rectangles[j];
-					var ballBottomOverLapsTop = ball.nextY + ball.radius >= rectangle.yTop;
-					var ballTopOverLapsBottom = ball.nextY - ball.radius <= rectangle.yBottom;
+					var ballBottomOverLapsTop = false;
+					var ballTopOverLapsBottom = false;
 					//Process Up/Down 
-					if (ball.nextY + ball.radius >= rectangle.yBottom) {
-						ballBottomOverLapsTop = false;
+					if (ball.nextY + ball.radius >= rectangle.yTop && ball.nextY - ball.radius <= rectangle.yTop && ball.isGoingDown) {
+						//If ball bottom is lower than the top of the rectangle;
+						// and if the ball top is above the top of the rectangle;
+						ballBottomOverLapsTop = true;
+						console.log('ball' + ball.ballID + ' might overlap top');
 					}
-					if (ball.nextY - ball.radius <= rectangle.yTop) {
+					if (ball.nextY - ball.radius <= rectangle.yBottom && ball.nextY - ball.radius >= rectangle.yTop && ball.isGoingUp) {
+						//If ball top is above the bottom of the rectangle;
+						// and if the top is below the top of the rectangle;
+						ballTopOverLapsBottom = true;
+						console.log('ball' + ball.ballID + ' might overlap bottom');
+					}
+
+					if (ball.nextX + ball.radius >= rectangle.xLeft || ball.nextX - ball.radius <= rectangle.xRightt) {
+						//Is the RIGHT of the ball left of the left side of the rectangle
+						//IF ball right is outsdie of left, than we are not in the rectangle bounds
+						//ballBottomOverLapsTop = false;
+					}
+					if (ball.nextX - ball.radius <= rectangle.xRight || ball.nextX + ball.radius >= rectangle.xLeft) {
+						//Is the left of the ball right of the right side of the rectangle
+						ballBottomOverLapsTop = false;
 						ballTopOverLapsBottom = false;
 					}
-					if (ball.nextX - ball.radius >= rectangle.xRight) {
-						//Is the ball within the rectangle bounds
-						ballBottomOverLapsTop = false;
-						ballTopOverLapsBottom = false;
-					} else if (ball.nextX + ball.radius <= rectangle.xLeft) {
-						//Is the ball within the rectangle bounds
-						ballBottomOverLapsTop = false;
-						ballTopOverLapsBottom = false;
-					}
+
 					if (ballBottomOverLapsTop) {
-						ball.nextY = rectangle.yTop - ball.radius;
-						ball.canGoDown = false;
+						if (rectangle.yTop > ball.radius * 2) {
+							//Rectangle top should sit below the radius;
+							console.log('ball' + ball.ballID + ' fits: ' + (rectangle.yTop - ball.radius * 2));
+							//There is enough room for the ball to go here;
+							ball.nextY = rectangle.yTop - ball.radius;
+							ball.canGoDown = false;
+						} else {
+							//Ball needs to bounce back and cannot fit;
+							console.log('ball ' + ball.ballID + ' does not fit');
+							if (ball.isGoingRight) {
+								ball.canGoRight = false;
+								//ball.nextX = rectangle.xLeft - ball.radius;
+							} else if (ball.isGoingLeft) {
+								ball.canGoLeft = false;
+								//ball.nextX = rectangle.xRight + ball.radius;
+							}
+						}
 					} else if (ballTopOverLapsBottom) {
-						ball.nextY = rectangle.yBottom + ball.radius;
-						ball.canGoUp = false;
+						if (rectangle.yBottom + ball.radius * 2 > this.state.width) {
+							//If rectangleBottom and radiuss fit within the screen;
+							console.log('ball' + ball.ballID + ' fits bottom');
+							console.log("MAX BOTTOM: " + this.state.width);
+							console.log("Current Bottom: " + (rectangle.yBottom + ball.radius * 2));
+							//There is enough room for the ball to go here;
+							ball.nextY = rectangle.yBottom + ball.radius;
+							ball.canGoUp = false;
+						} else {
+							//Ball needs to bounce back and cannot fit;
+							if (ball.isGoingRight) {
+								ball.canGoRight = false;
+								console.log('ball' + ball.ballID + ' does not fit bottom 1');
+								//ball.nextX = rectangle.xLeft - ball.radius;
+							} else if (ball.isGoingLeft) {
+								console.log('ball' + ball.ballID + ' does not fit bottom 2');
+								ball.canGoLeft = false;
+								//ball.nextX = rectangle.xRight + ball.radius;
+							}
+						}
 					}
 
 					//Process Left/Right
-					var ballRightOverLapsLeft = ball.nextX + ball.radius > rectangle.xLeft;
-					var ballLeftOverLapsRight = ball.nextX - ball.radius < rectangle.xRight;
-
-					if (ball.nextX - ball.radius > rectangle.xLeft) {
-						//If ball right is passed the left;
-						ballRightOverLapsLeft = false;
+					var ballRightOverLapsLeft = false;
+					var ballLeftOverLapsRight = false;
+					if (ball.nextX + ball.radius >= rectangle.xLeft && ball.nextX - ball.radius <= rectangle.xLeft) {
+						//If ball right is right of the left side
+						// and ball left is left of the left side
+						ballRightOverLapsLeft = true;
 					}
-					if (ball.nextX + ball.radius < rectangle.xLeft) {
-						ballLeftOverLapsRight = false;
+					if (ball.nextX - ball.radius <= rectangle.xRight && ball.nextX + ball.radius >= rectangle.xRight) {
+						//If ball left is left of the right side
+						// and ball right is right of the right side
+						ballLeftOverLapsRight = true;
 					}
 
 					if (ball.nextY + ball.radius <= rectangle.yTop) {
-						//If ball bottom is above rectangle top
+						//If ball bottom is above rectangles top
 						ballRightOverLapsLeft = false;
 						ballLeftOverLapsRight = false;
 					} else if (ball.nextY - ball.radius >= rectangle.yBottom) {
-						//If ball top is below bottom
+						//If ball top is below rectangles bottom
 						ballRightOverLapsLeft = false;
 						ballLeftOverLapsRight = false;
 					}
 
 					if (ballRightOverLapsLeft) {
-						ball.nextX = rectangle.xLeft - ball.radius;
+						console.log('ball' + ball.ballID + " IS OVERLAPPING LEFT RECTANGLE;");
 						ball.canGoRight = false;
 					} else if (ballLeftOverLapsRight) {
-						ball.nextX = rectangle.xRight + ball.radius;
+						console.log('ball' + ball.ballID + " IS OVERLAPPING RIGHT RECTANGLE;");
+						ball.nextX = rectangle.xRight + ball.radius - 0.001;
 						ball.canGoLeft = false;
 					}
 				} //end j-for
-
 
 				//See if expected coordinates will prevent us from going certain directions;
 				ball.handleBoundaries(this.state.width, this.state.height, this.balls);
