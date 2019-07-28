@@ -114,6 +114,12 @@ class Ball{
 	accelerate(dxBoost, dyBoost){
 		this.dx += dxBoost;
 		this.dy += dyBoost;
+		if(this.maxSpeed){
+			if(this.dx > this.maxSpeed)
+				this.dx = this.maxSpeed;
+			if(this.dy > this.maxSpeed)
+				this.dy = this.maxSpeed;
+		}
 	}
 	decelerate(dxLoss, dyLoss){
 		this.dx -= dxLoss;
