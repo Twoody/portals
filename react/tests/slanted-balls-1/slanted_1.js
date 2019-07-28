@@ -17,6 +17,7 @@ var initGravity = 0.45;
 var initKineticLoss = 1 / 3;
 var initKineticGain = 2 / 3;
 var rectangleColor = "black";
+var MAX_SPEED = 20;
 var initBallCnt = 1;
 function getRandomColor() {
 	var red = Math.floor(Math.random() * 3) * 127;
@@ -29,29 +30,6 @@ function getRandomInt(min, max) {
 	min = Math.ceil(min);
 	max = Math.floor(max);
 	return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-function areRectangleAndBallColliding(rectangle, ball) {
-	var xDistance = Math.abs(ball.xCord - rectangle.xCenter);
-	var yDistance = Math.abs(ball.yCord - rectangle.yCenter);
-	var xMinDistance = rectangle.width / 2 + ball.radius;
-	var yMinDistance = rectangle.height / 2 + ball.radius;
-	if (xDistance > xMinDistance || yDistance > yMinDistance) return false;
-	if (xDistance <= rectangle.width / 2) return true;
-	if (yDistance <= rectangle.height / 2) return true;
-	//Check if corner collision using pythagorean theoem;
-	var xDistanceDiff = xDistance - rectangle.width / 2;
-	var yDistanceDiff = yDistance - rectangle.height / 2;
-	var radiusSquared = Math.pow(ball.radius, 2);
-	if (Math.pow(yDistanceDiff, 2) + Math.pow(xDistanceDiff, 2) <= radiusSquared) return true;
-	return false;
-}
-function isOverLapping(x1, y1, x2, y2, minDistance) {
-	//Use Pythagorean Theorem to determine if points collide;
-	//minDistance will form the right angle of the triangle;
-	var xDiff = x1 - x2;
-	var yDiff = y1 - y2;
-	if (Math.pow(xDiff, 2) + Math.pow(yDiff, 2) >= Math.pow(minDistance, 2)) return true;
-	return false;
 }
 
 var BallPen = function (_React$Component) {
@@ -122,20 +100,7 @@ var BallPen = function (_React$Component) {
 			for (var i = 0; i < this.rectangles.length; i++) {
 				var rectangle = this.rectangles[i];
 				rectangle.draw(ctx);
-				ctx.beginPath();
-				ctx.fillStyle = 'black';
-				ctx.arc(rectangle.xLeft, rectangle.yCenter, 10, 0, 2 * Math.PI);
-				ctx.arc(rectangle.xRight, rectangle.yCenter, 10, 0, 2 * Math.PI);
-				ctx.arc(rectangle.xCenter, rectangle.yCenter, 10, 0, 2 * Math.PI);
-				ctx.fill();
-				ctx.closePath();
-				ctx.beginPath();
-				ctx.fillStyle = 'black';
-				ctx.arc(rectangle.xCenter, rectangle.yBottom, 10, 0, 2 * Math.PI);
-				ctx.arc(rectangle.xCenter, rectangle.yTop, 10, 0, 2 * Math.PI);
-				ctx.fill();
-				ctx.closePath();
-			}
+			} //end i-for
 		}
 	}, {
 		key: "initDisplay",
@@ -158,6 +123,7 @@ var BallPen = function (_React$Component) {
 					cnt += 1;
 					if (cnt === 50) return false;
 				}
+				newBall.maxSpeed = MAX_SPEED;;
 				this.balls.push(newBall);
 			} //end i-for
 
@@ -196,6 +162,7 @@ var BallPen = function (_React$Component) {
 				var rectangle = this.rectangles[_i];
 				if (rectangle.isOverLappingBall(newBall)) return false;
 			} //end i-for
+			newBall.maxSpeed = MAX_SPEED;
 			return newBall;
 		} //end makeRandomBall
 
@@ -261,6 +228,7 @@ var BallPen = function (_React$Component) {
 						dx: 2,
 						dy: 2
 					});
+					newBall.maxSpeed = MAX_SPEED;
 					this.balls.push(newBall);
 					this.setState({
 						ballCnt: this.state.ballCnt + 1
@@ -379,21 +347,14 @@ var BallPen = function (_React$Component) {
 						//If ball bottom is lower than the top of the rectangle;
 						// and if the ball top is above the top of the rectangle;
 						ballBottomOverLapsTop = true;
-						console.log('ball' + ball.ballID + ' might overlap top');
 					}
-					if (ball.nextY - ball.radius <= rectangle.yBottom && ball.nextY - ball.radius >= rectangle.yTop && ball.isGoingUp) {
+					if (ball.nextY - ball.radius <= rectangle.yBottom && ball.nextY + ball.radius >= rectangle.yBottom && ball.isGoingUp) {
 						//If ball top is above the bottom of the rectangle;
 						// and if the top is below the top of the rectangle;
 						ballTopOverLapsBottom = true;
-						console.log('ball' + ball.ballID + ' might overlap bottom');
 					}
 
-					if (ball.nextX + ball.radius >= rectangle.xLeft || ball.nextX - ball.radius <= rectangle.xRightt) {
-						//Is the RIGHT of the ball left of the left side of the rectangle
-						//IF ball right is outsdie of left, than we are not in the rectangle bounds
-						//ballBottomOverLapsTop = false;
-					}
-					if (ball.nextX - ball.radius <= rectangle.xRight || ball.nextX + ball.radius >= rectangle.xLeft) {
+					if (ball.nextX - ball.radius >= rectangle.xRight || ball.nextX + ball.radius <= rectangle.xLeft) {
 						//Is the left of the ball right of the right side of the rectangle
 						ballBottomOverLapsTop = false;
 						ballTopOverLapsBottom = false;
@@ -402,13 +363,11 @@ var BallPen = function (_React$Component) {
 					if (ballBottomOverLapsTop) {
 						if (rectangle.yTop > ball.radius * 2) {
 							//Rectangle top should sit below the radius;
-							console.log('ball' + ball.ballID + ' fits: ' + (rectangle.yTop - ball.radius * 2));
 							//There is enough room for the ball to go here;
 							ball.nextY = rectangle.yTop - ball.radius;
 							ball.canGoDown = false;
 						} else {
 							//Ball needs to bounce back and cannot fit;
-							console.log('ball ' + ball.ballID + ' does not fit');
 							if (ball.isGoingRight) {
 								ball.canGoRight = false;
 								//ball.nextX = rectangle.xLeft - ball.radius;
@@ -418,22 +377,16 @@ var BallPen = function (_React$Component) {
 							}
 						}
 					} else if (ballTopOverLapsBottom) {
-						if (rectangle.yBottom + ball.radius * 2 > this.state.width) {
-							//If rectangleBottom and radiuss fit within the screen;
-							console.log('ball' + ball.ballID + ' fits bottom');
-							console.log("MAX BOTTOM: " + this.state.width);
-							console.log("Current Bottom: " + (rectangle.yBottom + ball.radius * 2));
-							//There is enough room for the ball to go here;
+						if (rectangle.yBottom + ball.radius * 2 < this.state.width) {
+							//If rectangle bottom and ball fit within the screen;
 							ball.nextY = rectangle.yBottom + ball.radius;
 							ball.canGoUp = false;
 						} else {
 							//Ball needs to bounce back and cannot fit;
 							if (ball.isGoingRight) {
 								ball.canGoRight = false;
-								console.log('ball' + ball.ballID + ' does not fit bottom 1');
 								//ball.nextX = rectangle.xLeft - ball.radius;
 							} else if (ball.isGoingLeft) {
-								console.log('ball' + ball.ballID + ' does not fit bottom 2');
 								ball.canGoLeft = false;
 								//ball.nextX = rectangle.xRight + ball.radius;
 							}
@@ -465,10 +418,8 @@ var BallPen = function (_React$Component) {
 					}
 
 					if (ballRightOverLapsLeft) {
-						console.log('ball' + ball.ballID + " IS OVERLAPPING LEFT RECTANGLE;");
 						ball.canGoRight = false;
 					} else if (ballLeftOverLapsRight) {
-						console.log('ball' + ball.ballID + " IS OVERLAPPING RIGHT RECTANGLE;");
 						ball.nextX = rectangle.xRight + ball.radius - 0.001;
 						ball.canGoLeft = false;
 					}
