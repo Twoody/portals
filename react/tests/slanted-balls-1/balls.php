@@ -47,6 +47,7 @@ require_once($PATHS['TEMPLATES_B']);
 //$CONFIG['CUSTOM_SCRIPTS'] .= "\n<script></script>";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"./Balls.js\"></script>";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"./Rectangle.js\"></script>";
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"./utils.js\"></script>";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script type=\"text/babel\" src=\"".$react_js."\"></script>";
 
 $ad_not_sm	= "";	//Show WHEN NOT X-SMALL
