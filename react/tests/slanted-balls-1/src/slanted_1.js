@@ -273,8 +273,10 @@ class BallPen extends React.Component{
      	let ctx				= canvas.getContext('2d');
       if (width && width >575)
          width -= 320;   //Buffer for not x-small
-      else
+      else{
          width -= 120;   //Buffer for x-small
+			height = 500;
+		}
       height   -= 280;   //Buffer...
       if (height < 0)
          height = 0;
@@ -327,7 +329,7 @@ class BallPen extends React.Component{
 				this.updateBackground();
 				this.initDisplay();
 			}// End first ball init;
-			else if(this.state.isLeavingTrails === false && this.state.width > 500){
+			else if(this.state.isLeavingTrails === false){
 				this.updateBackground();
 			}
 		}//end if state.width clarity check;
