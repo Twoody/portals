@@ -10,17 +10,16 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var initRadius = 10;
-var MIN_RADIUS = 5;
-var MAX_RADIUS = 11;
-var initWallFriction = 0.075;
-var initBallFriction = 0.05;
-var initGravity = 0.45;
-var initKineticLoss = 1 / 3;
-var initKineticGain = 2 / 3;
-var rectangleColor = "black";
-var MAX_SPEED = 10;
-var initBallCnt = 55;
+var MIN_RADIUS = 1;
+var MAX_RADIUS = 3;
+var WALL_FRICTION = 0.075;
+var BALL_FRICTION = 0.05;
+var GRAVITY = 0.45;
+var KINETIC_LOSS = 0.33;
+var KINETIC_KEEP = 0.66;
+var BACKGROUND_COLOR = "black";
+var MAX_SPEED = MAX_RADIUS * 2;
+var initBallCnt = 85;
 function getRandomColor() {
 	var red = Math.floor(Math.random() * 3) * 127;
 	var green = Math.floor(Math.random() * 3) * 127;
@@ -54,7 +53,7 @@ var BallPen = function (_React$Component) {
 		};
 		_this.balls = [];
 		_this.rectangles = [];
-		_this.friction = initWallFriction;
+		_this.friction = WALL_FRICTION;
 		_this.updateWindowDimensions = _this.updateWindowDimensions.bind(_this);
 		_this.handleInputChange = _this.handleInputChange.bind(_this);
 		_this.shrinkBalls = _this.shrinkBalls.bind(_this);
@@ -96,7 +95,7 @@ var BallPen = function (_React$Component) {
 			var canvas = this.canvasRef;
 			var ctx = canvas.getContext('2d');
 			ctx.beginPath();
-			ctx.fillStyle = rectangleColor;
+			ctx.fillStyle = BACKGROUND_COLOR;
 			ctx.fillRect(0, 0, this.state.width, this.state.height);
 			ctx.closePath();
 			for (var i = 0; i < this.rectangles.length; i++) {
@@ -104,9 +103,9 @@ var BallPen = function (_React$Component) {
 				rectangle.draw(ctx);
 
 				ctx.beginPath();
-				ctx.font = "16px Arial";
+				ctx.font = "20px Arial";
 				ctx.fillStyle = "black";
-				ctx.fillText("HIRE ME", rectangle.xCenter - 30, rectangle.yCenter);
+				ctx.fillText("HIRE ME", rectangle.xCenter - 40, rectangle.yCenter);
 				ctx.closePath();
 			} //end i-for
 		}
@@ -123,7 +122,7 @@ var BallPen = function (_React$Component) {
 				isShowingLabels: true
 			});
 			for (var i = 0; i < initBallCnt; i++) {
-				//Going to make 100 small balls and accelerate them;
+				//Make new balls;
 				var newBall = this.makeRandomBall();
 				var cnt = 0;
 				while (newBall === false) {
@@ -145,10 +144,11 @@ var BallPen = function (_React$Component) {
 		key: "makeRandomBall",
 		value: function makeRandomBall() {
 			var randomRadius = getRandomInt(MIN_RADIUS, MAX_RADIUS);
+			randomRadius += getRandomInt(1, 99) * 0.01;
 			var randomX = getRandomInt(0 + randomRadius, this.state.width - randomRadius);
 			var randomY = getRandomInt(0 + randomRadius, this.state.height - randomRadius);
-			var randomDX = getRandomInt(5, 7);
-			var randomDY = getRandomInt(5, 7);
+			var randomDX = getRandomInt(1, Math.floor(randomRadius * 50)) * 0.01;
+			var randomDY = getRandomInt(1, Math.floor(randomRadius * 50)) * 0.01;
 			for (var i = 0; i < this.balls.length; i++) {
 				var otherBall = this.balls[i];
 				var minDistance = otherBall.radius + randomRadius;
@@ -192,6 +192,8 @@ var BallPen = function (_React$Component) {
 			var yMousePos = yClick;;
 			var xCanvasPos = xMousePos - rect.left;
 			var yCanvasPos = yMousePos - rect.top;
+			var randomRadius = getRandomInt(MIN_RADIUS, MAX_RADIUS);
+			randomRadius += getRandomInt(1, 99) * 0.01;
 			var isLegalBall = true; //Will try to make false;
 			var didClickBall = false;
 			for (var i = 0; i < this.balls.length; i++) {
@@ -205,23 +207,23 @@ var BallPen = function (_React$Component) {
 				var radius = this.balls[i].radius;
 				var ballMouseDistance = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
 				var clickedBall = ballMouseDistance <= radius;
-				if (isLegalBall) isLegalBall = ballMouseDistance >= radius + initRadius;
+				if (isLegalBall) isLegalBall = ballMouseDistance >= radius + randomRadius;
 				if (clickedBall) {
-					ball.accelerate(4 * initGravity, 20 * initGravity);
+					ball.accelerate(4 * GRAVITY, 20 * GRAVITY);
 					didClickBall = true;
 					break;
 				}
 			} //end i-for
 			for (var _i2 = 0; _i2 < this.rectangles.length; _i2++) {
 				var rectangle = this.rectangles[_i2];
-				if (yCanvasPos > rectangle.yTop - initRadius && yCanvasPos < rectangle.yBottom + initRadius && xCanvasPos < rectangle.xRight + initRadius && xCanvasPos > rectangle.xLeft - initRadius) {
+				if (yCanvasPos > rectangle.yTop - randomRadius && yCanvasPos < rectangle.yBottom + randomRadius && xCanvasPos < rectangle.xRight + randomRadius && xCanvasPos > rectangle.xLeft - randomRadius) {
 					isLegalBall = false;
 					break;
 				}
 			} //end i-for
 			if (isLegalBall) {
 				//Check with top, bottom, and sides;
-				if (xCanvasPos - initRadius < 0) isLegalBall = false;else if (xCanvasPos + initRadius > this.state.width) isLegalBall = false;else if (yCanvasPos - initRadius < 0) isLegalBall = false;else if (yCanvasPos + initRadius > this.state.height) isLegalBall = false;
+				if (xCanvasPos - randomRadius < 0) isLegalBall = false;else if (xCanvasPos + randomRadius > this.state.width) isLegalBall = false;else if (yCanvasPos - randomRadius < 0) isLegalBall = false;else if (yCanvasPos + randomRadius > this.state.height) isLegalBall = false;
 			}
 			if (!didClickBall) {
 				//Make new ball;
@@ -232,7 +234,7 @@ var BallPen = function (_React$Component) {
 						color: getRandomColor(),
 						xCord: xCanvasPos,
 						yCord: yCanvasPos,
-						radius: initRadius,
+						radius: randomRadius,
 						dx: 2,
 						dy: 2
 					});
@@ -289,7 +291,7 @@ var BallPen = function (_React$Component) {
 				var ballTop = ball.yCord - ball.radius;
 				if (ballBottom > height) {
 					ball.yCord = height - ball.radius;
-					ball.accelerate(4 * initGravity, 20 * initGravity);
+					ball.accelerate(4 * GRAVITY, 20 * GRAVITY);
 					ball.shrink();
 				}
 				if (ballTop <= 0) {
@@ -324,16 +326,16 @@ var BallPen = function (_React$Component) {
 			} //end if state.width clarity check;
 			for (var i = 0; i < this.balls.length; i++) {
 				var ball = this.balls[i];
-				if (!this.state.hasWallFriction) this.friction = 0;else this.friction = initWallFriction;
+				if (!this.state.hasWallFriction) this.friction = 0;else this.friction = WALL_FRICTION;
 
-				if (!this.state.hasBallFriction) ball.friction = 0;else ball.friction = initBallFriction;
+				if (!this.state.hasBallFriction) ball.friction = 0;else ball.friction = BALL_FRICTION;
 
 				if (!this.state.hasKineticTransfer) {
 					ball.kineticGain = 1;
 					ball.kineticLoss = 0;
 				} else {
-					ball.kineticLoss = initKineticLoss;
-					ball.kineticGain = initKineticGain;
+					ball.kineticLoss = KINETIC_LOSS;
+					ball.kineticGain = KINETIC_KEEP;
 				}
 				//Assume we can go any direction first; Change values on `handle`*;
 				ball.canGoUp = true;
@@ -442,7 +444,7 @@ var BallPen = function (_React$Component) {
 				ball.handleMovement(this.friction);
 				ball.updateCoordinates();
 				if (this.state.hasGravity) {
-					ball.gravity = initGravity;
+					ball.gravity = GRAVITY;
 					ball.applyGravity();
 				} else {
 					ball.gravity = 0;
@@ -465,7 +467,12 @@ var BallPen = function (_React$Component) {
 		key: "accelerateBalls",
 		value: function accelerateBalls(event) {
 			for (var i = 0; i < this.balls.length; i++) {
-				this.balls[i].accelerate(getRandomInt(5, 12), getRandomInt(10, 20));
+				var ball = this.balls[i];
+				if (ball.dx < 1) ball.dx += 3;
+				if (ball.dy < 1) ball.dy += 3;
+				var dxGain = getRandomInt(1, 50) * 0.01 * ball.dx;
+				var dyGain = getRandomInt(1, 50) * 0.01 * ball.dy;
+				ball.accelerate(dxGain, dyGain);
 			} //end i-for
 		} //end accelerateBalls
 
@@ -473,9 +480,11 @@ var BallPen = function (_React$Component) {
 		key: "decelerateBalls",
 		value: function decelerateBalls(event) {
 			for (var i = 0; i < this.balls.length; i++) {
-				this.balls[i].decelerate(getRandomInt(1, 5), getRandomInt(5, 10));
+				var dxLoss = getRandomInt(1, 50) * 0.01 * this.balls[i].dx;
+				var dyLoss = getRandomInt(1, 50) * 0.01 * this.balls[i].dy;
+				this.balls[i].decelerate(dxLoss, dyLoss);
 			} //end i-for
-		} //end accelerateBalls
+		} //end decelerateBalls
 
 	}, {
 		key: "resetBalls",
