@@ -342,14 +342,14 @@ var BallPen = function (_React$Component) {
 			var msgX = middleCords.x - 50;
 			var msgY = middleCords.y + 7;
 			var ctx = canvas.getContext('2d');
-			if (this.state.width !== 0 && this.state.width > 500) {
+			if (this.state.width !== 0) {
 				if (this.balls.length === 0) {
 					this.updateBackground();
 					this.initDisplay();
 				} // End first ball init;
-				if (this.state.isLeavingTrails === false) {
-					this.updateBackground();
-				}
+				else if (this.state.isLeavingTrails === false && this.state.width > 500) {
+						this.updateBackground();
+					}
 			} //end if state.width clarity check;
 
 			writeToScreen(ctx, "HIRE ME", msgX, msgY, getRandomColor());

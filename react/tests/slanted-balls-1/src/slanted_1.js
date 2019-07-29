@@ -322,12 +322,12 @@ class BallPen extends React.Component{
 		const msgX			= middleCords.x-50;
 		const msgY			= middleCords.y+7;
       const ctx			= canvas.getContext('2d');
-		if(this.state.width !== 0 && this.state.width > 500){
+		if(this.state.width !== 0){
 			if(this.balls.length === 0){
 				this.updateBackground();
 				this.initDisplay();
 			}// End first ball init;
-			if(this.state.isLeavingTrails === false){
+			else if(this.state.isLeavingTrails === false && this.state.width > 500){
 				this.updateBackground();
 			}
 		}//end if state.width clarity check;
