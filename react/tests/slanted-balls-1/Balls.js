@@ -119,11 +119,12 @@ var Ball = function () {
 			this.dx += dxBoost;
 			this.dy += dyBoost;
 
-			if (this.dx > this.radius * 2) this.dx = this.radius * 2;
-			if (this.dy > this.radius * 2) this.dy = this.radius * 2;
+			if (this.dx > this.radius * 2 - 0.01) this.dx = this.radius * 2 - 0.01;
+			if (this.dy > this.radius * 2 - 0.01) this.dy = this.radius * 2 - 0.01;
 
 			if (this.dx > this.maxSpeed) this.dx = this.maxSpeed;
 			if (this.dy > this.maxSpeed) this.dy = this.maxSpeed;
+			this.decelerate(0, 0); //Hack to check if zero;
 		}
 	}, {
 		key: "decelerate",
