@@ -119,8 +119,10 @@ function get_config($ROOT=Null){
 		/* ----- ----- BOOTSTRAP REQUIRED PARAMETERS AND CONFIGURATION ----- ----- */
 		'HAS_REACT'=>FALSE,
 		'REACT_DEV_SRC'=>'https://unpkg.com/react@16.8.6/umd/react.development.js',
+		'REACT_DEV_SRC'=>'https://unpkg.com/react@16.8.6/umd/react.production.min.js',
 		'REACT_DEV_CROSSORIGIN'=>'',
 		'REACT_DOM_DEV_SRC'=>'https://unpkg.com/react-dom@16.8.6/umd/react-dom.development.js',
+		'REACT_DOM_DEV_SRC'=>'https://unpkg.com/react-dom@16.8.6/umd/react-dom.production.min.js',
 		'REACT_DOM_DEV_CROSSORIGIN'=>'',
 		'BABEL_SRC'=>'https://unpkg.com/babel-standalone@6.26.0/babel.min.js',
 
