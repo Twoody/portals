@@ -133,7 +133,7 @@ class Ball{
 			this.dx = 0;
 		if(this.dy <=0)
 			this.dy = 0;
-	}
+	}//end decelerate()
 
 	handleBoundaries(width, height, allBalls){
 		const y 	= this.yCord;
@@ -421,6 +421,107 @@ class Ball{
 			this.shrink();
 		}
 	}//end handleWindowResize()
+	handleRectangleInteractions(rectangle, screenWidth, screenHeight){
+		//Handle rectangle objects
+		let ballBottomOverLapsTop	= false;
+		let ballTopOverLapsBottom	= false;
+		//Process Up/Down 
+		if(this.nextY + this.radius >= rectangle.yTop
+			&& this.nextY - this.radius <= rectangle.yTop
+			&& this.isGoingDown){
+			//If ball bottom is lower than the top of the rectangle;
+			// and if the ball top is above the top of the rectangle;
+			ballBottomOverLapsTop = true;
+		}
+		if(this.nextY - this.radius <= rectangle.yBottom
+			&& this.nextY + this.radius >= rectangle.yBottom
+			&& this.isGoingUp){
+			//If ball top is above the bottom of the rectangle;
+			// and if the top is below the top of the rectangle;
+			ballTopOverLapsBottom = true;
+		}
+
+		if(this.nextX-this.radius >= rectangle.xRight
+			|| this.nextX+this.radius <= rectangle.xLeft){
+			//Is the left of the ball right of the right side of the rectangle
+			ballBottomOverLapsTop = false;
+			ballTopOverLapsBottom = false;
+		}
+
+		if(ballBottomOverLapsTop){
+			if(rectangle.yTop > this.radius*2 ){
+				//Rectangle top should sit below the radius;
+				//There is enough room for the ball to go here;
+				this.nextY		= rectangle.yTop - this.radius;
+				this.canGoDown = false;
+			}
+			else{
+				//Ball needs to bounce back and cannot fit;
+				if(this.isGoingRight){
+					this.canGoRight = false;
+					//this.nextX = rectangle.xLeft - this.radius;
+				}
+				else if(this.isGoingLeft){
+					this.canGoLeft = false;
+					//this.nextX = rectangle.xRight + this.radius;
+				}
+			}
+		}
+		else if(ballTopOverLapsBottom){
+			if(rectangle.yBottom + (this.radius*2) < screenWidth){
+				//If rectangle bottom and ball fit within the screen;
+				this.nextY		= rectangle.yBottom + this.radius;
+				this.canGoUp	= false;
+			}
+			else{
+				//Ball needs to bounce back and cannot fit;
+				if(this.isGoingRight){
+					this.canGoRight = false;
+					//this.nextX = rectangle.xLeft - this.radius;
+				}
+				else if(this.isGoingLeft){
+					this.canGoLeft = false;
+					//this.nextX = rectangle.xRight + this.radius;
+				}
+			}
+		}
+
+		//Process Left/Right
+		let ballRightOverLapsLeft = false;
+		let ballLeftOverLapsRight = false;
+		if(this.nextX + this.radius >= rectangle.xLeft 
+			&& this.nextX - this.radius <= rectangle.xLeft){
+			//If ball right is right of the left side
+			// and ball left is left of the left side
+			ballRightOverLapsLeft = true;
+		}
+		if(this.nextX - this.radius <= rectangle.xRight
+			&& this.nextX + this.radius >= rectangle.xRight){
+			//If ball left is left of the right side
+			// and ball right is right of the right side
+			ballLeftOverLapsRight = true;
+		}
+
+		if(this.nextY + this.radius <= rectangle.yTop){
+			//If ball bottom is above rectangles top
+			ballRightOverLapsLeft = false;
+			ballLeftOverLapsRight = false;
+		}
+		else if(this.nextY - this.radius >= rectangle.yBottom){
+			//If ball top is below rectangles bottom
+			ballRightOverLapsLeft = false;
+			ballLeftOverLapsRight = false;
+		}
+		
+		if(ballRightOverLapsLeft){
+			this.nextX		= rectangle.xLeft - this.radius - 0.001;
+			this.canGoRight	= false;
+		}
+		else if(ballLeftOverLapsRight){
+			this.nextX		= rectangle.xRight + this.radius - 0.001;
+			this.canGoLeft	= false;
+		}
+	}//end handleRectangleInteractions()
 	distanceTo(x, y){
 		const xDiff 	= this.nextX - x;
 		const yDiff 	= this.nextY - y;

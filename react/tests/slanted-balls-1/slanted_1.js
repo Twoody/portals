@@ -62,6 +62,7 @@ var BallPen = function (_React$Component) {
 		};
 		_this.balls = [];
 		_this.rectangles = [];
+		_this.middleRectangle = null;
 		_this.friction = WALL_FRICTION;
 		_this.updateWindowDimensions = _this.updateWindowDimensions.bind(_this);
 		_this.handleInputChange = _this.handleInputChange.bind(_this);
@@ -81,8 +82,8 @@ var BallPen = function (_React$Component) {
 			return cords;
 		}
 	}, {
-		key: "initRectangles",
-		value: function initRectangles() {
+		key: "updateMiddleRectangle",
+		value: function updateMiddleRectangle() {
 			var middleCords = this.getMiddleOfCanvas();
 			var width = 110;
 			var height = 30;
@@ -96,8 +97,9 @@ var BallPen = function (_React$Component) {
 				width: width,
 				height: height
 			});
-			this.rectangles.push(rectangle);
-		}
+			this.middleRectangle = rectangle;
+		} //end updateMiddleRectangle()
+
 	}, {
 		key: "updateBackground",
 		value: function updateBackground() {
@@ -115,7 +117,6 @@ var BallPen = function (_React$Component) {
 	}, {
 		key: "initDisplay",
 		value: function initDisplay() {
-			this.initRectangles();
 			this.setState({
 				hasGravity: false,
 				hasWallFriction: false,
@@ -192,6 +193,7 @@ var BallPen = function (_React$Component) {
 				var rectangle = this.rectangles[_i];
 				if (rectangle.isOverLappingBall(newBall)) return false;
 			} //end i-for
+			if (this.middleRectangle.isOverLappingBall(newBall)) return false;
 			newBall.maxSpeed = MAX_SPEED;
 			return newBall;
 		} //end /akeRandomBall
@@ -243,6 +245,10 @@ var BallPen = function (_React$Component) {
 					break;
 				}
 			} //end i-for
+			if (yCanvasPos > this.middleRectangle.yTop - randomRadius && yCanvasPos < this.middleRectangle.yBottom + randomRadius && xCanvasPos < this.middleRectangle.xRight + randomRadius && xCanvasPos > this.middleRectangle.xLeft - randomRadius) {
+				isLegalBall = false;
+			}
+
 			if (isLegalBall) {
 				//Check with top, bottom, and sides;
 				if (xCanvasPos - randomRadius < 0) isLegalBall = false;else if (xCanvasPos + randomRadius > this.state.width) isLegalBall = false;else if (yCanvasPos - randomRadius < 0) isLegalBall = false;else if (yCanvasPos + randomRadius > this.state.height) isLegalBall = false;
@@ -348,6 +354,7 @@ var BallPen = function (_React$Component) {
 			if (this.state.width !== 0) {
 				if (this.balls.length === 0) {
 					this.updateBackground();
+					this.updateMiddleRectangle();
 					this.initDisplay();
 				} // End first ball init;
 				else if (this.state.isLeavingTrails === false) {
@@ -355,6 +362,8 @@ var BallPen = function (_React$Component) {
 					}
 			} //end if state.width clarity check;
 
+			this.updateMiddleRectangle();
+			this.middleRectangle.draw(ctx);
 			writeToScreen(ctx, "HIRE ME", msgX, msgY, getRandomColor());
 
 			for (var i = 0; i < this.balls.length; i++) {
@@ -383,91 +392,9 @@ var BallPen = function (_React$Component) {
 				for (var j = 0; j < this.rectangles.length; j++) {
 					//Handle rectangle objects
 					var rectangle = this.rectangles[j];
-					var ballBottomOverLapsTop = false;
-					var ballTopOverLapsBottom = false;
-					//Process Up/Down 
-					if (ball.nextY + ball.radius >= rectangle.yTop && ball.nextY - ball.radius <= rectangle.yTop && ball.isGoingDown) {
-						//If ball bottom is lower than the top of the rectangle;
-						// and if the ball top is above the top of the rectangle;
-						ballBottomOverLapsTop = true;
-					}
-					if (ball.nextY - ball.radius <= rectangle.yBottom && ball.nextY + ball.radius >= rectangle.yBottom && ball.isGoingUp) {
-						//If ball top is above the bottom of the rectangle;
-						// and if the top is below the top of the rectangle;
-						ballTopOverLapsBottom = true;
-					}
-
-					if (ball.nextX - ball.radius >= rectangle.xRight || ball.nextX + ball.radius <= rectangle.xLeft) {
-						//Is the left of the ball right of the right side of the rectangle
-						ballBottomOverLapsTop = false;
-						ballTopOverLapsBottom = false;
-					}
-
-					if (ballBottomOverLapsTop) {
-						if (rectangle.yTop > ball.radius * 2) {
-							//Rectangle top should sit below the radius;
-							//There is enough room for the ball to go here;
-							ball.nextY = rectangle.yTop - ball.radius;
-							ball.canGoDown = false;
-						} else {
-							//Ball needs to bounce back and cannot fit;
-							if (ball.isGoingRight) {
-								ball.canGoRight = false;
-								//ball.nextX = rectangle.xLeft - ball.radius;
-							} else if (ball.isGoingLeft) {
-								ball.canGoLeft = false;
-								//ball.nextX = rectangle.xRight + ball.radius;
-							}
-						}
-					} else if (ballTopOverLapsBottom) {
-						if (rectangle.yBottom + ball.radius * 2 < this.state.width) {
-							//If rectangle bottom and ball fit within the screen;
-							ball.nextY = rectangle.yBottom + ball.radius;
-							ball.canGoUp = false;
-						} else {
-							//Ball needs to bounce back and cannot fit;
-							if (ball.isGoingRight) {
-								ball.canGoRight = false;
-								//ball.nextX = rectangle.xLeft - ball.radius;
-							} else if (ball.isGoingLeft) {
-								ball.canGoLeft = false;
-								//ball.nextX = rectangle.xRight + ball.radius;
-							}
-						}
-					}
-
-					//Process Left/Right
-					var ballRightOverLapsLeft = false;
-					var ballLeftOverLapsRight = false;
-					if (ball.nextX + ball.radius >= rectangle.xLeft && ball.nextX - ball.radius <= rectangle.xLeft) {
-						//If ball right is right of the left side
-						// and ball left is left of the left side
-						ballRightOverLapsLeft = true;
-					}
-					if (ball.nextX - ball.radius <= rectangle.xRight && ball.nextX + ball.radius >= rectangle.xRight) {
-						//If ball left is left of the right side
-						// and ball right is right of the right side
-						ballLeftOverLapsRight = true;
-					}
-
-					if (ball.nextY + ball.radius <= rectangle.yTop) {
-						//If ball bottom is above rectangles top
-						ballRightOverLapsLeft = false;
-						ballLeftOverLapsRight = false;
-					} else if (ball.nextY - ball.radius >= rectangle.yBottom) {
-						//If ball top is below rectangles bottom
-						ballRightOverLapsLeft = false;
-						ballLeftOverLapsRight = false;
-					}
-
-					if (ballRightOverLapsLeft) {
-						ball.nextX = rectangle.xLeft - ball.radius - 0.001;
-						ball.canGoRight = false;
-					} else if (ballLeftOverLapsRight) {
-						ball.nextX = rectangle.xRight + ball.radius - 0.001;
-						ball.canGoLeft = false;
-					}
+					ball.handleRectangleInteractions(rectangle, this.state.width, this.state.height);
 				} //end j-for
+				ball.handleRectangleInteractions(this.middleRectangle, this.state.width, this.state.height);
 
 				//See if expected coordinates will prevent us from going certain directions;
 				ball.handleBoundaries(this.state.width, this.state.height, this.balls);
