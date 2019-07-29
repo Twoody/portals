@@ -20,27 +20,6 @@ var KINETIC_KEEP = 0.85;
 var BACKGROUND_COLOR = "black";
 var MAX_SPEED = MAX_RADIUS * 2;
 var initBallCnt = 85;
-function getRandomColor() {
-	var red = Math.floor(Math.random() * 3) * 127;
-	var green = Math.floor(Math.random() * 3) * 127;
-	var blue = Math.floor(Math.random() * 3) * 127;
-	var rc = "rgb(" + red + ", " + green + ", " + blue + ")";
-	return rc;
-}
-function getRandomInt(min, max) {
-	min = Math.ceil(min);
-	max = Math.floor(max);
-	return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-function writeToScreen(ctx, msg, x, y) {
-	var color = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "black";
-
-	ctx.beginPath();
-	ctx.font = "25px Arial";
-	ctx.fillStyle = color;
-	ctx.fillText(msg, x, y);
-	ctx.closePath();
-}
 
 var BallPen = function (_React$Component) {
 	_inherits(BallPen, _React$Component);
@@ -74,17 +53,9 @@ var BallPen = function (_React$Component) {
 	}
 
 	_createClass(BallPen, [{
-		key: "getMiddleOfCanvas",
-		value: function getMiddleOfCanvas() {
-			var cords = {};
-			cords.x = this.state.width / 2;
-			cords.y = this.state.height / 2;
-			return cords;
-		}
-	}, {
-		key: "updateMiddleRectangle",
+		key: 'updateMiddleRectangle',
 		value: function updateMiddleRectangle() {
-			var middleCords = this.getMiddleOfCanvas();
+			var middleCords = getMiddleOfCanvas(this.state.width, this.state.height);
 			var width = 110;
 			var height = 30;
 			var xLeft = middleCords.x - width / 2;
@@ -101,7 +72,7 @@ var BallPen = function (_React$Component) {
 		} //end updateMiddleRectangle()
 
 	}, {
-		key: "updateBackground",
+		key: 'updateBackground',
 		value: function updateBackground() {
 			var canvas = this.canvasRef;
 			var ctx = canvas.getContext('2d');
@@ -115,7 +86,7 @@ var BallPen = function (_React$Component) {
 			} //end i-for
 		}
 	}, {
-		key: "initDisplay",
+		key: 'initDisplay',
 		value: function initDisplay() {
 			this.setState({
 				hasGravity: false,
@@ -145,7 +116,7 @@ var BallPen = function (_React$Component) {
 		} //End initDisplay
 
 	}, {
-		key: "makeRandomBall",
+		key: 'makeRandomBall',
 		value: function makeRandomBall() {
 			//Return false if random ball fails;
 			//Else return random ball;
@@ -196,10 +167,10 @@ var BallPen = function (_React$Component) {
 			if (this.middleRectangle.isOverLappingBall(newBall)) return false;
 			newBall.maxSpeed = MAX_SPEED;
 			return newBall;
-		} //end /akeRandomBall
+		} //end makeRandomBall
 
 	}, {
-		key: "handleInputChange",
+		key: 'handleInputChange',
 		value: function handleInputChange(event) {
 			var target = event.target;
 			var value = target.type === 'checkbox' ? target.checked : target.value;
@@ -209,7 +180,7 @@ var BallPen = function (_React$Component) {
 			this.setState(_defineProperty({}, name, value));
 		}
 	}, {
-		key: "handleCanvasClick",
+		key: 'handleCanvasClick',
 		value: function handleCanvasClick(canvas, xClick, yClick) {
 			var rect = canvas;
 			var xMousePos = xClick;
@@ -275,7 +246,7 @@ var BallPen = function (_React$Component) {
 			}
 		}
 	}, {
-		key: "componentDidMount",
+		key: 'componentDidMount',
 		value: function componentDidMount() {
 			var _this2 = this;
 
@@ -287,18 +258,18 @@ var BallPen = function (_React$Component) {
 			window.addEventListener('resize', this.updateWindowDimensions);
 		}
 	}, {
-		key: "componentWillUnmount",
+		key: 'componentWillUnmount',
 		value: function componentWillUnmount() {
 			clearInterval(this.timerID);
 			window.removeEventListener('resize', this.updateWindowDimensions);
 		}
 	}, {
-		key: "componentDidUpdate",
+		key: 'componentDidUpdate',
 		value: function componentDidUpdate() {
 			this.updateCanvas();
 		}
 	}, {
-		key: "updateWindowDimensions",
+		key: 'updateWindowDimensions',
 		value: function updateWindowDimensions() {
 			var canvas = this.canvasRef;
 			var width = window.innerWidth;
@@ -344,10 +315,10 @@ var BallPen = function (_React$Component) {
 			return;
 		}
 	}, {
-		key: "updateCanvas",
+		key: 'updateCanvas',
 		value: function updateCanvas() {
 			var canvas = this.canvasRef;
-			var middleCords = this.getMiddleOfCanvas();
+			var middleCords = getMiddleOfCanvas(this.state.width, this.state.height);
 			var msgX = middleCords.x - 50;
 			var msgY = middleCords.y + 7;
 			var ctx = canvas.getContext('2d');
@@ -416,7 +387,7 @@ var BallPen = function (_React$Component) {
 		} //End updateCanvas()
 
 	}, {
-		key: "shrinkBalls",
+		key: 'shrinkBalls',
 		value: function shrinkBalls(event) {
 			for (var i = 0; i < this.balls.length; i++) {
 				if (Math.random() >= 0.5) this.balls[i].shrink();
@@ -424,7 +395,7 @@ var BallPen = function (_React$Component) {
 		} //end shrinkBalls
 
 	}, {
-		key: "accelerateBalls",
+		key: 'accelerateBalls',
 		value: function accelerateBalls(event) {
 			for (var i = 0; i < this.balls.length; i++) {
 				var ball = this.balls[i];
@@ -437,7 +408,7 @@ var BallPen = function (_React$Component) {
 		} //end accelerateBalls
 
 	}, {
-		key: "decelerateBalls",
+		key: 'decelerateBalls',
 		value: function decelerateBalls(event) {
 			for (var i = 0; i < this.balls.length; i++) {
 				var dxLoss = getRandomInt(1, 50) * 0.01 * this.balls[i].dx;
@@ -447,7 +418,7 @@ var BallPen = function (_React$Component) {
 		} //end decelerateBalls
 
 	}, {
-		key: "resetBalls",
+		key: 'resetBalls',
 		value: function resetBalls(event) {
 			this.balls = [];
 			this.setState({
@@ -467,7 +438,7 @@ var BallPen = function (_React$Component) {
 		} //end resetBalls
 
 	}, {
-		key: "render",
+		key: 'render',
 		value: function render() {
 			var _this3 = this;
 
@@ -478,15 +449,15 @@ var BallPen = function (_React$Component) {
 				textAlign: "right"
 			};
 			return React.createElement(
-				"div",
+				'div',
 				null,
 				React.createElement(
-					"p",
+					'p',
 					{ style: totalStyle },
-					"Ball Count: ",
+					'Ball Count: ',
 					this.state.ballCnt
 				),
-				React.createElement("canvas", {
+				React.createElement('canvas', {
 					ref: function ref(canvas) {
 						return _this3.canvasRef = canvas;
 					},
@@ -501,144 +472,144 @@ var BallPen = function (_React$Component) {
 					}
 				}),
 				React.createElement(
-					"table",
+					'table',
 					{ width: this.state.width },
 					React.createElement(
-						"tbody",
+						'tbody',
 						null,
 						React.createElement(
-							"tr",
+							'tr',
 							null,
 							React.createElement(
-								"td",
+								'td',
 								null,
 								React.createElement(
-									"label",
+									'label',
 									null,
-									"Has Gravity:\xA0\xA0",
-									React.createElement("input", {
-										name: "hasGravity",
-										type: "checkbox",
+									'Has Gravity:\xA0\xA0',
+									React.createElement('input', {
+										name: 'hasGravity',
+										type: 'checkbox',
 										checked: this.state.hasGravity,
 										onChange: this.handleInputChange })
 								)
 							),
 							React.createElement(
-								"td",
+								'td',
 								null,
 								React.createElement(
-									"label",
+									'label',
 									null,
-									"Has Wall Friction:\xA0\xA0",
-									React.createElement("input", {
-										name: "hasWallFriction",
-										type: "checkbox",
+									'Has Wall Friction:\xA0\xA0',
+									React.createElement('input', {
+										name: 'hasWallFriction',
+										type: 'checkbox',
 										checked: this.state.hasWallFriction,
 										onChange: this.handleInputChange })
 								)
 							),
 							React.createElement(
-								"td",
+								'td',
 								null,
 								React.createElement(
-									"label",
+									'label',
 									null,
-									"Has Ball Friction:\xA0\xA0",
-									React.createElement("input", {
-										name: "hasBallFriction",
-										type: "checkbox",
+									'Has Ball Friction:\xA0\xA0',
+									React.createElement('input', {
+										name: 'hasBallFriction',
+										type: 'checkbox',
 										checked: this.state.hasBallFriction,
 										onChange: this.handleInputChange })
 								)
 							)
 						),
 						React.createElement(
-							"tr",
+							'tr',
 							null,
 							React.createElement(
-								"td",
+								'td',
 								null,
 								React.createElement(
-									"label",
+									'label',
 									null,
-									"Has Kinetic Transfer:\xA0\xA0",
-									React.createElement("input", {
-										name: "hasKineticTransfer",
-										type: "checkbox",
+									'Has Kinetic Transfer:\xA0\xA0',
+									React.createElement('input', {
+										name: 'hasKineticTransfer',
+										type: 'checkbox',
 										checked: this.state.hasKineticTransfer,
 										onChange: this.handleInputChange })
 								)
 							),
 							React.createElement(
-								"td",
+								'td',
 								null,
 								React.createElement(
-									"label",
+									'label',
 									null,
-									"Leave Trails:\xA0\xA0",
-									React.createElement("input", {
-										name: "isLeavingTrails",
-										type: "checkbox",
+									'Leave Trails:\xA0\xA0',
+									React.createElement('input', {
+										name: 'isLeavingTrails',
+										type: 'checkbox',
 										checked: this.state.isLeavingTrails,
 										onChange: this.handleInputChange })
 								)
 							),
 							React.createElement(
-								"td",
+								'td',
 								null,
 								React.createElement(
-									"label",
+									'label',
 									null,
-									"Turn on Lables:\xA0\xA0",
-									React.createElement("input", {
-										name: "isShowingLabels",
-										type: "checkbox",
+									'Turn on Lables:\xA0\xA0',
+									React.createElement('input', {
+										name: 'isShowingLabels',
+										type: 'checkbox',
 										checked: this.state.isShowingLabels,
 										onChange: this.handleInputChange })
 								)
 							)
 						),
 						React.createElement(
-							"tr",
+							'tr',
 							null,
 							React.createElement(
-								"td",
+								'td',
 								null,
 								React.createElement(
-									"button",
+									'button',
 									{ onClick: this.shrinkBalls },
-									"Shrink Some Balls"
+									'Shrink Some Balls'
 								)
 							),
 							React.createElement(
-								"td",
+								'td',
 								null,
 								React.createElement(
-									"button",
+									'button',
 									{ onClick: this.accelerateBalls },
-									"Accelerate Balls"
+									'Accelerate Balls'
 								)
 							),
 							React.createElement(
-								"td",
+								'td',
 								null,
 								React.createElement(
-									"button",
+									'button',
 									{ onClick: this.decelerateBalls },
-									"Decelerate Balls"
+									'Decelerate Balls'
 								)
 							)
 						),
 						React.createElement(
-							"tr",
+							'tr',
 							null,
 							React.createElement(
-								"td",
+								'td',
 								null,
 								React.createElement(
-									"button",
+									'button',
 									{ onClick: this.resetBalls },
-									"Reset Balls"
+									'Reset Balls'
 								)
 							)
 						)

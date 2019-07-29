@@ -9,25 +9,6 @@ const KINETIC_KEEP		= 0.85;
 const BACKGROUND_COLOR	= "black";
 const MAX_SPEED			= MAX_RADIUS * 2;
 const initBallCnt			= 85;
-function getRandomColor(){
-	let red		= Math.floor(Math.random() * 3) * 127;
-	let green	= Math.floor(Math.random() * 3) * 127;
-	let blue		= Math.floor(Math.random() * 3) * 127;
-	let rc		= "rgb(" + red + ", " + green + ", " + blue + ")";
-	return rc;
-}
-function getRandomInt(min, max) {
-	min = Math.ceil(min);
-	max = Math.floor(max);
-	return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-function writeToScreen(ctx, msg, x, y, color="black"){
-	ctx.beginPath();
-	ctx.font      = "25px Arial";
-	ctx.fillStyle = color;
-	ctx.fillText(msg, x, y);
-	ctx.closePath();
-}
 class BallPen extends React.Component{
    constructor(props){
       super(props);
@@ -52,14 +33,8 @@ class BallPen extends React.Component{
 		this.decelerateBalls				= this.decelerateBalls.bind(this);
 		this.resetBalls					= this.resetBalls.bind(this);
    }
-	getMiddleOfCanvas(){
-		let cords = {};
-		cords.x = this.state.width/2;
-		cords.y = this.state.height/2;
-		return cords;
-	}
 	updateMiddleRectangle(){
-		const middleCords	= this.getMiddleOfCanvas();
+		const middleCords	= getMiddleOfCanvas(this.state.width, this.state.height);
 		const width			= 110;
 		const height		= 30;
 		const xLeft			= middleCords.x - width/2;
@@ -168,7 +143,7 @@ class BallPen extends React.Component{
 			return false;
 		newBall.maxSpeed = MAX_SPEED;
 		return newBall;
-	}//end /akeRandomBall
+	}//end makeRandomBall
 	handleInputChange(event) {
 		const target	= event.target;
 		const value		= target.type === 'checkbox' ? target.checked : target.value;
@@ -278,10 +253,10 @@ class BallPen extends React.Component{
    }
 
    updateWindowDimensions() {
-     	const canvas		= this.canvasRef;
-      let width			= window.innerWidth;
-      let height			= window.innerHeight;
-     	let ctx				= canvas.getContext('2d');
+     	const canvas	= this.canvasRef;
+      let width		= window.innerWidth;
+      let height		= window.innerHeight;
+     	let ctx			= canvas.getContext('2d');
       if (width && width >575)
          width -= 320;   //Buffer for not x-small
       else{
@@ -331,7 +306,7 @@ class BallPen extends React.Component{
    }
    updateCanvas(){
       const canvas		= this.canvasRef;
-		const middleCords	= this.getMiddleOfCanvas();
+		const middleCords	= getMiddleOfCanvas(this.state.width, this.state.height);
 		const msgX			= middleCords.x-50;
 		const msgY			= middleCords.y+7;
       const ctx			= canvas.getContext('2d');
