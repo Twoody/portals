@@ -15,8 +15,8 @@ var MAX_RADIUS = 3;
 var WALL_FRICTION = 0.075;
 var BALL_FRICTION = 0.05;
 var GRAVITY = 0.45;
-var KINETIC_LOSS = 0.33;
-var KINETIC_KEEP = 0.66;
+var KINETIC_LOSS = 0.15;
+var KINETIC_KEEP = 0.85;
 var BACKGROUND_COLOR = "black";
 var MAX_SPEED = MAX_RADIUS * 2;
 var initBallCnt = 85;
@@ -31,6 +31,15 @@ function getRandomInt(min, max) {
 	min = Math.ceil(min);
 	max = Math.floor(max);
 	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+function writeToScreen(ctx, msg, x, y) {
+	var color = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "black";
+
+	ctx.beginPath();
+	ctx.font = "25px Arial";
+	ctx.fillStyle = color;
+	ctx.fillText(msg, x, y);
+	ctx.closePath();
 }
 
 var BallPen = function (_React$Component) {
@@ -101,12 +110,6 @@ var BallPen = function (_React$Component) {
 			for (var i = 0; i < this.rectangles.length; i++) {
 				var rectangle = this.rectangles[i];
 				rectangle.draw(ctx);
-
-				ctx.beginPath();
-				ctx.font = "20px Arial";
-				ctx.fillStyle = "black";
-				ctx.fillText("HIRE ME", rectangle.xCenter - 40, rectangle.yCenter);
-				ctx.closePath();
 			} //end i-for
 		}
 	}, {
@@ -118,7 +121,7 @@ var BallPen = function (_React$Component) {
 				hasWallFriction: false,
 				hasBallFriction: false,
 				hasKineticTransfer: false,
-				isLeavingTrails: true,
+				isLeavingTrails: false,
 				isShowingLabels: true
 			});
 			for (var i = 0; i < initBallCnt; i++) {
@@ -143,12 +146,14 @@ var BallPen = function (_React$Component) {
 	}, {
 		key: "makeRandomBall",
 		value: function makeRandomBall() {
+			//Return false if random ball fails;
+			//Else return random ball;
 			var randomRadius = getRandomInt(MIN_RADIUS, MAX_RADIUS);
 			randomRadius += getRandomInt(1, 99) * 0.01;
 			var randomX = getRandomInt(0 + randomRadius, this.state.width - randomRadius);
 			var randomY = getRandomInt(0 + randomRadius, this.state.height - randomRadius);
-			var randomDX = getRandomInt(1, Math.floor(randomRadius * 50)) * 0.01;
-			var randomDY = getRandomInt(1, Math.floor(randomRadius * 50)) * 0.01;
+			var randomDX = getRandomInt(1, 20) * 0.01;
+			var randomDY = getRandomInt(1, 20) * 0.01;
 			for (var i = 0; i < this.balls.length; i++) {
 				var otherBall = this.balls[i];
 				var minDistance = otherBall.radius + randomRadius;
@@ -166,6 +171,23 @@ var BallPen = function (_React$Component) {
 				dx: randomDX,
 				dy: randomDY
 			});
+			if (this.balls.length % 4 === 0) {
+				newBall.isGoingLeft = true;
+				newBall.isGoingRight = false;
+				newBall.isGoingDown = true;
+				newBall.isGoingUp = false;
+			} else if (this.balls.length % 4 === 1) {
+				newBall.isGoingLeft = true;
+				newBall.isGoingRight = false;
+				newBall.isGoingDown = false;
+				newBall.isGoingUp = true;
+			} else if (this.balls.length % 4 === 2) {
+				newBall.isGoingLeft = false;
+				newBall.isGoingRight = true;
+				newBall.isGoingDown = false;
+				newBall.isGoingUp = true;
+			}
+
 			for (var _i = 0; _i < this.rectangles.length; _i++) {
 				var rectangle = this.rectangles[_i];
 				if (rectangle.isOverLappingBall(newBall)) return false;
@@ -272,10 +294,12 @@ var BallPen = function (_React$Component) {
 	}, {
 		key: "updateWindowDimensions",
 		value: function updateWindowDimensions() {
+			var canvas = this.canvasRef;
 			var width = window.innerWidth;
+			var height = window.innerHeight;
+			var ctx = canvas.getContext('2d');
 			if (width && width > 575) width -= 320; //Buffer for not x-small
 			else width -= 120; //Buffer for x-small
-			var height = window.innerHeight;
 			height -= 280; //Buffer...
 			if (height < 0) height = 0;
 			this.setState({
@@ -314,6 +338,9 @@ var BallPen = function (_React$Component) {
 		key: "updateCanvas",
 		value: function updateCanvas() {
 			var canvas = this.canvasRef;
+			var middleCords = this.getMiddleOfCanvas();
+			var msgX = middleCords.x - 48;
+			var msgY = middleCords.y + 5;
 			var ctx = canvas.getContext('2d');
 			if (this.state.width !== 0) {
 				if (this.balls.length === 0) {
@@ -324,6 +351,9 @@ var BallPen = function (_React$Component) {
 					this.updateBackground();
 				}
 			} //end if state.width clarity check;
+
+			writeToScreen(ctx, "HIRE ME", msgX, msgY, getRandomColor());
+
 			for (var i = 0; i < this.balls.length; i++) {
 				var ball = this.balls[i];
 				if (!this.state.hasWallFriction) this.friction = 0;else this.friction = WALL_FRICTION;
