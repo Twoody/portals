@@ -27,15 +27,21 @@ class Rectangle{
 		ctx.closePath();
 	}
 	isOverLappingBall(ball){
-		const bottomDistance	= ball.distanceTo(ball.nextX, this.yBottom);
-		const topDistance		= ball.distanceTo(ball.nextX, this.ytop);
-		const leftDistance	= ball.distanceTo(this.xLeft, ball.nextY);
-		const rightDistance	= ball.distanceTo(this.xRight, ball.nextY);
-		const willOverLapBottom = bottomDistance < ball.radius;
-		const willOverLapTop		= topDistance < ball.radius;
-		const willOverLapLeft	= leftDistance < ball.radius;
-		const willOverLapRight	= rightDistance < ball.radius;
-		const isOverLapping =  (willOverLapBottom && willOverLapTop && willOverLapRight && willOverLapLeft);
+		//Each distance should be positive;
+		//rectangle bottom is highest value: subtract top of ball from it;
+		//rectangle top is lower value: add ball and radius and subtract rectangle top;
+		//rectangle right is hight value: subtract left of ball from it;
+		//rectangle left is lower value: add ball and radius and subtract rectangle left from it;
+		const bottomDistance	= this.yBottom - ball.nextY - ball.radius;	
+		const topDistance		= ball.nextY + ball.radius - this.yTop;
+		const rightDistance	= this.xRight - ball.nextX - ball.radius;
+		const leftDistance	= ball.nextX + ball.radius - this.xLeft ;
+		const isBallAboveBottom	= bottomDistance	> -15;
+		const isBallBelowTop		= topDistance		> -15;
+		const isBallRightOfLeft	= leftDistance		> -15;
+		const isBallLeftOfRight	= rightDistance	> -15;
+		const isOverLapping =  (isBallAboveBottom && isBallBelowTop 
+											&& isBallLeftOfRight && isBallRightOfLeft);
 		return isOverLapping;
 	}
 }//End Rectangle Class

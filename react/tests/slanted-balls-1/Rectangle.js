@@ -32,15 +32,20 @@ var Rectangle = function () {
 	}, {
 		key: 'isOverLappingBall',
 		value: function isOverLappingBall(ball) {
-			var bottomDistance = ball.distanceTo(ball.nextX, this.yBottom);
-			var topDistance = ball.distanceTo(ball.nextX, this.ytop);
-			var leftDistance = ball.distanceTo(this.xLeft, ball.nextY);
-			var rightDistance = ball.distanceTo(this.xRight, ball.nextY);
-			var willOverLapBottom = bottomDistance < ball.radius;
-			var willOverLapTop = topDistance < ball.radius;
-			var willOverLapLeft = leftDistance < ball.radius;
-			var willOverLapRight = rightDistance < ball.radius;
-			var isOverLapping = willOverLapBottom && willOverLapTop && willOverLapRight && willOverLapLeft;
+			//Each distance should be positive;
+			//rectangle bottom is highest value: subtract top of ball from it;
+			//rectangle top is lower value: add ball and radius and subtract rectangle top;
+			//rectangle right is hight value: subtract left of ball from it;
+			//rectangle left is lower value: add ball and radius and subtract rectangle left from it;
+			var bottomDistance = this.yBottom - ball.nextY - ball.radius;
+			var topDistance = ball.nextY + ball.radius - this.yTop;
+			var rightDistance = this.xRight - ball.nextX - ball.radius;
+			var leftDistance = ball.nextX + ball.radius - this.xLeft;
+			var isBallAboveBottom = bottomDistance > -15;
+			var isBallBelowTop = topDistance > -15;
+			var isBallRightOfLeft = leftDistance > -15;
+			var isBallLeftOfRight = rightDistance > -15;
+			var isOverLapping = isBallAboveBottom && isBallBelowTop && isBallLeftOfRight && isBallRightOfLeft;
 			return isOverLapping;
 		}
 	}]);
