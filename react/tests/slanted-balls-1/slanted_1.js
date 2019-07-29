@@ -11,8 +11,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var initRadius = 10;
-var MIN_RADIUS = 9;
-var MAX_RADIUS = 9;
+var MIN_RADIUS = 5;
+var MAX_RADIUS = 11;
 var initWallFriction = 0.075;
 var initBallFriction = 0.05;
 var initGravity = 0.45;
@@ -102,6 +102,12 @@ var BallPen = function (_React$Component) {
 			for (var i = 0; i < this.rectangles.length; i++) {
 				var rectangle = this.rectangles[i];
 				rectangle.draw(ctx);
+
+				ctx.beginPath();
+				ctx.font = "16px Arial";
+				ctx.fillStyle = "black";
+				ctx.fillText("HIRE ME", rectangle.xCenter - 30, rectangle.yCenter);
+				ctx.closePath();
 			} //end i-for
 		}
 	}, {
@@ -166,7 +172,7 @@ var BallPen = function (_React$Component) {
 			} //end i-for
 			newBall.maxSpeed = MAX_SPEED;
 			return newBall;
-		} //end makeRandomBall
+		} //end /akeRandomBall
 
 	}, {
 		key: "handleInputChange",
@@ -484,7 +490,6 @@ var BallPen = function (_React$Component) {
 				isShowingLabels: true
 			});
 			var newBall = this.makeRandomBall();
-			newBall.radius = 30;
 			newBall.color = "blue";
 			this.balls.push(newBall);
 			this.setState({

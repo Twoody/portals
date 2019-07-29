@@ -1,7 +1,7 @@
 'use strict';
 const initRadius			= 10;
-const MIN_RADIUS			= 9;
-const MAX_RADIUS			= 9;
+const MIN_RADIUS			= 5;
+const MAX_RADIUS			= 11;
 const initWallFriction	= 0.075;
 const initBallFriction	= 0.05;
 const initGravity			= 0.45;
@@ -77,6 +77,12 @@ class BallPen extends React.Component{
 		for(let i=0; i<this.rectangles.length; i++){
 			let rectangle = this.rectangles[i];
 			rectangle.draw(ctx);
+
+			ctx.beginPath();
+			ctx.font      = "16px Arial";
+			ctx.fillStyle = "black";
+			ctx.fillText("HIRE ME", rectangle.xCenter-30, rectangle.yCenter);
+			ctx.closePath();
 		}//end i-for
 	}
 	initDisplay(){
@@ -138,7 +144,7 @@ class BallPen extends React.Component{
 		}//end i-for
 		newBall.maxSpeed = MAX_SPEED;
 		return newBall;
-	}//end makeRandomBall
+	}//end /akeRandomBall
 	handleInputChange(event) {
 		const target	= event.target;
 		const value		= target.type === 'checkbox' ? target.checked : target.value;
@@ -482,7 +488,6 @@ class BallPen extends React.Component{
 			isShowingLabels:		true,
 		});
 		let newBall = this.makeRandomBall();
-		newBall.radius = 30;
 		newBall.color = "blue";
 		this.balls.push(newBall);
 		this.setState({
