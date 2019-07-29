@@ -59,8 +59,8 @@ class BallPen extends React.Component{
 	}
 	initRectangles(){
 		const middleCords	= this.getMiddleOfCanvas();
-		const width			= 200;
-		const height		= 100;
+		const width			= 110;
+		const height		= 30;
 		const xLeft			= middleCords.x - width/2;
 		const yTop			= middleCords.y - height/2;
 		const rectangle	= new Rectangle({
@@ -319,10 +319,10 @@ class BallPen extends React.Component{
    updateCanvas(){
       const canvas		= this.canvasRef;
 		const middleCords	= this.getMiddleOfCanvas();
-		const msgX			= middleCords.x-48;
-		const msgY			= middleCords.y+5;
+		const msgX			= middleCords.x-50;
+		const msgY			= middleCords.y+7;
       const ctx			= canvas.getContext('2d');
-		if(this.state.width !== 0){
+		if(this.state.width !== 0 && this.state.width > 500){
 			if(this.balls.length === 0){
 				this.updateBackground();
 				this.initDisplay();

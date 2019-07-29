@@ -84,8 +84,8 @@ var BallPen = function (_React$Component) {
 		key: "initRectangles",
 		value: function initRectangles() {
 			var middleCords = this.getMiddleOfCanvas();
-			var width = 200;
-			var height = 100;
+			var width = 110;
+			var height = 30;
 			var xLeft = middleCords.x - width / 2;
 			var yTop = middleCords.y - height / 2;
 			var rectangle = new Rectangle({
@@ -339,10 +339,10 @@ var BallPen = function (_React$Component) {
 		value: function updateCanvas() {
 			var canvas = this.canvasRef;
 			var middleCords = this.getMiddleOfCanvas();
-			var msgX = middleCords.x - 48;
-			var msgY = middleCords.y + 5;
+			var msgX = middleCords.x - 50;
+			var msgY = middleCords.y + 7;
 			var ctx = canvas.getContext('2d');
-			if (this.state.width !== 0) {
+			if (this.state.width !== 0 && this.state.width > 500) {
 				if (this.balls.length === 0) {
 					this.updateBackground();
 					this.initDisplay();
