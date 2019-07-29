@@ -32,14 +32,16 @@ make_imports($ROOT);
 $CONFIG	= get_config($ROOT);
 $PATHS	= get_paths($ROOT);
 $STRINGS	= get_config_strings($CONFIG);
-$react_div	= "<div id=\"ball-pen-11\"></div>";
-$react_dir	= $ROOT. "/react/tests/ball-pen-11";
-$react_js	= $react_dir. "/ball_pen_11.js";
-$balls_js	= $react_dir. "/Balls.js";
+$react_div		= "<div id=\"slanted-1\"></div>";
+$react_dir		= $ROOT. "/react/tests/slanted-balls-1";
+$react_js		= $react_dir. "/slanted_1.js";
+$balls_js		= $react_dir. "/Balls.js";
+$rectangle_js	= $react_dir. "/Rectangle.js";
 require_once($PATHS['LIBPATH_DB_PAGES']);
 require_once($PATHS['TEMPLATES_B']);
 
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"".$balls_js."\"></script>";
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"".$rectangle_js."\"></script>";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script type=\"text/babel\" src=\"".$react_js."\"></script>";
 
 /*
