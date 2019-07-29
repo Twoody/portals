@@ -18,12 +18,12 @@ var Ball = function () {
 		this.kineticLoss = 1 / 3;
 		this.kineticGain = 2 / 3;
 		//Direction variables;
-		this.isGoingRight = true;
-		this.isGoingDown = true;
+		this.isGoingRight = true; //Ball starts going to the right;
+		this.isGoingDown = true; //Ball starts going down;
 		this.isGoingLeft = false;
 		this.isGoingUp = false;
-		this.nextX = this.xCord + this.dx; //Ball starts going to the right;
-		this.nextY = this.yCord + this.dy; //Ball starts going down;
+		this.nextX = this.xCord + this.dx;
+		this.nextY = this.yCord + this.dy;
 		//Boundary variables;
 		this.canGoLeft = false;
 		this.canGoRight = false;
@@ -118,8 +118,10 @@ var Ball = function () {
 		value: function accelerate(dxBoost, dyBoost) {
 			this.dx += dxBoost;
 			this.dy += dyBoost;
+
 			if (this.dx > this.radius * 2) this.dx = this.radius * 2;
 			if (this.dy > this.radius * 2) this.dy = this.radius * 2;
+
 			if (this.dx > this.maxSpeed) this.dx = this.maxSpeed;
 			if (this.dy > this.maxSpeed) this.dy = this.maxSpeed;
 		}
@@ -204,10 +206,12 @@ var Ball = function () {
 				otherBall.decelerate(this.friction, this.friction);
 				this.decelerate(otherBall.friction, otherBall.friction);
 
-				otherBall.accelerate(this.dx * this.kineticLoss, 0);
-				otherBall.accelerate(0, this.dy * this.kineticLoss);
-				this.dy *= this.kineticGain;
-				this.dx *= this.kineticGain;
+				if (this.kineticLoss > 0 && this.kineticGain > 0) {
+					otherBall.accelerate(this.dx * this.kineticLoss, 0);
+					otherBall.accelerate(0, this.dy * this.kineticLoss);
+					this.dy *= this.kineticGain;
+					this.dx *= this.kineticGain;
+				}
 			} //end i-for
 		} //End handleBallCollision()
 
