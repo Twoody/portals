@@ -14,8 +14,12 @@ class BallPen extends React.Component{
    constructor(props){
       super(props);
       this.state      = {
-         height: 0,
-         width:  0,
+         height:		0,
+         width:		0,
+			clickTimer:	0,
+			xClick:		0,
+			yClick:		0,
+			isDragging:				false,
 			hasGravity:				true,
 			hasWallFriction:		true,
 			hasBallFriction:		true,
@@ -30,6 +34,9 @@ class BallPen extends React.Component{
       this.updateWindowDimensions	= this.updateWindowDimensions.bind(this);
 		this.handleInputChange			= this.handleInputChange.bind(this);
 		this.handleKeydown				= this.handleKeydown.bind(this);
+		this.handleCanvasMouseDown		= this.handleCanvasMouseDown.bind(this);
+		this.handleCanvasMouseMove		= this.handleCanvasMouseMove.bind(this);
+		this.handleCanvasMouseUp		= this.handleCanvasMouseUp.bind(this);
 		this.shrinkBalls					= this.shrinkBalls.bind(this);
 		this.accelerateBalls				= this.accelerateBalls.bind(this);
 		this.decelerateBalls				= this.decelerateBalls.bind(this);
@@ -157,14 +164,13 @@ class BallPen extends React.Component{
 		});
 	}
 
-	handleCanvasClick(canvas, xClick, yClick){
-		const rect			= canvas;
-		const xMousePos	= xClick;
-		const yMousePos	= yClick;;
-		const xCanvasPos	= xMousePos - rect.left;
-		const yCanvasPos	= yMousePos - rect.top;
+	handleCanvasClick(){
+     	const canvas		= this.canvasRef;
+		const rect			= canvas.getBoundingClientRect();
+		const xCanvasPos	= this.state.xClick - rect.left;
+		const yCanvasPos	= this.state.yClick - rect.top;
 		let randomRadius	= getRandomInt(MIN_RADIUS, MAX_RADIUS);
-		randomRadius += getRandomInt(1,99) * 0.01;
+		randomRadius -= getRandomInt(1,99) * 0.01;
 		let isLegalBall	= true;	//Will try to make false;
 		let didClickBall	= false;
 		for(let i=0; i<this.balls.length; i++){
@@ -234,10 +240,47 @@ class BallPen extends React.Component{
 					ballCnt: this.state.ballCnt + 1,
 				});
 			}
-			else
+			else{
 				console.log('Not legal ball');
+			}
 		}
 	}//end handleCanvasClick
+	handleCanvasMouseDown( xClick, yClick){
+		/*
+			Determine if click is long press or just a click;
+			Will call functions on mouseup and mousemove;
+		*/
+		document.body.addEventListener('mousemove', this.handleCanvasMouseMove);
+		document.body.addEventListener('mouseup', this.handleCanvasMouseUp);
+		this.setState({
+			clickTimer:	new Date(),	//Start timer
+			xClick:		xClick,
+			yClick:		yClick
+		});
+	}//end handleCanvasMouseDown
+	handleCanvasMouseUp(){
+		/*
+			If elapsed time is less than half a second, user just clicked;
+			Else, user is long pressing and moving the rectangle;
+		*/
+		document.body.removeEventListener('mousedown', this.handleCanvasMouseDown);
+		document.body.removeEventListener('mouseup', this.handleCanvasMouseUp);
+		const endTime		= new Date();	//End time of screen click;
+		const elapsedTime = endTime - this.state.clickTimer; //In Milliseconds;
+		if(elapsedTime < 500){
+			//User just clicked screen
+			this.handleCanvasClick();
+		}
+		else{
+			console.log("LONG PRESS ACTIVATE");
+			//User was dragging rectangle;
+		}
+
+	}
+	handleCanvasMouseMove(){
+		//TODO: Get movement of mouse and move rectangle accordingly;
+	}
+
 	handleKeydown(event){
 		if(!event && !event.key){
 			console.log("WARNING: KEYBOARD INPUT NOT UNDERSTOOD");
@@ -281,14 +324,14 @@ class BallPen extends React.Component{
         25
       );
       window.addEventListener('resize', this.updateWindowDimensions);
-      //document.body.BallPen.addEventListener('keydown', this.handleKeydown);
       document.body.addEventListener('keydown', this.handleKeydown);
    }
    componentWillUnmount(){
       clearInterval(this.timerID);
       window.removeEventListener('resize', this.updateWindowDimensions);
-      //document.body.BallPen.removeEventListener('keydown', this.handleKeydown);
       document.body.removeEventListener('keydown', this.handleKeydown);
+		document.body.addEventListener('mousemove', this.handleCanvasMouseMove);
+		document.body.addEventListener('mouseup', this.handleCanvasMouseUp);
    }
    componentDidUpdate() {
       this.updateCanvas();
@@ -497,11 +540,8 @@ class BallPen extends React.Component{
                width={this.state.width}
                height={this.state.height}
                style={penStyle}
-					onClick={e => {
-						const canvas	= this.canvasRef.getBoundingClientRect();
-						const xClick	= e.clientX;
-						const yClick	= e.clientY;
-						this.handleCanvasClick(canvas, xClick, yClick);
+					onMouseDown={ e=> {
+						this.handleCanvasMouseDown(e.clientX, e.clientY);
 					}}
             />
 				<table width={this.state.width}>
