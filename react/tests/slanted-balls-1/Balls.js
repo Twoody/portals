@@ -145,8 +145,8 @@ var Ball = function () {
 				var otherBall = allBalls[i];
 				if (otherBall === this) continue;
 				var minDistance = this.radius + otherBall.radius;
-				var leftDistance = this.distanceBetween(xL, y, otherBall.xCord, otherBall.yCord);
-				var rightDistance = this.distanceBetween(xR, y, otherBall.xCord, otherBall.yCord);
+				var leftDistance = this.distanceBetween(xL, y, otherBall.nextX, otherBall.nextY);
+				var rightDistance = this.distanceBetween(xR, y, otherBall.nextX, otherBall.nextY);
 				if (rightDistance < minDistance && leftDistance < minDistance) {
 					this.canGoDown = false;
 					this.canGoUp = false;
@@ -164,14 +164,14 @@ var Ball = function () {
 				if (this.ballID === allBalls[i].ballID) continue;
 				var otherBall = allBalls[i];
 				var minDistance = otherBall.radius + this.radius;
-				var nextDistance = this.distanceTo(otherBall.xCord, otherBall.yCord);
+				var nextDistance = this.distanceTo(otherBall.nextX, otherBall.nextY);
 				var willOverlap = nextDistance <= minDistance;
 				if (!willOverlap) {
 					continue;
 				}
 
 				//Set the directions that this ball cannot go;
-				if (this.nextX > otherBall.xCord) {
+				if (this.nextX > otherBall.nextX) {
 					//Current ball is right of otherball
 					this.canGoLeft = false;
 				} else this.canGoRight = false;
@@ -192,7 +192,7 @@ var Ball = function () {
 					else if (this.isGoingLeft) this.nextX += dxRatio; //Step back right
 					if (this.isGoingDown) this.nextY -= dyRatio; //Step back up
 					else if (this.isGoingUp) this.nextY += dyRatio; //Step back down
-					nextDistance = this.distanceTo(otherBall.xCord, otherBall.yCord);
+					nextDistance = this.distanceTo(otherBall.nextX, otherBall.nextY);
 					willOverlap = nextDistance < minDistance;
 					cnt += 1;
 					if (cnt === timeRatio) {

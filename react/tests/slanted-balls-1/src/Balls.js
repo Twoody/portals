@@ -144,8 +144,8 @@ class Ball{
 			if(otherBall === this)
 				continue;
 			const minDistance		= this.radius + otherBall.radius;
-			const leftDistance	= this.distanceBetween(xL, y, otherBall.xCord, otherBall.yCord);
-			const rightDistance	= this.distanceBetween(xR, y, otherBall.xCord, otherBall.yCord);
+			const leftDistance	= this.distanceBetween(xL, y, otherBall.nextX, otherBall.nextY);
+			const rightDistance	= this.distanceBetween(xR, y, otherBall.nextX, otherBall.nextY);
 			if(rightDistance < minDistance && leftDistance < minDistance ){
 				this.canGoDown = false;
 				this.canGoUp = false;
@@ -163,14 +163,14 @@ class Ball{
 				continue;
 			let otherBall			= allBalls[i];
 			const minDistance		= otherBall.radius + this.radius;
-			let nextDistance		= this.distanceTo(otherBall.xCord, otherBall.yCord);
+			let nextDistance		= this.distanceTo(otherBall.nextX, otherBall.nextY);
 			let willOverlap		= nextDistance <= minDistance;
 			if( !willOverlap ){
 				continue;
 			}
 
 			//Set the directions that this ball cannot go;
-			if(this.nextX > otherBall.xCord){
+			if(this.nextX > otherBall.nextX){
 				//Current ball is right of otherball
 				this.canGoLeft = false;
 			}
@@ -199,7 +199,7 @@ class Ball{
 					this.nextY -= dyRatio;	//Step back up
 				else if(this.isGoingUp)
 					this.nextY += dyRatio;	//Step back down
-				nextDistance	= this.distanceTo(otherBall.xCord, otherBall.yCord);
+				nextDistance	= this.distanceTo(otherBall.nextX, otherBall.nextY);
 				willOverlap		= nextDistance < minDistance;
 				cnt += 1;
 				if(cnt === timeRatio){
