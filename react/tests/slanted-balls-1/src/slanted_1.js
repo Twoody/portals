@@ -167,8 +167,8 @@ class BallPen extends React.Component{
 	handleCanvasClick(){
      	const canvas		= this.canvasRef;
 		const rect			= canvas.getBoundingClientRect();
-		const xCanvasPos	= this.state.xClick - rect.left;
-		const yCanvasPos	= this.state.yClick - rect.top;
+		const xCanvasPos	= this.state.xClick - rect.left;		//X cord of user click
+		const yCanvasPos	= this.state.yClick - rect.top;		//Y cord of user click
 		let randomRadius	= getRandomInt(MIN_RADIUS, MAX_RADIUS);
 		randomRadius -= getRandomInt(1,99) * 0.01;
 		let isLegalBall	= true;	//Will try to make false;
@@ -246,8 +246,7 @@ class BallPen extends React.Component{
 		}
 	}//end handleCanvasClick
 	handleCanvasMouseDown( xClick, yClick){
-		/*
-			Determine if click is long press or just a click;
+		/* Determine if click is long press or just a click;
 			Will call functions on mouseup and mousemove;
 		*/
 		document.body.addEventListener('mousemove', this.handleCanvasMouseMove);
@@ -259,12 +258,12 @@ class BallPen extends React.Component{
 		});
 	}//end handleCanvasMouseDown
 	handleCanvasMouseUp(){
-		/*
-			If elapsed time is less than half a second, user just clicked;
+		/* If elapsed time is less than half a second, user just clicked;
 			Else, user is long pressing and moving the rectangle;
 		*/
 		document.body.removeEventListener('mousedown', this.handleCanvasMouseDown);
 		document.body.removeEventListener('mouseup', this.handleCanvasMouseUp);
+		document.body.removeEventListener('mousemove', this.handleCanvasMouseMove);
 		const endTime		= new Date();	//End time of screen click;
 		const elapsedTime = endTime - this.state.clickTimer; //In Milliseconds;
 		if(elapsedTime < 500){
@@ -272,13 +271,47 @@ class BallPen extends React.Component{
 			this.handleCanvasClick();
 		}
 		else{
-			console.log("LONG PRESS ACTIVATE");
 			//User was dragging rectangle;
+			console.log("LONG PRESS DE-ACTIVATED");
 		}
 
-	}
-	handleCanvasMouseMove(){
+	}//end handleCanvasMouseUp()
+	handleCanvasMouseMove(event){
 		//TODO: Get movement of mouse and move rectangle accordingly;
+		if(!this.middleRectangle){
+			console.log("WARNING: Rectangle not initialized yet;");
+			console.log(this);
+			return false;
+		}
+
+     	const canvas			= this.canvasRef;
+		const rect				= canvas.getBoundingClientRect();
+		let clientX				= event.clientX;
+		let clientY				= event.clientY;
+		clientX					= clientX - rect.left;
+		clientY					= clientY - rect.top;
+		const xMid				= this.middleRectangle.xCenter;
+		const yMid				= this.middleRectangle.yCenter;
+		const rectangleLeft	= this.middleRectangle.xLeft;
+		const rectangleTop	= this.middleRectangle.yTop;
+
+		if(clientX < xMid){
+			//Move left
+			this.middleRectangle.updateCoordinates(rectangleLeft-2, rectangleTop);
+		}
+		if(clientX > xMid){
+			//Move right
+			this.middleRectangle.updateCoordinates(rectangleLeft+2, rectangleTop);
+		}
+		if(clientY < yMid){
+			//Move Up
+			this.middleRectangle.updateCoordinates(rectangleLeft, rectangleTop-2);
+		}
+		if(clientY > yMid){
+			//Move Down
+			this.middleRectangle.updateCoordinates(rectangleLeft, rectangleTop+2);
+		}
+
 	}
 
 	handleKeydown(event){
@@ -330,8 +363,8 @@ class BallPen extends React.Component{
       clearInterval(this.timerID);
       window.removeEventListener('resize', this.updateWindowDimensions);
       document.body.removeEventListener('keydown', this.handleKeydown);
-		document.body.addEventListener('mousemove', this.handleCanvasMouseMove);
-		document.body.addEventListener('mouseup', this.handleCanvasMouseUp);
+		document.body.removeEventListener('mousemove', this.handleCanvasMouseMove);
+		document.body.removeEventListener('mouseup', this.handleCanvasMouseUp);
    }
    componentDidUpdate() {
       this.updateCanvas();
