@@ -45,6 +45,7 @@ var BallPen = function (_React$Component) {
 		_this.friction = WALL_FRICTION;
 		_this.updateWindowDimensions = _this.updateWindowDimensions.bind(_this);
 		_this.handleInputChange = _this.handleInputChange.bind(_this);
+		_this.handleKeydown = _this.handleKeydown.bind(_this);
 		_this.shrinkBalls = _this.shrinkBalls.bind(_this);
 		_this.accelerateBalls = _this.accelerateBalls.bind(_this);
 		_this.decelerateBalls = _this.decelerateBalls.bind(_this);
@@ -244,6 +245,43 @@ var BallPen = function (_React$Component) {
 					});
 				} else console.log('Not legal ball');
 			}
+		} //end handleCanvasClick
+
+	}, {
+		key: 'handleKeydown',
+		value: function handleKeydown(event) {
+			if (!event && !event.key) {
+				console.log("WARNING: KEYBOARD INPUT NOT UNDERSTOOD");
+				return false;
+			}
+			if (!this.middleRectangle) {
+				console.log("WARNING: Rectangle not initialized yet;");
+				console.log(this);
+				return false;
+			}
+			var rectangleLeft = this.middleRectangle.xLeft;
+			var rectangleTop = this.middleRectangle.yTop;
+			if (event.keyCode === 37) {
+				//arrow left
+				event.preventDefault();
+				this.middleRectangle.updateCoordinates(rectangleLeft - 2, rectangleTop);
+			}
+			if (event.keyCode === 38) {
+				//arrow up
+				event.preventDefault();
+				this.middleRectangle.updateCoordinates(rectangleLeft, rectangleTop - 2);
+			}
+			if (event.keyCode === 39) {
+				//arrow right
+				event.preventDefault();
+				this.middleRectangle.updateCoordinates(rectangleLeft + 2, rectangleTop);
+			}
+			if (event.keyCode === 40) {
+				//arrow down
+				event.preventDefault();
+				this.middleRectangle.updateCoordinates(rectangleLeft, rectangleTop + 2);
+			}
+			return true;
 		}
 	}, {
 		key: 'componentDidMount',
@@ -256,12 +294,16 @@ var BallPen = function (_React$Component) {
 				return _this2.updateCanvas();
 			}, 25);
 			window.addEventListener('resize', this.updateWindowDimensions);
+			//document.body.BallPen.addEventListener('keydown', this.handleKeydown);
+			document.body.addEventListener('keydown', this.handleKeydown);
 		}
 	}, {
 		key: 'componentWillUnmount',
 		value: function componentWillUnmount() {
 			clearInterval(this.timerID);
 			window.removeEventListener('resize', this.updateWindowDimensions);
+			//document.body.BallPen.removeEventListener('keydown', this.handleKeydown);
+			document.body.removeEventListener('keydown', this.handleKeydown);
 		}
 	}, {
 		key: 'componentDidUpdate',
@@ -333,10 +375,11 @@ var BallPen = function (_React$Component) {
 					}
 			} //end if state.width clarity check;
 
-			this.updateMiddleRectangle();
-			this.middleRectangle.draw(ctx);
-			writeToScreen(ctx, "HIRE ME", msgX, msgY, getRandomColor());
-
+			//this.updateMiddleRectangle();
+			if (this.middleRectangle) {
+				this.middleRectangle.draw(ctx);
+				writeToScreen(ctx, "HIRE ME", this.middleRectangle.xCenter - 50, this.middleRectangle.yCenter + 7, getRandomColor());
+			}
 			for (var i = 0; i < this.balls.length; i++) {
 				var ball = this.balls[i];
 				if (!this.state.hasWallFriction) this.friction = 0;else this.friction = WALL_FRICTION;

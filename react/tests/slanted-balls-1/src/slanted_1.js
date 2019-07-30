@@ -9,6 +9,7 @@ const KINETIC_KEEP		= 0.85;
 const BACKGROUND_COLOR	= "black";
 const MAX_SPEED			= MAX_RADIUS * 2;
 const initBallCnt			= 85;
+
 class BallPen extends React.Component{
    constructor(props){
       super(props);
@@ -28,6 +29,7 @@ class BallPen extends React.Component{
 		this.friction			= WALL_FRICTION;
       this.updateWindowDimensions	= this.updateWindowDimensions.bind(this);
 		this.handleInputChange			= this.handleInputChange.bind(this);
+		this.handleKeydown				= this.handleKeydown.bind(this);
 		this.shrinkBalls					= this.shrinkBalls.bind(this);
 		this.accelerateBalls				= this.accelerateBalls.bind(this);
 		this.decelerateBalls				= this.decelerateBalls.bind(this);
@@ -154,6 +156,7 @@ class BallPen extends React.Component{
 			[name]: value
 		});
 	}
+
 	handleCanvasClick(canvas, xClick, yClick){
 		const rect			= canvas;
 		const xMousePos	= xClick;
@@ -192,10 +195,10 @@ class BallPen extends React.Component{
 				break;
 			}
 		}//end i-for
-		if(yCanvasPos > this.middleRectangle.yTop-randomRadius 
-			&& yCanvasPos < this.middleRectangle.yBottom+randomRadius
-			&& xCanvasPos < this.middleRectangle.xRight+randomRadius 
-			&& xCanvasPos > this.middleRectangle.xLeft-randomRadius
+		if(   yCanvasPos > this.middleRectangle.yTop		- randomRadius 
+			&& yCanvasPos < this.middleRectangle.yBottom	+ randomRadius
+			&& xCanvasPos < this.middleRectangle.xRight	+ randomRadius 
+			&& xCanvasPos > this.middleRectangle.xLeft	- randomRadius
 		){
 			isLegalBall = false;
 		}
@@ -234,7 +237,42 @@ class BallPen extends React.Component{
 			else
 				console.log('Not legal ball');
 		}
-	}  
+	}//end handleCanvasClick
+	handleKeydown(event){
+		if(!event && !event.key){
+			console.log("WARNING: KEYBOARD INPUT NOT UNDERSTOOD");
+			return false;
+		}
+		if(!this.middleRectangle){
+			console.log("WARNING: Rectangle not initialized yet;");
+			console.log(this);
+			return false;
+		}
+		const rectangleLeft	= this.middleRectangle.xLeft;
+		const rectangleTop	= this.middleRectangle.yTop;
+		if(event.keyCode === 37){
+			//arrow left
+			event.preventDefault();
+			this.middleRectangle.updateCoordinates(rectangleLeft-2, rectangleTop);
+		}
+		if(event.keyCode === 38){
+			//arrow up
+			event.preventDefault();
+			this.middleRectangle.updateCoordinates(rectangleLeft, rectangleTop-2);
+		}
+		if(event.keyCode === 39){
+			//arrow right
+			event.preventDefault();
+			this.middleRectangle.updateCoordinates(rectangleLeft+2, rectangleTop);
+		}
+		if(event.keyCode === 40){
+			//arrow down
+			event.preventDefault();
+			this.middleRectangle.updateCoordinates(rectangleLeft, rectangleTop+2);
+		}
+		return true;
+	}
+
    componentDidMount() {
       this.updateWindowDimensions();
       this.updateCanvas();
@@ -243,10 +281,14 @@ class BallPen extends React.Component{
         25
       );
       window.addEventListener('resize', this.updateWindowDimensions);
+      //document.body.BallPen.addEventListener('keydown', this.handleKeydown);
+      document.body.addEventListener('keydown', this.handleKeydown);
    }
    componentWillUnmount(){
       clearInterval(this.timerID);
       window.removeEventListener('resize', this.updateWindowDimensions);
+      //document.body.BallPen.removeEventListener('keydown', this.handleKeydown);
+      document.body.removeEventListener('keydown', this.handleKeydown);
    }
    componentDidUpdate() {
       this.updateCanvas();
@@ -321,10 +363,17 @@ class BallPen extends React.Component{
 			}
 		}//end if state.width clarity check;
 
-		this.updateMiddleRectangle();
-		this.middleRectangle.draw(ctx);
-		writeToScreen(ctx, "HIRE ME", msgX, msgY, getRandomColor());
-
+		//this.updateMiddleRectangle();
+		if(this.middleRectangle){
+			this.middleRectangle.draw(ctx);
+			writeToScreen(
+				ctx, 
+				"HIRE ME", 
+				this.middleRectangle.xCenter - 50, 
+				this.middleRectangle.yCenter + 7, 
+				getRandomColor()
+			);
+		}
 		for(let i=0; i<this.balls.length; i++){
 			let ball	= this.balls[i];
 			if(!this.state.hasWallFriction)
@@ -548,7 +597,6 @@ class BallPen extends React.Component{
 					</tr>
 					</tbody>
 				</table>
-
          </div>
       );
    }
