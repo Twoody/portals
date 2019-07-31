@@ -261,11 +261,9 @@ var BallPen = function (_React$Component) {
 			/* Determine if click is long press or just a click;
    	Will call functions on mouseup and mousemove;
    */
-			document.body.addEventListener('mousemove', this.handleCanvasMouseMove);
-			document.body.addEventListener('mouseup', this.handleCanvasMouseUp);
-			hireMeCanvas.addEventListener('touchmove', this.handleCanvasMouseMove);
-			hireMeCanvas.addEventListener('touchend', this.handleCanvasMouseUp);
 			if (event.changedTouches && event.changedTouches.length) {
+				hireMeCanvas.addEventListener('touchmove', this.handleCanvasMouseMove);
+				hireMeCanvas.addEventListener('touchend', this.handleCanvasMouseUp);
 				//event.preventDefault();
 				this.setState({
 					clickTimer: new Date(), //Start timer
@@ -274,6 +272,8 @@ var BallPen = function (_React$Component) {
 					isDragging: true
 				});
 			} else {
+				document.body.addEventListener('mousemove', this.handleCanvasMouseMove);
+				document.body.addEventListener('mouseup', this.handleCanvasMouseUp);
 				this.setState({
 					clickTimer: new Date(), //Start timer
 					xClick: event.xClick,
@@ -281,7 +281,6 @@ var BallPen = function (_React$Component) {
 					isDragging: true
 				});
 			}
-			console.log('mouse down');
 		} //end handleCanvasMouseDown
 
 	}, {
@@ -303,20 +302,26 @@ var BallPen = function (_React$Component) {
 				this.handleCanvasClick();
 			} else {
 				var isRectangleAtFinalDestination = false;
+				var canvas = this.canvasRef;
+				var rect = canvas.getBoundingClientRect();
 				var xMid = this.middleRectangle.xCenter;
 				var yMid = this.middleRectangle.yCenter;
+				var xCanvasPos = this.state.xClick - rect.left; //X cord of user click
+				var yCanvasPos = this.state.yClick - rect.top; //Y cord of user click
 				var safetyNet = 0;
 
 				while (isRectangleAtFinalDestination === false) {
-					if (this.state.xClick > xMid + 1 && this.state.xClick < xMid - 1) {
-						isRectangleAtFinalDestination = false;
-						this.handleRectangleMove();
-					} else if (this.state.yClick > yMid + 1 && this.state.yClick < xMid - 1) {
-						isRectangleAtFinalDestination = false;
-						this.handleRectangleMove();
-					} else isRectangleAtFinalDestination = true;
+					if (xCanvasPos <= xMid + 2 && xCanvasPos >= xMid - 2 && yCanvasPos <= yMid + 2 && yCanvasPos >= yMid - 2) {
+						isRectangleAtFinalDestination = true;
+					} else this.handleRectangleMove();
 					safetyNet += 1;
-					if (safetyNet > 100) break;
+					if (safetyNet > 1000) break;
+					console.log(safetyNet + ": xmid: " + (xMid - 2) + " - " + (xMid + 2));
+					console.log(safetyNet + ": xClick: " + xCanvasPos);
+					console.log(safetyNet + ": xState: " + this.state.xClick);
+					console.log(safetyNet + ": ymid: " + (yMid - 2) + " - " + (yMid + 2));
+					console.log(safetyNet + ": yClick: " + yCanvasPos);
+					console.log(safetyNet + ": yState: " + this.state.yClick);
 				} //end while
 				this.setState({
 					isDragging: false
