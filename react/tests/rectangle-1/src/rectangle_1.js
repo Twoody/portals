@@ -10,16 +10,16 @@ class BallPen extends React.Component{
 			clickTimer:	0,
 			xClick:		0,
 			yClick:		0,
-			isDragging:				false,
       };
 		this.middleRectangle	= null;
       this.updateWindowDimensions	= this.updateWindowDimensions.bind(this);
 		this.handleKeydown				= this.handleKeydown.bind(this);
+		this.handleKeyup					= this.handleKeyup.bind(this);
 		this.handleCanvasMouseDown		= this.handleCanvasMouseDown.bind(this);
 		this.handleCanvasMouseMove		= this.handleCanvasMouseMove.bind(this);
 		this.handleCanvasMouseUp		= this.handleCanvasMouseUp.bind(this);
    }
-	updateMiddleRectangle(){
+	initMiddleRectangle(){
 		const middleCords	= getMiddleOfCanvas(this.state.width, this.state.height);
 		const width			= 110;
 		const height		= 30;
@@ -54,27 +54,13 @@ class BallPen extends React.Component{
 		/* Determine if click is long press or just a click;
 			Will call functions on mouseup and mousemove;
 		*/
-		if(event.changedTouches && event.changedTouches.length){
-			hireMeCanvas.addEventListener('touchmove', this.handleCanvasMouseMove);
-			hireMeCanvas.addEventListener('touchend', this.handleCanvasMouseUp);
-			//event.preventDefault();
-			this.setState({
-				clickTimer:	new Date(),	//Start timer
-				xClick:		Math.round(event.changedTouches[0].clientX),
-				yClick:		Math.round(event.changedTouches[0].clientY),
-				isDragging:	true,
-			});
-		}
-		else{
-			document.body.addEventListener('mousemove', this.handleCanvasMouseMove);
-			document.body.addEventListener('mouseup', this.handleCanvasMouseUp);
-			this.setState({
-				clickTimer:	new Date(),	//Start timer
-				xClick:		event.xClick,
-				yClick:		event.yClick,
-				isDragging:	true,
-			});
-		}
+		document.body.addEventListener('mousemove', this.handleCanvasMouseMove);
+		document.body.addEventListener('mouseup', this.handleCanvasMouseUp);
+		this.setState({
+			clickTimer:	new Date(),	//Start timer
+			xClick:		event.xClick,
+			yClick:		event.yClick,
+		});
 	}//end handleCanvasMouseDown
 	handleCanvasMouseUp(){
 		/* If elapsed time is less than half a second, user just clicked;
@@ -83,9 +69,6 @@ class BallPen extends React.Component{
 		document.body.removeEventListener('mousedown', this.handleCanvasMouseDown);
 		document.body.removeEventListener('mouseup', this.handleCanvasMouseUp);
 		document.body.removeEventListener('mousemove', this.handleCanvasMouseMove);
-		hireMeCanvas.removeEventListener('touchstart', this.handleCanvasMouseDown);
-		hireMeCanvas.removeEventListener('touchmove', this.handleCanvasMouseMove);
-		hireMeCanvas.removeEventListener('touchend', this.handleCanvasMouseUp);
 		const endTime		= new Date();	//End time of screen click;
 		const elapsedTime = endTime - this.state.clickTimer; //In Milliseconds;
 		if(elapsedTime < 500){
@@ -102,27 +85,6 @@ class BallPen extends React.Component{
 			const yCanvasPos	= this.state.yClick - rect.top;	//Y cord of user click
 			let safetyNet		= 0;
 
-			while(isRectangleAtFinalDestination === false){
-				if(   xCanvasPos <= xMid+2 && xCanvasPos >= xMid-2
-					&& yCanvasPos <= yMid+2 && yCanvasPos >= yMid-2
-				){
-					isRectangleAtFinalDestination = true;
-				}
-				else
-					this.handleRectangleMove();
-				safetyNet += 1;
-				if(safetyNet > 1000)
-					break;
-				console.log(safetyNet + ": xmid: "		+ (xMid-2) + " - " + (xMid+2));
-				console.log(safetyNet + ": xClick: "	+ xCanvasPos);
-				console.log(safetyNet + ": xState: "	+ this.state.xClick);
-				console.log(safetyNet + ": ymid: "		+ (yMid-2) + " - " + (yMid+2));
-				console.log(safetyNet + ": yClick: "	+ yCanvasPos);
-				console.log(safetyNet + ": yState: "	+ this.state.yClick);
-			}//end while
-			this.setState({
-				isDragging:	false,
-			});
 			console.log("DRAGGING FINSIHED");
 		}
 	}//end handleCanvasMouseUp()
@@ -134,19 +96,10 @@ class BallPen extends React.Component{
 			return false;
 		}
 
-		if(event.changedTouches && event.changedTouches.length){
-			//event.preventDefault();
-			this.setState({
-				xClick:		Math.round(event.changedTouches[0].clientX),
-				yClick:		Math.round(event.changedTouches[0].clientY)
-			});
-		}
-		else{
-			this.setState({
-				xClick:		event.clientX,
-				yClick:		event.clientY
-			});
-		}
+		this.setState({
+			xClick:		event.clientX,
+			yClick:		event.clientY
+		});
 		this.handleRectangleMove();
 	}
 	handleRectangleMove(){
@@ -161,19 +114,23 @@ class BallPen extends React.Component{
 
 		if(clientX < xMid){
 			//Move left
-			this.middleRectangle.updateCoordinates(rectangleLeft-2, rectangleTop);
+			const nextX = clientX - (this.middleRectangle.width/2);
+			this.middleRectangle.updateCoordinates(nextX, rectangleTop);
 		}
 		if(clientX > xMid){
 			//Move right
-			this.middleRectangle.updateCoordinates(rectangleLeft+2, rectangleTop);
+			const nextX = clientX - (this.middleRectangle.width/2);
+			this.middleRectangle.updateCoordinates(nextX, rectangleTop);
 		}
 		if(clientY < yMid){
 			//Move Up
-			this.middleRectangle.updateCoordinates(rectangleLeft, rectangleTop-2);
+			const nextY = clientY - (this.middleRectangle.height/2);
+			this.middleRectangle.updateCoordinates(rectangleLeft, nextY);
 		}
 		if(clientY > yMid){
 			//Move Down
-			this.middleRectangle.updateCoordinates(rectangleLeft, rectangleTop+2);
+			const nextY = clientY - (this.middleRectangle.height/2);
+			this.middleRectangle.updateCoordinates(rectangleLeft, nextY);
 		}
 
 	}
@@ -187,29 +144,48 @@ class BallPen extends React.Component{
 			console.log(this);
 			return false;
 		}
+		let speed = 2;
+		if(this.state.isHeldDown){
+			const currTime			= new Date();
+			const elapsedTime	= currTime - this.state.timePressed;
+			speed *= (elapsedTime/1000);
+		}
+		else{
+      	this.setState({
+				isHeldDown: true,
+				timePressed: new Date(),
+      	});
+		}
 		const rectangleLeft	= this.middleRectangle.xLeft;
 		const rectangleTop	= this.middleRectangle.yTop;
 		if(event.keyCode === 37){
-			//arrow left
 			event.preventDefault();
-			this.middleRectangle.updateCoordinates(rectangleLeft-2, rectangleTop);
+			this.middleRectangle.updateCoordinates(rectangleLeft-speed, rectangleTop);
+			console.log("moved left");
 		}
 		if(event.keyCode === 38){
-			//arrow up
 			event.preventDefault();
-			this.middleRectangle.updateCoordinates(rectangleLeft, rectangleTop-2);
+			this.middleRectangle.updateCoordinates(rectangleLeft, rectangleTop-speed);
+			console.log("moved up");
 		}
 		if(event.keyCode === 39){
-			//arrow right
 			event.preventDefault();
-			this.middleRectangle.updateCoordinates(rectangleLeft+2, rectangleTop);
+			this.middleRectangle.updateCoordinates(rectangleLeft+speed, rectangleTop);
+			console.log("moved right");
 		}
 		if(event.keyCode === 40){
-			//arrow down
 			event.preventDefault();
-			this.middleRectangle.updateCoordinates(rectangleLeft, rectangleTop+2);
+			this.middleRectangle.updateCoordinates(rectangleLeft, rectangleTop+speed);
+			console.log("moved down");
 		}
 		return true;
+	}
+	handleKeyup(){
+      	this.setState({
+				isHeldDown: false,
+				timePressed: null,
+      	});
+			console.log('key up');
 	}
 
    componentDidMount() {
@@ -217,19 +193,19 @@ class BallPen extends React.Component{
       this.updateCanvas();
       this.timerID   = setInterval(
          ()=>this.updateCanvas(),
-        25
+        525
       );
       window.addEventListener('resize', this.updateWindowDimensions);
       document.body.addEventListener('keydown', this.handleKeydown);
+      document.body.addEventListener('keyup', this.handleKeyup);
    }
    componentWillUnmount(){
       clearInterval(this.timerID);
       window.removeEventListener('resize', this.updateWindowDimensions);
       document.body.removeEventListener('keydown', this.handleKeydown);
+      document.body.removeEventListener('keyup', this.handleKeyup);
 		document.body.removeEventListener('mousemove', this.handleCanvasMouseMove);
 		document.body.removeEventListener('mouseup', this.handleCanvasMouseUp);
-		hireMeCanvas.removeEventListener('touchmove', this.handleCanvasMouseMove);
-		hireMeCanvas.removeEventListener('touchend', this.handleCanvasMouseUp);
    }
    componentDidUpdate() {
       this.updateCanvas();
@@ -261,10 +237,10 @@ class BallPen extends React.Component{
       const ctx			= canvas.getContext('2d');
 		if(this.state.width !== 0){
 			this.updateBackground();
-			this.updateMiddleRectangle();
+			if(!this.middleRectangle)
+				this.initMiddleRectangle();
 		}//end if state.width clarity check;
 
-		//this.updateMiddleRectangle();
 		if(this.middleRectangle){
 			this.middleRectangle.draw(ctx);
 			writeToScreen(
@@ -280,14 +256,8 @@ class BallPen extends React.Component{
       const penStyle		= {
          border:   "1px solid #000000"
       };
-		const totalStyle	= {
-			textAlign: "right"
-		};
       return (
          <div>
-				<p style={totalStyle}>
-					Ball Count: {this.state.ballCnt}
-				</p>
             <canvas
 					id="hireMeCanvas"
                ref={canvas => this.	canvasRef = canvas}
@@ -295,7 +265,6 @@ class BallPen extends React.Component{
                height={this.state.height}
                style={penStyle}
 					onMouseDown		= { this.handleCanvasMouseDown }
-					onTouchStart	= { this.handleCanvasMouseDown }
             />
          </div>
       );
