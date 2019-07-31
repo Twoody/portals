@@ -263,21 +263,25 @@ var BallPen = function (_React$Component) {
    */
 			document.body.addEventListener('mousemove', this.handleCanvasMouseMove);
 			document.body.addEventListener('mouseup', this.handleCanvasMouseUp);
-			document.body.addEventListener('touchmove', this.handleCanvasMouseMove);
-			document.body.addEventListener('touchend', this.handleCanvasMouseUp);
+			hireMeCanvas.addEventListener('touchmove', this.handleCanvasMouseMove);
+			hireMeCanvas.addEventListener('touchend', this.handleCanvasMouseUp);
 			if (event.changedTouches && event.changedTouches.length) {
 				//event.preventDefault();
 				this.setState({
 					clickTimer: new Date(), //Start timer
-					xClick: event.changedTouches[0].clientX,
-					yClick: event.changedTouches[0].clientY
+					xClick: Math.round(event.changedTouches[0].clientX),
+					yClick: Math.round(event.changedTouches[0].clientY),
+					isDragging: true
+				});
+			} else {
+				this.setState({
+					clickTimer: new Date(), //Start timer
+					xClick: event.xClick,
+					yClick: event.yClick,
+					isDragging: true
 				});
 			}
-			this.setState({
-				clickTimer: new Date(), //Start timer
-				xClick: event.xClick,
-				yClick: event.yClick
-			});
+			console.log('mouse down');
 		} //end handleCanvasMouseDown
 
 	}, {
@@ -289,16 +293,35 @@ var BallPen = function (_React$Component) {
 			document.body.removeEventListener('mousedown', this.handleCanvasMouseDown);
 			document.body.removeEventListener('mouseup', this.handleCanvasMouseUp);
 			document.body.removeEventListener('mousemove', this.handleCanvasMouseMove);
-			document.body.removeEventListener('touchmove', this.handleCanvasMouseMove);
-			document.body.removeEventListener('touchend', this.handleCanvasMouseUp);
+			hireMeCanvas.removeEventListener('touchstart', this.handleCanvasMouseDown);
+			hireMeCanvas.removeEventListener('touchmove', this.handleCanvasMouseMove);
+			hireMeCanvas.removeEventListener('touchend', this.handleCanvasMouseUp);
 			var endTime = new Date(); //End time of screen click;
 			var elapsedTime = endTime - this.state.clickTimer; //In Milliseconds;
 			if (elapsedTime < 500) {
 				//User just clicked screen
 				this.handleCanvasClick();
 			} else {
-				//User was dragging rectangle;
-				console.log("LONG PRESS DE-ACTIVATED");
+				var isRectangleAtFinalDestination = false;
+				var xMid = this.middleRectangle.xCenter;
+				var yMid = this.middleRectangle.yCenter;
+				var safetyNet = 0;
+
+				while (isRectangleAtFinalDestination === false) {
+					if (this.state.xClick > xMid + 1 && this.state.xClick < xMid - 1) {
+						isRectangleAtFinalDestination = false;
+						this.handleRectangleMove();
+					} else if (this.state.yClick > yMid + 1 && this.state.yClick < xMid - 1) {
+						isRectangleAtFinalDestination = false;
+						this.handleRectangleMove();
+					} else isRectangleAtFinalDestination = true;
+					safetyNet += 1;
+					if (safetyNet > 100) break;
+				} //end while
+				this.setState({
+					isDragging: false
+				});
+				console.log("DRAGGING FINSIHED");
 			}
 		} //end handleCanvasMouseUp()
 
@@ -315,8 +338,8 @@ var BallPen = function (_React$Component) {
 			if (event.changedTouches && event.changedTouches.length) {
 				//event.preventDefault();
 				this.setState({
-					xClick: event.changedTouches[0].clientX,
-					yClick: event.changedTouches[0].clientY
+					xClick: Math.round(event.changedTouches[0].clientX),
+					yClick: Math.round(event.changedTouches[0].clientY)
 				});
 			} else {
 				this.setState({
@@ -324,6 +347,11 @@ var BallPen = function (_React$Component) {
 					yClick: event.clientY
 				});
 			}
+			this.handleRectangleMove();
+		}
+	}, {
+		key: 'handleRectangleMove',
+		value: function handleRectangleMove() {
 			var canvas = this.canvasRef;
 			var rect = canvas.getBoundingClientRect();
 			var clientX = this.state.xClick - rect.left;
@@ -407,8 +435,8 @@ var BallPen = function (_React$Component) {
 			document.body.removeEventListener('keydown', this.handleKeydown);
 			document.body.removeEventListener('mousemove', this.handleCanvasMouseMove);
 			document.body.removeEventListener('mouseup', this.handleCanvasMouseUp);
-			document.body.removeEventListener('touchmove', this.handleCanvasMouseMove);
-			document.body.removeEventListener('touchend', this.handleCanvasMouseUp);
+			hireMeCanvas.removeEventListener('touchmove', this.handleCanvasMouseMove);
+			hireMeCanvas.removeEventListener('touchend', this.handleCanvasMouseUp);
 		}
 	}, {
 		key: 'componentDidUpdate',

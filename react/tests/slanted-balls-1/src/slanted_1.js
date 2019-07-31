@@ -251,21 +251,26 @@ class BallPen extends React.Component{
 		*/
 		document.body.addEventListener('mousemove', this.handleCanvasMouseMove);
 		document.body.addEventListener('mouseup', this.handleCanvasMouseUp);
-		document.body.addEventListener('touchmove', this.handleCanvasMouseMove);
-		document.body.addEventListener('touchend', this.handleCanvasMouseUp);
+		hireMeCanvas.addEventListener('touchmove', this.handleCanvasMouseMove);
+		hireMeCanvas.addEventListener('touchend', this.handleCanvasMouseUp);
 		if(event.changedTouches && event.changedTouches.length){
 			//event.preventDefault();
 			this.setState({
 				clickTimer:	new Date(),	//Start timer
-				xClick:		event.changedTouches[0].clientX,
-				yClick:		event.changedTouches[0].clientY
+				xClick:		Math.round(event.changedTouches[0].clientX),
+				yClick:		Math.round(event.changedTouches[0].clientY),
+				isDragging:	true,
 			});
 		}
-		this.setState({
-			clickTimer:	new Date(),	//Start timer
-			xClick:		event.xClick,
-			yClick:		event.yClick
-		});
+		else{
+			this.setState({
+				clickTimer:	new Date(),	//Start timer
+				xClick:		event.xClick,
+				yClick:		event.yClick,
+				isDragging:	true,
+			});
+		}
+		console.log('mouse down');
 	}//end handleCanvasMouseDown
 	handleCanvasMouseUp(){
 		/* If elapsed time is less than half a second, user just clicked;
@@ -274,8 +279,9 @@ class BallPen extends React.Component{
 		document.body.removeEventListener('mousedown', this.handleCanvasMouseDown);
 		document.body.removeEventListener('mouseup', this.handleCanvasMouseUp);
 		document.body.removeEventListener('mousemove', this.handleCanvasMouseMove);
-		document.body.removeEventListener('touchmove', this.handleCanvasMouseMove);
-		document.body.removeEventListener('touchend', this.handleCanvasMouseUp);
+		hireMeCanvas.removeEventListener('touchstart', this.handleCanvasMouseDown);
+		hireMeCanvas.removeEventListener('touchmove', this.handleCanvasMouseMove);
+		hireMeCanvas.removeEventListener('touchend', this.handleCanvasMouseUp);
 		const endTime		= new Date();	//End time of screen click;
 		const elapsedTime = endTime - this.state.clickTimer; //In Milliseconds;
 		if(elapsedTime < 500){
@@ -283,8 +289,34 @@ class BallPen extends React.Component{
 			this.handleCanvasClick();
 		}
 		else{
-			//User was dragging rectangle;
-			console.log("LONG PRESS DE-ACTIVATED");
+			let isRectangleAtFinalDestination = false;
+			const xMid		= this.middleRectangle.xCenter;
+			const yMid		= this.middleRectangle.yCenter;
+			let safetyNet	= 0;
+
+			while(isRectangleAtFinalDestination === false){
+				if(this.state.xClick > xMid+1
+					&& this.state.xClick < xMid-1
+				){
+					isRectangleAtFinalDestination = false;
+					this.handleRectangleMove();
+				}
+				else if(this.state.yClick > yMid+1
+					&& this.state.yClick < xMid-1
+				){
+					isRectangleAtFinalDestination = false;
+					this.handleRectangleMove();
+				}
+				else
+					isRectangleAtFinalDestination = true;
+				safetyNet += 1;
+				if(safetyNet > 100)
+					break;
+			}//end while
+			this.setState({
+				isDragging:	false,
+			});
+			console.log("DRAGGING FINSIHED");
 		}
 
 	}//end handleCanvasMouseUp()
@@ -299,8 +331,8 @@ class BallPen extends React.Component{
 		if(event.changedTouches && event.changedTouches.length){
 			//event.preventDefault();
 			this.setState({
-				xClick:		event.changedTouches[0].clientX,
-				yClick:		event.changedTouches[0].clientY
+				xClick:		Math.round(event.changedTouches[0].clientX),
+				yClick:		Math.round(event.changedTouches[0].clientY)
 			});
 		}
 		else{
@@ -309,7 +341,10 @@ class BallPen extends React.Component{
 				yClick:		event.clientY
 			});
 		}
-     	const canvas			= this.canvasRef;
+		this.handleRectangleMove();
+	}
+	handleRectangleMove(){
+	  	const canvas			= this.canvasRef;
 		const rect				= canvas.getBoundingClientRect();
 		const clientX			= this.state.xClick - rect.left;
 		const clientY			= this.state.yClick - rect.top;
@@ -334,8 +369,8 @@ class BallPen extends React.Component{
 			//Move Down
 			this.middleRectangle.updateCoordinates(rectangleLeft, rectangleTop+2);
 		}
-	}
 
+	}
 	handleKeydown(event){
 		if(!event && !event.key){
 			console.log("WARNING: KEYBOARD INPUT NOT UNDERSTOOD");
@@ -387,8 +422,8 @@ class BallPen extends React.Component{
       document.body.removeEventListener('keydown', this.handleKeydown);
 		document.body.removeEventListener('mousemove', this.handleCanvasMouseMove);
 		document.body.removeEventListener('mouseup', this.handleCanvasMouseUp);
-		document.body.removeEventListener('touchmove', this.handleCanvasMouseMove);
-		document.body.removeEventListener('touchend', this.handleCanvasMouseUp);
+		hireMeCanvas.removeEventListener('touchmove', this.handleCanvasMouseMove);
+		hireMeCanvas.removeEventListener('touchend', this.handleCanvasMouseUp);
    }
    componentDidUpdate() {
       this.updateCanvas();
