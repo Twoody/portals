@@ -254,6 +254,7 @@ class BallPen extends React.Component{
 		document.body.addEventListener('touchmove', this.handleCanvasMouseMove);
 		document.body.addEventListener('touchend', this.handleCanvasMouseUp);
 		if(event.changedTouches && event.changedTouches.length){
+			//event.preventDefault();
 			this.setState({
 				clickTimer:	new Date(),	//Start timer
 				xClick:		event.changedTouches[0].clientX,
@@ -301,7 +302,6 @@ class BallPen extends React.Component{
 				xClick:		event.changedTouches[0].clientX,
 				yClick:		event.changedTouches[0].clientY
 			});
-			console.log(event.changedTouches[0].clientX);
 		}
 		else{
 			this.setState({
@@ -334,7 +334,6 @@ class BallPen extends React.Component{
 			//Move Down
 			this.middleRectangle.updateCoordinates(rectangleLeft, rectangleTop+2);
 		}
-
 	}
 
 	handleKeydown(event){
@@ -594,6 +593,7 @@ class BallPen extends React.Component{
 					Ball Count: {this.state.ballCnt}
 				</p>
             <canvas
+					id="hireMeCanvas"
                ref={canvas => this.	canvasRef = canvas}
                width={this.state.width}
                height={this.state.height}

@@ -266,6 +266,7 @@ var BallPen = function (_React$Component) {
 			document.body.addEventListener('touchmove', this.handleCanvasMouseMove);
 			document.body.addEventListener('touchend', this.handleCanvasMouseUp);
 			if (event.changedTouches && event.changedTouches.length) {
+				//event.preventDefault();
 				this.setState({
 					clickTimer: new Date(), //Start timer
 					xClick: event.changedTouches[0].clientX,
@@ -317,7 +318,6 @@ var BallPen = function (_React$Component) {
 					xClick: event.changedTouches[0].clientX,
 					yClick: event.changedTouches[0].clientY
 				});
-				console.log(event.changedTouches[0].clientX);
 			} else {
 				this.setState({
 					xClick: event.clientX,
@@ -606,6 +606,7 @@ var BallPen = function (_React$Component) {
 					this.state.ballCnt
 				),
 				React.createElement('canvas', {
+					id: 'hireMeCanvas',
 					ref: function ref(canvas) {
 						return _this3.canvasRef = canvas;
 					},

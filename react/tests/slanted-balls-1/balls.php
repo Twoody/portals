@@ -43,8 +43,8 @@ $CONFIG['ACTIVE_PAGE']		= __FILE__;
 require_once($PATHS['LIBPATH_DB_PAGES']);
 require_once($PATHS['TEMPLATES_B']);
 
-//$CONFIG['CUSTOM_STYLES'] .= "\n<style></style>";
-//$CONFIG['CUSTOM_SCRIPTS'] .= "\n<script></script>";
+//$CONFIG['CUSTOM_STYLES'] .= "\n<style>hireMeCanvas{touch-action:none}</style>";
+
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"./Balls.js\"></script>";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"./Rectangle.js\"></script>";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"./utils.js\"></script>";
