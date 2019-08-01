@@ -12,6 +12,7 @@ class BallPen extends React.Component{
 			yClick:		0,
       };
 		this.movableRectangle	= null;
+		this.ball					= null;
       this.updateWindowDimensions	= this.updateWindowDimensions.bind(this);
 		this.handleKeydown				= this.handleKeydown.bind(this);
 		this.handleKeyup					= this.handleKeyup.bind(this);
@@ -20,6 +21,8 @@ class BallPen extends React.Component{
 		this.handleCanvasMouseUp		= this.handleCanvasMouseUp.bind(this);
    }
 	initMiddleRectangle(){
+		//Initialize a middle rectangle;
+		//Rectangle is going to have draggable properties;
 		const middleCords	= getMiddleOfCanvas(this.state.width, this.state.height);
 		const width			= 110;
 		const height		= 30;
@@ -35,14 +38,21 @@ class BallPen extends React.Component{
 		});
 		this.movableRectangle = rectangle;
 	}//end updateMiddleRectangle()
+	initBall(){
+		if(!this.ball)
+			this.ball = makeRandomBall(this.state.width, this.state.height, 0, 30, 30, 30);
+	}
 	updateBackground(){
+		if(this.state.width === 0)
+			return false;
      	const canvas	= this.canvasRef;
      	let ctx			= canvas.getContext('2d');
 		ctx.beginPath();
 		ctx.fillStyle = BACKGROUND_COLOR;
 		ctx.fillRect(0, 0, this.state.width, this.state.height);
 		ctx.closePath();
-	}
+		return true;
+	}//end updateBackground();
 
 	handleCanvasClick(){
      	const canvas		= this.canvasRef;
@@ -128,6 +138,7 @@ class BallPen extends React.Component{
 			});
 		}
 		this.handleRectangleDrag();
+      this.updateRectangle();
 	}
 	handleRectangleDrag(){
 	  	const canvas			= this.canvasRef;
@@ -228,6 +239,7 @@ class BallPen extends React.Component{
 			this.state.width, 
 			this.state.height
 		);
+      this.updateRectangle();
 		return true;
 	}
 	handleKeyup(){
@@ -238,16 +250,21 @@ class BallPen extends React.Component{
 			console.log('key up');
 	}
 
-   componentDidMount() {
-      this.updateWindowDimensions();
-      this.updateCanvas();
+   componentDidMount(){
+ 	   this.updateWindowDimensions();
+   	this.updateBackground();
+		this.initMiddleRectangle;
       this.canvasTimerID   = setInterval(
-         ()=>this.updateCanvas(),
-        525
+         ()=>this.updateBackground(),
+        225
       );
       this.rectangleTimerID   = setInterval(
          ()=>this.updateRectangle(),
-        525
+        225
+      );
+      this.ballTimerID   = setInterval(
+         ()=>this.updateBall(),
+        25
       );
       window.addEventListener('resize', this.updateWindowDimensions);
       document.body.addEventListener('keydown', this.handleKeydown);
@@ -255,6 +272,8 @@ class BallPen extends React.Component{
    }
    componentWillUnmount(){
       clearInterval(this.rectangleTimerID);
+      clearInterval(this.canvasTimerID);
+      clearInterval(this.ballTimerID);
       window.removeEventListener('resize', this.updateWindowDimensions);
       document.body.removeEventListener('keydown', this.handleKeydown);
       document.body.removeEventListener('keyup', this.handleKeyup);
@@ -265,8 +284,7 @@ class BallPen extends React.Component{
 		hireMeCanvas.removeEventListener('touchend', this.handleCanvasMouseUp);
    }
    componentDidUpdate() {
-      this.updateCanvas();
-      this.updateRectangle();
+		//Going to handle updates as we go to enhance efficiency;
    }
 
    updateWindowDimensions() {
@@ -287,6 +305,8 @@ class BallPen extends React.Component{
          width: width, 
          height: height
       });
+
+      this.updateBackground();
 		if(this.movableRectangle){
 			//Following hack to see if current coordinates are 
 			//	colliding with wall or not;
@@ -296,15 +316,18 @@ class BallPen extends React.Component{
 				this.state.width, 
 				this.state.height
 			);
+      	this.updateRectangle();
 		}
-
+		//Update objects on screen;
       return;
    }//end updateWindowDimenstions()
-   updateCanvas(){
-		if(this.state.width !== 0){
-			this.updateBackground();
-		}
-   }//End updateCanvas()
+	updateBall(){
+		if(!this.ball)
+			this.initBall();
+      const canvas	= this.canvasRef;
+      const ctx		= canvas.getContext('2d');
+		this.ball.draw(ctx);
+	}
    updateRectangle(){
 		if(this.state.width === 0)
 			return;
@@ -313,6 +336,12 @@ class BallPen extends React.Component{
 
       const canvas	= this.canvasRef;
       const ctx		= canvas.getContext('2d');
+      ctx.clearRect(
+			this.movableRectangle.xLeft,
+			this.movableRectangle.yTop,
+			this.movableRectangle.width,
+			this.movableRectangle.height,
+		);
 		//this.movableRectangle.handleWallCollisions();
 		this.movableRectangle.draw(ctx);
 		writeToScreen(
