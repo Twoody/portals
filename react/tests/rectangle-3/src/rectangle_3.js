@@ -127,9 +127,9 @@ class BallPen extends React.Component{
 				yClick:		event.clientY
 			});
 		}
-		this.handleRectangleMove();
+		this.handleRectangleDrag();
 	}
-	handleRectangleMove(){
+	handleRectangleDrag(){
 	  	const canvas			= this.canvasRef;
 		const rect				= canvas.getBoundingClientRect();
 		const clientX			= this.state.xClick - rect.left;
@@ -162,8 +162,14 @@ class BallPen extends React.Component{
 		else{
 			//Same position
 		}
-		this.movableRectangle.updateCoordinates(nextX, nextY);
-	}//end handleRectangleMove();
+		
+		this.movableRectangle.handleRectangleMove(
+			nextX, 
+			nextY, 
+			this.state.width, 
+			this.state.height
+		);
+	}//end handleRectangleDrag();
 	handleKeydown(event){
 		if(!event && !event.key){
 			console.log("WARNING: KEYBOARD INPUT NOT UNDERSTOOD");
@@ -179,7 +185,7 @@ class BallPen extends React.Component{
 		let nextY 		= this.movableRectangle.yTop;
 
 		if(!goodCodes.includes(event.keyCode))
-			return;
+			return false;
 
 		//Figure out speed
 		if(this.state.isHeldDown){
@@ -215,7 +221,13 @@ class BallPen extends React.Component{
 			nextY += speed;
 			console.log("moved down");
 		}
-		this.movableRectangle.updateCoordinates(nextX, nextY);
+
+		this.movableRectangle.handleRectangleMove(
+			nextX, 
+			nextY, 
+			this.state.width, 
+			this.state.height
+		);
 		return true;
 	}
 	handleKeyup(){

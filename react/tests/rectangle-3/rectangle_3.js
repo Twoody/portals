@@ -152,11 +152,11 @@ var BallPen = function (_React$Component) {
 					yClick: event.clientY
 				});
 			}
-			this.handleRectangleMove();
+			this.handleRectangleDrag();
 		}
 	}, {
-		key: 'handleRectangleMove',
-		value: function handleRectangleMove() {
+		key: 'handleRectangleDrag',
+		value: function handleRectangleDrag() {
 			var canvas = this.canvasRef;
 			var rect = canvas.getBoundingClientRect();
 			var clientX = this.state.xClick - rect.left;
@@ -185,8 +185,9 @@ var BallPen = function (_React$Component) {
 			} else {
 				//Same position
 			}
-			this.movableRectangle.updateCoordinates(nextX, nextY);
-		} //end handleRectangleMove();
+
+			this.movableRectangle.handleRectangleMove(nextX, nextY, this.state.width, this.state.height);
+		} //end handleRectangleDrag();
 
 	}, {
 		key: 'handleKeydown',
@@ -204,7 +205,7 @@ var BallPen = function (_React$Component) {
 			var nextX = this.movableRectangle.xLeft;
 			var nextY = this.movableRectangle.yTop;
 
-			if (!goodCodes.includes(event.keyCode)) return;
+			if (!goodCodes.includes(event.keyCode)) return false;
 
 			//Figure out speed
 			if (this.state.isHeldDown) {
@@ -238,7 +239,8 @@ var BallPen = function (_React$Component) {
 				nextY += speed;
 				console.log("moved down");
 			}
-			this.movableRectangle.updateCoordinates(nextX, nextY);
+
+			this.movableRectangle.handleRectangleMove(nextX, nextY, this.state.width, this.state.height);
 			return true;
 		}
 	}, {
