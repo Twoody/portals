@@ -6,3 +6,5 @@ Touch has not been implemented yet:
 	touchmove
 	touchstart
 
+Status:
+	Working on mobile and with touches and online;
