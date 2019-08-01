@@ -181,7 +181,11 @@ var BallPen = function (_React$Component) {
 			if (this.state.isHeldDown) {
 				var currTime = new Date();
 				var elapsedTime = currTime - this.state.timePressed;
-				speed *= elapsedTime / 1000;
+				speed += elapsedTime / 100;
+				if (speed > this.middleRectangle.width) speed = this.middleRectangle.width / 2 - 0.01;
+				console.log('etime: ' + elapsedTime);
+				console.log(this.middleRectangle.width);
+				console.log(speed);
 			} else {
 				this.setState({
 					isHeldDown: true,
@@ -228,9 +232,12 @@ var BallPen = function (_React$Component) {
 
 			this.updateWindowDimensions();
 			this.updateCanvas();
-			this.timerID = setInterval(function () {
+			this.canvasTimerID = setInterval(function () {
 				return _this2.updateCanvas();
 			}, 525);
+			this.rectangleTimerID = setInterval(function () {
+				return _this2.updateRectangle();
+			}, 25);
 			window.addEventListener('resize', this.updateWindowDimensions);
 			document.body.addEventListener('keydown', this.handleKeydown);
 			document.body.addEventListener('keyup', this.handleKeyup);
@@ -238,7 +245,7 @@ var BallPen = function (_React$Component) {
 	}, {
 		key: 'componentWillUnmount',
 		value: function componentWillUnmount() {
-			clearInterval(this.timerID);
+			clearInterval(this.rectangleTimerID);
 			window.removeEventListener('resize', this.updateWindowDimensions);
 			document.body.removeEventListener('keydown', this.handleKeydown);
 			document.body.removeEventListener('keyup', this.handleKeyup);
@@ -249,14 +256,13 @@ var BallPen = function (_React$Component) {
 		key: 'componentDidUpdate',
 		value: function componentDidUpdate() {
 			this.updateCanvas();
+			this.updateRectangle();
 		}
 	}, {
 		key: 'updateWindowDimensions',
 		value: function updateWindowDimensions() {
-			var canvas = this.canvasRef;
 			var width = window.innerWidth;
 			var height = window.innerHeight;
-			var ctx = canvas.getContext('2d');
 			if (width && width > 575) width -= 320; //Buffer for not x-small
 			else {
 					width -= 120; //Buffer for x-small
@@ -270,22 +276,29 @@ var BallPen = function (_React$Component) {
 			});
 			this.updateBackground();
 			return;
-		}
+		} //end updateWindowDimenstions()
+
 	}, {
 		key: 'updateCanvas',
 		value: function updateCanvas() {
-			var canvas = this.canvasRef;
-			var ctx = canvas.getContext('2d');
 			if (this.state.width !== 0) {
 				this.updateBackground();
-				if (!this.middleRectangle) this.initMiddleRectangle();
 			} //end if state.width clarity check;
+		} //End updateCanvas()
 
+	}, {
+		key: 'updateRectangle',
+		value: function updateRectangle() {
+			if (this.state.width === 0) return;
+			if (!this.middleRectangle) this.initMiddleRectangle();
+
+			var canvas = this.canvasRef;
+			var ctx = canvas.getContext('2d');
 			if (this.middleRectangle) {
 				this.middleRectangle.draw(ctx);
 				writeToScreen(ctx, "HIRE ME", this.middleRectangle.xCenter - 50, this.middleRectangle.yCenter + 7, getRandomColor());
 			}
-		} //End updateCanvas()
+		} //End updateRectangle()
 
 	}, {
 		key: 'render',
