@@ -1,1 +1,8 @@
-Going to try to implement rectangles and a maze;
+Implementing drag and drop for canvas rectangle;
+This example focuses on getting the drag and drop to work specifically
+	with mouse clicks;
+Touch has not been implemented yet:
+	touchend
+	touchmove
+	touchstart
+
