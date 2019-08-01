@@ -56,11 +56,14 @@ class BallPen extends React.Component{
 		*/
 		if(event.changedTouches && event.changedTouches.length){
 			//Touch event: Mobile + touch screen laptops;
-			hireMeCanvas.addEventListener(
-				'touchmove', 
-				this.handleCanvasMouseMove,
+			hireMeCanvas.addEventListener( 'touchmove', 
+				ev =>{
+					ev.preventDefault();
+					ev.stopImmediatePropagation;
+				},
 				{passive:false}
 			);
+			hireMeCanvas.addEventListener( 'touchmove', this.handleCanvasMouseMove);
 			hireMeCanvas.addEventListener('touchend', this.handleCanvasMouseUp);
 			//event.preventDefault();
 			this.setState({
@@ -300,7 +303,7 @@ class BallPen extends React.Component{
    render(){
       const penStyle		= {
          border:   "1px solid #000000",
-			touch-action: "none",
+			touchAction: "none",
       };
       return (
          <div>

@@ -81,6 +81,10 @@ var BallPen = function (_React$Component) {
    */
 			if (event.changedTouches && event.changedTouches.length) {
 				//Touch event: Mobile + touch screen laptops;
+				hireMeCanvas.addEventListener('touchmove', function (ev) {
+					ev.preventDefault();
+					ev.stopImmediatePropagation;
+				}, { passive: false });
 				hireMeCanvas.addEventListener('touchmove', this.handleCanvasMouseMove);
 				hireMeCanvas.addEventListener('touchend', this.handleCanvasMouseUp);
 				//event.preventDefault();
@@ -330,7 +334,8 @@ var BallPen = function (_React$Component) {
 			var _this3 = this;
 
 			var penStyle = {
-				border: "1px solid #000000"
+				border: "1px solid #000000",
+				touchAction: "none"
 			};
 			return React.createElement(
 				'div',
