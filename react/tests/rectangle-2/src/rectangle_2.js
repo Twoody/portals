@@ -295,7 +295,8 @@ class BallPen extends React.Component{
    }//End updateRectangle()
    render(){
       const penStyle		= {
-         border:   "1px solid #000000"
+         border:   "1px solid #000000",
+			touch-action: "none",
       };
       return (
          <div>
