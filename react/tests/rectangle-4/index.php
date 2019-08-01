@@ -45,6 +45,7 @@ require_once($PATHS['TEMPLATES_B']);
 
 //$CONFIG['CUSTOM_STYLES'] .= "\n<style>hireMeCanvas{touch-action:none}</style>";
 
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"./Balls.js\"></script>";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"./Rectangle.js\"></script>";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"./utils.js\"></script>";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script type=\"text/babel\" src=\"".$react_js."\"></script>";
