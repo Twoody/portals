@@ -143,7 +143,6 @@ var BallPen = function (_React$Component) {
 			var yMid = this.movableRectangle.yCenter;
 			var rectangleLeft = this.movableRectangle.xLeft;
 			var rectangleTop = this.movableRectangle.yTop;
-
 			var nextX = this.movableRectangle.xLeft;
 			var nextY = this.movableRectangle.yTop;
 			if (clientX < xMid) {

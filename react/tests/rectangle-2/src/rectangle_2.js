@@ -111,9 +111,8 @@ class BallPen extends React.Component{
 		const yMid				= this.movableRectangle.yCenter;
 		const rectangleLeft	= this.movableRectangle.xLeft;
 		const rectangleTop	= this.movableRectangle.yTop;
-
-		let nextX = this.movableRectangle.xLeft;
-		let nextY = this.movableRectangle.yTop;
+		let nextX 				= this.movableRectangle.xLeft;
+		let nextY 				= this.movableRectangle.yTop;
 		if(clientX < xMid){
 			//Move left
 			nextX = clientX - (this.movableRectangle.width/2);
@@ -137,7 +136,6 @@ class BallPen extends React.Component{
 			//Same position
 		}
 		this.movableRectangle.updateCoordinates(nextX, nextY);
-
 	}//end handleRectangleMove();
 	handleKeydown(event){
 		if(!event && !event.key){
