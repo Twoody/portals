@@ -91,8 +91,7 @@ var BallPen = function (_React$Component) {
 				this.setState({
 					clickTimer: new Date(), //Start timer
 					xClick: Math.round(event.changedTouches[0].clientX),
-					yClick: Math.round(event.changedTouches[0].clientY),
-					isDragging: true
+					yClick: Math.round(event.changedTouches[0].clientY)
 				});
 			} else {
 				document.body.addEventListener('mousemove', this.handleCanvasMouseMove);
@@ -139,7 +138,6 @@ var BallPen = function (_React$Component) {
 			//TODO: Get movement of mouse and move rectangle accordingly;
 			if (!this.movableRectangle) {
 				console.log("WARNING: Rectangle not initialized yet;");
-				console.log(this);
 				return false;
 			}
 			if (event.changedTouches && event.changedTouches.length) {
@@ -199,46 +197,48 @@ var BallPen = function (_React$Component) {
 			}
 			if (!this.movableRectangle) {
 				console.log("WARNING: Rectangle not initialized yet;");
-				console.log(this);
 				return false;
 			}
+			var goodCodes = [37, 38, 39, 40];
 			var speed = 2;
+			var nextX = this.movableRectangle.xLeft;
+			var nextY = this.movableRectangle.yTop;
+
+			if (!goodCodes.includes(event.keyCode)) return;
+
+			//Figure out speed
 			if (this.state.isHeldDown) {
 				var currTime = new Date();
 				var elapsedTime = currTime - this.state.timePressed;
 				speed += elapsedTime / 100;
-				if (speed > this.movableRectangle.width) speed = this.movableRectangle.width / 2 - 0.01;
-				console.log('etime: ' + elapsedTime);
-				console.log(this.movableRectangle.width);
-				console.log(speed);
+				if (speed > this.movableRectangle.width) speed = this.movableRectangle.width / 2 - 0.01; //Buffer
 			} else {
 				this.setState({
 					isHeldDown: true,
 					timePressed: new Date()
 				});
 			}
-			var rectangleLeft = this.movableRectangle.xLeft;
-			var rectangleTop = this.movableRectangle.yTop;
 			if (event.keyCode === 37) {
 				event.preventDefault();
-				this.movableRectangle.updateCoordinates(rectangleLeft - speed, rectangleTop);
+				nextX -= speed;
 				console.log("moved left");
 			}
 			if (event.keyCode === 38) {
 				event.preventDefault();
-				this.movableRectangle.updateCoordinates(rectangleLeft, rectangleTop - speed);
+				nextY -= speed;
 				console.log("moved up");
 			}
 			if (event.keyCode === 39) {
 				event.preventDefault();
-				this.movableRectangle.updateCoordinates(rectangleLeft + speed, rectangleTop);
+				nextX += speed;
 				console.log("moved right");
 			}
 			if (event.keyCode === 40) {
 				event.preventDefault();
-				this.movableRectangle.updateCoordinates(rectangleLeft, rectangleTop + speed);
+				nextY += speed;
 				console.log("moved down");
 			}
+			this.movableRectangle.updateCoordinates(nextX, nextY);
 			return true;
 		}
 	}, {
@@ -262,7 +262,7 @@ var BallPen = function (_React$Component) {
 			}, 525);
 			this.rectangleTimerID = setInterval(function () {
 				return _this2.updateRectangle();
-			}, 25);
+			}, 525);
 			window.addEventListener('resize', this.updateWindowDimensions);
 			document.body.addEventListener('keydown', this.handleKeydown);
 			document.body.addEventListener('keyup', this.handleKeyup);
@@ -311,7 +311,7 @@ var BallPen = function (_React$Component) {
 		value: function updateCanvas() {
 			if (this.state.width !== 0) {
 				this.updateBackground();
-			} //end if state.width clarity check;
+			}
 		} //End updateCanvas()
 
 	}, {
@@ -322,10 +322,9 @@ var BallPen = function (_React$Component) {
 
 			var canvas = this.canvasRef;
 			var ctx = canvas.getContext('2d');
-			if (this.movableRectangle) {
-				this.movableRectangle.draw(ctx);
-				writeToScreen(ctx, "HIRE ME", this.movableRectangle.xCenter - 50, this.movableRectangle.yCenter + 7, getRandomColor());
-			}
+			//this.movableRectangle.handleWallCollisions();
+			this.movableRectangle.draw(ctx);
+			writeToScreen(ctx, "HIRE ME", this.movableRectangle.xCenter - 50, this.movableRectangle.yCenter + 7, getRandomColor());
 		} //End updateRectangle()
 
 	}, {
