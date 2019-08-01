@@ -34,6 +34,19 @@ class Rectangle{
 		ctx.fill();
 		ctx.closePath();
 	}
+	handleRectangleMove(nextX, nextY, sWidth, sHeight){
+		//Handle rectangle movement:
+		//Find out what item is out of bounds and fix accordingly;
+		if(nextX < 0)
+			nextX = 0;
+		if(nextX + this.width > sWidth)
+			nextX = sWidth - this.width;
+		if(nextY < 0)
+			nextY = 0;
+		if(nextY + this.height > sHeight)
+			nextY = sHeight - this.height;
+		this.updateCoordinates(nextX, nextY);
+	}
 	isOverLappingBall(ball){
 		//Each distance should be positive;
 		//rectangle bottom is highest value: subtract top of ball from it;
@@ -51,5 +64,17 @@ class Rectangle{
 		const isOverLapping =  (isBallAboveBottom && isBallBelowTop 
 											&& isBallLeftOfRight && isBallRightOfLeft);
 		return isOverLapping;
+	}
+	isInBounds(width, height){
+		//Determine if rectangle fits the screen width and screen height;
+		if(this.xLeft < 0)
+			return false;
+		if(this.xRight > width)
+			return false;
+		if(this.yTop < 0)
+			return false;
+		if(this.yBottom > height)
+			return false;
+		return true;
 	}
 }//End Rectangle Class
