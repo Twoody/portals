@@ -54,13 +54,27 @@ class BallPen extends React.Component{
 		/* Determine if click is long press or just a click;
 			Will call functions on mouseup and mousemove;
 		*/
-		document.body.addEventListener('mousemove', this.handleCanvasMouseMove);
-		document.body.addEventListener('mouseup', this.handleCanvasMouseUp);
-		this.setState({
-			clickTimer:	new Date(),	//Start timer
-			xClick:		event.xClick,
-			yClick:		event.yClick,
-		});
+		if(event.changedTouches && event.changedTouches.length){
+			//Touch event: Mobile + touch screen laptops;
+			hireMeCanvas.addEventListener('touchmove', this.handleCanvasMouseMove);
+			hireMeCanvas.addEventListener('touchend', this.handleCanvasMouseUp);
+			//event.preventDefault();
+			this.setState({
+				clickTimer:	new Date(),	//Start timer
+				xClick:		Math.round(event.changedTouches[0].clientX),
+				yClick:		Math.round(event.changedTouches[0].clientY),
+				isDragging:	true,
+			});
+		}
+		else{
+			document.body.addEventListener('mousemove', this.handleCanvasMouseMove);
+			document.body.addEventListener('mouseup', this.handleCanvasMouseUp);
+			this.setState({
+				clickTimer:	new Date(),	//Start timer
+				xClick:		event.xClick,
+				yClick:		event.yClick,
+			});
+		}
 	}//end handleCanvasMouseDown
 	handleCanvasMouseUp(){
 		/* If elapsed time is less than half a second, user just clicked;
@@ -95,11 +109,19 @@ class BallPen extends React.Component{
 			console.log(this);
 			return false;
 		}
-
-		this.setState({
-			xClick:		event.clientX,
-			yClick:		event.clientY
-		});
+		if(event.changedTouches && event.changedTouches.length){
+			//event.preventDefault();
+			this.setState({
+				xClick:		Math.round(event.changedTouches[0].clientX),
+				yClick:		Math.round(event.changedTouches[0].clientY)
+			});
+		}
+		else{
+			this.setState({
+				xClick:		event.clientX,
+				yClick:		event.clientY
+			});
+		}
 		this.handleRectangleMove();
 	}
 	handleRectangleMove(){
@@ -218,6 +240,9 @@ class BallPen extends React.Component{
       document.body.removeEventListener('keyup', this.handleKeyup);
 		document.body.removeEventListener('mousemove', this.handleCanvasMouseMove);
 		document.body.removeEventListener('mouseup', this.handleCanvasMouseUp);
+		hireMeCanvas.removeEventListener('touchstart', this.handleCanvasMouseDown);
+		hireMeCanvas.removeEventListener('touchmove', this.handleCanvasMouseMove);
+		hireMeCanvas.removeEventListener('touchend', this.handleCanvasMouseUp);
    }
    componentDidUpdate() {
       this.updateCanvas();
@@ -281,6 +306,7 @@ class BallPen extends React.Component{
                height={this.state.height}
                style={penStyle}
 					onMouseDown		= { this.handleCanvasMouseDown }
+					onTouchStart	= { this.handleCanvasMouseDown }
             />
          </div>
       );
