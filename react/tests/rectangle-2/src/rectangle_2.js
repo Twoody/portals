@@ -56,7 +56,11 @@ class BallPen extends React.Component{
 		*/
 		if(event.changedTouches && event.changedTouches.length){
 			//Touch event: Mobile + touch screen laptops;
-			hireMeCanvas.addEventListener('touchmove', this.handleCanvasMouseMove);
+			hireMeCanvas.addEventListener(
+				'touchmove', 
+				this.handleCanvasMouseMove,
+				{passive:false}
+			);
 			hireMeCanvas.addEventListener('touchend', this.handleCanvasMouseUp);
 			//event.preventDefault();
 			this.setState({
