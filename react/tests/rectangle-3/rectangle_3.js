@@ -305,6 +305,12 @@ var BallPen = function (_React$Component) {
 				width: width,
 				height: height
 			});
+			if (this.movableRectangle) {
+				//Following hack to see if current coordinates are 
+				//	colliding with wall or not;
+				this.movableRectangle.handleRectangleMove(this.movableRectangle.xLeft, this.movableRectangle.yTop, this.state.width, this.state.height);
+			}
+
 			return;
 		} //end updateWindowDimenstions()
 
