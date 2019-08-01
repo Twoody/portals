@@ -1,3 +1,9 @@
+function getMiddleOfCanvas(width, height){
+		let cords = {};
+		cords.x = width/2;
+		cords.y = height/2;
+		return cords;
+}
 function getRandomColor(){
 	let red		= Math.floor(Math.random() * 3) * 127;
 	let green	= Math.floor(Math.random() * 3) * 127;
@@ -17,10 +23,3 @@ function writeToScreen(ctx, msg, x, y, color="black"){
 	ctx.fillText(msg, x, y);
 	ctx.closePath();
 }
-function getMiddleOfCanvas(width, height){
-		let cords = {};
-		cords.x = width/2;
-		cords.y = height/2;
-		return cords;
-}
-
