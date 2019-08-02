@@ -1,3 +1,9 @@
+function distanceBetween(x1, y1, x2, y2) {
+	var xDiff = x1 - x2;
+	var yDiff = y1 - y2;
+	var distance = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
+	return distance;
+}
 function getMiddleOfCanvas(width, height) {
 	var cords = {};
 	cords.x = width / 2;

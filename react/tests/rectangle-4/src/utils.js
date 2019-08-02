@@ -1,3 +1,9 @@
+function distanceBetween(x1, y1, x2, y2){
+	const xDiff 	= x1-x2;
+	const yDiff 	= y1-y2;
+	const distance	= Math.sqrt(xDiff**2 + yDiff**2);
+	return distance;
+}
 function getMiddleOfCanvas(width, height){
 		let cords = {};
 		cords.x = width/2;
