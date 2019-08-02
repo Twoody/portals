@@ -402,7 +402,6 @@ var BallPen = function (_React$Component) {
 
 			var canvas = this.canvasRef;
 			var ctx = canvas.getContext('2d');
-			//this.movableRectangle.handleWallCollisions();
 			this.drawRectangle(ctx);
 		} //End updateRectangle()
 

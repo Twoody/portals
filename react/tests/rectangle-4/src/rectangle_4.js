@@ -389,7 +389,6 @@ class BallPen extends React.Component{
 
       const canvas	= this.canvasRef;
       const ctx		= canvas.getContext('2d');
-		//this.movableRectangle.handleWallCollisions();
 		this.drawRectangle(ctx);
 	}//End updateRectangle()
 	drawBall(ctx){
