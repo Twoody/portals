@@ -67,12 +67,6 @@ class Ball{
 		const distance	= Math.sqrt(xDiff**2 + yDiff**2);
 		return distance;
 	}
-	distanceBetween(x1, y1, x2, y2){
-		const xDiff 	= x1-x2;
-		const yDiff 	= y1-y2;
-		const distance	= Math.sqrt(xDiff**2 + yDiff**2);
-		return distance;
-	}
 	draw(ctx){
 		ctx.beginPath();
 		ctx.arc(
@@ -153,6 +147,18 @@ class Ball{
 		}//end i-for
 	}//End handleBallCollision()
 	handleBoundaries(width, height, allBalls){
+		/*	Analyze current state of ball compared to:
+				1. Other balls
+				2. Screen
+				3. TODO: rectangles
+			If there is an overlap, shrink the ball and accelerate it;
+			Input:
+				width: int: Available width for ball to live in;
+				height: int: Availabe height for ball to live in;
+				allBalls: array: Balls to compare this ball to.
+			Output:
+				None
+		*/
 		const y 	= this.yCord;
 		const xL	= this.xCord - this.dx;
 		const xR	= this.xCord + this.dx;
@@ -161,8 +167,8 @@ class Ball{
 			if(otherBall === this)
 				continue;
 			const minDistance		= this.radius + otherBall.radius;
-			const leftDistance	= this.distanceBetween(xL, y, otherBall.nextX, otherBall.nextY);
-			const rightDistance	= this.distanceBetween(xR, y, otherBall.nextX, otherBall.nextY);
+			const leftDistance	= distanceBetween(xL, y, otherBall.nextX, otherBall.nextY);
+			const rightDistance	= distanceBetween(xR, y, otherBall.nextX, otherBall.nextY);
 			if(rightDistance < minDistance && leftDistance < minDistance ){
 				this.canGoDown = false;
 				this.canGoUp = false;
@@ -447,28 +453,27 @@ class Ball{
 		}
 	}//End handleWallCollision
 	handleWindowResize(maxWidth, maxHeight){
-		const ballBottom = this.yCord + this.radius;
-		const ballTop    = this.yCord - this.radius;
-		const ballRight  = this.xCord + this.radius;
-		const ballLeft   = this.xCord - this.radius;
-		if(ballBottom >= maxHeight){
-			this.yCord = maxHeight - this.radius;
+		let ballBottom	= this.yCord + this.radius;
+		let ballTop		= this.yCord - this.radius;
+		if(ballBottom > height){
+			this.yCord = height - this.radius;
+			this.accelerate(4, 10);
 			this.shrink();
 		}
-		else
-			this.canGoDown = true;
 		if(ballTop <= 0){
-			this.yCord = 0 + this.radius;
-			this.accelerate(5, 20);
 			this.shrink();
 		}
-		if(ballRight >= maxWidth){
-			this.xCord = maxWidth - this.radius;
-			this.shrink();
-		}
-		if(ballLeft <= 0){
-			this.xCord = 0 + this.radius;
-			this.shrink();
+		for(let j=i+1; j<this.balls.length; j++){
+			let otherBall = this.balls[j];
+			const minDistance = this.radius + otherBall.radius;
+			const curDistance	= distanceBetween(
+				this.xCord,
+				this.yCord,
+				otherBall.xCord,
+				otherBall.yCord,
+			);
+			if(curDistance < minDistance)
+				this.shrink();
 		}
 	}//end handleWindowResize()
 	hitBottom(maxHeight){
