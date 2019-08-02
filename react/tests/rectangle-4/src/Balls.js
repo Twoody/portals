@@ -452,19 +452,19 @@ class Ball{
 			//No collision
 		}
 	}//End handleWallCollision
-	handleWindowResize(maxWidth, maxHeight){
+	handleWindowResize(maxWidth, maxHeight, otherBalls){
 		let ballBottom	= this.yCord + this.radius;
 		let ballTop		= this.yCord - this.radius;
-		if(ballBottom > height){
-			this.yCord = height - this.radius;
+		if(ballBottom > maxHeight){
+			this.yCord = maxHeight - this.radius;
 			this.accelerate(4, 10);
 			this.shrink();
 		}
 		if(ballTop <= 0){
 			this.shrink();
 		}
-		for(let j=i+1; j<this.balls.length; j++){
-			let otherBall = this.balls[j];
+		for(let i=0; i<otherBalls.length; i++){
+			let otherBall = this.balls[i];
 			const minDistance = this.radius + otherBall.radius;
 			const curDistance	= distanceBetween(
 				this.xCord,
@@ -474,7 +474,7 @@ class Ball{
 			);
 			if(curDistance < minDistance)
 				this.shrink();
-		}
+		}//end i-for
 	}//end handleWindowResize()
 	hitBottom(maxHeight){
 		const ballMaxBottom = this.nextY + this.radius;

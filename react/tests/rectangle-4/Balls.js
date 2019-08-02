@@ -88,9 +88,9 @@ var Ball = function () {
 		key: 'handleBallCollisions',
 		value: function handleBallCollisions(allBalls) {
 			//Find out if NEXT coordinates overlap anything;
-			for (var _i = 0; _i < allBalls.length; _i++) {
-				if (this.ballID === allBalls[_i].ballID) continue;
-				var otherBall = allBalls[_i];
+			for (var i = 0; i < allBalls.length; i++) {
+				if (this.ballID === allBalls[i].ballID) continue;
+				var otherBall = allBalls[i];
 				var minDistance = otherBall.radius + this.radius;
 				var nextDistance = this.distanceTo(otherBall.nextX, otherBall.nextY);
 				var willOverlap = nextDistance <= minDistance;
@@ -163,8 +163,8 @@ var Ball = function () {
 			var y = this.yCord;
 			var xL = this.xCord - this.dx;
 			var xR = this.xCord + this.dx;
-			for (var _i2 = 0; _i2 < allBalls.length; _i2++) {
-				var otherBall = allBalls[_i2];
+			for (var i = 0; i < allBalls.length; i++) {
+				var otherBall = allBalls[i];
 				if (otherBall === this) continue;
 				var minDistance = this.radius + otherBall.radius;
 				var leftDistance = distanceBetween(xL, y, otherBall.nextX, otherBall.nextY);
@@ -422,23 +422,23 @@ var Ball = function () {
 
 	}, {
 		key: 'handleWindowResize',
-		value: function handleWindowResize(maxWidth, maxHeight) {
+		value: function handleWindowResize(maxWidth, maxHeight, otherBalls) {
 			var ballBottom = this.yCord + this.radius;
 			var ballTop = this.yCord - this.radius;
-			if (ballBottom > height) {
-				this.yCord = height - this.radius;
+			if (ballBottom > maxHeight) {
+				this.yCord = maxHeight - this.radius;
 				this.accelerate(4, 10);
 				this.shrink();
 			}
 			if (ballTop <= 0) {
 				this.shrink();
 			}
-			for (var j = i + 1; j < this.balls.length; j++) {
-				var otherBall = this.balls[j];
+			for (var i = 0; i < otherBalls.length; i++) {
+				var otherBall = this.balls[i];
 				var minDistance = this.radius + otherBall.radius;
 				var curDistance = distanceBetween(this.xCord, this.yCord, otherBall.xCord, otherBall.yCord);
 				if (curDistance < minDistance) this.shrink();
-			}
+			} //end i-for
 		} //end handleWindowResize()
 
 	}, {
