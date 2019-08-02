@@ -21,17 +21,6 @@ var Rectangle = function () {
 	}
 
 	_createClass(Rectangle, [{
-		key: 'updateCoordinates',
-		value: function updateCoordinates(nextX, nextY) {
-			this.xLeft = nextX;
-			this.yTop = nextY;
-			this.xRight = this.xLeft + this.width;
-			this.yBottom = this.yTop + this.height;
-			this.xCenter = Math.abs(this.xRight - this.width / 2);
-			this.yCenter = Math.abs(this.yBottom - this.height / 2);
-		} //end updateCoordinates()
-
-	}, {
 		key: 'draw',
 		value: function draw(ctx) {
 			ctx.beginPath();
@@ -91,6 +80,17 @@ var Rectangle = function () {
 			if (this.yBottom > height) return false;
 			return true;
 		} //end isInBounds();
+
+	}, {
+		key: 'updateCoordinates',
+		value: function updateCoordinates(nextX, nextY) {
+			this.xLeft = nextX;
+			this.yTop = nextY;
+			this.xRight = this.xLeft + this.width;
+			this.yBottom = this.yTop + this.height;
+			this.xCenter = Math.abs(this.xRight - this.width / 2);
+			this.yCenter = Math.abs(this.yBottom - this.height / 2);
+		} //end updateCoordinates()
 
 	}]);
 
