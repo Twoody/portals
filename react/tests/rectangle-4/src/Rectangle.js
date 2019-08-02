@@ -88,10 +88,14 @@ class Rectangle{
 			return true;
 
 		//Corners
-		const xDiff = ballDistanceX - this.width/2;
-		const yDiff = ballDistanceY - this.height/2;
-		const cornerDistance = (xDiff**2 + yDiff**2);
-		if(cornerDistance <= ball.radius**2)
+		const areCornersTouching = isOverLapping(
+			ballDistanceX,
+			ballDistanceY,
+			this.width/2,
+			this.height/2,
+			ball.radius
+		);
+		if(areCornersTouching)
 			return true;
 		return false;
 	}

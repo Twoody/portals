@@ -97,10 +97,8 @@ var Rectangle = function () {
 			if (ballDistanceY <= this.height / 2) return true;
 
 			//Corners
-			var xDiff = ballDistanceX - this.width / 2;
-			var yDiff = ballDistanceY - this.height / 2;
-			var cornerDistance = Math.pow(xDiff, 2) + Math.pow(yDiff, 2);
-			if (cornerDistance <= Math.pow(ball.radius, 2)) return true;
+			var areCornersTouching = isOverLapping(ballDistanceX, ballDistanceY, this.width / 2, this.height / 2, ball.radius);
+			if (areCornersTouching) return true;
 			return false;
 		}
 	}, {
