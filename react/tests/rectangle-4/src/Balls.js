@@ -25,96 +25,11 @@ class Ball{
 		this.canGoDown		= false;
 		this.canGoUp		= false;
 	}
-	draw(ctx){
-		ctx.beginPath();
-		ctx.arc(
-			this.xCord,
-			this.yCord, 
-			this.radius,
-			2*Math.PI,		//Start angle in radians
-			0					//End angle in radians
-		);
-		ctx.fillStyle = this.color;
-		ctx.fill();
-	}
-	label(ctx){
-		if(this.radius < 30)
-			return;
-		if(!this.isGoingDown && !this.isGoingUp){
-			if(!this.isGoingRight && !this.isGoingLeft){
-				ctx.font      = "12px Arial";
-				ctx.fillStyle = "white";
-				ctx.fillText("Static"+this.ballID, this.xCord - this.radius+1, this.yCord+1);
-
-				ctx.font      = "10px Arial";
-				ctx.fillStyle = "white";
-				ctx.fillText("dx:" + this.dx.toFixed(2), this.xCord - this.radius+10, this.yCord+10);
-
-				ctx.font      = "10px Arial";
-				ctx.fillStyle = "white";
-				ctx.fillText("dy:" + this.dy.toFixed(2), this.xCord - this.radius+10, this.yCord+20);
-			}
-			else{
-				ctx.font      = "12px Arial";
-				ctx.fillStyle = "white";
-				ctx.fillText("Rolling"+this.ballID, this.xCord - this.radius+1, this.yCord+1);
-				if(this.isGoingRight){
-					ctx.font      = "10px Arial";
-					ctx.fillStyle = "white";
-					ctx.fillText("Right", this.xCord - this.radius+10, this.yCord+10);
-				}
-				if(this.isGoingLeft){
-					ctx.font      = "10px Arial";
-					ctx.fillStyle = "white";
-					ctx.fillText("Left", this.xCord - this.radius+10, this.yCord+10);
-				}
-				ctx.font      = "10px Arial";
-				ctx.fillStyle = "white";
-				ctx.fillText(this.dx.toFixed(2), this.xCord - this.radius+10, this.yCord+20);
-			}
-		}
-		else{
-			ctx.font      = "10px Arial";
-			ctx.fillStyle = "white";
-			ctx.fillText("Bouncing" + this.ballID, this.xCord - this.radius+1, this.yCord+1);
-			if(this.isGoingDown){
-				ctx.font      = "8px Arial";
-				ctx.fillStyle = "white";
-				ctx.fillText("Down: " + this.dy.toFixed(1), this.xCord - this.radius+13, this.yCord+10);
-			}
-			else{
-				ctx.font      = "8px Arial";
-				ctx.fillStyle = "white";
-				ctx.fillText("Up: " + this.dy.toFixed(1), this.xCord - this.radius+13, this.yCord+10);
-			}
-			if(this.isGoingLeft){
-				ctx.font      = "8px Arial";
-				ctx.fillStyle = "white";
-				ctx.fillText("Left: " + this.dx.toFixed(1), this.xCord - this.radius+13, this.yCord+22);
-			}
-			if(this.isGoingRight){
-				ctx.font      = "8px Arial";
-				ctx.fillStyle = "white";
-				ctx.fillText("Right: " + this.dx.toFixed(1), this.xCord - this.radius+13, this.yCord+22);
-			}
-		}
-	}//end label()
-	updateCoordinates(){
-		this.xCord = this.nextX;
-		this.yCord = this.nextY;
-	}
-	applyGravity(){
-		if(this.isGoingDown)
-			this.accelerate(0, this.gravity);
-		else if(this.isGoingUp)
-			this.decelerate(0, this.gravity);
-		else if (this.canGoDown)
-			this.accelerate(0, this.gravity);
-	}
 	accelerate(dxBoost, dyBoost){
 		this.dx += dxBoost;
 		this.dy += dyBoost;
 
+		//Apply buffer to stay in speed of light realm;
 		if(this.dx > this.radius*2 - 0.01)
 			this.dx = this.radius*2 - 0.01;
 		if(this.dy > this.radius*2 - 0.01)
@@ -126,6 +41,14 @@ class Ball{
 			this.dy = this.maxSpeed;
 		this.decelerate(0,0);	//Hack to check if zero;
 	}
+	applyGravity(){
+		if(this.isGoingDown)
+			this.accelerate(0, this.gravity);
+		else if(this.isGoingUp)
+			this.decelerate(0, this.gravity);
+		else if (this.canGoDown)
+			this.accelerate(0, this.gravity);
+	}
 	decelerate(dxLoss, dyLoss){
 		this.dx -= dxLoss;
 		this.dy -= dyLoss;
@@ -134,38 +57,34 @@ class Ball{
 		if(this.dy <=0)
 			this.dy = 0;
 	}//end decelerate()
-	setNextCoordinates(){
-		//Update balls nextX and nextY according to previous movement;
-		if(this.isGoingUp)
-			this.nextY = this.yCord - this.dy;
-		else if(this.isGoingDown)
-			this.nextY = this.yCord + this.dy;
-		if(this.isGoingLeft)
-			this.nextX = this.xCord - this.dx;
-		else if(this.isGoingRight)
-			this.nextX = this.xCord + this.dx;
-	}//end setNextCoordinates
-	handleBoundaries(width, height, allBalls){
-		const y 	= this.yCord;
-		const xL	= this.xCord - this.dx;
-		const xR	= this.xCord + this.dx;
-		for(let i=0; i<allBalls.length; i++){
-			let otherBall			= allBalls[i];
-			if(otherBall === this)
-				continue;
-			const minDistance		= this.radius + otherBall.radius;
-			const leftDistance	= this.distanceBetween(xL, y, otherBall.nextX, otherBall.nextY);
-			const rightDistance	= this.distanceBetween(xR, y, otherBall.nextX, otherBall.nextY);
-			if(rightDistance < minDistance && leftDistance < minDistance ){
-				this.canGoDown = false;
-				this.canGoUp = false;
-			}
-		}//end i-for
-		if(y-this.radius <=0)
-			this.canGoUp = false;
-		if(y+this.radius >= height)
-			this.canGoDown = false;
-	}//end handleBoundaries
+	destruct(){
+		//Destroy Ball
+		this.radius	= 0;
+	}
+	distanceTo(x, y){
+		const xDiff 	= this.nextX - x;
+		const yDiff 	= this.nextY - y;
+		const distance	= Math.sqrt(xDiff**2 + yDiff**2);
+		return distance;
+	}
+	distanceBetween(x1, y1, x2, y2){
+		const xDiff 	= x1-x2;
+		const yDiff 	= y1-y2;
+		const distance	= Math.sqrt(xDiff**2 + yDiff**2);
+		return distance;
+	}
+	draw(ctx){
+		ctx.beginPath();
+		ctx.arc(
+			this.xCord,
+			this.yCord, 
+			this.radius,
+			2*Math.PI,		//Start angle in radians
+			0					//End angle in radians
+		);
+		ctx.fillStyle = this.color;
+		ctx.fill();
+	}//end draw()
 	handleBallCollisions(allBalls){
 		//Find out if NEXT coordinates overlap anything;
 		for(let i=0; i<allBalls.length; i++){
@@ -231,9 +150,29 @@ class Ball{
 				this.dy			*= this.kineticGain;
 				this.dx			*= this.kineticGain;
 			}
-			
 		}//end i-for
 	}//End handleBallCollision()
+	handleBoundaries(width, height, allBalls){
+		const y 	= this.yCord;
+		const xL	= this.xCord - this.dx;
+		const xR	= this.xCord + this.dx;
+		for(let i=0; i<allBalls.length; i++){
+			let otherBall			= allBalls[i];
+			if(otherBall === this)
+				continue;
+			const minDistance		= this.radius + otherBall.radius;
+			const leftDistance	= this.distanceBetween(xL, y, otherBall.nextX, otherBall.nextY);
+			const rightDistance	= this.distanceBetween(xR, y, otherBall.nextX, otherBall.nextY);
+			if(rightDistance < minDistance && leftDistance < minDistance ){
+				this.canGoDown = false;
+				this.canGoUp = false;
+			}
+		}//end i-for
+		if(y-this.radius <=0)
+			this.canGoUp = false;
+		if(y+this.radius >= height)
+			this.canGoDown = false;
+	}//end handleBoundaries
 	handleMovement(friction){
 		//Set directions for next movement based off of current collisions;
 
@@ -359,78 +298,6 @@ class Ball{
 			console.log('ERROR: BALL CANNOT GO LEFT AND RIGHT');
 		}
 	}//End handleMovement()
-	handleWallCollisions(maxWidth, maxHeight, friction){
-		const willOverlapBottom	= this.hitBottom(maxHeight);
-		const willOverlapTop		= this.hitTop(0);
-		const willOverlapRight	= this.hitRight(maxWidth);
-		const willOverlapLeft	= this.hitLeft(0);
-		if(willOverlapTop && willOverlapBottom){
-			//The screen is now to small for our ball;
-			//This is now handles with  window resize;
-		}
-		else if(willOverlapBottom){
-			this.decelerate(0, friction);
-			if(this.dy === 0){
-				this.canGoUp = false;
-			}
-			this.canGoDown = false;
-			this.nextY = maxHeight - this.radius;
-		}
-		else if(willOverlapTop){
-			this.decelerate(0, friction);
-			this.canGoUp = false;
-			this.nextY = 0 + this.radius;
-		}
-		else{
-			//No collision
-		}
-		if(willOverlapRight && willOverlapLeft){
-			//The screen is now to small for our ball;
-			//We will just keep the ball at it's current place and stop all movemnt;
-			//TODO: Handle this with window resize;
-			this.nextX = this.xCord;
-			this.nextY = this.yCord;
-			this.dy = 0;
-			this.dx = 0;
-			console.log('WARNING: SCREEN NOT FITTED;');
-		}
-		else if(willOverlapRight){
-			this.canGoRight = false;
-			this.nextX = maxWidth - this.radius;
-		}
-		else if(willOverlapLeft){
-			this.canGoLeft = false;
-			this.nextX = 0 + this.radius;
-		}
-		else{
-			//No collision
-		}
-	}//End handleWallCollision
-	handleWindowResize(maxWidth, maxHeight){
-		const ballBottom = this.yCord + this.radius;
-		const ballTop    = this.yCord - this.radius;
-		const ballRight  = this.xCord + this.radius;
-		const ballLeft   = this.xCord - this.radius;
-		if(ballBottom >= maxHeight){
-			this.yCord = maxHeight - this.radius;
-			this.shrink();
-		}
-		else
-			this.canGoDown = true;
-		if(ballTop <= 0){
-			this.yCord = 0 + this.radius;
-			this.accelerate(5, 20);
-			this.shrink();
-		}
-		if(ballRight >= maxWidth){
-			this.xCord = maxWidth - this.radius;
-			this.shrink();
-		}
-		if(ballLeft <= 0){
-			this.xCord = 0 + this.radius;
-			this.shrink();
-		}
-	}//end handleWindowResize()
 	handleRectangleInteractions(rectangle, screenWidth, screenHeight){
 		//Handle rectangle objects
 		let ballBottomOverLapsTop	= false;
@@ -532,25 +399,91 @@ class Ball{
 			this.canGoLeft	= false;
 		}
 	}//end handleRectangleInteractions()
-	distanceTo(x, y){
-		const xDiff 	= this.nextX - x;
-		const yDiff 	= this.nextY - y;
-		const distance	= Math.sqrt(xDiff**2 + yDiff**2);
-		return distance;
-	}
-	distanceBetween(x1, y1, x2, y2){
-		const xDiff 	= x1-x2;
-		const yDiff 	= y1-y2;
-		const distance	= Math.sqrt(xDiff**2 + yDiff**2);
-		return distance;
-	}
+	handleWallCollisions(maxWidth, maxHeight, friction){
+		const willOverlapBottom	= this.hitBottom(maxHeight);
+		const willOverlapTop		= this.hitTop(0);
+		const willOverlapRight	= this.hitRight(maxWidth);
+		const willOverlapLeft	= this.hitLeft(0);
+		if(willOverlapTop && willOverlapBottom){
+			//The screen is now to small for our ball;
+			//This is now handles with  window resize;
+		}
+		else if(willOverlapBottom){
+			this.decelerate(0, friction);
+			if(this.dy === 0){
+				this.canGoUp = false;
+			}
+			this.canGoDown = false;
+			this.nextY = maxHeight - this.radius;
+		}
+		else if(willOverlapTop){
+			this.decelerate(0, friction);
+			this.canGoUp = false;
+			this.nextY = 0 + this.radius;
+		}
+		else{
+			//No collision
+		}
+		if(willOverlapRight && willOverlapLeft){
+			//The screen is now to small for our ball;
+			//We will just keep the ball at it's current place and stop all movemnt;
+			//TODO: Handle this with window resize;
+			this.nextX = this.xCord;
+			this.nextY = this.yCord;
+			this.dy = 0;
+			this.dx = 0;
+			console.log('WARNING: SCREEN NOT FITTED;');
+		}
+		else if(willOverlapRight){
+			this.canGoRight = false;
+			this.nextX = maxWidth - this.radius;
+		}
+		else if(willOverlapLeft){
+			this.canGoLeft = false;
+			this.nextX = 0 + this.radius;
+		}
+		else{
+			//No collision
+		}
+	}//End handleWallCollision
+	handleWindowResize(maxWidth, maxHeight){
+		const ballBottom = this.yCord + this.radius;
+		const ballTop    = this.yCord - this.radius;
+		const ballRight  = this.xCord + this.radius;
+		const ballLeft   = this.xCord - this.radius;
+		if(ballBottom >= maxHeight){
+			this.yCord = maxHeight - this.radius;
+			this.shrink();
+		}
+		else
+			this.canGoDown = true;
+		if(ballTop <= 0){
+			this.yCord = 0 + this.radius;
+			this.accelerate(5, 20);
+			this.shrink();
+		}
+		if(ballRight >= maxWidth){
+			this.xCord = maxWidth - this.radius;
+			this.shrink();
+		}
+		if(ballLeft <= 0){
+			this.xCord = 0 + this.radius;
+			this.shrink();
+		}
+	}//end handleWindowResize()
 	hitBottom(maxHeight){
 		const ballMaxBottom = this.nextY + this.radius;
 		if(ballMaxBottom >= maxHeight)
 			return true;
 		return false;
-	
 	}
+	hitLeft(minWidth){
+		const ballMaxLeft = this.nextX - this.radius;
+		if(ballMaxLeft <= minWidth)
+			return true;
+		return false;
+	}
+
 	hitTop(minHeight){
 		const ballMaxTop = this.nextY - this.radius;
 		if(ballMaxTop <= minHeight)
@@ -564,24 +497,91 @@ class Ball{
 		return false;
 	
 	}
-	hitLeft(minWidth){
-		const ballMaxLeft = this.nextX - this.radius;
-		if(ballMaxLeft <= minWidth)
-			return true;
-		return false;
-	}
-	shrink(){
-		//Destroy Ball
-		this.radius	*= 0.9;
-	}
-	destruct(){
-		//Destroy Ball
-		this.radius	= 0;
-	}
+	label(ctx){
+		if(this.radius < 30)
+			return;
+		if(!this.isGoingDown && !this.isGoingUp){
+			if(!this.isGoingRight && !this.isGoingLeft){
+				ctx.font      = "12px Arial";
+				ctx.fillStyle = "white";
+				ctx.fillText("Static"+this.ballID, this.xCord - this.radius+1, this.yCord+1);
+
+				ctx.font      = "10px Arial";
+				ctx.fillStyle = "white";
+				ctx.fillText("dx:" + this.dx.toFixed(2), this.xCord - this.radius+10, this.yCord+10);
+
+				ctx.font      = "10px Arial";
+				ctx.fillStyle = "white";
+				ctx.fillText("dy:" + this.dy.toFixed(2), this.xCord - this.radius+10, this.yCord+20);
+			}
+			else{
+				ctx.font      = "12px Arial";
+				ctx.fillStyle = "white";
+				ctx.fillText("Rolling"+this.ballID, this.xCord - this.radius+1, this.yCord+1);
+				if(this.isGoingRight){
+					ctx.font      = "10px Arial";
+					ctx.fillStyle = "white";
+					ctx.fillText("Right", this.xCord - this.radius+10, this.yCord+10);
+				}
+				if(this.isGoingLeft){
+					ctx.font      = "10px Arial";
+					ctx.fillStyle = "white";
+					ctx.fillText("Left", this.xCord - this.radius+10, this.yCord+10);
+				}
+				ctx.font      = "10px Arial";
+				ctx.fillStyle = "white";
+				ctx.fillText(this.dx.toFixed(2), this.xCord - this.radius+10, this.yCord+20);
+			}
+		}
+		else{
+			ctx.font      = "10px Arial";
+			ctx.fillStyle = "white";
+			ctx.fillText("Bouncing" + this.ballID, this.xCord - this.radius+1, this.yCord+1);
+			if(this.isGoingDown){
+				ctx.font      = "8px Arial";
+				ctx.fillStyle = "white";
+				ctx.fillText("Down: " + this.dy.toFixed(1), this.xCord - this.radius+13, this.yCord+10);
+			}
+			else{
+				ctx.font      = "8px Arial";
+				ctx.fillStyle = "white";
+				ctx.fillText("Up: " + this.dy.toFixed(1), this.xCord - this.radius+13, this.yCord+10);
+			}
+			if(this.isGoingLeft){
+				ctx.font      = "8px Arial";
+				ctx.fillStyle = "white";
+				ctx.fillText("Left: " + this.dx.toFixed(1), this.xCord - this.radius+13, this.yCord+22);
+			}
+			if(this.isGoingRight){
+				ctx.font      = "8px Arial";
+				ctx.fillStyle = "white";
+				ctx.fillText("Right: " + this.dx.toFixed(1), this.xCord - this.radius+13, this.yCord+22);
+			}
+		}
+	}//end label()
 	resetSurroundings(){
 		this.canGoUp		= true;
 		this.canGoDown		= true;
 		this.canGoLeft		= true;
 		this.canGoRight	= true;
+	}
+	setNextCoordinates(){
+		//Update balls nextX and nextY according to previous movement;
+		if(this.isGoingUp)
+			this.nextY = this.yCord - this.dy;
+		else if(this.isGoingDown)
+			this.nextY = this.yCord + this.dy;
+		if(this.isGoingLeft)
+			this.nextX = this.xCord - this.dx;
+		else if(this.isGoingRight)
+			this.nextX = this.xCord + this.dx;
+	}//end setNextCoordinates
+	shrink(){
+		//Destroy Ball
+		this.radius	*= 0.9;
+	}
+	updateCoordinates(){
+		this.xCord = this.nextX;
+		this.yCord = this.nextY;
 	}
 }//End Ball Class
