@@ -15,8 +15,9 @@ Status:
 			Legality of ball is being checked to not overlap rectangle;
 		Single ball is moving;
 		Single ball is moving according to rectangle influence;
+		Single ball is being moved with the window:	
+			ball is being squished;
 	Not working:
-		ball is not being squished;
 		ball is not rolling out of the way;
 		rectangle is able to overlap ball;
 		Have rectangle move the ball out of the way;
@@ -24,3 +25,4 @@ Status:
 			directions available, squish ball;
 	Bugs:
 		Ball ontop of rectangle is buggy;
+		Ball is being squished for no reason;
