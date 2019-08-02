@@ -9,6 +9,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var BACKGROUND_COLOR = "black";
+var RECTANGLE_WIDTH = 100;
+var RECTANGLE_HEIGHT = 30;
 
 var BallPen = function (_React$Component) {
 	_inherits(BallPen, _React$Component);
@@ -42,8 +44,8 @@ var BallPen = function (_React$Component) {
 			//Initialize a middle rectangle;
 			//Rectangle is going to have draggable properties;
 			var middleCords = getMiddleOfCanvas(this.state.width, this.state.height);
-			var width = 110;
-			var height = 30;
+			var width = RECTANGLE_WIDTH;
+			var height = RECTANGLE_HEIGHT;
 			var xLeft = middleCords.x - width / 2;
 			var yTop = middleCords.y - height / 2;
 			var rectangle = new Rectangle({
@@ -60,8 +62,33 @@ var BallPen = function (_React$Component) {
 	}, {
 		key: 'initBall',
 		value: function initBall() {
-			if (!this.ball) this.ball = makeRandomBall(this.state.width, this.state.height, 0, 30, 30, 30);
-		}
+			if (!this.ball) {
+				var newBall = makeRandomBall(this.state.width, this.state.height, 0, 30, 30, 30);
+				var cnt = 1;
+				while (this.isLegalBall(newBall) === false) {
+					cnt += 1;
+					newBall = makeRandomBall(this.state.width, this.state.height, 0, 30, 30, 30);
+					console.log('new ball attempt: ' + cnt);
+					if (cnt > 500) {
+						console.log('FAILED MAKING A WORKABLE BALL');
+						break;
+					}
+				} //end while
+				this.ball = newBall;
+			}
+		} //end initBall()
+
+	}, {
+		key: 'isLegalBall',
+		value: function isLegalBall(ball) {
+			/*Ball is legal if it: 
+   	1. is in bounds <-- Checked in makeRandomBall()
+   	2. is not overlapping the rectangle
+   */
+			if (this.movableRectangle.isOverLappingBall(ball)) return false;
+			return true;
+		} //end isLegalBall()
+
 	}, {
 		key: 'updateBackground',
 		value: function updateBackground() {
@@ -338,10 +365,13 @@ var BallPen = function (_React$Component) {
 	}, {
 		key: 'updateBall',
 		value: function updateBall() {
+			if (this.state.width === 0) return false;
+			if (!this.movableRectangle) return false;
 			if (!this.ball) this.initBall();
 			var canvas = this.canvasRef;
 			var ctx = canvas.getContext('2d');
 			this.ball.draw(ctx);
+			return true;
 		}
 	}, {
 		key: 'updateRectangle',

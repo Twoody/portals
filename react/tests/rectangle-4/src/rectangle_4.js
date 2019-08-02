@@ -1,5 +1,7 @@
 'use strict';
 const BACKGROUND_COLOR	= "black";
+const RECTANGLE_WIDTH	= 100;
+const RECTANGLE_HEIGHT	= 30;
 
 class BallPen extends React.Component{
    constructor(props){
@@ -24,8 +26,8 @@ class BallPen extends React.Component{
 		//Initialize a middle rectangle;
 		//Rectangle is going to have draggable properties;
 		const middleCords	= getMiddleOfCanvas(this.state.width, this.state.height);
-		const width			= 110;
-		const height		= 30;
+		const width			= RECTANGLE_WIDTH;
+		const height		= RECTANGLE_HEIGHT;
 		const xLeft			= middleCords.x - width/2;
 		const yTop			= middleCords.y - height/2;
 		const rectangle	= new Rectangle({
@@ -39,9 +41,31 @@ class BallPen extends React.Component{
 		this.movableRectangle = rectangle;
 	}//end updateMiddleRectangle()
 	initBall(){
-		if(!this.ball)
-			this.ball = makeRandomBall(this.state.width, this.state.height, 0, 30, 30, 30);
-	}
+		if(!this.ball){
+			let newBall = makeRandomBall(this.state.width, this.state.height, 0, 30, 30, 30);
+			let cnt		= 1;
+			while(this.isLegalBall(newBall) === false){
+				cnt += 1;
+				newBall = makeRandomBall(this.state.width, this.state.height, 0, 30, 30, 30);
+				console.log('new ball attempt: ' + cnt);
+				if(cnt > 500){
+					console.log('FAILED MAKING A WORKABLE BALL');
+					break;
+				}
+			}//end while
+			this.ball = newBall;
+		}
+	}//end initBall()
+	isLegalBall(ball){
+		/*Ball is legal if it: 
+			1. is in bounds <-- Checked in makeRandomBall()
+			2. is not overlapping the rectangle
+		*/
+		if(this.movableRectangle.isOverLappingBall(ball))
+			return false;
+		return true;
+
+	}//end isLegalBall()
 	updateBackground(){
 		if(this.state.width === 0)
 			return false;
@@ -322,11 +346,16 @@ class BallPen extends React.Component{
       return;
    }//end updateWindowDimenstions()
 	updateBall(){
+		if(this.state.width === 0)
+			return false;
+		if(!this.movableRectangle)
+			return false;
 		if(!this.ball)
 			this.initBall();
       const canvas	= this.canvasRef;
       const ctx		= canvas.getContext('2d');
 		this.ball.draw(ctx);
+		return true;
 	}
    updateRectangle(){
 		if(this.state.width === 0)
