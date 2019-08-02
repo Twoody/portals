@@ -25,6 +25,20 @@ function getRandomInt(min, max) {
 function isInRange(x, min, max) {
 	return x >= min && x <= max;
 }
+function isOverLapping(x1, y1, x2, y2, distance) {
+	/*	Will use distance formula to compute;
+ 	Input:
+ 		x1: int
+ 		y1: int
+ 		x2: int
+ 		y2: int
+ 		distance: int
+ 	Output:
+ 		boolean
+ */
+	if (Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2) <= Math.pow(distance, 2)) return true;
+	return false;
+}
 function makeRandomBall(sWidth, sHeight, ballID) {
 	var minRadius = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 3;
 	var maxRadius = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 30;
