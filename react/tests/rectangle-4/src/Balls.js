@@ -307,9 +307,11 @@ class Ball{
 	}//End handleMovement()
 	handleRectangleInteractions(rectangle, screenWidth, screenHeight){
 		//Handle rectangle objects
+		if(rectangle.isOverLappingBall(this) === false)
+			return;
+		//Process Up/Down 
 		let ballBottomOverLapsTop	= false;
 		let ballTopOverLapsBottom	= false;
-		//Process Up/Down 
 		if(this.nextY + this.radius >= rectangle.yTop
 			&& this.nextY - this.radius <= rectangle.yTop
 			&& this.isGoingDown){
@@ -398,11 +400,11 @@ class Ball{
 		}
 		
 		if(ballRightOverLapsLeft){
-			this.nextX		= rectangle.xLeft - this.radius - 0.001;
+			this.nextX		= rectangle.xLeft - this.radius;
 			this.canGoRight	= false;
 		}
 		else if(ballLeftOverLapsRight){
-			this.nextX		= rectangle.xRight + this.radius - 0.001;
+			this.nextX		= rectangle.xRight + this.radius;
 			this.canGoLeft	= false;
 		}
 	}//end handleRectangleInteractions()

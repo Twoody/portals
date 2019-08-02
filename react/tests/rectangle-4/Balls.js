@@ -291,9 +291,10 @@ var Ball = function () {
 		key: 'handleRectangleInteractions',
 		value: function handleRectangleInteractions(rectangle, screenWidth, screenHeight) {
 			//Handle rectangle objects
+			if (rectangle.isOverLappingBall(this) === false) return;
+			//Process Up/Down 
 			var ballBottomOverLapsTop = false;
 			var ballTopOverLapsBottom = false;
-			//Process Up/Down 
 			if (this.nextY + this.radius >= rectangle.yTop && this.nextY - this.radius <= rectangle.yTop && this.isGoingDown) {
 				//If ball bottom is lower than the top of the rectangle;
 				// and if the ball top is above the top of the rectangle;
@@ -369,10 +370,10 @@ var Ball = function () {
 			}
 
 			if (ballRightOverLapsLeft) {
-				this.nextX = rectangle.xLeft - this.radius - 0.001;
+				this.nextX = rectangle.xLeft - this.radius;
 				this.canGoRight = false;
 			} else if (ballLeftOverLapsRight) {
-				this.nextX = rectangle.xRight + this.radius - 0.001;
+				this.nextX = rectangle.xRight + this.radius;
 				this.canGoLeft = false;
 			}
 		} //end handleRectangleInteractions()
