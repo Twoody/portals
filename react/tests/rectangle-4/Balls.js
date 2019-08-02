@@ -161,22 +161,21 @@ var Ball = function () {
    	Output:
    		None
    */
-			var y = this.yCord;
-			var xL = this.xCord - this.dx;
-			var xR = this.xCord + this.dx;
 			for (var i = 0; i < allBalls.length; i++) {
 				var otherBall = allBalls[i];
 				if (otherBall === this) continue;
 				var minDistance = this.radius + otherBall.radius;
-				var leftDistance = distanceBetween(xL, y, otherBall.nextX, otherBall.nextY);
-				var rightDistance = distanceBetween(xR, y, otherBall.nextX, otherBall.nextY);
-				if (rightDistance < minDistance && leftDistance < minDistance) {
+				var isLeftOverLapping = isOverLapping(this.xCord - this.dx, this.yCord, otherBall.nextX, otherBall.nextY, minDistance);
+				var isRightOverLapping = isOverLapping(this.xCord + this.dx, this.yCord, otherBall.nextX, otherBall.nextY, minDistance);
+				if (isLeftOverLapping && isRightOverLapping) {
 					this.canGoDown = false;
 					this.canGoUp = false;
 				}
 			} //end i-for
-			if (y - this.radius <= 0) this.canGoUp = false;
-			if (y + this.radius >= height) this.canGoDown = false;
+
+			//Screen
+			if (this.yCord - this.radius <= 0) this.canGoUp = false;
+			if (this.yCord + this.radius >= height) this.canGoDown = false;
 		} //end handleBoundaries
 
 	}, {
@@ -438,8 +437,8 @@ var Ball = function () {
 			for (var i = 0; i < otherBalls.length; i++) {
 				var otherBall = this.balls[i];
 				var minDistance = this.radius + otherBall.radius;
-				var curDistance = distanceBetween(this.xCord, this.yCord, otherBall.xCord, otherBall.yCord);
-				if (curDistance < minDistance) this.shrink();
+				var _isOverLapping = _isOverLapping(this.xCord, this.yCord, otherBall.xCord, otherBall.yCord, minDistance);
+				if (_isOverLapping) this.shrink();
 			} //end i-for
 		} //end handleWindowResize()
 

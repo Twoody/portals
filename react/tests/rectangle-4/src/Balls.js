@@ -160,24 +160,35 @@ class Ball{
 			Output:
 				None
 		*/
-		const y 	= this.yCord;
-		const xL	= this.xCord - this.dx;
-		const xR	= this.xCord + this.dx;
 		for(let i=0; i<allBalls.length; i++){
 			let otherBall			= allBalls[i];
 			if(otherBall === this)
 				continue;
 			const minDistance		= this.radius + otherBall.radius;
-			const leftDistance	= distanceBetween(xL, y, otherBall.nextX, otherBall.nextY);
-			const rightDistance	= distanceBetween(xR, y, otherBall.nextX, otherBall.nextY);
-			if(rightDistance < minDistance && leftDistance < minDistance ){
+			const isLeftOverLapping = isOverLapping(
+				this.xCord - this.dx, 
+				this.yCord, 
+				otherBall.nextX, 
+				otherBall.nextY,
+				minDistance
+			);
+			const isRightOverLapping = isOverLapping(
+				this.xCord + this.dx, 
+				this.yCord, 
+				otherBall.nextX, 
+				otherBall.nextY,
+				minDistance
+			);
+			if(isLeftOverLapping && isRightOverLapping){
 				this.canGoDown = false;
 				this.canGoUp = false;
 			}
 		}//end i-for
-		if(y-this.radius <=0)
+
+		//Screen
+		if(this.yCord - this.radius <=0)
 			this.canGoUp = false;
-		if(y+this.radius >= height)
+		if(this.yCord + this.radius >= height)
 			this.canGoDown = false;
 	}//end handleBoundaries
 	handleMovement(friction){
@@ -469,13 +480,14 @@ class Ball{
 		for(let i=0; i<otherBalls.length; i++){
 			let otherBall = this.balls[i];
 			const minDistance = this.radius + otherBall.radius;
-			const curDistance	= distanceBetween(
+			const isOverLapping	= isOverLapping(
 				this.xCord,
 				this.yCord,
 				otherBall.xCord,
 				otherBall.yCord,
+				minDistance
 			);
-			if(curDistance < minDistance)
+			if(isOverLapping)
 				this.shrink();
 		}//end i-for
 	}//end handleWindowResize()
