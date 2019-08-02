@@ -134,7 +134,17 @@ class Ball{
 		if(this.dy <=0)
 			this.dy = 0;
 	}//end decelerate()
-
+	setNextCoordinates(){
+		//Update balls nextX and nextY according to previous movement;
+		if(this.isGoingUp)
+			this.nextY = this.yCord - this.dy;
+		else if(this.isGoingDown)
+			this.nextY = this.yCord + this.dy;
+		if(this.isGoingLeft)
+			this.nextX = this.xCord - this.dx;
+		else if(this.isGoingRight)
+			this.nextX = this.xCord + this.dx;
+	}//end setNextCoordinates
 	handleBoundaries(width, height, allBalls){
 		const y 	= this.yCord;
 		const xL	= this.xCord - this.dx;
@@ -567,5 +577,11 @@ class Ball{
 	destruct(){
 		//Destroy Ball
 		this.radius	= 0;
+	}
+	resetSurroundings(){
+		this.canGoUp		= true;
+		this.canGoDown		= true;
+		this.canGoLeft		= true;
+		this.canGoRight	= true;
 	}
 }//End Ball Class

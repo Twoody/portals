@@ -136,6 +136,14 @@ var Ball = function () {
 		} //end decelerate()
 
 	}, {
+		key: "setNextCoordinates",
+		value: function setNextCoordinates() {
+			//Update balls nextX and nextY according to previous movement;
+			if (this.isGoingUp) this.nextY = this.yCord - this.dy;else if (this.isGoingDown) this.nextY = this.yCord + this.dy;
+			if (this.isGoingLeft) this.nextX = this.xCord - this.dx;else if (this.isGoingRight) this.nextX = this.xCord + this.dx;
+		} //end setNextCoordinates
+
+	}, {
 		key: "handleBoundaries",
 		value: function handleBoundaries(width, height, allBalls) {
 			var y = this.yCord;
@@ -540,6 +548,14 @@ var Ball = function () {
 		value: function destruct() {
 			//Destroy Ball
 			this.radius = 0;
+		}
+	}, {
+		key: "resetSurroundings",
+		value: function resetSurroundings() {
+			this.canGoUp = true;
+			this.canGoDown = true;
+			this.canGoLeft = true;
+			this.canGoRight = true;
 		}
 	}]);
 
