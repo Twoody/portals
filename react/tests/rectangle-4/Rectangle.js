@@ -51,7 +51,7 @@ var Rectangle = function () {
 			/*	Find out what way rectangle is moving;
    	If we encounter a ball, move that ball IFF that ball can move in the other direction;
    */
-
+			console.log('rectangle interacting with ball');
 		}
 	}, {
 		key: 'handleRectangleEntityInteractions',
@@ -83,31 +83,26 @@ var Rectangle = function () {
 	}, {
 		key: 'isOverLappingBall',
 		value: function isOverLappingBall(ball) {
-			/*Get X and Y range and see if balls coords fall in that range or not;
+			/* Is rectangle intersecting/overlapping ball;
    	Input:
    		Ball() object
    	Output:
    		Boolean
-   	@ ./src/utils.js
    */
-			var bottomAreaAllowed = this.yBottom + ball.radius;
-			var topAreaAllowed = this.yTop - ball.radius;
-			var rightDistanceAllowed = this.xRight + ball.radius;
-			var leftDistanceAllowed = this.xLeft - ball.radius;
-			var yIsInRange = isInRange(ball.nextY, topAreaAllowed, bottomAreaAllowed);
-			var xIsInRange = isInRange(ball.nextX, leftDistanceAllowed, rightDistanceAllowed);
-			if (yIsInRange) {
-				if (xIsInRange) {
-					console.log('rectangle Y Range: ' + topAreaAllowed + ' - ' + bottomAreaAllowed);
-					console.log('rectangle X range: ' + leftDistanceAllowed + ' - ' + rightDistanceAllowed);
-					console.log('analyzed Y: ' + ball.nextY);
-					console.log('analyzed X: ' + ball.nextX);
-					return true;
-				} else return false;
-			}
-			return false;
-		} //end isOverLappingBall()
+			var ballDistanceX = Math.abs(ball.xCord - this.xCenter);
+			var ballDistanceY = Math.abs(ball.yCord - this.yCenter);
+			if (ballDistanceX > this.width / 2 + ball.radius) return false;
+			if (ballDistanceY > this.height / 2 + ball.radius) return false;
+			if (ballDistanceX <= this.width / 2) return true;
+			if (ballDistanceY <= this.height / 2) return true;
 
+			//Corners
+			var xDiff = ballDistanceX - this.width / 2;
+			var yDiff = ballDistanceY - this.height / 2;
+			var cornerDistance = Math.pow(xDiff, 2) + Math.pow(yDiff, 2);
+			if (cornerDistance <= Math.pow(ball.radius, 2)) return true;
+			return false;
+		}
 	}, {
 		key: 'isInBounds',
 		value: function isInBounds(width, height) {

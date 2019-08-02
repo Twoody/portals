@@ -40,7 +40,7 @@ class Rectangle{
 		/*	Find out what way rectangle is moving;
 			If we encounter a ball, move that ball IFF that ball can move in the other direction;
 		*/
-		
+		console.log('rectangle interacting with ball');
 	}
 	handleRectangleEntityInteractions(sWidth, sHeight, entities=[]){
 		for( let i=0; i<entities.length; i++){
@@ -70,32 +70,31 @@ class Rectangle{
 		return true;
 	}
 	isOverLappingBall(ball){
-		/*Get X and Y range and see if balls coords fall in that range or not;
+		/* Is rectangle intersecting/overlapping ball;
 			Input:
 				Ball() object
 			Output:
 				Boolean
-			@ ./src/utils.js
 		*/	
-		const bottomAreaAllowed		= this.yBottom	+ ball.radius;
-		const topAreaAllowed			= this.yTop		- ball.radius;
-		const rightDistanceAllowed	= this.xRight	+ ball.radius;
-		const leftDistanceAllowed	= this.xLeft	- ball.radius;
-		const yIsInRange	= isInRange(ball.nextY, topAreaAllowed, bottomAreaAllowed);
-		const xIsInRange	= isInRange(ball.nextX, leftDistanceAllowed, rightDistanceAllowed);
-		if (yIsInRange ){
-			if(xIsInRange){
-				console.log('rectangle Y Range: ' + topAreaAllowed + ' - ' + bottomAreaAllowed);
-				console.log('rectangle X range: ' + leftDistanceAllowed + ' - ' + rightDistanceAllowed);
-				console.log('analyzed Y: ' + ball.nextY);
-				console.log('analyzed X: ' + ball.nextX);
-				return true;
-			}
-			else
-				return false;
-		}
+		const ballDistanceX = Math.abs(ball.xCord - this.xCenter);
+		const ballDistanceY = Math.abs(ball.yCord - this.yCenter);
+		if( ballDistanceX > (this.width/2 + ball.radius) )
+			return false;
+		if( ballDistanceY > (this.height/2 + ball.radius) )
+			return false;
+		if( ballDistanceX <= (this.width/2) )
+			return true;
+		if( ballDistanceY <= (this.height/2) )
+			return true;
+
+		//Corners
+		const xDiff = ballDistanceX - this.width/2;
+		const yDiff = ballDistanceY - this.height/2;
+		const cornerDistance = (xDiff**2 + yDiff**2);
+		if(cornerDistance <= ball.radius**2)
+			return true;
 		return false;
-	}//end isOverLappingBall()
+	}
 	isInBounds(width, height){
 		//Determine if rectangle fits the screen width and screen height;
 		if(this.xLeft < 0)
