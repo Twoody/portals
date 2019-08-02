@@ -29,7 +29,8 @@ var Rectangle = function () {
 			this.yBottom = this.yTop + this.height;
 			this.xCenter = Math.abs(this.xRight - this.width / 2);
 			this.yCenter = Math.abs(this.yBottom - this.height / 2);
-		}
+		} //end updateCoordinates()
+
 	}, {
 		key: 'draw',
 		value: function draw(ctx) {
@@ -38,7 +39,8 @@ var Rectangle = function () {
 			ctx.fillStyle = this.color;
 			ctx.fill();
 			ctx.closePath();
-		}
+		} //end draw()
+
 	}, {
 		key: 'handleRectangleMove',
 		value: function handleRectangleMove(nextX, nextY, sWidth, sHeight) {
@@ -49,7 +51,8 @@ var Rectangle = function () {
 			if (nextY < 0) nextY = 0;
 			if (nextY + this.height > sHeight) nextY = sHeight - this.height;
 			this.updateCoordinates(nextX, nextY);
-		}
+		} //end handleRectangleMove
+
 	}, {
 		key: 'isOverLappingBall',
 		value: function isOverLappingBall(ball) {
@@ -76,7 +79,8 @@ var Rectangle = function () {
 				} else return false;
 			}
 			return false;
-		}
+		} //end isOverLappingBall()
+
 	}, {
 		key: 'isInBounds',
 		value: function isInBounds(width, height) {
@@ -86,7 +90,8 @@ var Rectangle = function () {
 			if (this.yTop < 0) return false;
 			if (this.yBottom > height) return false;
 			return true;
-		}
+		} //end isInBounds();
+
 	}]);
 
 	return Rectangle;

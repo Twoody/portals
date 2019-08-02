@@ -21,7 +21,7 @@ class Rectangle{
 		this.yBottom	= this.yTop + this.height;
 		this.xCenter	= Math.abs(this.xRight	- this.width/2);
 		this.yCenter	= Math.abs(this.yBottom - this.height/2);
-	}
+	}//end updateCoordinates()
 	draw(ctx){
 		ctx.beginPath();
 		ctx.rect(
@@ -33,7 +33,7 @@ class Rectangle{
 		ctx.fillStyle = this.color;
 		ctx.fill();
 		ctx.closePath();
-	}
+	}//end draw()
 	handleRectangleMove(nextX, nextY, sWidth, sHeight){
 		//Handle rectangle movement:
 		//Find out what item is out of bounds and fix accordingly;
@@ -46,7 +46,7 @@ class Rectangle{
 		if(nextY + this.height > sHeight)
 			nextY = sHeight - this.height;
 		this.updateCoordinates(nextX, nextY);
-	}
+	}//end handleRectangleMove
 	isOverLappingBall(ball){
 		/*Get X and Y range and see if balls coords fall in that range or not;
 			Input:
@@ -73,8 +73,7 @@ class Rectangle{
 				return false;
 		}
 		return false;
-
-	}
+	}//end isOverLappingBall()
 	isInBounds(width, height){
 		//Determine if rectangle fits the screen width and screen height;
 		if(this.xLeft < 0)
@@ -86,5 +85,5 @@ class Rectangle{
 		if(this.yBottom > height)
 			return false;
 		return true;
-	}
+	}//end isInBounds();
 }//End Rectangle Class
