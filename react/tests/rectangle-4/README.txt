@@ -6,16 +6,21 @@ The idea is to update the rectangle without updating the ball:
 	Hoping to have this fixed this time;
 
 Next Step:
-	
+	More rectangle + ball interactions;;
 
 Status:
 	Working:
 		Single ball is being created:	
 			Legality of ball is being checked to stay in view;
 			Legality of ball is being checked to not overlap rectangle;
+		Single ball is moving;
+		Single ball is moving according to rectangle influence;
 	Not working:
-		Start ball animations;
-		Start handling ball and rectangle interactions;
+		ball is not being squished;
+		ball is not rolling out of the way;
+		rectangle is able to overlap ball;
 		Have rectangle move the ball out of the way;
 		If Ball is stuck between the rectangle and wall and cannot go in the other two 
 			directions available, squish ball;
+	Bugs:
+		Ball ontop of rectangle is buggy;
