@@ -226,8 +226,9 @@ var BallPen = function (_React$Component) {
 			} else {
 				//Same position
 			}
-
-			this.movableRectangle.handleRectangleMove(nextX, nextY, this.state.width, this.state.height);
+			this.movableRectangle.nextX = nextX;
+			this.movableRectangle.nextY = nextY;
+			this.movableRectangle.handleRectangleMove(this.state.width, this.state.height);
 		} //end handleRectangleDrag();
 
 	}, {
@@ -281,7 +282,9 @@ var BallPen = function (_React$Component) {
 				console.log("moved down");
 			}
 
-			this.movableRectangle.handleRectangleMove(nextX, nextY, this.state.width, this.state.height);
+			this.movableRectangle.nextX = nextX;
+			this.movableRectangle.nextY = nextY;
+			this.movableRectangle.handleRectangleMove(this.state.width, this.state.height);
 			this.updateRectangle();
 			return true;
 		}

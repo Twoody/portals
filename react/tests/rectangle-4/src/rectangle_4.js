@@ -199,10 +199,9 @@ class BallPen extends React.Component{
 		else{
 			//Same position
 		}
-		
+		this.movableRectangle.nextX = nextX;
+		this.movableRectangle.nextY = nextY;
 		this.movableRectangle.handleRectangleMove(
-			nextX, 
-			nextY, 
 			this.state.width, 
 			this.state.height
 		);
@@ -259,9 +258,9 @@ class BallPen extends React.Component{
 			console.log("moved down");
 		}
 
+		this.movableRectangle.nextX = nextX;
+		this.movableRectangle.nextY = nextY;
 		this.movableRectangle.handleRectangleMove(
-			nextX, 
-			nextY, 
 			this.state.width, 
 			this.state.height
 		);
