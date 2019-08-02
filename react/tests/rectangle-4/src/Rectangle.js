@@ -29,35 +29,35 @@ class Rectangle{
 		ctx.fill();
 		ctx.closePath();
 	}//end draw()
-	handleRectangleMove(sWidth, sHeight, entities=[]){
+	handleMove(sWidth, sHeight, entities=[]){
 		//Handle rectangle movement:
 
-		this.handleRectangleWallInteractions(sWidth, sHeight);
-		this.handleRectangleEntityInteractions(sWidth, sHeight, entities);
+		this.handleWallInteractions(sWidth, sHeight);
+		this.handleEntityInteractions(sWidth, sHeight, entities);
 		this.updateCoordinates();
-	}//end handleRectangleMove
-	handleRectangleBallInteractions(sWidth, sHeight, entity){
+	}//end handleMove
+	handleBallInteractions(sWidth, sHeight, entity){
 		/*	Find out what way rectangle is moving;
 			If we encounter a ball, move that ball IFF that ball can move in the other direction;
 		*/
 		console.log('rectangle interacting with ball');
 	}
-	handleRectangleEntityInteractions(sWidth, sHeight, entities=[]){
+	handleEntityInteractions(sWidth, sHeight, entities=[]){
 		for( let i=0; i<entities.length; i++){
 			const entity	= entities[i];
 			if(entity.type === 'rectangle')
-				this.handleRectangleRectangleInteractions(sWidth, sHeight, entity);
+				this.handleRectangleInteractions(sWidth, sHeight, entity);
 			else if(entity.type === 'ball')
-				this.handleRectangleBallInteractions(sWidth, sHeight, entity);
+				this.handleBallInteractions(sWidth, sHeight, entity);
 			else{
 				//type not found
 			}
 		}//end i-for
 	}
-	handleRectangleRectangleInteractions(sWidth, sHeight, entity){
+	handleRectangleInteractions(sWidth, sHeight, entity){
 		//Encountered other rectangle; Can we move that rectangle, too?
 	}
-	handleRectangleWallInteractions(sWidth, sHeight){
+	handleWallInteractions(sWidth, sHeight){
 		//Find out what item is out of bounds and fix accordingly;
 		if(this.nextX < 0)
 			this.nextX = 0;

@@ -228,7 +228,7 @@ var BallPen = function (_React$Component) {
 			}
 			this.movableRectangle.nextX = nextX;
 			this.movableRectangle.nextY = nextY;
-			this.movableRectangle.handleRectangleMove(this.state.width, this.state.height, [this.ball]);
+			this.movableRectangle.handleMove(this.state.width, this.state.height, [this.ball]);
 		} //end handleRectangleDrag();
 
 	}, {
@@ -284,7 +284,7 @@ var BallPen = function (_React$Component) {
 
 			this.movableRectangle.nextX = nextX;
 			this.movableRectangle.nextY = nextY;
-			this.movableRectangle.handleRectangleMove(this.state.width, this.state.height, [this.ball]);
+			this.movableRectangle.handleMove(this.state.width, this.state.height, [this.ball]);
 			this.updateRectangle();
 			return true;
 		}
@@ -356,7 +356,7 @@ var BallPen = function (_React$Component) {
 			if (this.movableRectangle) {
 				//Following hack to see if current coordinates are 
 				//	colliding with wall or not;
-				this.movableRectangle.handleRectangleMove(this.state.width, this.state.height, []);
+				this.movableRectangle.handleMove(this.state.width, this.state.height, []);
 				this.updateRectangle();
 			}
 			if (this.ball) {

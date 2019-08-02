@@ -201,7 +201,7 @@ class BallPen extends React.Component{
 		}
 		this.movableRectangle.nextX = nextX;
 		this.movableRectangle.nextY = nextY;
-		this.movableRectangle.handleRectangleMove(
+		this.movableRectangle.handleMove(
 			this.state.width, 
 			this.state.height,
 			[this.ball]
@@ -261,7 +261,7 @@ class BallPen extends React.Component{
 
 		this.movableRectangle.nextX = nextX;
 		this.movableRectangle.nextY = nextY;
-		this.movableRectangle.handleRectangleMove(
+		this.movableRectangle.handleMove(
 			this.state.width, 
 			this.state.height,
 			[this.ball]
@@ -332,7 +332,7 @@ class BallPen extends React.Component{
 		if(this.movableRectangle){
 			//Following hack to see if current coordinates are 
 			//	colliding with wall or not;
-			this.movableRectangle.handleRectangleMove(
+			this.movableRectangle.handleMove(
 				this.state.width, 
 				this.state.height,
 				[]

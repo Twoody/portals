@@ -34,45 +34,45 @@ var Rectangle = function () {
 		} //end draw()
 
 	}, {
-		key: 'handleRectangleMove',
-		value: function handleRectangleMove(sWidth, sHeight) {
+		key: 'handleMove',
+		value: function handleMove(sWidth, sHeight) {
 			var entities = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
 
 			//Handle rectangle movement:
 
-			this.handleRectangleWallInteractions(sWidth, sHeight);
-			this.handleRectangleEntityInteractions(sWidth, sHeight, entities);
+			this.handleWallInteractions(sWidth, sHeight);
+			this.handleEntityInteractions(sWidth, sHeight, entities);
 			this.updateCoordinates();
-		} //end handleRectangleMove
+		} //end handleMove
 
 	}, {
-		key: 'handleRectangleBallInteractions',
-		value: function handleRectangleBallInteractions(sWidth, sHeight, entity) {
+		key: 'handleBallInteractions',
+		value: function handleBallInteractions(sWidth, sHeight, entity) {
 			/*	Find out what way rectangle is moving;
    	If we encounter a ball, move that ball IFF that ball can move in the other direction;
    */
 			console.log('rectangle interacting with ball');
 		}
 	}, {
-		key: 'handleRectangleEntityInteractions',
-		value: function handleRectangleEntityInteractions(sWidth, sHeight) {
+		key: 'handleEntityInteractions',
+		value: function handleEntityInteractions(sWidth, sHeight) {
 			var entities = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
 
 			for (var i = 0; i < entities.length; i++) {
 				var entity = entities[i];
-				if (entity.type === 'rectangle') this.handleRectangleRectangleInteractions(sWidth, sHeight, entity);else if (entity.type === 'ball') this.handleRectangleBallInteractions(sWidth, sHeight, entity);else {
+				if (entity.type === 'rectangle') this.handleRectangleInteractions(sWidth, sHeight, entity);else if (entity.type === 'ball') this.handleBallInteractions(sWidth, sHeight, entity);else {
 					//type not found
 				}
 			} //end i-for
 		}
 	}, {
-		key: 'handleRectangleRectangleInteractions',
-		value: function handleRectangleRectangleInteractions(sWidth, sHeight, entity) {
+		key: 'handleRectangleInteractions',
+		value: function handleRectangleInteractions(sWidth, sHeight, entity) {
 			//Encountered other rectangle; Can we move that rectangle, too?
 		}
 	}, {
-		key: 'handleRectangleWallInteractions',
-		value: function handleRectangleWallInteractions(sWidth, sHeight) {
+		key: 'handleWallInteractions',
+		value: function handleWallInteractions(sWidth, sHeight) {
 			//Find out what item is out of bounds and fix accordingly;
 			if (this.nextX < 0) this.nextX = 0;
 			if (this.nextX + this.width > sWidth) this.nextX = sWidth - this.width;
