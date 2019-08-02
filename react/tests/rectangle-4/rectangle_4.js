@@ -208,21 +208,29 @@ var BallPen = function (_React$Component) {
 			var rectangleTop = this.movableRectangle.yTop;
 			var nextX = this.movableRectangle.xLeft;
 			var nextY = this.movableRectangle.yTop;
+			this.movableRectangle.isGoingLeft = false;
+			this.movableRectangle.isGoingRight = false;
+			this.movableRectangle.isGoingUp = false;
+			this.movableRectangle.isGoingDown = false;
 			if (clientX < xMid) {
 				//Move left
 				nextX = clientX - this.movableRectangle.width / 2;
+				this.movableRectangle.isGoingLeft = true;
 			} else if (clientX > xMid) {
 				//Move right
 				nextX = clientX - this.movableRectangle.width / 2;
+				this.movableRectangle.isGoingRight = true;
 			} else {
 				//Same position
 			}
 			if (clientY < yMid) {
 				//Move Up
 				nextY = clientY - this.movableRectangle.height / 2;
+				this.movableRectangle.isGoingUp = true;
 			} else if (clientY > yMid) {
 				//Move Down
 				nextY = clientY - this.movableRectangle.height / 2;
+				this.movableRectangle.isGoingDown = true;
 			} else {
 				//Same position
 			}
