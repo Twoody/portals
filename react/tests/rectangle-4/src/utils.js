@@ -16,6 +16,9 @@ function getRandomInt(min, max) {
 	max = Math.floor(max);
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+function isInRange(x, min, max){
+	return (x>=min && x<=max);
+}
 function makeRandomBall(sWidth, sHeight, ballID, minRadius=3, maxRadius=30, maxSpeed=29){
 	/*	Return false if random ball fails;
 		Else return random ball;
