@@ -1,7 +1,8 @@
 'use strict';
 const BACKGROUND_COLOR	= "black";
-const RECTANGLE_WIDTH	= 100;
+const RECTANGLE_WIDTH	= 110;
 const RECTANGLE_HEIGHT	= 30;
+const WALL_FRICTION		= 0.075;
 
 class BallPen extends React.Component{
    constructor(props){
@@ -13,8 +14,9 @@ class BallPen extends React.Component{
 			xClick:		0,
 			yClick:		0,
       };
-		this.movableRectangle	= null;
-		this.ball					= null;
+		this.movableRectangle			= null;
+		this.ball							= null;
+		this.friction						= WALL_FRICTION;
       this.updateWindowDimensions	= this.updateWindowDimensions.bind(this);
 		this.handleKeydown				= this.handleKeydown.bind(this);
 		this.handleKeyup					= this.handleKeyup.bind(this);
@@ -66,7 +68,7 @@ class BallPen extends React.Component{
 		return true;
 
 	}//end isLegalBall()
-	updateBackground(){
+	drawBackground(){
 		if(this.state.width === 0)
 			return false;
      	const canvas	= this.canvasRef;
@@ -76,7 +78,7 @@ class BallPen extends React.Component{
 		ctx.fillRect(0, 0, this.state.width, this.state.height);
 		ctx.closePath();
 		return true;
-	}//end updateBackground();
+	}//end drawBackground();
 
 	handleCanvasClick(){
      	const canvas		= this.canvasRef;
@@ -276,12 +278,8 @@ class BallPen extends React.Component{
 
    componentDidMount(){
  	   this.updateWindowDimensions();
-   	this.updateBackground();
+   	this.drawBackground();
 		this.initMiddleRectangle;
-      this.canvasTimerID   = setInterval(
-         ()=>this.updateBackground(),
-        225
-      );
       this.rectangleTimerID   = setInterval(
          ()=>this.updateRectangle(),
         225
@@ -296,7 +294,6 @@ class BallPen extends React.Component{
    }
    componentWillUnmount(){
       clearInterval(this.rectangleTimerID);
-      clearInterval(this.canvasTimerID);
       clearInterval(this.ballTimerID);
       window.removeEventListener('resize', this.updateWindowDimensions);
       document.body.removeEventListener('keydown', this.handleKeydown);
@@ -330,7 +327,7 @@ class BallPen extends React.Component{
          height: height
       });
 
-      this.updateBackground();
+      this.drawBackground();
 		if(this.movableRectangle){
 			//Following hack to see if current coordinates are 
 			//	colliding with wall or not;
@@ -354,7 +351,34 @@ class BallPen extends React.Component{
 			this.initBall();
       const canvas	= this.canvasRef;
       const ctx		= canvas.getContext('2d');
-		this.ball.draw(ctx);
+		//Assume we can go any direction first; Change values on `handle`*;
+		//Reset canGo* properties for this iteration;
+		this.ball.resetSurroundings();
+		
+		//Set coordinates for next movment;
+		this.ball.setNextCoordinates();
+
+		//See if next coordinates create any conflicts and if expected coordinates 
+		//	will prevent us from going certain directions;
+		this.ball.handleRectangleInteractions(
+			this.movableRectangle, 
+			this.state.width, 
+			this.state.height
+		);
+		this.ball.handleBoundaries(this.state.width, this.state.height, []);
+		this.ball.handleWallCollisions(this.state.width, this.state.height, this.friction);
+		this.ball.handleBallCollisions([]);
+
+		//Process final available movements; Update coords appropriately; Apply Gravity;
+		this.ball.handleMovement(this.friction);
+		this.ball.updateCoordinates();
+		this.ball.applyGravity();
+
+		//Update other objects 
+		this.drawBackground();	//Redraw Background
+		this.drawBall(ctx);
+		this.drawRectangle(ctx);	//Update rectangle;
+
 		return true;
 	}
    updateRectangle(){
@@ -365,13 +389,14 @@ class BallPen extends React.Component{
 
       const canvas	= this.canvasRef;
       const ctx		= canvas.getContext('2d');
-      ctx.clearRect(
-			this.movableRectangle.xLeft,
-			this.movableRectangle.yTop,
-			this.movableRectangle.width,
-			this.movableRectangle.height,
-		);
 		//this.movableRectangle.handleWallCollisions();
+		this.drawRectangle(ctx);
+	}//End updateRectangle()
+	drawBall(ctx){
+		this.ball.draw(ctx);
+		this.ball.label(ctx);
+	}
+	drawRectangle(ctx){
 		this.movableRectangle.draw(ctx);
 		writeToScreen(
 			ctx, 
@@ -380,7 +405,8 @@ class BallPen extends React.Component{
 			this.movableRectangle.yCenter + 7, 
 			getRandomColor()
 		);
-   }//End updateRectangle()
+
+	}
    render(){
       const penStyle		= {
          border:   "1px solid #000000",

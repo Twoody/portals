@@ -9,8 +9,9 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var BACKGROUND_COLOR = "black";
-var RECTANGLE_WIDTH = 100;
+var RECTANGLE_WIDTH = 110;
 var RECTANGLE_HEIGHT = 30;
+var WALL_FRICTION = 0.075;
 
 var BallPen = function (_React$Component) {
 	_inherits(BallPen, _React$Component);
@@ -29,6 +30,7 @@ var BallPen = function (_React$Component) {
 		};
 		_this.movableRectangle = null;
 		_this.ball = null;
+		_this.friction = WALL_FRICTION;
 		_this.updateWindowDimensions = _this.updateWindowDimensions.bind(_this);
 		_this.handleKeydown = _this.handleKeydown.bind(_this);
 		_this.handleKeyup = _this.handleKeyup.bind(_this);
@@ -90,8 +92,8 @@ var BallPen = function (_React$Component) {
 		} //end isLegalBall()
 
 	}, {
-		key: 'updateBackground',
-		value: function updateBackground() {
+		key: 'drawBackground',
+		value: function drawBackground() {
 			if (this.state.width === 0) return false;
 			var canvas = this.canvasRef;
 			var ctx = canvas.getContext('2d');
@@ -100,7 +102,7 @@ var BallPen = function (_React$Component) {
 			ctx.fillRect(0, 0, this.state.width, this.state.height);
 			ctx.closePath();
 			return true;
-		} //end updateBackground();
+		} //end drawBackground();
 
 	}, {
 		key: 'handleCanvasClick',
@@ -298,11 +300,8 @@ var BallPen = function (_React$Component) {
 			var _this2 = this;
 
 			this.updateWindowDimensions();
-			this.updateBackground();
+			this.drawBackground();
 			this.initMiddleRectangle;
-			this.canvasTimerID = setInterval(function () {
-				return _this2.updateBackground();
-			}, 225);
 			this.rectangleTimerID = setInterval(function () {
 				return _this2.updateRectangle();
 			}, 225);
@@ -317,7 +316,6 @@ var BallPen = function (_React$Component) {
 		key: 'componentWillUnmount',
 		value: function componentWillUnmount() {
 			clearInterval(this.rectangleTimerID);
-			clearInterval(this.canvasTimerID);
 			clearInterval(this.ballTimerID);
 			window.removeEventListener('resize', this.updateWindowDimensions);
 			document.body.removeEventListener('keydown', this.handleKeydown);
@@ -351,7 +349,7 @@ var BallPen = function (_React$Component) {
 				height: height
 			});
 
-			this.updateBackground();
+			this.drawBackground();
 			if (this.movableRectangle) {
 				//Following hack to see if current coordinates are 
 				//	colliding with wall or not;
@@ -370,7 +368,30 @@ var BallPen = function (_React$Component) {
 			if (!this.ball) this.initBall();
 			var canvas = this.canvasRef;
 			var ctx = canvas.getContext('2d');
-			this.ball.draw(ctx);
+			//Assume we can go any direction first; Change values on `handle`*;
+			//Reset canGo* properties for this iteration;
+			this.ball.resetSurroundings();
+
+			//Set coordinates for next movment;
+			this.ball.setNextCoordinates();
+
+			//See if next coordinates create any conflicts and if expected coordinates 
+			//	will prevent us from going certain directions;
+			this.ball.handleRectangleInteractions(this.movableRectangle, this.state.width, this.state.height);
+			this.ball.handleBoundaries(this.state.width, this.state.height, []);
+			this.ball.handleWallCollisions(this.state.width, this.state.height, this.friction);
+			this.ball.handleBallCollisions([]);
+
+			//Process final available movements; Update coords appropriately; Apply Gravity;
+			this.ball.handleMovement(this.friction);
+			this.ball.updateCoordinates();
+			this.ball.applyGravity();
+
+			//Update other objects 
+			this.drawBackground(); //Redraw Background
+			this.drawBall(ctx);
+			this.drawRectangle(ctx); //Update rectangle;
+
 			return true;
 		}
 	}, {
@@ -381,12 +402,22 @@ var BallPen = function (_React$Component) {
 
 			var canvas = this.canvasRef;
 			var ctx = canvas.getContext('2d');
-			ctx.clearRect(this.movableRectangle.xLeft, this.movableRectangle.yTop, this.movableRectangle.width, this.movableRectangle.height);
 			//this.movableRectangle.handleWallCollisions();
-			this.movableRectangle.draw(ctx);
-			writeToScreen(ctx, "HIRE ME", this.movableRectangle.xCenter - 50, this.movableRectangle.yCenter + 7, getRandomColor());
+			this.drawRectangle(ctx);
 		} //End updateRectangle()
 
+	}, {
+		key: 'drawBall',
+		value: function drawBall(ctx) {
+			this.ball.draw(ctx);
+			this.ball.label(ctx);
+		}
+	}, {
+		key: 'drawRectangle',
+		value: function drawRectangle(ctx) {
+			this.movableRectangle.draw(ctx);
+			writeToScreen(ctx, "HIRE ME", this.movableRectangle.xCenter - 50, this.movableRectangle.yCenter + 7, getRandomColor());
+		}
 	}, {
 		key: 'render',
 		value: function render() {
