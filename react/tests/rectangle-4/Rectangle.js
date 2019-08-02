@@ -53,21 +53,29 @@ var Rectangle = function () {
 	}, {
 		key: 'isOverLappingBall',
 		value: function isOverLappingBall(ball) {
-			//Each distance should be positive;
-			//rectangle bottom is highest value: subtract top of ball from it;
-			//rectangle top is lower value: add ball and radius and subtract rectangle top;
-			//rectangle right is hight value: subtract left of ball from it;
-			//rectangle left is lower value: add ball and radius and subtract rectangle left from it;
-			var bottomDistance = this.yBottom - ball.nextY - ball.radius;
-			var topDistance = ball.nextY + ball.radius - this.yTop;
-			var rightDistance = this.xRight - ball.nextX - ball.radius;
-			var leftDistance = ball.nextX + ball.radius - this.xLeft;
-			var isBallAboveBottom = bottomDistance > -15;
-			var isBallBelowTop = topDistance > -15;
-			var isBallRightOfLeft = leftDistance > -15;
-			var isBallLeftOfRight = rightDistance > -15;
-			var isOverLapping = isBallAboveBottom && isBallBelowTop && isBallLeftOfRight && isBallRightOfLeft;
-			return isOverLapping;
+			/*Get X and Y range and see if balls coords fall in that range or not;
+   	Input:
+   		Ball() object
+   	Output:
+   		Boolean
+   	@ ./src/utils.js
+   */
+			var bottomAreaAllowed = this.yBottom + ball.radius;
+			var topAreaAllowed = this.yTop - ball.radius;
+			var rightDistanceAllowed = this.xRight + ball.radius;
+			var leftDistanceAllowed = this.xLeft - ball.radius;
+			var yIsInRange = isInRange(ball.nextY, topAreaAllowed, bottomAreaAllowed);
+			var xIsInRange = isInRange(ball.nextX, leftDistanceAllowed, rightDistanceAllowed);
+			if (yIsInRange) {
+				if (xIsInRange) {
+					console.log('rectangle Y Range: ' + topAreaAllowed + ' - ' + bottomAreaAllowed);
+					console.log('rectangle X range: ' + leftDistanceAllowed + ' - ' + rightDistanceAllowed);
+					console.log('analyzed Y: ' + ball.nextY);
+					console.log('analyzed X: ' + ball.nextX);
+					return true;
+				} else return false;
+			}
+			return false;
 		}
 	}, {
 		key: 'isInBounds',

@@ -48,22 +48,32 @@ class Rectangle{
 		this.updateCoordinates(nextX, nextY);
 	}
 	isOverLappingBall(ball){
-		//Each distance should be positive;
-		//rectangle bottom is highest value: subtract top of ball from it;
-		//rectangle top is lower value: add ball and radius and subtract rectangle top;
-		//rectangle right is hight value: subtract left of ball from it;
-		//rectangle left is lower value: add ball and radius and subtract rectangle left from it;
-		const bottomDistance	= this.yBottom - ball.nextY - ball.radius;	
-		const topDistance		= ball.nextY + ball.radius - this.yTop;
-		const rightDistance	= this.xRight - ball.nextX - ball.radius;
-		const leftDistance	= ball.nextX + ball.radius - this.xLeft ;
-		const isBallAboveBottom	= bottomDistance	> -15;
-		const isBallBelowTop		= topDistance		> -15;
-		const isBallRightOfLeft	= leftDistance		> -15;
-		const isBallLeftOfRight	= rightDistance	> -15;
-		const isOverLapping =  (isBallAboveBottom && isBallBelowTop 
-											&& isBallLeftOfRight && isBallRightOfLeft);
-		return isOverLapping;
+		/*Get X and Y range and see if balls coords fall in that range or not;
+			Input:
+				Ball() object
+			Output:
+				Boolean
+			@ ./src/utils.js
+		*/	
+		const bottomAreaAllowed		= this.yBottom	+ ball.radius;
+		const topAreaAllowed			= this.yTop		- ball.radius;
+		const rightDistanceAllowed	= this.xRight	+ ball.radius;
+		const leftDistanceAllowed	= this.xLeft	- ball.radius;
+		const yIsInRange	= isInRange(ball.nextY, topAreaAllowed, bottomAreaAllowed);
+		const xIsInRange	= isInRange(ball.nextX, leftDistanceAllowed, rightDistanceAllowed);
+		if (yIsInRange ){
+			if(xIsInRange){
+				console.log('rectangle Y Range: ' + topAreaAllowed + ' - ' + bottomAreaAllowed);
+				console.log('rectangle X range: ' + leftDistanceAllowed + ' - ' + rightDistanceAllowed);
+				console.log('analyzed Y: ' + ball.nextY);
+				console.log('analyzed X: ' + ball.nextX);
+				return true;
+			}
+			else
+				return false;
+		}
+		return false;
+
 	}
 	isInBounds(width, height){
 		//Determine if rectangle fits the screen width and screen height;
