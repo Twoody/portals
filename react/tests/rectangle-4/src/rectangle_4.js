@@ -339,6 +339,9 @@ class BallPen extends React.Component{
 			);
       	this.updateRectangle();
 		}
+		if(this.ball){
+			this.ball.handleWindowResize(this.state.width, this.state.height, []);
+		}
 		//Update objects on screen;
       return;
    }//end updateWindowDimenstions()

@@ -356,6 +356,9 @@ var BallPen = function (_React$Component) {
 				this.movableRectangle.handleRectangleMove(this.movableRectangle.xLeft, this.movableRectangle.yTop, this.state.width, this.state.height);
 				this.updateRectangle();
 			}
+			if (this.ball) {
+				this.ball.handleWindowResize(this.state.width, this.state.height, []);
+			}
 			//Update objects on screen;
 			return;
 		} //end updateWindowDimenstions()
