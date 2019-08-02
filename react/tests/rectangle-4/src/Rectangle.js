@@ -1,6 +1,7 @@
 class Rectangle{
 	'use strict';
 	constructor(properties){
+		this.type			= 'rectangle';
 		this.rectID			= properties.rectID;
 		this.color			= properties.color;
 		this.width			= properties.width;
@@ -11,6 +12,8 @@ class Rectangle{
 		this.yBottom		= this.yTop + this.height;
 		this.xCenter		= Math.abs(this.xRight	- this.width/2);
 		this.yCenter		= Math.abs(this.yBottom - this.height/2);
+		this.nextX			= this.xLeft;
+		this.nextY			= this.yTop;
 		this.gravity		= 0;
 		this.friction		= 0.05;
 	}
@@ -26,19 +29,46 @@ class Rectangle{
 		ctx.fill();
 		ctx.closePath();
 	}//end draw()
-	handleRectangleMove(nextX, nextY, sWidth, sHeight){
+	handleRectangleMove(sWidth, sHeight, entities=[]){
 		//Handle rectangle movement:
-		//Find out what item is out of bounds and fix accordingly;
-		if(nextX < 0)
-			nextX = 0;
-		if(nextX + this.width > sWidth)
-			nextX = sWidth - this.width;
-		if(nextY < 0)
-			nextY = 0;
-		if(nextY + this.height > sHeight)
-			nextY = sHeight - this.height;
-		this.updateCoordinates(nextX, nextY);
+
+		this.handleRectangleWallInteractions(sWidth, sHeight);
+		this.handleRectangleEntityInteractions(sWidth, sHeight, entities);
+		this.updateCoordinates();
 	}//end handleRectangleMove
+	handleRectangleBallInteractions(sWidth, sHeight, entity){
+		/*	Find out what way rectangle is moving;
+			If we encounter a ball, move that ball IFF that ball can move in the other direction;
+		*/
+		
+	}
+	handleRectangleEntityInteractions(sWidth, sHeight, entities=[]){
+		for( let i=0; i<entities.length; i++){
+			const entity	= entities[i];
+			if(entity.type === 'rectangle')
+				this.handleRectangleRectangleInteractions(sWidth, sHeight, entity);
+			else if(entity.type === 'ball')
+				this.handleRectangleBallInteractions(sWidth, sHeight, entity);
+			else{
+				//type not found
+			}
+		}//end i-for
+	}
+	handleRectangleRectangleInteractions(sWidth, sHeight, entity){
+		//Encountered other rectangle; Can we move that rectangle, too?
+	}
+	handleRectangleWallInteractions(sWidth, sHeight){
+		//Find out what item is out of bounds and fix accordingly;
+		if(this.nextX < 0)
+			this.nextX = 0;
+		if(this.nextX + this.width > sWidth)
+			this.nextX = sWidth - this.width;
+		if(this.nextY < 0)
+			this.nextY = 0;
+		if(this.nextY + this.height > sHeight)
+			this.nextY = sHeight - this.height;
+		return true;
+	}
 	isOverLappingBall(ball){
 		/*Get X and Y range and see if balls coords fall in that range or not;
 			Input:
@@ -78,12 +108,14 @@ class Rectangle{
 			return false;
 		return true;
 	}//end isInBounds();
-	updateCoordinates(nextX, nextY){
-		this.xLeft		= nextX;
-		this.yTop		= nextY;
+	updateCoordinates(){
+		this.xLeft		= this.nextX;
+		this.yTop		= this.nextY;
 		this.xRight		= this.xLeft + this.width;
 		this.yBottom	= this.yTop + this.height;
 		this.xCenter	= Math.abs(this.xRight	- this.width/2);
 		this.yCenter	= Math.abs(this.yBottom - this.height/2);
+		this.nextX		= this.xLeft;
+		this.nextY		= this.yTop;
 	}//end updateCoordinates()
 }//End Rectangle Class

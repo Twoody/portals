@@ -6,6 +6,7 @@ var Rectangle = function () {
 	function Rectangle(properties) {
 		_classCallCheck(this, Rectangle);
 
+		this.type = 'rectangle';
 		this.rectID = properties.rectID;
 		this.color = properties.color;
 		this.width = properties.width;
@@ -16,6 +17,8 @@ var Rectangle = function () {
 		this.yBottom = this.yTop + this.height;
 		this.xCenter = Math.abs(this.xRight - this.width / 2);
 		this.yCenter = Math.abs(this.yBottom - this.height / 2);
+		this.nextX = this.xLeft;
+		this.nextY = this.yTop;
 		this.gravity = 0;
 		this.friction = 0.05;
 	}
@@ -32,16 +35,51 @@ var Rectangle = function () {
 
 	}, {
 		key: 'handleRectangleMove',
-		value: function handleRectangleMove(nextX, nextY, sWidth, sHeight) {
+		value: function handleRectangleMove(sWidth, sHeight) {
+			var entities = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+
 			//Handle rectangle movement:
-			//Find out what item is out of bounds and fix accordingly;
-			if (nextX < 0) nextX = 0;
-			if (nextX + this.width > sWidth) nextX = sWidth - this.width;
-			if (nextY < 0) nextY = 0;
-			if (nextY + this.height > sHeight) nextY = sHeight - this.height;
-			this.updateCoordinates(nextX, nextY);
+
+			this.handleRectangleWallInteractions(sWidth, sHeight);
+			this.handleRectangleEntityInteractions(sWidth, sHeight, entities);
+			this.updateCoordinates();
 		} //end handleRectangleMove
 
+	}, {
+		key: 'handleRectangleBallInteractions',
+		value: function handleRectangleBallInteractions(sWidth, sHeight, entity) {
+			/*	Find out what way rectangle is moving;
+   	If we encounter a ball, move that ball IFF that ball can move in the other direction;
+   */
+
+		}
+	}, {
+		key: 'handleRectangleEntityInteractions',
+		value: function handleRectangleEntityInteractions(sWidth, sHeight) {
+			var entities = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+
+			for (var i = 0; i < entities.length; i++) {
+				var entity = entities[i];
+				if (entity.type === 'rectangle') this.handleRectangleRectangleInteractions(sWidth, sHeight, entity);else if (entity.type === 'ball') this.handleRectangleBallInteractions(sWidth, sHeight, entity);else {
+					//type not found
+				}
+			} //end i-for
+		}
+	}, {
+		key: 'handleRectangleRectangleInteractions',
+		value: function handleRectangleRectangleInteractions(sWidth, sHeight, entity) {
+			//Encountered other rectangle; Can we move that rectangle, too?
+		}
+	}, {
+		key: 'handleRectangleWallInteractions',
+		value: function handleRectangleWallInteractions(sWidth, sHeight) {
+			//Find out what item is out of bounds and fix accordingly;
+			if (this.nextX < 0) this.nextX = 0;
+			if (this.nextX + this.width > sWidth) this.nextX = sWidth - this.width;
+			if (this.nextY < 0) this.nextY = 0;
+			if (this.nextY + this.height > sHeight) this.nextY = sHeight - this.height;
+			return true;
+		}
 	}, {
 		key: 'isOverLappingBall',
 		value: function isOverLappingBall(ball) {
@@ -83,13 +121,15 @@ var Rectangle = function () {
 
 	}, {
 		key: 'updateCoordinates',
-		value: function updateCoordinates(nextX, nextY) {
-			this.xLeft = nextX;
-			this.yTop = nextY;
+		value: function updateCoordinates() {
+			this.xLeft = this.nextX;
+			this.yTop = this.nextY;
 			this.xRight = this.xLeft + this.width;
 			this.yBottom = this.yTop + this.height;
 			this.xCenter = Math.abs(this.xRight - this.width / 2);
 			this.yCenter = Math.abs(this.yBottom - this.height / 2);
+			this.nextX = this.xLeft;
+			this.nextY = this.yTop;
 		} //end updateCoordinates()
 
 	}]);
