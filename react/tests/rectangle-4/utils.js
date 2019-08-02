@@ -16,6 +16,9 @@ function getRandomInt(min, max) {
 	max = Math.floor(max);
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+function isInRange(x, min, max) {
+	return x >= min && x <= max;
+}
 function makeRandomBall(sWidth, sHeight, ballID) {
 	var minRadius = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 3;
 	var maxRadius = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 30;
