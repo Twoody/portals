@@ -1,6 +1,7 @@
 class Ball{
 	'use strict';
 	constructor(properties){
+		this.type			= 'ball';
 		this.ballID			= properties.ballID;
 		this.color			= properties.color;
 		this.xCord			= properties.xCord;

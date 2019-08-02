@@ -6,6 +6,7 @@ var Ball = function () {
 	function Ball(properties) {
 		_classCallCheck(this, Ball);
 
+		this.type = 'ball';
 		this.ballID = properties.ballID;
 		this.color = properties.color;
 		this.xCord = properties.xCord;
