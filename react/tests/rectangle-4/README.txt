@@ -17,12 +17,13 @@ Status:
 		Single ball is moving according to rectangle influence;
 		Single ball is being moved with the window:	
 			ball is being squished;
+		Rectangle moving the ball out of the way;
+		Rectangle is prevented from moving dependend on balls ability to move;
 	Not working:
-		ball is not rolling out of the way;
-		rectangle is able to overlap ball;
-		Have rectangle move the ball out of the way;
 		If Ball is stuck between the rectangle and wall and cannot go in the other two 
 			directions available, squish ball;
 	Bugs:
 		Ball ontop of rectangle is buggy;
 		Ball is being squished for no reason;
+		Ball is not acting accodingly with distances and interactions with the rectangle:
+			Essentially, it jumps pixels and does not move fluidly;
