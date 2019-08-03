@@ -529,6 +529,32 @@ class Ball{
 			}
 		}
 	}//end label()
+	move(sWidth, sHeight, wallFriction, rectangles, balls){
+		//Assume we can go any direction first; Change values on `handle`*;
+		//Reset canGo* properties for this iteration;
+		this.resetSurroundings();
+		
+		//Set coordinates for next movment;
+		this.setNextCoordinates();
+
+		//See if next coordinates create any conflicts and if expected coordinates 
+		//	will prevent us from going certain directions;
+		for(let i=0; i<rectangles.length; i++){
+			this.handleRectangleInteractions(
+				rectangles[i], 
+				sWidth, 
+				sHeight
+			);
+		}
+		this.handleBoundaries(sWidth, sHeight, balls);
+		this.handleWallCollisions(sWidth, sHeight, wallFriction);
+		this.handleBallCollisions(balls);
+
+		//Process final available movements; Update coords appropriately; Apply Gravity;
+		this.handleMovement(wallFriction);
+		this.updateCoordinates();
+		this.applyGravity();
+	}//end move()
 	resetSurroundings(){
 		this.canGoUp		= true;
 		this.canGoDown		= true;
