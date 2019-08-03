@@ -47,11 +47,28 @@ var Rectangle = function () {
 
 	}, {
 		key: 'handleBallInteractions',
-		value: function handleBallInteractions(sWidth, sHeight, entity) {
+		value: function handleBallInteractions(sWidth, sHeight, ball) {
 			/*	Find out what way rectangle is moving;
    	If we encounter a ball, move that ball IFF that ball can move in the other direction;
    */
-			console.log('rectangle interacting with ball');
+			console.log('ball interactions');
+			if (this.isOverLappingBall(ball) === false) return true;
+			if (this.isGoingRight && ball.canGoRight === false) {
+				this.nextX = this.xLeft;
+				this.isGoingRight = false;
+			}
+			if (this.isGoingLeft && ball.canGoLeft === false) {
+				this.nextX = this.xRight;
+				this.isGoingLeft = false;
+			}
+			if (this.isGoingDown && ball.canGoDown === false) {
+				this.nextY = this.yTop;
+				this.isGoingDown = false;
+			}
+			if (this.isGoingUp && ball.canGoUp === false) {
+				this.nextY = this.yTop;
+				this.isGoingUp = false;
+			}
 		}
 	}, {
 		key: 'handleEntityInteractions',
