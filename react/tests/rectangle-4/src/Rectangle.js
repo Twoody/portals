@@ -43,34 +43,30 @@ class Rectangle{
 		if(this.isOverLappingBall(ball) === false){
 			return true;
 		}
-		console.log('collisions');
+
+		
+
+		//Process directions and speeds
 		const dxBoost = (Math.abs(this.xLeft - this.nextX))/10;
 		const dyBoost = (Math.abs(this.yTop - this.nextY))/10;
+		ball.accelerate(dxBoost, dyBoost);
 		if(this.isGoingRight && ball.nextX > this.xCenter){
 			//Rectangle is going right and ball is in path;
 			this.nextX = this.xLeft;		//Do not allow this movement
 			this.isGoingRight = false;
 		}
-		else
-			ball.accelerate(dxBoost, dyBoost);
 		if(this.isGoingLeft && ball.nextX < this.xCenter){
-			this.nextX			= this.xLeft;
+			this.nextX = this.xLeft;		//Do not allow this movement
 			this.isGoingLeft	= false;
 		}
-		else
-			ball.accelerate(dxBoost, dyBoost);
 		if(this.isGoingDown && ball.nextY > this.yCenter){
-			this.nextY = this.yTop;
+			this.nextY = this.yTop;		//Do not allow this movement
 			this.isGoingDown = false;
 		}
-		else
-			ball.accelerate(dxBoost, dyBoost);
 		if(this.isGoingUp && ball.nextY < this.yCenter){
-			this.nextY = this.yTop;
+			this.nextY = this.yTop;		//Do not allow this movement
 			this.isGoingUp = false;
 		}
-		else
-			ball.accelerate(dxBoost, dyBoost);
 	}
 	handleEntityInteractions(sWidth, sHeight, entities=[]){
 		for( let i=0; i<entities.length; i++){
