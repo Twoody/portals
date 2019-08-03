@@ -43,29 +43,33 @@ class Rectangle{
 		if(this.isOverLappingBall(ball) === false){
 			return true;
 		}
-
-		
-
 		//Process directions and speeds
-		const dxBoost = (Math.abs(this.xLeft - this.nextX))/10;
-		const dyBoost = (Math.abs(this.yTop - this.nextY))/10;
-		ball.accelerate(dxBoost, dyBoost);
+		const dxBoost = (Math.abs(this.xLeft - this.nextX))/50;
+		const dyBoost = (Math.abs(this.yTop - this.nextY))/50;
 		if(this.isGoingRight && ball.nextX > this.xCenter){
 			//Rectangle is going right and ball is in path;
 			this.nextX = this.xLeft;		//Do not allow this movement
 			this.isGoingRight = false;
+			ball.accelerate(dxBoost, dyBoost);
 		}
 		if(this.isGoingLeft && ball.nextX < this.xCenter){
 			this.nextX = this.xLeft;		//Do not allow this movement
 			this.isGoingLeft	= false;
+			ball.accelerate(dxBoost, dyBoost);
 		}
 		if(this.isGoingDown && ball.nextY > this.yCenter){
 			this.nextY = this.yTop;		//Do not allow this movement
 			this.isGoingDown = false;
+			ball.accelerate(dxBoost, dyBoost);
 		}
 		if(this.isGoingUp && ball.nextY < this.yCenter){
 			this.nextY = this.yTop;		//Do not allow this movement
 			this.isGoingUp = false;
+			ball.accelerate(dxBoost, dyBoost);
+		}
+		if(this.isOverLappingBall(ball)){
+			//We should have fixed the result, but we may have moved the rectangle to fast to catch it;
+			console.log("still overlapping");
 		}
 	}
 	handleEntityInteractions(sWidth, sHeight, entities=[]){
