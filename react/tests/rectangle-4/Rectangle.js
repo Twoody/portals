@@ -54,26 +54,26 @@ var Rectangle = function () {
 			if (this.isOverLappingBall(ball) === false) {
 				return true;
 			}
-			if (this.isGoingRight && ball.canGoRight === false) {
-				if (ball.xCord > this.xCenter) {
-					this.nextX = this.xLeft; //Do not allow this movement
-					this.isGoingRight = false;
-				}
-			}
-			if (this.isGoingLeft && ball.canGoLeft === false) {
-				if (ball.xCord < this.xCenter) {
-					this.nextX = this.xLeft;
-					this.isGoingLeft = false;
-				}
-			}
-			if (this.isGoingDown && ball.canGoDown === false) {
+			console.log('collisions');
+			var dxBoost = Math.abs(this.xLeft - this.nextX) / 10;
+			var dyBoost = Math.abs(this.yTop - this.nextY) / 10;
+			if (this.isGoingRight && ball.nextX > this.xCenter) {
+				//Rectangle is going right and ball is in path;
+				this.nextX = this.xLeft; //Do not allow this movement
+				this.isGoingRight = false;
+			} else ball.accelerate(dxBoost, dyBoost);
+			if (this.isGoingLeft && ball.nextX < this.xCenter) {
+				this.nextX = this.xLeft;
+				this.isGoingLeft = false;
+			} else ball.accelerate(dxBoost, dyBoost);
+			if (this.isGoingDown && ball.nextY > this.yCenter) {
 				this.nextY = this.yTop;
 				this.isGoingDown = false;
-			}
-			if (this.isGoingUp && ball.canGoUp === false) {
+			} else ball.accelerate(dxBoost, dyBoost);
+			if (this.isGoingUp && ball.nextY < this.yCenter) {
 				this.nextY = this.yTop;
 				this.isGoingUp = false;
-			}
+			} else ball.accelerate(dxBoost, dyBoost);
 		}
 	}, {
 		key: 'handleEntityInteractions',
@@ -111,8 +111,8 @@ var Rectangle = function () {
    	Output:
    		Boolean
    */
-			var ballDistanceX = Math.abs(ball.xCord - this.xCenter);
-			var ballDistanceY = Math.abs(ball.yCord - this.yCenter);
+			var ballDistanceX = Math.abs(ball.nextX - this.xCenter);
+			var ballDistanceY = Math.abs(ball.nextY - this.yCenter);
 			if (ballDistanceX > this.width / 2 + ball.radius) return false;
 			if (ballDistanceY > this.height / 2 + ball.radius) return false;
 			if (ballDistanceX <= this.width / 2) return true;

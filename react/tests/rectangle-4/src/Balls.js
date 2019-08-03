@@ -318,106 +318,56 @@ class Ball{
 	}//End handleMovement()
 	handleRectangleInteractions(rectangle, screenWidth, screenHeight){
 		//Handle rectangle objects
-		if(rectangle.isOverLappingBall(this) === false)
+		let isOverlapping = rectangle.isOverLappingBall(this);
+		if( isOverlapping === false)
 			return;
-		//Process Up/Down 
-		let ballBottomOverLapsTop	= false;
-		let ballTopOverLapsBottom	= false;
-		if(this.nextY + this.radius >= rectangle.yTop
-			&& this.nextY - this.radius <= rectangle.yTop
-			&& this.isGoingDown){
-			//If ball bottom is lower than the top of the rectangle;
-			// and if the ball top is above the top of the rectangle;
-			ballBottomOverLapsTop = true;
-		}
-		if(this.nextY - this.radius <= rectangle.yBottom
-			&& this.nextY + this.radius >= rectangle.yBottom
-			&& this.isGoingUp){
-			//If ball top is above the bottom of the rectangle;
-			// and if the top is below the top of the rectangle;
-			ballTopOverLapsBottom = true;
-		}
+		//There is a collision;
 
-		if(this.nextX-this.radius >= rectangle.xRight
-			|| this.nextX+this.radius <= rectangle.xLeft){
-			//Is the left of the ball right of the right side of the rectangle
-			ballBottomOverLapsTop = false;
-			ballTopOverLapsBottom = false;
+		//Set the directions that this ball cannot go;
+		if(this.nextX > rectangle.xCenter){
+			//Current ball is right of rectangle
+			this.canGoLeft = false;
 		}
+		else
+			this.canGoRight = false;
+		if(this.nextY > rectangle.yCenter){
+			//Current ball is below of rectangle; 
+			this.canGoUp = false;
+		}
+		else
+			this.canGoDown = false;
 
-		if(ballBottomOverLapsTop){
-			if(rectangle.yTop > this.radius*2 ){
-				//Rectangle top should sit below the radius;
-				//There is enough room for the ball to go here;
-				this.nextY		= rectangle.yTop - this.radius;
-				this.canGoDown = false;
+		//Set canGo* flags, rewind time on next* coords;
+		let timeRatio	= 50;
+		let dyRatio		= this.dy / timeRatio;
+		let dxRatio		= this.dx / timeRatio;
+		let cnt			= 0;
+		let isResolved	= true;
+		while(isOverlapping){
+			if(this.isGoingRight)
+				this.nextX -= dxRatio;	//Step back left
+			else if(this.isGoingLeft)
+				this.nextX += dxRatio;	//Step back right
+			if(this.isGoingDown)
+				this.nextY -= dyRatio;	//Step back up
+			else if(this.isGoingUp)
+				this.nextY += dyRatio;	//Step back down
+			isOverlapping = rectangle.isOverLappingBall(this);
+			cnt += 1;
+			if(cnt === timeRatio){
+				//Problem not solved;
+				//We need to adjust the ball instead;
+				isResolved = false;
+				break;
 			}
-			else{
-				//Ball needs to bounce back and cannot fit;
-				if(this.isGoingRight){
-					this.canGoRight = false;
-					//this.nextX = rectangle.xLeft - this.radius;
-				}
-				else if(this.isGoingLeft){
-					this.canGoLeft = false;
-					//this.nextX = rectangle.xRight + this.radius;
-				}
-			}
+		}//end while
+		if(isResolved === false){
+			this.nextY = this.yCord;
+			this.nextX = this.xCord;
 		}
-		else if(ballTopOverLapsBottom){
-			if(rectangle.yBottom + (this.radius*2) < screenWidth){
-				//If rectangle bottom and ball fit within the screen;
-				this.nextY		= rectangle.yBottom + this.radius;
-				this.canGoUp	= false;
-			}
-			else{
-				//Ball needs to bounce back and cannot fit;
-				if(this.isGoingRight){
-					this.canGoRight = false;
-					//this.nextX = rectangle.xLeft - this.radius;
-				}
-				else if(this.isGoingLeft){
-					this.canGoLeft = false;
-					//this.nextX = rectangle.xRight + this.radius;
-				}
-			}
-		}
+		this.decelerate(rectangle.friction, rectangle.friction);
 
-		//Process Left/Right
-		let ballRightOverLapsLeft = false;
-		let ballLeftOverLapsRight = false;
-		if(this.nextX + this.radius >= rectangle.xLeft 
-			&& this.nextX - this.radius <= rectangle.xLeft){
-			//If ball right is right of the left side
-			// and ball left is left of the left side
-			ballRightOverLapsLeft = true;
-		}
-		if(this.nextX - this.radius <= rectangle.xRight
-			&& this.nextX + this.radius >= rectangle.xRight){
-			//If ball left is left of the right side
-			// and ball right is right of the right side
-			ballLeftOverLapsRight = true;
-		}
 
-		if(this.nextY + this.radius <= rectangle.yTop){
-			//If ball bottom is above rectangles top
-			ballRightOverLapsLeft = false;
-			ballLeftOverLapsRight = false;
-		}
-		else if(this.nextY - this.radius >= rectangle.yBottom){
-			//If ball top is below rectangles bottom
-			ballRightOverLapsLeft = false;
-			ballLeftOverLapsRight = false;
-		}
-		
-		if(ballRightOverLapsLeft){
-			this.nextX		= rectangle.xLeft - this.radius;
-			this.canGoRight	= false;
-		}
-		else if(ballLeftOverLapsRight){
-			this.nextX		= rectangle.xRight + this.radius;
-			this.canGoLeft	= false;
-		}
 	}//end handleRectangleInteractions()
 	handleWallCollisions(maxWidth, maxHeight, friction){
 		const willOverlapBottom	= this.hitBottom(maxHeight);
