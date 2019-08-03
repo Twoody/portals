@@ -382,25 +382,9 @@ var BallPen = function (_React$Component) {
 			if (!this.ball) this.initBall();
 			var canvas = this.canvasRef;
 			var ctx = canvas.getContext('2d');
-			//Assume we can go any direction first; Change values on `handle`*;
-			//Reset canGo* properties for this iteration;
-			this.ball.resetSurroundings();
 
-			//Set coordinates for next movment;
-			this.ball.setNextCoordinates();
-
-			//See if next coordinates create any conflicts and if expected coordinates 
-			//	will prevent us from going certain directions;
-			this.ball.handleRectangleInteractions(this.movableRectangle, this.state.width, this.state.height);
-			this.ball.handleBoundaries(this.state.width, this.state.height, []);
-			this.ball.handleWallCollisions(this.state.width, this.state.height, this.friction);
-			this.ball.handleBallCollisions([]);
-
-			//Process final available movements; Update coords appropriately; Apply Gravity;
-			this.ball.handleMovement(this.friction);
-			this.ball.updateCoordinates();
-			this.ball.applyGravity();
-
+			this.ball.move(this.state.width, this.state.height, this.friction, [this.movableRectangle], [] //other balls
+			);
 			//Update other objects 
 			this.drawBackground(); //Redraw Background
 			this.drawBall(ctx);
