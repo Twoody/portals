@@ -51,15 +51,20 @@ var Rectangle = function () {
 			/*	Find out what way rectangle is moving;
    	If we encounter a ball, move that ball IFF that ball can move in the other direction;
    */
-			console.log('ball interactions');
-			if (this.isOverLappingBall(ball) === false) return true;
+			if (this.isOverLappingBall(ball) === false) {
+				return true;
+			}
 			if (this.isGoingRight && ball.canGoRight === false) {
-				this.nextX = this.xLeft;
-				this.isGoingRight = false;
+				if (ball.xCord > this.xCenter) {
+					this.nextX = this.xLeft; //Do not allow this movement
+					this.isGoingRight = false;
+				}
 			}
 			if (this.isGoingLeft && ball.canGoLeft === false) {
-				this.nextX = this.xRight;
-				this.isGoingLeft = false;
+				if (ball.xCord < this.xCenter) {
+					this.nextX = this.xLeft;
+					this.isGoingLeft = false;
+				}
 			}
 			if (this.isGoingDown && ball.canGoDown === false) {
 				this.nextY = this.yTop;
@@ -142,6 +147,16 @@ var Rectangle = function () {
 			this.nextY = this.yTop;
 		} //end updateCoordinates()
 
+	}, {
+		key: 'willOverLapBall',
+		value: function willOverLapBall(ball) {
+			var currX = this.xLeft;
+			var currY = this.yTop;
+			this.updateCoordinates(this.nextX, this.nextY);
+			var ret = this.isOverLappingBall(ball);
+			this.updateCoordinates(currX, currY);
+			return ret;
+		}
 	}]);
 
 	return Rectangle;

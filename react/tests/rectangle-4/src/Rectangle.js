@@ -40,16 +40,20 @@ class Rectangle{
 		/*	Find out what way rectangle is moving;
 			If we encounter a ball, move that ball IFF that ball can move in the other direction;
 		*/
-		console.log('ball interactions');
-		if(this.isOverLappingBall(ball) === false)
+		if(this.isOverLappingBall(ball) === false){
 			return true;
+		}
 		if(this.isGoingRight && ball.canGoRight === false){
-			this.nextX = this.xLeft;
-			this.isGoingRight = false;
+			if(ball.xCord > this.xCenter){
+				this.nextX = this.xLeft;	//Do not allow this movement
+				this.isGoingRight = false;
+			}
 		}
 		if(this.isGoingLeft && ball.canGoLeft === false){
-			this.nextX = this.xRight;
-			this.isGoingLeft = false;
+			if(ball.xCord < this.xCenter){
+				this.nextX = this.xLeft;
+				this.isGoingLeft = false;
+			}
 		}
 		if(this.isGoingDown && ball.canGoDown === false){
 			this.nextY = this.yTop;
@@ -139,4 +143,12 @@ class Rectangle{
 		this.nextX		= this.xLeft;
 		this.nextY		= this.yTop;
 	}//end updateCoordinates()
+	willOverLapBall(ball){
+		const currX	= this.xLeft;
+		const currY = this.yTop;
+		this.updateCoordinates(this.nextX, this.nextY);
+		const ret = this.isOverLappingBall(ball);
+		this.updateCoordinates(currX, currY);
+		return ret;
+	}
 }//End Rectangle Class
