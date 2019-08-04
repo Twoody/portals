@@ -18,12 +18,13 @@ Status:
 		Single ball is being moved with the window:	
 			ball is being squished;
 		Rectangle moving the ball out of the way;
-		Rectangle is prevented from moving dependend on balls ability to move;
-	Not working:
-		If Ball is stuck between the rectangle and wall and cannot go in the other two 
-			directions available, squish ball;
+		Rectangle is prevented from moving:
+			Movement dependent on balls ability to move;
+		Rectangle completely forbidden to Overlap ball:
+			Still some occasional bugs, but we are able to allow
+			user to fix the situation;
+
 	Bugs:
 		Ball ontop of rectangle is buggy;
-		Ball is being squished for no reason;
-		Ball is not acting accodingly with distances and interactions with the rectangle:
-			Essentially, it jumps pixels and does not move fluidly;
+		Ball is being squished for no reason by screen size changes;
+		Ball acceleration is happening to much;
