@@ -76,6 +76,7 @@ var BallPen = function (_React$Component) {
 						break;
 					}
 				} //end while
+				newBall.maxSpeed = newBall.radius / 2;
 				this.ball = newBall;
 			}
 		} //end initBall()
@@ -192,9 +193,9 @@ var BallPen = function (_React$Component) {
 					yClick: event.clientY
 				});
 			}
-			this.handleRectangleDrag();
-			this.updateRectangle();
-		}
+			if (this.handleRectangleDrag()) this.updateRectangle();
+		} //end handleCanvasMouseMove()
+
 	}, {
 		key: 'handleRectangleDrag',
 		value: function handleRectangleDrag() {
@@ -204,14 +205,13 @@ var BallPen = function (_React$Component) {
 			var clientY = this.state.yClick - rect.top;
 			var xMid = this.movableRectangle.xCenter;
 			var yMid = this.movableRectangle.yCenter;
-			var rectangleLeft = this.movableRectangle.xLeft;
-			var rectangleTop = this.movableRectangle.yTop;
 			var nextX = this.movableRectangle.xLeft;
 			var nextY = this.movableRectangle.yTop;
 			this.movableRectangle.isGoingLeft = false;
 			this.movableRectangle.isGoingRight = false;
 			this.movableRectangle.isGoingUp = false;
 			this.movableRectangle.isGoingDown = false;
+
 			if (clientX < xMid) {
 				//Move left
 				nextX = clientX - this.movableRectangle.width / 2;
@@ -236,7 +236,25 @@ var BallPen = function (_React$Component) {
 			}
 			this.movableRectangle.nextX = nextX;
 			this.movableRectangle.nextY = nextY;
+			var dx = Math.abs(this.movableRectangle.xLeft - nextX);
+			var dy = Math.abs(this.movableRectangle.yTop - nextY);
+			var dxBoost = dx / 100;
+			var dyBoost = dy / 100;
+			if (this.movableRectangle.willOverLapBall(this.ball)) {
+				//Accelerate ball;
+				this.ball.accelerate(dxBoost, dyBoost);
+				//Prevent movements and directional changes;
+				this.movableRectangle.nextX = this.movableRectangle.xLeft;
+				this.movableRectangle.nextY = this.movableRectangle.yTop;
+				this.movableRectangle.isGoingLeft = false;
+				this.movableRectangle.isGoingRight = false;
+				this.movableRectangle.isGoingUp = false;
+				this.movableRectangle.isGoingDown = false;
+				return false;
+			}
+
 			this.movableRectangle.handleMove(this.state.width, this.state.height, [this.ball]);
+			return true;
 		} //end handleRectangleDrag();
 
 	}, {
