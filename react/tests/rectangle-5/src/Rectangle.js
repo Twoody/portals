@@ -193,15 +193,40 @@ class Rectangle{
 			return false;
 		return true;
 	}//end isInBounds();
+	isLegalMovement(nextX, nextY, entities){
+		/*	Go over entities and see if this next movement is going to cause
+			a conflict with the existing rectangle;
+
+			TODO: accelerating the ball here is not intuitive;
+		*/
+		this.nextX = nextX;
+		this.nextY = nextY;
+		const dx			= Math.abs(this.xLeft - nextX);
+		const dy			= Math.abs(this.yTop - nextY);
+		const dxBoost	= dx/100;
+		const dyBoost	= dy/100;
+		for( let i=0; i<entities.length; i++){
+			const entity = entities[i];
+			if(entity.type === 'ball'){
+				if( this.willOverLapBall(entity) ){
+					console.log('illegal movement: reseting coordinates back;');
+					//Accelerate ball;
+					entity.accelerate(dxBoost, dyBoost);
+					this.nextX = this.xLeft;
+					this.nextY = this.yYop;
+					this.resetMovement();
+					return false;
+				}
+			}//end ball check
+		}//end i-for
+		return true;
+	}
 	processDrag(clientX, clientY, entities){
 		const xMid			= this.xCenter;
 		const yMid			= this.yCenter;
 		let nextX 			= this.xLeft;
 		let nextY 			= this.yTop;
-		this.isGoingLeft	= false;
-		this.isGoingRight	= false;
-		this.isGoingUp		= false;
-		this.isGoingDown	= false;
+		this.resetMovement();
 
 		if(clientX < xMid){
 			//Move left
@@ -229,31 +254,29 @@ class Rectangle{
 		else{
 			//Same position
 		}
-		this.nextX = nextX;
-		this.nextY = nextY;
-		const dx					= Math.abs(this.xLeft - nextX);
-		const dy					= Math.abs(this.yTop - nextY);
-		const dxBoost			= dx/100;
-		const dyBoost			= dy/100;
-		for( let i=0; i<entities.length; i++){
-			const entity = entities[i];
-			if(entity.type === 'ball'){
-				if( this.willOverLapBall(entity) ){
-					//Accelerate ball;
-					entity.accelerate(dxBoost, dyBoost);
-					//Prevent movements and directional changes;
-					this.nextX = this.xLeft;
-					this.nextY = this.yTop;
-					this.isGoingLeft	= false;
-					this.isGoingRight	= false;
-					this.isGoingUp		= false;
-					this.isGoingDown	= false;
-					return false;
-				}
-			}//end ball check
-		}//end i-for
-		return true;
+
+		const isLegalDrag = this.isLegalMovement(nextX, nextY, entities);
+		if(isLegalDrag === false){
+			this.nextX = this.xLeft;
+			this.nextY = this.yTop;
+			this.resetMovement();
+			return false;
+		}
+		else{
+			this.nextX = nextX;
+			this.nextY = nextY;
+			return true;
+		}
 	}//end processDrag()
+	processMovement(){
+		
+	}
+	resetMovement(){
+		this.isGoingLeft	= false;
+		this.isGoingRight	= false;
+		this.isGoingUp		= false;
+		this.isGoingDown	= false;
+	}
 	updateCoordinates(){
 		this.xLeft		= this.nextX;
 		this.yTop		= this.nextY;

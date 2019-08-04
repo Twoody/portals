@@ -184,16 +184,42 @@ var Rectangle = function () {
 		} //end isInBounds();
 
 	}, {
+		key: 'isLegalMovement',
+		value: function isLegalMovement(nextX, nextY, entities) {
+			/*	Go over entities and see if this next movement is going to cause
+   	a conflict with the existing rectangle;
+   		TODO: accelerating the ball here is not intuitive;
+   */
+			this.nextX = nextX;
+			this.nextY = nextY;
+			var dx = Math.abs(this.xLeft - nextX);
+			var dy = Math.abs(this.yTop - nextY);
+			var dxBoost = dx / 100;
+			var dyBoost = dy / 100;
+			for (var i = 0; i < entities.length; i++) {
+				var entity = entities[i];
+				if (entity.type === 'ball') {
+					if (this.willOverLapBall(entity)) {
+						console.log('illegal movement: reseting coordinates back;');
+						//Accelerate ball;
+						entity.accelerate(dxBoost, dyBoost);
+						this.nextX = this.xLeft;
+						this.nextY = this.yYop;
+						this.resetMovement();
+						return false;
+					}
+				} //end ball check
+			} //end i-for
+			return true;
+		}
+	}, {
 		key: 'processDrag',
 		value: function processDrag(clientX, clientY, entities) {
 			var xMid = this.xCenter;
 			var yMid = this.yCenter;
 			var nextX = this.xLeft;
 			var nextY = this.yTop;
-			this.isGoingLeft = false;
-			this.isGoingRight = false;
-			this.isGoingUp = false;
-			this.isGoingDown = false;
+			this.resetMovement();
 
 			if (clientX < xMid) {
 				//Move left
@@ -217,32 +243,31 @@ var Rectangle = function () {
 			} else {
 				//Same position
 			}
-			this.nextX = nextX;
-			this.nextY = nextY;
-			var dx = Math.abs(this.xLeft - nextX);
-			var dy = Math.abs(this.yTop - nextY);
-			var dxBoost = dx / 100;
-			var dyBoost = dy / 100;
-			for (var i = 0; i < entities.length; i++) {
-				var entity = entities[i];
-				if (entity.type === 'ball') {
-					if (this.willOverLapBall(entity)) {
-						//Accelerate ball;
-						entity.accelerate(dxBoost, dyBoost);
-						//Prevent movements and directional changes;
-						this.nextX = this.xLeft;
-						this.nextY = this.yTop;
-						this.isGoingLeft = false;
-						this.isGoingRight = false;
-						this.isGoingUp = false;
-						this.isGoingDown = false;
-						return false;
-					}
-				} //end ball check
-			} //end i-for
-			return true;
+
+			var isLegalDrag = this.isLegalMovement(nextX, nextY, entities);
+			if (isLegalDrag === false) {
+				this.nextX = this.xLeft;
+				this.nextY = this.yTop;
+				this.resetMovement();
+				return false;
+			} else {
+				this.nextX = nextX;
+				this.nextY = nextY;
+				return true;
+			}
 		} //end processDrag()
 
+	}, {
+		key: 'processMovement',
+		value: function processMovement() {}
+	}, {
+		key: 'resetMovement',
+		value: function resetMovement() {
+			this.isGoingLeft = false;
+			this.isGoingRight = false;
+			this.isGoingUp = false;
+			this.isGoingDown = false;
+		}
 	}, {
 		key: 'updateCoordinates',
 		value: function updateCoordinates() {
