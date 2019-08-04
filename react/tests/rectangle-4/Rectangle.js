@@ -54,33 +54,75 @@ var Rectangle = function () {
 			if (this.isOverLappingBall(ball) === false) {
 				return true;
 			}
-			//Process directions and speeds
-			var dxBoost = Math.abs(this.xLeft - this.nextX) / 50;
-			var dyBoost = Math.abs(this.yTop - this.nextY) / 50;
-			if (this.isGoingRight && ball.nextX > this.xCenter) {
-				//Rectangle is going right and ball is in path;
-				this.nextX = this.xLeft; //Do not allow this movement
-				this.isGoingRight = false;
-				ball.accelerate(dxBoost, dyBoost);
-			}
-			if (this.isGoingLeft && ball.nextX < this.xCenter) {
-				this.nextX = this.xLeft; //Do not allow this movement
-				this.isGoingLeft = false;
-				ball.accelerate(dxBoost, dyBoost);
-			}
-			if (this.isGoingDown && ball.nextY > this.yCenter) {
-				this.nextY = this.yTop; //Do not allow this movement
-				this.isGoingDown = false;
-				ball.accelerate(dxBoost, dyBoost);
-			}
-			if (this.isGoingUp && ball.nextY < this.yCenter) {
-				this.nextY = this.yTop; //Do not allow this movement
-				this.isGoingUp = false;
-				ball.accelerate(dxBoost, dyBoost);
+			//Move rectangle away from ball until no overlap continue;
+			var timeRatio = 50;
+			var dx = Math.abs(this.xLeft - this.nextX);
+			var dy = Math.abs(this.yTop - this.nextY);
+			var dxRatio = dx / timeRatio;
+			var dyRatio = dy / timeRatio;
+			var timeCnt = 0;
+			while (this.isOverLappingBall(ball)) {
+				if (this.isGoingRight) this.nextX -= dxRatio; //Move back left
+				else if (this.isGoingLeft) this.nextX += dxRatio; //Move back right
+				if (this.isGoingUp) this.nextY += dyRatio; //Move back down;
+				else if (this.isGoingDown) this.nextY -= dyRatio; //Move back up;
+				timeCnt += 1;
+				if (timeCnt === timeRatio) {
+					this.nextX = this.xLeft;
+					this.nextY = this.yTop;
+					break;
+				}
 			}
 			if (this.isOverLappingBall(ball)) {
-				//We should have fixed the result, but we may have moved the rectangle to fast to catch it;
-				console.log("still overlapping");
+				//Ball and rectangle are super stuck for whatever reason;
+				//Manually try to move rectangle out of the way;
+				console.log('ERROR: Rectangle.handleBallInteractions: Super stuck;');
+				if (this.isGoingRight && ball.nextX < this.xCenter) {
+					//Rectangle is moving right and ball is stuck left of rectangle;
+					this.nextX += ball.radius;
+				} else if (this.isGoingRight && ball.nextX > this.xCenter) {
+					//Rectangle is moving right and ball is right of rectangle;
+					//Since this is overlapping, move the rectangle back left to avoid overlap;
+					this.nextX -= ball.radius;
+				}
+				if (this.isGoingLeft && ball.nextX > this.xCenter) {
+					this.nextX -= ball.radius;
+				} else if (this.isGoingLeft && ball.nextX < this.xCenter) {
+					//Moving left and ball is left; Since overlap, move back right;
+					this.nextX += ball.radius;
+				}
+
+				if (this.isGoingDown && ball.nextY > this.yCenter) {
+					//Move rectangle back up;
+					this.nextY -= ball.radius;
+				} else if (this.isGoingDown && ball.nextY < this.yCenter) {
+					//Rectangle is going down and ball is above above rectangle;
+					//Move rectangle down;
+					this.nextY += ball.radius;
+				}
+				if (this.isGoingUp && ball.nextY > this.yCenter) {
+					//Rectangle is going up and ball is below rectangle;
+					//Move rectangle up;
+					this.nextY -= ball.radius;
+				} else if (this.isGoingup && ball.nextY < this.yCenter) {
+					//Move rectangle down;
+					this.nextY += ball.radius;
+				}
+			}
+
+			//Process directions and speeds
+			if (this.isGoingRight && ball.nextX > this.xCenter) {
+				//Rectangle is going right and ball is in path;
+				this.isGoingRight = false;
+			}
+			if (this.isGoingLeft && ball.nextX < this.xCenter) {
+				this.isGoingLeft = false;
+			}
+			if (this.isGoingDown && ball.nextY > this.yCenter) {
+				this.isGoingDown = false;
+			}
+			if (this.isGoingUp && ball.nextY < this.yCenter) {
+				this.isGoingUp = false;
 			}
 		}
 	}, {
@@ -160,9 +202,15 @@ var Rectangle = function () {
 		value: function willOverLapBall(ball) {
 			var currX = this.xLeft;
 			var currY = this.yTop;
-			this.updateCoordinates(this.nextX, this.nextY);
+			var nextX = this.nextX;
+			var nextY = this.nextY;
+			this.updateCoordinates();
 			var ret = this.isOverLappingBall(ball);
-			this.updateCoordinates(currX, currY);
+			this.nextX = currX;
+			this.nextY = currY;
+			this.updateCoordinates();
+			this.nextX = nextX;
+			this.nextY = nextY;
 			return ret;
 		}
 	}]);
