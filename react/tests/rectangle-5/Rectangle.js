@@ -39,7 +39,6 @@ var Rectangle = function () {
 			var entities = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
 
 			//Handle rectangle movement:
-
 			this.handleWallInteractions(sWidth, sHeight);
 			this.handleEntityInteractions(sWidth, sHeight, entities);
 			this.updateCoordinates();
@@ -183,6 +182,66 @@ var Rectangle = function () {
 			if (this.yBottom > height) return false;
 			return true;
 		} //end isInBounds();
+
+	}, {
+		key: 'processDrag',
+		value: function processDrag(clientX, clientY, entities) {
+			var xMid = this.xCenter;
+			var yMid = this.yCenter;
+			var nextX = this.xLeft;
+			var nextY = this.yTop;
+			this.isGoingLeft = false;
+			this.isGoingRight = false;
+			this.isGoingUp = false;
+			this.isGoingDown = false;
+
+			if (clientX < xMid) {
+				//Move left
+				nextX = clientX - this.width / 2;
+				this.isGoingLeft = true;
+			} else if (clientX > xMid) {
+				//Move right
+				nextX = clientX - this.width / 2;
+				this.isGoingRight = true;
+			} else {
+				//Same position
+			}
+			if (clientY < yMid) {
+				//Move Up
+				nextY = clientY - this.height / 2;
+				this.isGoingUp = true;
+			} else if (clientY > yMid) {
+				//Move Down
+				nextY = clientY - this.height / 2;
+				this.isGoingDown = true;
+			} else {
+				//Same position
+			}
+			this.nextX = nextX;
+			this.nextY = nextY;
+			var dx = Math.abs(this.xLeft - nextX);
+			var dy = Math.abs(this.yTop - nextY);
+			var dxBoost = dx / 100;
+			var dyBoost = dy / 100;
+			for (var i = 0; i < entities.length; i++) {
+				var entity = entities[i];
+				if (entity.type === 'ball') {
+					if (this.willOverLapBall(entity)) {
+						//Accelerate ball;
+						entity.accelerate(dxBoost, dyBoost);
+						//Prevent movements and directional changes;
+						this.nextX = this.xLeft;
+						this.nextY = this.yTop;
+						this.isGoingLeft = false;
+						this.isGoingRight = false;
+						this.isGoingUp = false;
+						this.isGoingDown = false;
+						return false;
+					}
+				} //end ball check
+			} //end i-for
+			return true;
+		} //end processDrag()
 
 	}, {
 		key: 'updateCoordinates',

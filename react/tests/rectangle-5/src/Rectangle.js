@@ -31,7 +31,6 @@ class Rectangle{
 	}//end draw()
 	handleMove(sWidth, sHeight, entities=[]){
 		//Handle rectangle movement:
-
 		this.handleWallInteractions(sWidth, sHeight);
 		this.handleEntityInteractions(sWidth, sHeight, entities);
 		this.updateCoordinates();
@@ -194,6 +193,67 @@ class Rectangle{
 			return false;
 		return true;
 	}//end isInBounds();
+	processDrag(clientX, clientY, entities){
+		const xMid			= this.xCenter;
+		const yMid			= this.yCenter;
+		let nextX 			= this.xLeft;
+		let nextY 			= this.yTop;
+		this.isGoingLeft	= false;
+		this.isGoingRight	= false;
+		this.isGoingUp		= false;
+		this.isGoingDown	= false;
+
+		if(clientX < xMid){
+			//Move left
+			nextX = clientX - (this.width/2);
+			this.isGoingLeft = true;
+		}
+		else if(clientX > xMid){
+			//Move right
+			nextX = clientX - (this.width/2);
+			this.isGoingRight = true;
+		}
+		else{
+			//Same position
+		}
+		if(clientY < yMid){
+			//Move Up
+			nextY = clientY - (this.height/2);
+			this.isGoingUp = true;
+		}
+		else if(clientY > yMid){
+			//Move Down
+			nextY = clientY - (this.height/2);
+			this.isGoingDown = true;
+		}
+		else{
+			//Same position
+		}
+		this.nextX = nextX;
+		this.nextY = nextY;
+		const dx					= Math.abs(this.xLeft - nextX);
+		const dy					= Math.abs(this.yTop - nextY);
+		const dxBoost			= dx/100;
+		const dyBoost			= dy/100;
+		for( let i=0; i<entities.length; i++){
+			const entity = entities[i];
+			if(entity.type === 'ball'){
+				if( this.willOverLapBall(entity) ){
+					//Accelerate ball;
+					entity.accelerate(dxBoost, dyBoost);
+					//Prevent movements and directional changes;
+					this.nextX = this.xLeft;
+					this.nextY = this.yTop;
+					this.isGoingLeft	= false;
+					this.isGoingRight	= false;
+					this.isGoingUp		= false;
+					this.isGoingDown	= false;
+					return false;
+				}
+			}//end ball check
+		}//end i-for
+		return true;
+	}//end processDrag()
 	updateCoordinates(){
 		this.xLeft		= this.nextX;
 		this.yTop		= this.nextY;
