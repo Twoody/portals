@@ -168,64 +168,13 @@ class BallPen extends React.Component{
  	     this.updateRectangle();
 	}//end handleCanvasMouseMove()
 	handleRectangleDrag(){
-	  	const canvas			= this.canvasRef;
-		const rect				= canvas.getBoundingClientRect();
-		const clientX			= this.state.xClick - rect.left;
-		const clientY			= this.state.yClick - rect.top;
-		const xMid				= this.movableRectangle.xCenter;
-		const yMid				= this.movableRectangle.yCenter;
-		let nextX 				= this.movableRectangle.xLeft;
-		let nextY 				= this.movableRectangle.yTop;
-		this.movableRectangle.isGoingLeft	= false;
-		this.movableRectangle.isGoingRight	= false;
-		this.movableRectangle.isGoingUp		= false;
-		this.movableRectangle.isGoingDown	= false;
-
-		if(clientX < xMid){
-			//Move left
-			nextX = clientX - (this.movableRectangle.width/2);
-			this.movableRectangle.isGoingLeft = true;
-		}
-		else if(clientX > xMid){
-			//Move right
-			nextX = clientX - (this.movableRectangle.width/2);
-			this.movableRectangle.isGoingRight = true;
-		}
-		else{
-			//Same position
-		}
-		if(clientY < yMid){
-			//Move Up
-			nextY = clientY - (this.movableRectangle.height/2);
-			this.movableRectangle.isGoingUp = true;
-		}
-		else if(clientY > yMid){
-			//Move Down
-			nextY = clientY - (this.movableRectangle.height/2);
-			this.movableRectangle.isGoingDown = true;
-		}
-		else{
-			//Same position
-		}
-		this.movableRectangle.nextX = nextX;
-		this.movableRectangle.nextY = nextY;
-		const dx					= Math.abs(this.movableRectangle.xLeft - nextX);
-		const dy					= Math.abs(this.movableRectangle.yTop - nextY);
-		const dxBoost			= dx/100;
-		const dyBoost			= dy/100;
-		if( this.movableRectangle.willOverLapBall(this.ball) ){
-			//Accelerate ball;
-			this.ball.accelerate(dxBoost, dyBoost);
-			//Prevent movements and directional changes;
-			this.movableRectangle.nextX = this.movableRectangle.xLeft;
-			this.movableRectangle.nextY = this.movableRectangle.yTop;
-			this.movableRectangle.isGoingLeft	= false;
-			this.movableRectangle.isGoingRight	= false;
-			this.movableRectangle.isGoingUp		= false;
-			this.movableRectangle.isGoingDown	= false;
+	  	const canvas		= this.canvasRef;
+		const rect			= canvas.getBoundingClientRect();
+		const clientX		= this.state.xClick - rect.left;
+		const clientY		= this.state.yClick - rect.top;
+		const isDragging	= this.movableRectangle.processDrag(clientX, clientY, [this.ball]);
+		if(!isDragging)
 			return false;
-		}
-
 		this.movableRectangle.handleMove(
 			this.state.width, 
 			this.state.height,
@@ -296,11 +245,11 @@ class BallPen extends React.Component{
 		return true;
 	}
 	handleKeyup(){
-      	this.setState({
-				isHeldDown: false,
-				timePressed: null,
-      	});
-			console.log('key up');
+     	this.setState({
+			isHeldDown: false,
+			timePressed: null,
+     	});
+		console.log('key up');
 	}
 
    componentDidMount(){

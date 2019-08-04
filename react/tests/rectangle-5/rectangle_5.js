@@ -203,56 +203,8 @@ var BallPen = function (_React$Component) {
 			var rect = canvas.getBoundingClientRect();
 			var clientX = this.state.xClick - rect.left;
 			var clientY = this.state.yClick - rect.top;
-			var xMid = this.movableRectangle.xCenter;
-			var yMid = this.movableRectangle.yCenter;
-			var nextX = this.movableRectangle.xLeft;
-			var nextY = this.movableRectangle.yTop;
-			this.movableRectangle.isGoingLeft = false;
-			this.movableRectangle.isGoingRight = false;
-			this.movableRectangle.isGoingUp = false;
-			this.movableRectangle.isGoingDown = false;
-
-			if (clientX < xMid) {
-				//Move left
-				nextX = clientX - this.movableRectangle.width / 2;
-				this.movableRectangle.isGoingLeft = true;
-			} else if (clientX > xMid) {
-				//Move right
-				nextX = clientX - this.movableRectangle.width / 2;
-				this.movableRectangle.isGoingRight = true;
-			} else {
-				//Same position
-			}
-			if (clientY < yMid) {
-				//Move Up
-				nextY = clientY - this.movableRectangle.height / 2;
-				this.movableRectangle.isGoingUp = true;
-			} else if (clientY > yMid) {
-				//Move Down
-				nextY = clientY - this.movableRectangle.height / 2;
-				this.movableRectangle.isGoingDown = true;
-			} else {
-				//Same position
-			}
-			this.movableRectangle.nextX = nextX;
-			this.movableRectangle.nextY = nextY;
-			var dx = Math.abs(this.movableRectangle.xLeft - nextX);
-			var dy = Math.abs(this.movableRectangle.yTop - nextY);
-			var dxBoost = dx / 100;
-			var dyBoost = dy / 100;
-			if (this.movableRectangle.willOverLapBall(this.ball)) {
-				//Accelerate ball;
-				this.ball.accelerate(dxBoost, dyBoost);
-				//Prevent movements and directional changes;
-				this.movableRectangle.nextX = this.movableRectangle.xLeft;
-				this.movableRectangle.nextY = this.movableRectangle.yTop;
-				this.movableRectangle.isGoingLeft = false;
-				this.movableRectangle.isGoingRight = false;
-				this.movableRectangle.isGoingUp = false;
-				this.movableRectangle.isGoingDown = false;
-				return false;
-			}
-
+			var isDragging = this.movableRectangle.processDrag(clientX, clientY, [this.ball]);
+			if (!isDragging) return false;
 			this.movableRectangle.handleMove(this.state.width, this.state.height, [this.ball]);
 			return true;
 		} //end handleRectangleDrag();
