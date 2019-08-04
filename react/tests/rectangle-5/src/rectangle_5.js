@@ -164,7 +164,8 @@ class BallPen extends React.Component{
 				yClick:		event.clientY
 			});
 		}
-		if(this.handleRectangleDrag())
+		const isLegalDrag = this.handleRectangleDrag();
+		if(isLegalDrag)
  	     this.updateRectangle();
 	}//end handleCanvasMouseMove()
 	handleRectangleDrag(){
@@ -195,6 +196,7 @@ class BallPen extends React.Component{
 		let speed		= 2;
 		let nextX 		= this.movableRectangle.xLeft;
 		let nextY 		= this.movableRectangle.yTop;
+		this.movableRectangle.resetMovement();
 
 		if(!goodCodes.includes(event.keyCode))
 			return false;
@@ -202,7 +204,7 @@ class BallPen extends React.Component{
 		//Figure out speed
 		if(this.state.isHeldDown){
 			const currTime			= new Date();
-			const elapsedTime	= currTime - this.state.timePressed;
+			const elapsedTime		= currTime - this.state.timePressed;
 			speed += elapsedTime/100;
 			if(speed > this.movableRectangle.width)
 				speed = this.movableRectangle.width/2 - 0.01; //Buffer
@@ -216,34 +218,47 @@ class BallPen extends React.Component{
 		if(event.keyCode === 37){
 			event.preventDefault();
 			nextX -= speed;
-			console.log("moved left");
+			this.movableRectangle.isGoingLeft = true;
 		}
 		if(event.keyCode === 38){
 			event.preventDefault();
 			nextY -= speed;
-			console.log("moved up");
+			this.movableRectangle.isGoingUp = true;
 		}
 		if(event.keyCode === 39){
 			event.preventDefault();
 			nextX += speed;
-			console.log("moved right");
+			this.movableRectangle.isGoingRight = true;
 		}
 		if(event.keyCode === 40){
 			event.preventDefault();
 			nextY += speed;
-			console.log("moved down");
+			this.movableRectangle.isGoingDown = true;
 		}
 
-		this.movableRectangle.nextX = nextX;
-		this.movableRectangle.nextY = nextY;
-		this.movableRectangle.handleMove(
-			this.state.width, 
-			this.state.height,
+		const isMovable = this.movableRectangle.isLegalMovement(
+			nextX,
+			nextY,
 			[this.ball]
 		);
-      this.updateRectangle();
+		if(isMovable === false){
+			this.movableRectangle.nextX = this.movableRectangle.xLeft;
+			this.movableRectangle.nextY = this.movableRectangle.yTop;
+			this.movableRectangle.resetMovement();
+			return false;
+		}
+		else{
+			this.movableRectangle.nextX = nextX;
+			this.movableRectangle.nextY = nextY;
+			this.movableRectangle.handleMove(
+				this.state.width, 
+				this.state.height,
+				[this.ball]
+			);
+      	this.updateRectangle();
+		}
 		return true;
-	}
+	}//end handleKeydown()
 	handleKeyup(){
      	this.setState({
 			isHeldDown: false,

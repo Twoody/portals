@@ -193,7 +193,8 @@ var BallPen = function (_React$Component) {
 					yClick: event.clientY
 				});
 			}
-			if (this.handleRectangleDrag()) this.updateRectangle();
+			var isLegalDrag = this.handleRectangleDrag();
+			if (isLegalDrag) this.updateRectangle();
 		} //end handleCanvasMouseMove()
 
 	}, {
@@ -224,6 +225,7 @@ var BallPen = function (_React$Component) {
 			var speed = 2;
 			var nextX = this.movableRectangle.xLeft;
 			var nextY = this.movableRectangle.yTop;
+			this.movableRectangle.resetMovement();
 
 			if (!goodCodes.includes(event.keyCode)) return false;
 
@@ -242,30 +244,39 @@ var BallPen = function (_React$Component) {
 			if (event.keyCode === 37) {
 				event.preventDefault();
 				nextX -= speed;
-				console.log("moved left");
+				this.movableRectangle.isGoingLeft = true;
 			}
 			if (event.keyCode === 38) {
 				event.preventDefault();
 				nextY -= speed;
-				console.log("moved up");
+				this.movableRectangle.isGoingUp = true;
 			}
 			if (event.keyCode === 39) {
 				event.preventDefault();
 				nextX += speed;
-				console.log("moved right");
+				this.movableRectangle.isGoingRight = true;
 			}
 			if (event.keyCode === 40) {
 				event.preventDefault();
 				nextY += speed;
-				console.log("moved down");
+				this.movableRectangle.isGoingDown = true;
 			}
 
-			this.movableRectangle.nextX = nextX;
-			this.movableRectangle.nextY = nextY;
-			this.movableRectangle.handleMove(this.state.width, this.state.height, [this.ball]);
-			this.updateRectangle();
+			var isMovable = this.movableRectangle.isLegalMovement(nextX, nextY, [this.ball]);
+			if (isMovable === false) {
+				this.movableRectangle.nextX = this.movableRectangle.xLeft;
+				this.movableRectangle.nextY = this.movableRectangle.yTop;
+				this.movableRectangle.resetMovement();
+				return false;
+			} else {
+				this.movableRectangle.nextX = nextX;
+				this.movableRectangle.nextY = nextY;
+				this.movableRectangle.handleMove(this.state.width, this.state.height, [this.ball]);
+				this.updateRectangle();
+			}
 			return true;
-		}
+		} //end handleKeydown()
+
 	}, {
 		key: 'handleKeyup',
 		value: function handleKeyup() {
