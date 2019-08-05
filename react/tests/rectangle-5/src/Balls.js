@@ -194,13 +194,13 @@ class Ball{
 	handleMovement(friction){
 		//Set directions for next movement based off of current collisions;
 
-		if(this.dy <=0){
+		if(this.dy === 0){
 			//Ball has no more momentum;
-			this.dy = 0;
 			if(this.isGoingUp){
 				//Ball lost momentum, but is in the air; Ball comes back down;
 				this.isGoingUp		= false;
 				if(this.canGoDown){
+					//We have a small bug here where momentum is still happening;
 					this.isGoingDown	= true;
 				}
 				else{
@@ -257,8 +257,9 @@ class Ball{
 			//If Ball has no momentum, it can go in neither direction;
 			//But if ball is "stuck", we need to give it a boost;
 			if(this.canGoDown && this.gravity > 0){
-				if(this.dx === 0)
-					this.accelerate(this.gravity*4, 0);
+				if(this.dx === 0){
+					//this.accelerate(this.gravity*4, 0);
+				}
 				if(this.canGoRight){
 					this.isGoingRight = true;
 					this.isGoingLeft	= false;
@@ -321,8 +322,9 @@ class Ball{
 		let isOverlapping = rectangle.isOverLappingBall(this);
 		if( isOverlapping === false)
 			return;
-		//There is a collision;
+		this.decelerate(rectangle.friction, rectangle.friction);
 
+		//There is a collision;
 		//Set the directions that this ball cannot go;
 		if(this.nextX > rectangle.xCenter){
 			//Current ball is right of rectangle
@@ -334,8 +336,15 @@ class Ball{
 			//Current ball is below of rectangle; 
 			this.canGoUp = false;
 		}
-		else
+		else{
 			this.canGoDown = false;
+			if(this.dy === 0){
+				//BUG: this never seems to happen
+				//console.log('cant go back up');
+				this.canGoUp = false;
+			}
+			this.nextY = rectangle.yTop + this.radius;
+		}
 
 		//Set canGo* flags, rewind time on next* coords;
 		let timeRatio	= 50;
@@ -365,9 +374,6 @@ class Ball{
 			this.nextY = this.yCord;
 			this.nextX = this.xCord;
 		}
-		this.decelerate(rectangle.friction, rectangle.friction);
-
-
 	}//end handleRectangleInteractions()
 	handleWallCollisions(maxWidth, maxHeight, friction){
 		const willOverlapBottom	= this.hitBottom(maxHeight);
