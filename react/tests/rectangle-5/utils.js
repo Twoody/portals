@@ -1,3 +1,7 @@
+function countDecimals(x) {
+	if (x % 1 != 0) return x.toString().split(".")[1].length || 0;
+	return 0;
+}
 function distanceBetween(x1, y1, x2, y2) {
 	var xDiff = x1 - x2;
 	var yDiff = y1 - y2;
@@ -22,6 +26,15 @@ function getRandomInt(min, max) {
 	max = Math.floor(max);
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+function getRandomFloat(min, max) {
+	//Get a random number with decimals not exceeding smallest place;
+	var decimals1 = countDecimals(min);
+	var decimals2 = countDecimals(max);
+	var retDecimals = Math.max(decimals1, decimals2);
+	var random = (Math.random() * (max - min) + min).toFixed(retDecimals);
+	random = parseFloat(random);
+	return random;
+}
 function isInRange(x, min, max) {
 	return x >= min && x <= max;
 }
@@ -42,7 +55,7 @@ function isOverLapping(x1, y1, x2, y2, distance) {
 function makeRandomBall(sWidth, sHeight, ballID) {
 	var minRadius = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 3;
 	var maxRadius = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 30;
-	var maxSpeed = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 29;
+	var maxSpeed = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : null;
 
 	/*	Return false if random ball fails;
  	Else return random ball;
@@ -61,8 +74,8 @@ function makeRandomBall(sWidth, sHeight, ballID) {
 	randomRadius += getRandomInt(1, 99) * 0.01;
 	var randomX = getRandomInt(randomRadius, sWidth - randomRadius);
 	var randomY = getRandomInt(randomRadius, sHeight - randomRadius);
-	var randomDX = getRandomInt(1, 20) * 0.01;
-	var randomDY = getRandomInt(1, 20) * 0.01;
+	var randomDX = getRandomFloat(1, randomRadius);
+	var randomDY = getRandomFloat(1, randomRadius);
 	var newBall = new Ball({
 		ballID: ballID,
 		color: getRandomColor(),
@@ -72,7 +85,7 @@ function makeRandomBall(sWidth, sHeight, ballID) {
 		dx: randomDX,
 		dy: randomDY
 	});
-	newBall.maxSpeed = maxSpeed;
+	if (maxSpeed !== null) newBall.maxSpeed = maxSpeed;else newBall.maxSpeed = randomRadius;
 	return newBall;
 } //end makeRandomBall
 

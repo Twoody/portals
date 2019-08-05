@@ -1,3 +1,8 @@
+function countDecimals(x){
+	if( (x%1) != 0 )
+		return x.toString().split(".")[1].length || 0;
+	return 0;
+}
 function distanceBetween(x1, y1, x2, y2){
 	const xDiff 	= x1-x2;
 	const yDiff 	= y1-y2;
@@ -22,6 +27,15 @@ function getRandomInt(min, max) {
 	max = Math.floor(max);
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+function getRandomFloat(min, max){
+	//Get a random number with decimals not exceeding smallest place;
+	const decimals1	= countDecimals(min);
+	const decimals2	= countDecimals(max);
+	const retDecimals = Math.max(decimals1, decimals2);
+	let random			= (Math.random() * (max - min) + min).toFixed(retDecimals);
+	random				= parseFloat(random);
+	return random;
+}
 function isInRange(x, min, max){
 	return (x>=min && x<=max);
 }
@@ -40,7 +54,7 @@ function isOverLapping(x1, y1, x2, y2, distance){
 		return true;
 	return false
 }
-function makeRandomBall(sWidth, sHeight, ballID, minRadius=3, maxRadius=30, maxSpeed=29){
+function makeRandomBall(sWidth, sHeight, ballID, minRadius=3, maxRadius=30, maxSpeed=null){
 	/*	Return false if random ball fails;
 		Else return random ball;
 		Input:
@@ -56,11 +70,11 @@ function makeRandomBall(sWidth, sHeight, ballID, minRadius=3, maxRadius=30, maxS
 	*/
 	let randomRadius	= getRandomInt(minRadius, maxRadius);
 	randomRadius += getRandomInt(1,99) * 0.01;
-	const randomX			= getRandomInt(randomRadius, sWidth - randomRadius);
-	const randomY			= getRandomInt(randomRadius, sHeight - randomRadius);
-	const randomDX			= getRandomInt(1, 20) * 0.01;
-	const randomDY			= getRandomInt(1, 20) * 0.01;
-	const newBall			= new Ball({
+	const randomX		= getRandomInt(randomRadius, sWidth - randomRadius);
+	const randomY		= getRandomInt(randomRadius, sHeight - randomRadius);
+	const randomDX		= getRandomFloat(1, randomRadius);
+	const randomDY		= getRandomFloat(1, randomRadius);
+	const newBall		= new Ball({
 		ballID:	ballID,
 		color:	getRandomColor(),
 		xCord:	randomX,
@@ -69,7 +83,10 @@ function makeRandomBall(sWidth, sHeight, ballID, minRadius=3, maxRadius=30, maxS
 		dx: 		randomDX,
 		dy:		randomDY,
 	});
-	newBall.maxSpeed = maxSpeed;
+	if(maxSpeed !== null)
+		newBall.maxSpeed = maxSpeed;
+	else
+		newBall.maxSpeed = randomRadius;
 	return newBall;
 }//end makeRandomBall
 
