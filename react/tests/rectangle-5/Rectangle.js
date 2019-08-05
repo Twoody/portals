@@ -284,6 +284,8 @@ var Rectangle = function () {
 	}, {
 		key: 'willOverLapBall',
 		value: function willOverLapBall(ball) {
+			//Do some coordinate trickery to see if updated results will 
+			//	cause a conflict as if it did happen;
 			var currX = this.xLeft;
 			var currY = this.yTop;
 			var nextX = this.nextX;

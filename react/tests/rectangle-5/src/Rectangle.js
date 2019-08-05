@@ -288,6 +288,8 @@ class Rectangle{
 		this.nextY		= this.yTop;
 	}//end updateCoordinates()
 	willOverLapBall(ball){
+		//Do some coordinate trickery to see if updated results will 
+		//	cause a conflict as if it did happen;
 		const currX	= this.xLeft;
 		const currY = this.yTop;
 		const nextX = this.nextX;
