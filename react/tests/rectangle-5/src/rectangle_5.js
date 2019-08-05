@@ -1,8 +1,16 @@
 'use strict';
-const BACKGROUND_COLOR	= "black";
-const RECTANGLE_WIDTH	= 110;
-const RECTANGLE_HEIGHT	= 30;
-const WALL_FRICTION		= 0.075;
+const BACKGROUND_COLOR		= "black";
+const WALL_FRICTION			= 0.075;
+const RECTANGLE_WIDTH		= 110;
+const RECTANGLE_HEIGHT		= 30;
+const RECTANGLE_FRICTION	= 0.075;
+const MIN_RADIUS				= 1;
+const MAX_RADIUS				= 3;
+const BALL_FRICTION			= 0.05;
+const GRAVITY					= 0.45;
+const KINETIC_LOSS			= 0.15;
+const KINETIC_KEEP			= 0.85;
+const INIT_BALL_CNT			= 85;
 
 class BallPen extends React.Component{
    constructor(props){
@@ -15,7 +23,7 @@ class BallPen extends React.Component{
 			yClick:		0,
       };
 		this.movableRectangle			= null;
-		this.ball							= null;
+		this.balls							= [];
 		this.friction						= WALL_FRICTION;
       this.updateWindowDimensions	= this.updateWindowDimensions.bind(this);
 		this.handleKeydown				= this.handleKeydown.bind(this);
@@ -42,13 +50,28 @@ class BallPen extends React.Component{
 		});
 		this.movableRectangle = rectangle;
 	}//end updateMiddleRectangle()
-	initBall(){
-		if(!this.ball){
-			let newBall = makeRandomBall(this.state.width, this.state.height, 0, 30, 30, 30);
-			let cnt		= 1;
+	initBalls(){
+		if(this.balls.length !== 0)
+			return true;
+
+		for(let i=0; i< INIT_BALL_CNT; i++){
+			let newBall = makeRandomBall(
+				this.state.width, 
+				this.state.height, 
+				this.balls.length, 
+				MIN_RADIUS, 
+				MAX_RADIUS, 
+			);
+			let cnt = 0;
 			while(this.isLegalBall(newBall) === false){
 				cnt += 1;
-				newBall = makeRandomBall(this.state.width, this.state.height, 0, 30, 30, 30);
+				newBall = makeRandomBall(
+					this.state.width, 
+					this.state.height,
+					this.balls.length, 
+					MIN_RADIUS, 
+					MAX_RADIUS, 
+				);
 				console.log('new ball attempt: ' + cnt);
 				if(cnt > 500){
 					console.log('FAILED MAKING A WORKABLE BALL');
@@ -56,18 +79,24 @@ class BallPen extends React.Component{
 				}
 			}//end while
 			newBall.maxSpeed = newBall.radius/2;
-			this.ball = newBall;
-		}
-	}//end initBall()
+			this.balls.push(newBall);
+		}//end i-for
+		return true;
+	}//end initBalls()
 	isLegalBall(ball){
 		/*Ball is legal if it: 
 			1. is in bounds <-- Checked in makeRandomBall()
 			2. is not overlapping the rectangle
+			3. ball is not overallping any otherBall in this.balls;
 		*/
 		if(this.movableRectangle.isOverLappingBall(ball))
 			return false;
+		for(let i=0; i<this.balls.length; i++){
+			const otherBall = this.balls[i];
+			if( isOverLapping(ball.xCord, ball.yCord, otherBall.nextX, otherBall.nextY) )
+				return false;
+		}//end i-for
 		return true;
-
 	}//end isLegalBall()
 	drawBackground(){
 		if(this.state.width === 0)
@@ -173,13 +202,13 @@ class BallPen extends React.Component{
 		const rect			= canvas.getBoundingClientRect();
 		const clientX		= this.state.xClick - rect.left;
 		const clientY		= this.state.yClick - rect.top;
-		const isDragging	= this.movableRectangle.processDrag(clientX, clientY, [this.ball]);
+		const isDragging	= this.movableRectangle.processDrag(clientX, clientY, this.balls);
 		if(!isDragging)
 			return false;
 		this.movableRectangle.handleMove(
 			this.state.width, 
 			this.state.height,
-			[this.ball]
+			this.balls
 		);
 		return true;
 	}//end handleRectangleDrag();
@@ -239,7 +268,7 @@ class BallPen extends React.Component{
 		const isMovable = this.movableRectangle.isLegalMovement(
 			nextX,
 			nextY,
-			[this.ball]
+			this.balls
 		);
 		if(isMovable === false){
 			this.movableRectangle.nextX = this.movableRectangle.xLeft;
@@ -253,7 +282,7 @@ class BallPen extends React.Component{
 			this.movableRectangle.handleMove(
 				this.state.width, 
 				this.state.height,
-				[this.ball]
+				this.balls
 			);
       	this.updateRectangle();
 		}
@@ -276,7 +305,7 @@ class BallPen extends React.Component{
         225
       );
       this.ballTimerID   = setInterval(
-         ()=>this.updateBall(),
+         ()=>this.updateBalls(),
         25
       );
       window.addEventListener('resize', this.updateWindowDimensions);
@@ -329,36 +358,40 @@ class BallPen extends React.Component{
 			);
       	this.updateRectangle();
 		}
-		if(this.ball){
-			this.ball.handleWindowResize(this.state.width, this.state.height, []);
+		if(this.balls){
+			for(let i=0; i<this.balls.length; i++){
+				this.balls[i].handleWindowResize(this.state.width, this.state.height, []);
+			}//end i-for
 		}
 		//Update objects on screen;
       return;
    }//end updateWindowDimenstions()
-	updateBall(){
+	updateBalls(){
 		if(this.state.width === 0)
 			return false;
 		if(!this.movableRectangle)
 			return false;
-		if(!this.ball)
-			this.initBall();
+		if(this.balls.length === 0)
+			this.initBalls();
       const canvas	= this.canvasRef;
       const ctx		= canvas.getContext('2d');
 	
-		this.ball.move(
-			this.state.width,
-			this.state.height,
-			this.friction,
-			[this.movableRectangle],
-			[] //other balls
-		);
+		for(let i=0; i<this.balls.length; i++){
+			this.balls[i].move(
+				this.state.width,
+				this.state.height,
+				this.friction,
+				[this.movableRectangle],
+				this.balls
+			);
+		}//end i-for
 		//Update other objects 
 		this.drawBackground();	//Redraw Background
-		this.drawBall(ctx);
+		this.drawBalls(ctx);
 		this.drawRectangle(ctx);	//Update rectangle;
 
 		return true;
-	}
+	}//end updateBalls()
    updateRectangle(){
 		if(this.state.width === 0)
 			return;
@@ -369,10 +402,13 @@ class BallPen extends React.Component{
       const ctx		= canvas.getContext('2d');
 		this.drawRectangle(ctx);
 	}//End updateRectangle()
-	drawBall(ctx){
-		this.ball.draw(ctx);
-		this.ball.label(ctx);
-	}
+	drawBalls(ctx){
+		for(let i=0; i<this.balls.length; i++){
+			const ball = this.balls[i];
+			ball.draw(ctx);
+			ball.label(ctx);
+		}//end i-for
+	}//end drawBalls()
 	drawRectangle(ctx){
 		this.movableRectangle.draw(ctx);
 		writeToScreen(

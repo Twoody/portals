@@ -9,9 +9,17 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var BACKGROUND_COLOR = "black";
+var WALL_FRICTION = 0.075;
 var RECTANGLE_WIDTH = 110;
 var RECTANGLE_HEIGHT = 30;
-var WALL_FRICTION = 0.075;
+var RECTANGLE_FRICTION = 0.075;
+var MIN_RADIUS = 1;
+var MAX_RADIUS = 3;
+var BALL_FRICTION = 0.05;
+var GRAVITY = 0.45;
+var KINETIC_LOSS = 0.15;
+var KINETIC_KEEP = 0.85;
+var INIT_BALL_CNT = 85;
 
 var BallPen = function (_React$Component) {
 	_inherits(BallPen, _React$Component);
@@ -29,7 +37,7 @@ var BallPen = function (_React$Component) {
 			yClick: 0
 		};
 		_this.movableRectangle = null;
-		_this.ball = null;
+		_this.balls = [];
 		_this.friction = WALL_FRICTION;
 		_this.updateWindowDimensions = _this.updateWindowDimensions.bind(_this);
 		_this.handleKeydown = _this.handleKeydown.bind(_this);
@@ -62,14 +70,16 @@ var BallPen = function (_React$Component) {
 		} //end updateMiddleRectangle()
 
 	}, {
-		key: 'initBall',
-		value: function initBall() {
-			if (!this.ball) {
-				var newBall = makeRandomBall(this.state.width, this.state.height, 0, 30, 30, 30);
-				var cnt = 1;
+		key: 'initBalls',
+		value: function initBalls() {
+			if (this.balls.length !== 0) return true;
+
+			for (var i = 0; i < INIT_BALL_CNT; i++) {
+				var newBall = makeRandomBall(this.state.width, this.state.height, this.balls.length, MIN_RADIUS, MAX_RADIUS);
+				var cnt = 0;
 				while (this.isLegalBall(newBall) === false) {
 					cnt += 1;
-					newBall = makeRandomBall(this.state.width, this.state.height, 0, 30, 30, 30);
+					newBall = makeRandomBall(this.state.width, this.state.height, this.balls.length, MIN_RADIUS, MAX_RADIUS);
 					console.log('new ball attempt: ' + cnt);
 					if (cnt > 500) {
 						console.log('FAILED MAKING A WORKABLE BALL');
@@ -77,9 +87,10 @@ var BallPen = function (_React$Component) {
 					}
 				} //end while
 				newBall.maxSpeed = newBall.radius / 2;
-				this.ball = newBall;
-			}
-		} //end initBall()
+				this.balls.push(newBall);
+			} //end i-for
+			return true;
+		} //end initBalls()
 
 	}, {
 		key: 'isLegalBall',
@@ -87,8 +98,13 @@ var BallPen = function (_React$Component) {
 			/*Ball is legal if it: 
    	1. is in bounds <-- Checked in makeRandomBall()
    	2. is not overlapping the rectangle
+   	3. ball is not overallping any otherBall in this.balls;
    */
 			if (this.movableRectangle.isOverLappingBall(ball)) return false;
+			for (var i = 0; i < this.balls.length; i++) {
+				var otherBall = this.balls[i];
+				if (isOverLapping(ball.xCord, ball.yCord, otherBall.nextX, otherBall.nextY)) return false;
+			} //end i-for
 			return true;
 		} //end isLegalBall()
 
@@ -204,9 +220,9 @@ var BallPen = function (_React$Component) {
 			var rect = canvas.getBoundingClientRect();
 			var clientX = this.state.xClick - rect.left;
 			var clientY = this.state.yClick - rect.top;
-			var isDragging = this.movableRectangle.processDrag(clientX, clientY, [this.ball]);
+			var isDragging = this.movableRectangle.processDrag(clientX, clientY, this.balls);
 			if (!isDragging) return false;
-			this.movableRectangle.handleMove(this.state.width, this.state.height, [this.ball]);
+			this.movableRectangle.handleMove(this.state.width, this.state.height, this.balls);
 			return true;
 		} //end handleRectangleDrag();
 
@@ -262,7 +278,7 @@ var BallPen = function (_React$Component) {
 				this.movableRectangle.isGoingDown = true;
 			}
 
-			var isMovable = this.movableRectangle.isLegalMovement(nextX, nextY, [this.ball]);
+			var isMovable = this.movableRectangle.isLegalMovement(nextX, nextY, this.balls);
 			if (isMovable === false) {
 				this.movableRectangle.nextX = this.movableRectangle.xLeft;
 				this.movableRectangle.nextY = this.movableRectangle.yTop;
@@ -271,7 +287,7 @@ var BallPen = function (_React$Component) {
 			} else {
 				this.movableRectangle.nextX = nextX;
 				this.movableRectangle.nextY = nextY;
-				this.movableRectangle.handleMove(this.state.width, this.state.height, [this.ball]);
+				this.movableRectangle.handleMove(this.state.width, this.state.height, this.balls);
 				this.updateRectangle();
 			}
 			return true;
@@ -298,7 +314,7 @@ var BallPen = function (_React$Component) {
 				return _this2.updateRectangle();
 			}, 225);
 			this.ballTimerID = setInterval(function () {
-				return _this2.updateBall();
+				return _this2.updateBalls();
 			}, 25);
 			window.addEventListener('resize', this.updateWindowDimensions);
 			document.body.addEventListener('keydown', this.handleKeydown);
@@ -348,31 +364,35 @@ var BallPen = function (_React$Component) {
 				this.movableRectangle.handleMove(this.state.width, this.state.height, []);
 				this.updateRectangle();
 			}
-			if (this.ball) {
-				this.ball.handleWindowResize(this.state.width, this.state.height, []);
+			if (this.balls) {
+				for (var i = 0; i < this.balls.length; i++) {
+					this.balls[i].handleWindowResize(this.state.width, this.state.height, []);
+				} //end i-for
 			}
 			//Update objects on screen;
 			return;
 		} //end updateWindowDimenstions()
 
 	}, {
-		key: 'updateBall',
-		value: function updateBall() {
+		key: 'updateBalls',
+		value: function updateBalls() {
 			if (this.state.width === 0) return false;
 			if (!this.movableRectangle) return false;
-			if (!this.ball) this.initBall();
+			if (this.balls.length === 0) this.initBalls();
 			var canvas = this.canvasRef;
 			var ctx = canvas.getContext('2d');
 
-			this.ball.move(this.state.width, this.state.height, this.friction, [this.movableRectangle], [] //other balls
-			);
+			for (var i = 0; i < this.balls.length; i++) {
+				this.balls[i].move(this.state.width, this.state.height, this.friction, [this.movableRectangle], this.balls);
+			} //end i-for
 			//Update other objects 
 			this.drawBackground(); //Redraw Background
-			this.drawBall(ctx);
+			this.drawBalls(ctx);
 			this.drawRectangle(ctx); //Update rectangle;
 
 			return true;
-		}
+		} //end updateBalls()
+
 	}, {
 		key: 'updateRectangle',
 		value: function updateRectangle() {
@@ -385,11 +405,15 @@ var BallPen = function (_React$Component) {
 		} //End updateRectangle()
 
 	}, {
-		key: 'drawBall',
-		value: function drawBall(ctx) {
-			this.ball.draw(ctx);
-			this.ball.label(ctx);
-		}
+		key: 'drawBalls',
+		value: function drawBalls(ctx) {
+			for (var i = 0; i < this.balls.length; i++) {
+				var ball = this.balls[i];
+				ball.draw(ctx);
+				ball.label(ctx);
+			} //end i-for
+		} //end drawBalls()
+
 	}, {
 		key: 'drawRectangle',
 		value: function drawRectangle(ctx) {
