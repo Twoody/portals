@@ -4,6 +4,7 @@ Also need to make sure arrow movements align with rectangleDrag() and click;
 
 Next Step:
 	Bug Fixes;
+	States and options from ../slanted-1/
 
 Status:
 	Working:
@@ -11,8 +12,7 @@ Status:
 		Ball on top of rectangle is being given friction:
 			Persistent bug such that the ball is not stopping
 			vertical bouncing;
-	Not Working:
-		Multiple balls has not started yet;
+		Multiple balls appears to be working;
 	Bugs:
 		Ball is being squished for no reason by screen size changes;
 		Ball acceleration is happening to much;
