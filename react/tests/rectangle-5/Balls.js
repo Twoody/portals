@@ -399,7 +399,8 @@ var Ball = function () {
 				this.shrink();
 			}
 			for (var i = 0; i < otherBalls.length; i++) {
-				var otherBall = this.balls[i];
+				var otherBall = otherBalls[i];
+				if (otherBall.ballID === this.ballID) continue;
 				var _isOverLapping = this.isOverLappingBall(otherBall);
 				if (_isOverLapping) this.shrink();
 			} //end i-for

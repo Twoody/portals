@@ -434,7 +434,9 @@ class Ball{
 			this.shrink();
 		}
 		for(let i=0; i<otherBalls.length; i++){
-			let otherBall = this.balls[i];
+			let otherBall = otherBalls[i];
+			if(otherBall.ballID === this.ballID)
+				continue;
 			const isOverLapping	= this.isOverLappingBall(otherBall);
 			if(isOverLapping)
 				this.shrink();
