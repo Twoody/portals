@@ -74,8 +74,8 @@ function makeRandomBall(sWidth, sHeight, ballID) {
 	randomRadius += getRandomInt(1, 99) * 0.01;
 	var randomX = getRandomInt(randomRadius, sWidth - randomRadius);
 	var randomY = getRandomInt(randomRadius, sHeight - randomRadius);
-	var randomDX = getRandomFloat(1, randomRadius);
-	var randomDY = getRandomFloat(1, randomRadius);
+	var randomDX = getRandomFloat(0, 0.151); //Slow start
+	var randomDY = getRandomFloat(0, 0.151); //Slow start
 	if (maxSpeed !== null) {
 		if (randomDX > maxSpeed) randomDX = maxSpeed;
 		if (randomDY > maxSpeed) randomDY = maxSpeed;
