@@ -331,7 +331,8 @@ class BallPen extends React.Component{
 					break;
 				}
 			}//end while
-			this.balls.push(newBall);
+			if(cnt <= 500)
+				this.balls.push(newBall);
 		}//end i-for
 		return true;
 	}//end initBalls()
