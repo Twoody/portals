@@ -13,14 +13,14 @@ var WALL_FRICTION = 0.075;
 var RECTANGLE_WIDTH = 110;
 var RECTANGLE_HEIGHT = 30;
 var RECTANGLE_FRICTION = 0.075;
-var MIN_RADIUS = 30;
-var MAX_RADIUS = 30;
-var MAX_SPEED = 1;
+var MIN_RADIUS = 1;
+var MAX_RADIUS = 10;
+var MAX_SPEED = 5;
 var BALL_FRICTION = 0.05;
 var GRAVITY = 0.45;
 var KINETIC_LOSS = 0.15;
 var KINETIC_KEEP = 0.85;
-var INIT_BALL_CNT = 8;
+var INIT_BALL_CNT = 185;
 
 var BallPen = function (_React$Component) {
 	_inherits(BallPen, _React$Component);

@@ -4,14 +4,14 @@ const WALL_FRICTION			= 0.075;
 const RECTANGLE_WIDTH		= 110;
 const RECTANGLE_HEIGHT		= 30;
 const RECTANGLE_FRICTION	= 0.075;
-const MIN_RADIUS				= 30;
-const MAX_RADIUS				= 30;
-const MAX_SPEED				= 1;
+const MIN_RADIUS				= 1;
+const MAX_RADIUS				= 10;
+const MAX_SPEED				= 5;
 const BALL_FRICTION			= 0.05;
 const GRAVITY					= 0.45;
 const KINETIC_LOSS			= 0.15;
 const KINETIC_KEEP			= 0.85;
-const INIT_BALL_CNT			= 8;
+const INIT_BALL_CNT			= 185;
 
 class BallPen extends React.Component{
    constructor(props){
