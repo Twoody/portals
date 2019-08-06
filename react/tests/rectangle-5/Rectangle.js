@@ -162,8 +162,10 @@ var Rectangle = function () {
    */
 			var ballDistanceX = Math.abs(ball.nextX - this.xCenter);
 			var ballDistanceY = Math.abs(ball.nextY - this.yCenter);
-			if (ballDistanceX > this.width / 2 + ball.radius) return false;
-			if (ballDistanceY > this.height / 2 + ball.radius) return false;
+			var sideDistance = this.width / 2 + ball.radius;
+			var vertDistance = this.height / 2 + ball.radius;
+			if (ballDistanceX > sideDistance) return false;
+			if (ballDistanceY > vertDistance) return false;
 			if (ballDistanceX <= this.width / 2) return true;
 			if (ballDistanceY <= this.height / 2) return true;
 

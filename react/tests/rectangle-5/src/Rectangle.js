@@ -157,12 +157,14 @@ class Rectangle{
 				Ball() object
 			Output:
 				Boolean
-		*/	
-		const ballDistanceX = Math.abs(ball.nextX - this.xCenter);
-		const ballDistanceY = Math.abs(ball.nextY - this.yCenter);
-		if( ballDistanceX > (this.width/2 + ball.radius) )
+		*/
+		const ballDistanceX	= Math.abs(ball.nextX - this.xCenter);
+		const ballDistanceY	= Math.abs(ball.nextY - this.yCenter);
+		const sideDistance	= this.width/2 + ball.radius;
+		const vertDistance	= this.height/2 + ball.radius;
+		if( ballDistanceX > sideDistance )
 			return false;
-		if( ballDistanceY > (this.height/2 + ball.radius) )
+		if( ballDistanceY > vertDistance )
 			return false;
 		if( ballDistanceX <= (this.width/2) )
 			return true;
