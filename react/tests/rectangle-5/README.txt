@@ -4,7 +4,6 @@ Also need to make sure arrow movements align with rectangleDrag() and click;
 
 Next Step:
 	Bug Fixes;
-	Balls to roll off eachother;
 	States and options from ../slanted-1/
 
 Status:
@@ -16,7 +15,7 @@ Status:
 		Multiple balls are behaving somewhat accordingly;
 		MAX_SPEED;
 		No overlap when initialized;
+		Balls are sliding off of eachother depedant on their sizes;
 	Not Working:
-		Balls are standing ontop of eachother again and need to move left/right if possible;
 	Bugs:
 		Ball is being squished for no reason by screen size changes;
