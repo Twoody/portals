@@ -47,6 +47,16 @@ var Ball = function () {
 			this.decelerate(0, 0); //Hack to check if zero;
 		}
 	}, {
+		key: 'accelerateBySize',
+		value: function accelerateBySize() {
+			var dx = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+			var dy = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+			var ratio = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 50;
+
+			var rate = this.radius / ratio;
+			if (dx && dy) this.accelerate(rate, rate);else if (dx) this.accelerate(rate, 0);else if (dy) this.accelerate(0, rate);
+		}
+	}, {
 		key: 'applyGravity',
 		value: function applyGravity() {
 			if (this.isGoingDown) this.accelerate(0, this.gravity);else if (this.isGoingUp) this.decelerate(0, this.gravity);else if (this.canGoDown) this.accelerate(0, this.gravity);
@@ -133,6 +143,20 @@ var Ball = function () {
 					}
 				} //end while
 
+				if (cnt === timeRatio) {
+					//Overlap problem not solved;
+					if (this.canGoDown === false) {
+						if (this.canGoRight && this.canGoLeft) console.log('weird');
+						if (this.canGoRight && this.dx === 0) {
+							this.accelerateBySize(true, false);
+						} else if (this.canGoLeft && this.dx === 0) {
+							this.accelerateBySize(true, false);
+						}
+						//else, stuck
+						return false;
+					}
+				}
+
 				//Apply Kinetic Transfers & Friction
 				otherBall.decelerate(this.friction, this.friction);
 				this.decelerate(otherBall.friction, otherBall.friction);
@@ -144,6 +168,7 @@ var Ball = function () {
 					this.dx *= this.kineticGain;
 				}
 			} //end i-for
+			return true;
 		} //End handleBallCollision()
 
 	}, {
@@ -521,7 +546,6 @@ var Ball = function () {
 			this.handleBoundaries(sWidth, sHeight, balls);
 			this.handleWallCollisions(sWidth, sHeight, wallFriction);
 			this.handleBallCollisions(balls);
-
 			//Process final available movements; Update coords appropriately; Apply Gravity;
 			this.handleMovement(wallFriction);
 			this.updateCoordinates();

@@ -42,6 +42,15 @@ class Ball{
 			this.dy = this.maxSpeed;
 		this.decelerate(0,0);	//Hack to check if zero;
 	}
+	accelerateBySize(dx=true, dy=true, ratio=50){
+		const rate = this.radius/ratio;
+		if(dx && dy)
+			this.accelerate(rate, rate);
+		else if(dx)
+			this.accelerate(rate, 0);
+		else if(dy)
+			this.accelerate(0, rate);
+	}
 	applyGravity(){
 		if(this.isGoingDown)
 			this.accelerate(0, this.gravity);
@@ -135,6 +144,22 @@ class Ball{
 				}
 			}//end while
 
+			if(cnt === timeRatio){
+				//Overlap problem not solved;
+				if(this.canGoDown === false){
+					if(this.canGoRight && this.canGoLeft)
+						console.log('weird');
+					if(this.canGoRight && this.dx === 0){
+						this.accelerateBySize(true, false);
+					}
+					else if(this.canGoLeft && this.dx === 0){
+						this.accelerateBySize(true, false);
+					}
+					//else, stuck
+					return false;
+				}
+			}
+
 			//Apply Kinetic Transfers & Friction
 			otherBall.decelerate(this.friction, this.friction);
 			this.decelerate(otherBall.friction, otherBall.friction);
@@ -146,6 +171,7 @@ class Ball{
 				this.dx			*= this.kineticGain;
 			}
 		}//end i-for
+		return true;
 	}//End handleBallCollision()
 	handleBoundaries(width, height, allBalls){
 		/*	Analyze current state of ball compared to:
@@ -562,7 +588,6 @@ class Ball{
 		this.handleBoundaries(sWidth, sHeight, balls);
 		this.handleWallCollisions(sWidth, sHeight, wallFriction);
 		this.handleBallCollisions(balls);
-
 		//Process final available movements; Update coords appropriately; Apply Gravity;
 		this.handleMovement(wallFriction);
 		this.updateCoordinates();
