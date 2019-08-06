@@ -89,8 +89,12 @@ function makeRandomBall(sWidth, sHeight, ballID, minRadius=3, maxRadius=30, maxS
 		dx: 		randomDX,
 		dy:		randomDY,
 	});
-	if(maxSpeed !== null)
-		newBall.maxSpeed = maxSpeed;
+	if(maxSpeed !== null){
+		if(maxSpeed < randomRadius)
+			newBall.maxSpeed = maxSpeed;
+		else
+			newBall.maxSpeed = Math.ceil(randomRadius);	//set max speed to a legal int of radius;
+	}
 	else
 		newBall.maxSpeed = randomRadius;
 	return newBall;
