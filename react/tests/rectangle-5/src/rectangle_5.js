@@ -5,7 +5,7 @@ const RECTANGLE_WIDTH		= 110;
 const RECTANGLE_HEIGHT		= 30;
 const RECTANGLE_FRICTION	= 0.075;
 const MIN_RADIUS				= 1;
-const MAX_RADIUS				= 10;
+const MAX_RADIUS				= 2;
 const MAX_SPEED				= 5;
 const BALL_FRICTION			= 0.05;
 const GRAVITY					= 0.45;
@@ -22,6 +22,12 @@ class BallPen extends React.Component{
 			clickTimer:	0,
 			xClick:		0,
 			yClick:		0,
+			ballCnt:		0,
+			hasGravity:			false,
+			hasWallFriction:	false,
+			hasBallFriction:	false,
+			hasInertia:			false,
+			isLeavingTrails:	false,
       };
 		this.movableRectangle			= null;
 		this.balls							= [];
@@ -32,6 +38,11 @@ class BallPen extends React.Component{
 		this.handleCanvasMouseDown		= this.handleCanvasMouseDown.bind(this);
 		this.handleCanvasMouseMove		= this.handleCanvasMouseMove.bind(this);
 		this.handleCanvasMouseUp		= this.handleCanvasMouseUp.bind(this);
+		this.handleInputChange			= this.handleInputChange.bind(this);
+		this.resetBalls					= this.resetBalls.bind(this);
+		this.shrinkBalls					= this.shrinkBalls.bind(this);
+		this.accelerateBalls				= this.accelerateBalls.bind(this);
+		this.decelerateBalls				= this.decelerateBalls.bind(this);
    }
 	didClickBall(xCanvasPos, yCanvasPos){
 		/*	Go through balls and see if clicked position is in ball or not;
@@ -59,6 +70,8 @@ class BallPen extends React.Component{
 	}//end didClickBall()
 	drawBackground(){
 		if(this.state.width === 0)
+			return false;
+		if(this.state.isLeavingTrails)
 			return false;
      	const canvas	= this.canvasRef;
      	let ctx			= canvas.getContext('2d');
@@ -90,12 +103,22 @@ class BallPen extends React.Component{
 		newBall.xCord = xCanvasPos;
 		newBall.yCord = yCanvasPos;
 		if(this.isLegalBall(newBall)){
+			this.setNewBallDirection(newBall);
 			console.log('making new ball' + newBall.ballID);
 			this.balls.push(newBall);
+			this.setState({ballCnt: this.state.ballCnt +1});
 			return true;
 		}
 		return false;
 	}//end handleCanvasClick
+	handleInputChange(event) {
+		const target	= event.target;
+		const value		= target.type === 'checkbox' ? target.checked : target.value;
+		const name		= target.name;
+		this.setState({
+			[name]: value
+		});
+	}//end handleInputChange()
 	handleCanvasMouseDown(event){
 		/* Determine if click is long press or just a click;
 			Will call functions on mouseup and mousemove;
@@ -331,8 +354,11 @@ class BallPen extends React.Component{
 					break;
 				}
 			}//end while
-			if(cnt <= 500)
+			if(cnt <= 500){
+				this.setNewBallDirection(newBall);
 				this.balls.push(newBall);
+				this.setState({ballCnt: this.state.ballCnt +1});
+			}
 		}//end i-for
 		return true;
 	}//end initBalls()
@@ -358,7 +384,7 @@ class BallPen extends React.Component{
 		this.initMiddleRectangle;
       this.rectangleTimerID   = setInterval(
          ()=>this.updateRectangle(),
-        225
+        25
       );
       this.ballTimerID   = setInterval(
          ()=>this.updateBalls(),
@@ -433,7 +459,29 @@ class BallPen extends React.Component{
       const ctx		= canvas.getContext('2d');
 	
 		for(let i=0; i<this.balls.length; i++){
-			this.balls[i].move(
+			let ball = this.balls[i];
+			if(this.state.hasGravity === false)
+				ball.gravity = 0;
+			else
+				ball.gravity = GRAVITY;
+			if(this.state.hasInertia === false){
+				ball.kineticLoss = 0;
+				ball.kineticGain = 1
+			}
+			else{
+				ball.kineticLoss = KINETIC_LOSS;
+				ball.kineticGain = KINETIC_KEEP;
+			}
+			if(this.state.hasBallFriction === false)
+				ball.friction = 0;
+			else
+				ball.friction = BALL_FRICTION;
+			if(this.state.hasWallFriction === false)
+				this.friction = 0;
+			else
+				this.friction = WALL_FRICTION;
+
+			ball.move(
 				this.state.width,
 				this.state.height,
 				this.friction,
@@ -476,13 +524,79 @@ class BallPen extends React.Component{
 		);
 
 	}
+	setNewBallDirection(ball){
+			const modGroup = this.balls.length %4;
+			if(modGroup === 0){
+				ball.isGoingDown	= true;
+				ball.isGoingUp		= false;
+				ball.isGoingRight	= true;
+				ball.isGoingLeft	= false;
+			}
+			else if(modGroup === 1){
+				ball.isGoingDown	= true;
+				ball.isGoingUp		= false;
+				ball.isGoingRight	= false;
+				ball.isGoingLeft	= true;
+			}
+			else if(modGroup === 2){
+				ball.isGoingDown	= false;
+				ball.isGoingUp		= true;
+				ball.isGoingRight	= false;
+				ball.isGoingLeft	= true;
+			}
+
+			else if(modGroup === 3){
+				ball.isGoingDown	= false;
+				ball.isGoingUp		= true;
+				ball.isGoingRight	= true;
+				ball.isGoingLeft	= false;
+			}
+	}
+	resetBalls(event){
+		this.balls = [];
+		this.setState({ballCnt: 0});
+	}
+	shrinkBalls(event){
+		for(let i=0; i<this.balls.length; i++){
+			let ball = this.balls[i];
+			if(Math.random() >=0.5)
+				ball.shrink();
+		}//end i-for
+	}//end shrinkBalls
+	accelerateBalls(event){
+		for(let i=0; i<this.balls.length; i++){
+			let ball = this.balls[i];
+			if(ball.dx < 1)
+				ball.dx += 3;
+			if(ball.dy < 1)
+				ball.dy += 3;
+			const dxGain = getRandomFloat(0, 0.99) * ball.dx;
+			const dyGain = getRandomFloat(0, 0.99) * ball.dy;
+			ball.accelerate( dxGain, dyGain );
+		}//end i-for
+	}//end accelerateBalls
+	decelerateBalls(event){
+		for(let i=0; i<this.balls.length; i++){
+			let ball = this.balls[i];
+			const dxLoss = getRandomFloat(0, 0.99) * ball.dx;
+			const dyLoss = getRandomFloat(0, 0.99) * ball.dy;
+			ball.decelerate( dxLoss, dyLoss );
+		}//end i-for
+	}//end decelerateBalls
+
    render(){
       const penStyle		= {
          border:   "1px solid #000000",
 			touchAction: "none",
       };
+		const ballCntStyle	= {
+			textAlign: "right"
+		};
       return (
          <div>
+				<p style={ballCntStyle}>
+					Ball Count: {this.state.ballCnt}
+				</p>
             <canvas
 					id="hireMeCanvas"
                ref={canvas => this.	canvasRef = canvas}
@@ -492,6 +606,86 @@ class BallPen extends React.Component{
 					onMouseDown		= { this.handleCanvasMouseDown }
 					onTouchStart	= { this.handleCanvasMouseDown }
             />
+				<table width={this.state.width}>
+					<tbody>
+					<tr>
+						<td>
+							<label>
+								Has Gravity:&nbsp;&nbsp;
+								<input
+									name="hasGravity"
+									type="checkbox"
+									checked={this.state.hasGravity}
+									onChange={this.handleInputChange} />
+							</label>
+						</td>
+						<td>
+							<label>
+								Has Wall Friction:&nbsp;&nbsp;
+								<input
+									name="hasWallFriction"
+									type="checkbox"
+									checked={this.state.hasWallFriction}
+									onChange={this.handleInputChange} />
+							</label>
+						</td>
+						<td>
+							<label>
+								Has Ball Friction:&nbsp;&nbsp;
+								<input
+									name="hasBallFriction"
+									type="checkbox"
+									checked={this.state.hasBallFriction}
+									onChange={this.handleInputChange} />
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label>
+								Has Kinetic Transfer:&nbsp;&nbsp;
+								<input
+									name="hasInertia"
+									type="checkbox"
+									checked={this.state.hasInertia}
+									onChange={this.handleInputChange} />
+							</label>
+						</td>
+						<td>
+							<label>
+								Leave Trails:&nbsp;&nbsp;
+								<input
+									name="isLeavingTrails"
+									type="checkbox"
+									checked={this.state.isLeavingTrails}
+									onChange={this.handleInputChange} />
+							</label>
+						</td>
+						<td>
+							<button onClick={this.resetBalls}>
+								Reset Balls
+							</button>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<button onClick={this.shrinkBalls}>
+								Shrink Some Balls
+							</button>
+						</td>
+						<td>
+							<button onClick={this.accelerateBalls}>
+								Accelerate Balls
+							</button>
+						</td>
+						<td>
+							<button onClick={this.decelerateBalls}>
+								Decelerate Balls
+							</button>
+						</td>
+					</tr>
+					</tbody>
+				</table>
          </div>
       );
    }

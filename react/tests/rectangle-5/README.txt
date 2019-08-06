@@ -4,7 +4,6 @@ Also need to make sure arrow movements align with rectangleDrag() and click;
 
 Next Step:
 	Bug Fixes;
-	States and options from ../slanted-1/
 
 Status:
 	Working:
@@ -16,6 +15,10 @@ Status:
 		MAX_SPEED;
 		No overlap when initialized;
 		Balls are sliding off of eachother depedant on their sizes;
+		All states and option pulled over from ../slanted-1/src/
+		Showing ball cnt;
+		Multiple balls working;
 	Not Working:
 	Bugs:
 		Ball is being squished for no reason by screen size changes;
+		Able to make new ball inside of movable rectanlge;
