@@ -401,19 +401,19 @@ var BallPen = function (_React$Component) {
 				height: height
 			});
 
-			this.drawBackground();
+			this.drawBackground(); //Update/draw Background
 			if (this.movableRectangle) {
 				//Following hack to see if current coordinates are 
 				//	colliding with wall or not;
 				this.movableRectangle.handleMove(this.state.width, this.state.height, []);
-				this.updateRectangle();
+				this.updateRectangle(); //Update/draw Rectangle
 			}
 			if (this.balls) {
 				for (var i = 0; i < this.balls.length; i++) {
-					this.balls[i].handleWindowResize(this.state.width, this.state.height, []);
+					this.balls[i].handleWindowResize(this.state.width, this.state.height, this.balls);
 				} //end i-for
+				this.updateBalls(); //Update/draw Balls;
 			}
-			//Update objects on screen;
 			return;
 		} //end updateWindowDimenstions()
 
