@@ -70,11 +70,17 @@ function makeRandomBall(sWidth, sHeight, ballID, minRadius=3, maxRadius=30, maxS
 	*/
 	let randomRadius	= getRandomInt(minRadius, maxRadius);
 	randomRadius += getRandomInt(1,99) * 0.01;
-	const randomX		= getRandomInt(randomRadius, sWidth - randomRadius);
-	const randomY		= getRandomInt(randomRadius, sHeight - randomRadius);
-	const randomDX		= getRandomFloat(1, randomRadius);
-	const randomDY		= getRandomFloat(1, randomRadius);
-	const newBall		= new Ball({
+	const randomX	= getRandomInt(randomRadius, sWidth - randomRadius);
+	const randomY	= getRandomInt(randomRadius, sHeight - randomRadius);
+	let randomDX	= getRandomFloat(1, randomRadius);
+	let randomDY	= getRandomFloat(1, randomRadius);
+	if(maxSpeed !== null){
+		if(randomDX > maxSpeed)
+			randomDX = maxSpeed;
+		if(randomDY > maxSpeed)
+			randomDY = maxSpeed;
+	}
+	const newBall	= new Ball({
 		ballID:	ballID,
 		color:	getRandomColor(),
 		xCord:	randomX,

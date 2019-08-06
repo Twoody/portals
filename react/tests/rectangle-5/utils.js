@@ -76,6 +76,10 @@ function makeRandomBall(sWidth, sHeight, ballID) {
 	var randomY = getRandomInt(randomRadius, sHeight - randomRadius);
 	var randomDX = getRandomFloat(1, randomRadius);
 	var randomDY = getRandomFloat(1, randomRadius);
+	if (maxSpeed !== null) {
+		if (randomDX > maxSpeed) randomDX = maxSpeed;
+		if (randomDY > maxSpeed) randomDY = maxSpeed;
+	}
 	var newBall = new Ball({
 		ballID: ballID,
 		color: getRandomColor(),
