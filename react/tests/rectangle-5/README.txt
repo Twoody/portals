@@ -18,7 +18,9 @@ Status:
 		All states and option pulled over from ../slanted-1/src/
 		Showing ball cnt;
 		Multiple balls working;
+		New ball on mouse up problem solved:
+			Bug was because of us making a random ball, and then
+			not updating its next coordinates;
 	Not Working:
 	Bugs:
 		Ball is being squished for no reason by screen size changes;
-		Able to make new ball inside of movable rectanlge;

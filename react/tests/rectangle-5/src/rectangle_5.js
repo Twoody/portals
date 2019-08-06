@@ -5,13 +5,13 @@ const RECTANGLE_WIDTH		= 110;
 const RECTANGLE_HEIGHT		= 30;
 const RECTANGLE_FRICTION	= 0.075;
 const MIN_RADIUS				= 1;
-const MAX_RADIUS				= 2;
+const MAX_RADIUS				= 3;
 const MAX_SPEED				= 5;
 const BALL_FRICTION			= 0.05;
 const GRAVITY					= 0.45;
 const KINETIC_LOSS			= 0.15;
 const KINETIC_KEEP			= 0.85;
-const INIT_BALL_CNT			= 185;
+let INIT_BALL_CNT				= 185;
 
 class BallPen extends React.Component{
    constructor(props){
@@ -92,6 +92,7 @@ class BallPen extends React.Component{
 			clickedBall.accelerate(5, 20);
 			return true;
 		}
+		//No ball was clicked; Is user trying to make a new ball?
 		let newBall = makeRandomBall(
 			this.state.width, 
 			this.state.height, 
@@ -102,7 +103,9 @@ class BallPen extends React.Component{
 		);
 		newBall.xCord = xCanvasPos;
 		newBall.yCord = yCanvasPos;
-		if(this.isLegalBall(newBall)){
+		newBall.nextX = xCanvasPos;
+		newBall.nextY = yCanvasPos;
+		if(this.isLegalBall(newBall) === true){
 			this.setNewBallDirection(newBall);
 			console.log('making new ball' + newBall.ballID);
 			this.balls.push(newBall);
@@ -325,9 +328,6 @@ class BallPen extends React.Component{
 		this.movableRectangle = rectangle;
 	}//end updateMiddleRectangle()
 	initBalls(){
-		if(this.balls.length !== 0)
-			return true;
-
 		for(let i=0; i< INIT_BALL_CNT; i++){
 			let newBall = makeRandomBall(
 				this.state.width, 
@@ -364,11 +364,20 @@ class BallPen extends React.Component{
 	}//end initBalls()
 	isLegalBall(ball){
 		/*Ball is legal if it: 
-			1. is in bounds <-- Checked in makeRandomBall()
+			1. is in bounds
 			2. is not overlapping the rectangle
 			3. ball is not overallping any otherBall in this.balls;
 		*/
-		if(this.movableRectangle.isOverLappingBall(ball))
+		if(ball.xCord - ball.radius < 0)
+			return false;
+		if(ball.xCord + ball.radius > this.state.width)
+			return false;
+		if(ball.yCord - ball.radius < 0)
+			return false;
+		if(ball.yCord + ball.radius > this.state.height)
+			return false;
+		const rectangleBallConflict = this.movableRectangle.isOverLappingBall(ball);
+		if(rectangleBallConflict)
 			return false;
 		for(let i=0; i<this.balls.length; i++){
 			const otherBall		= this.balls[i];
@@ -442,7 +451,11 @@ class BallPen extends React.Component{
 		}
 		if(this.balls){
 			for(let i=0; i<this.balls.length; i++){
-				this.balls[i].handleWindowResize(this.state.width, this.state.height, this.balls);
+				this.balls[i].handleWindowResize(
+					this.state.width, 
+					this.state.height, 
+					this.balls
+				);
 			}//end i-for
 			this.updateBalls();			//Update/draw Balls;
 		}
@@ -453,7 +466,7 @@ class BallPen extends React.Component{
 			return false;
 		if(!this.movableRectangle)
 			return false;
-		if(this.balls.length === 0)
+		if(this.balls.length === 0 && INIT_BALL_CNT !== 0)
 			this.initBalls();
       const canvas	= this.canvasRef;
       const ctx		= canvas.getContext('2d');
@@ -553,7 +566,8 @@ class BallPen extends React.Component{
 			}
 	}
 	resetBalls(event){
-		this.balls = [];
+		INIT_BALL_CNT	= 0;
+		this.balls		= [];
 		this.setState({ballCnt: 0});
 	}
 	shrinkBalls(event){
