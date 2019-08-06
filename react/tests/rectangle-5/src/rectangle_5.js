@@ -4,13 +4,14 @@ const WALL_FRICTION			= 0.075;
 const RECTANGLE_WIDTH		= 110;
 const RECTANGLE_HEIGHT		= 30;
 const RECTANGLE_FRICTION	= 0.075;
-const MIN_RADIUS				= 1;
-const MAX_RADIUS				= 3;
+const MIN_RADIUS				= 30;
+const MAX_RADIUS				= 30;
+const MAX_SPEED				= 1;
 const BALL_FRICTION			= 0.05;
 const GRAVITY					= 0.45;
 const KINETIC_LOSS			= 0.15;
 const KINETIC_KEEP			= 0.85;
-const INIT_BALL_CNT			= 85;
+const INIT_BALL_CNT			= 8;
 
 class BallPen extends React.Component{
    constructor(props){
@@ -32,74 +33,30 @@ class BallPen extends React.Component{
 		this.handleCanvasMouseMove		= this.handleCanvasMouseMove.bind(this);
 		this.handleCanvasMouseUp		= this.handleCanvasMouseUp.bind(this);
    }
-	initMiddleRectangle(){
-		//Initialize a middle rectangle;
-		//Rectangle is going to have draggable properties;
-		const middleCords	= getMiddleOfCanvas(this.state.width, this.state.height);
-		const width			= RECTANGLE_WIDTH;
-		const height		= RECTANGLE_HEIGHT;
-		const xLeft			= middleCords.x - width/2;
-		const yTop			= middleCords.y - height/2;
-		const rectangle	= new Rectangle({
-			rectID:	0,
-			color:	'white',
-			xLeft:	xLeft,
-			yTop:		yTop,
-			width:	width,
-			height:	height,
-		});
-		this.movableRectangle = rectangle;
-	}//end updateMiddleRectangle()
-	initBalls(){
-		if(this.balls.length !== 0)
-			return true;
-
-		for(let i=0; i< INIT_BALL_CNT; i++){
-			let newBall = makeRandomBall(
-				this.state.width, 
-				this.state.height, 
-				this.balls.length, 
-				MIN_RADIUS, 
-				MAX_RADIUS, 
-			);
-			let cnt = 0;
-			while(this.isLegalBall(newBall) === false){
-				cnt += 1;
-				newBall = makeRandomBall(
-					this.state.width, 
-					this.state.height,
-					this.balls.length, 
-					MIN_RADIUS, 
-					MAX_RADIUS, 
-				);
-				console.log('new ball attempt: ' + cnt);
-				if(cnt > 500){
-					console.log('FAILED MAKING A WORKABLE BALL');
-					break;
-				}
-			}//end while
-			newBall.maxSpeed = newBall.radius/2;
-			this.balls.push(newBall);
-		}//end i-for
-		return true;
-	}//end initBalls()
-	isLegalBall(ball){
-		/*Ball is legal if it: 
-			1. is in bounds <-- Checked in makeRandomBall()
-			2. is not overlapping the rectangle
-			3. ball is not overallping any otherBall in this.balls;
+	didClickBall(xCanvasPos, yCanvasPos){
+		/*	Go through balls and see if clicked position is in ball or not;
+			Inpus:
+				x click position relative to canvase
+				y click position relative to canvase
+			Output:
+				If true, clicked ball;
+				Else, NULL
+			@ utils.js
 		*/
-		if(this.movableRectangle.isOverLappingBall(ball))
-			return false;
 		for(let i=0; i<this.balls.length; i++){
-			const otherBall = this.balls[i];
-			//function isOverLapping(x1, y1, x2, y2, distance){
-			const isOverLapping = ball.isOverLappingBall(otherBall);
-			if(isOverLapping)
-				return false;
+			const ball			= this.balls[i];
+			const isClicked	= isOverLapping(
+				xCanvasPos, 
+				yCanvasPos, 
+				ball.xCord, 
+				ball.yCord, 
+				ball.radius
+			);
+			if(isClicked)
+				return ball;
 		}//end i-for
-		return true;
-	}//end isLegalBall()
+		return null;
+	}//end didClickBall()
 	drawBackground(){
 		if(this.state.width === 0)
 			return false;
@@ -111,12 +68,22 @@ class BallPen extends React.Component{
 		ctx.closePath();
 		return true;
 	}//end drawBackground();
-
 	handleCanvasClick(){
      	const canvas		= this.canvasRef;
 		const rect			= canvas.getBoundingClientRect();
 		const xCanvasPos	= this.state.xClick - rect.left;		//X cord of user click
 		const yCanvasPos	= this.state.yClick - rect.top;		//Y cord of user click
+		const clickedBall = this.didClickBall(xCanvasPos, yCanvasPos);
+		if(clickedBall !== null){
+			console.log('accelerating ball' + clickedBall.ballID);
+			clickedBall.accelerate(5, 20);
+			return true;
+		}
+		console.log('no ball clicked');
+		
+		//TODO: Check if the coordinates are acceptable for a new ball;
+
+		return false;
 	}//end handleCanvasClick
 	handleCanvasMouseDown(event){
 		/* Determine if click is long press or just a click;
@@ -133,34 +100,38 @@ class BallPen extends React.Component{
 			);
 			hireMeCanvas.addEventListener( 'touchmove', this.handleCanvasMouseMove);
 			hireMeCanvas.addEventListener('touchend', this.handleCanvasMouseUp);
-			//event.preventDefault();
 			this.setState({
 				clickTimer:	new Date(),	//Start timer
 				xClick:		Math.round(event.changedTouches[0].clientX),
 				yClick:		Math.round(event.changedTouches[0].clientY),
 			});
 		}
-		else{
-			document.body.addEventListener('mousemove', this.handleCanvasMouseMove);
-			document.body.addEventListener('mouseup', this.handleCanvasMouseUp);
+		else if(event){
+			hireMeCanvas.addEventListener('mousemove', this.handleCanvasMouseMove);
+			hireMeCanvas.addEventListener('mouseup', this.handleCanvasMouseUp);
 			this.setState({
 				clickTimer:	new Date(),	//Start timer
-				xClick:		event.xClick,
-				yClick:		event.yClick,
 			});
 		}
+		else{
+			console.log('input not understood');
+		}
 	}//end handleCanvasMouseDown
-	handleCanvasMouseUp(){
+	handleCanvasMouseUp(event){
 		/* If elapsed time is less than half a second, user just clicked;
 			Else, user is long pressing and moving the rectangle;
 		*/
-		document.body.removeEventListener('mousedown', this.handleCanvasMouseDown);
-		document.body.removeEventListener('mouseup', this.handleCanvasMouseUp);
-		document.body.removeEventListener('mousemove', this.handleCanvasMouseMove);
+		hireMeCanvas.removeEventListener('mousedown',	this.handleCanvasMouseDown);
+		hireMeCanvas.removeEventListener('mouseup',		this.handleCanvasMouseUp);
+		hireMeCanvas.removeEventListener('mousemove',	this.handleCanvasMouseMove);
 		const endTime		= new Date();	//End time of screen click;
 		const elapsedTime = endTime - this.state.clickTimer; //In Milliseconds;
-		if(elapsedTime < 500){
+		if(elapsedTime < 250){
 			//User just clicked screen
+			this.setState({
+				xClick:		event.clientX,
+				yClick:		event.clientY,
+			});
 			this.handleCanvasClick();
 		}
 		else{
@@ -175,6 +146,10 @@ class BallPen extends React.Component{
 
 			console.log("DRAGGING FINSIHED");
 		}
+		//Make clickTimer unassigned;
+		this.setState({
+			clickTimer:	null,	//Start timer
+		});
 	}//end handleCanvasMouseUp()
 	handleCanvasMouseMove(event){
 		//TODO: Get movement of mouse and move rectangle accordingly;
@@ -296,8 +271,78 @@ class BallPen extends React.Component{
 			timePressed: null,
      	});
 		console.log('key up');
-	}
+	}//end handleKeyup()
+	initMiddleRectangle(){
+		//Initialize a middle rectangle;
+		//Rectangle is going to have draggable properties;
+		const middleCords	= getMiddleOfCanvas(this.state.width, this.state.height);
+		const width			= RECTANGLE_WIDTH;
+		const height		= RECTANGLE_HEIGHT;
+		const xLeft			= middleCords.x - width/2;
+		const yTop			= middleCords.y - height/2;
+		const rectangle	= new Rectangle({
+			rectID:	0,
+			color:	'white',
+			xLeft:	xLeft,
+			yTop:		yTop,
+			width:	width,
+			height:	height,
+		});
+		this.movableRectangle = rectangle;
+	}//end updateMiddleRectangle()
+	initBalls(){
+		if(this.balls.length !== 0)
+			return true;
 
+		for(let i=0; i< INIT_BALL_CNT; i++){
+			let newBall = makeRandomBall(
+				this.state.width, 
+				this.state.height, 
+				this.balls.length, 
+				MIN_RADIUS, 
+				MAX_RADIUS, 
+			);
+			let cnt = 0;
+			while(this.isLegalBall(newBall) === false){
+				cnt += 1;
+				newBall = makeRandomBall(
+					this.state.width, 
+					this.state.height,
+					this.balls.length, 
+					MIN_RADIUS, 
+					MAX_RADIUS, 
+				);
+				console.log('new ball attempt: ' + cnt);
+				if(cnt > 500){
+					console.log('FAILED MAKING A WORKABLE BALL');
+					break;
+				}
+			}//end while
+			if(MAX_SPEED)
+				newBall.maxSpeed = MAX_SPEED;
+			else
+				newBall.maxSpeed = newBall.radius/2;
+			this.balls.push(newBall);
+		}//end i-for
+		return true;
+	}//end initBalls()
+	isLegalBall(ball){
+		/*Ball is legal if it: 
+			1. is in bounds <-- Checked in makeRandomBall()
+			2. is not overlapping the rectangle
+			3. ball is not overallping any otherBall in this.balls;
+		*/
+		if(this.movableRectangle.isOverLappingBall(ball))
+			return false;
+		for(let i=0; i<this.balls.length; i++){
+			const otherBall = this.balls[i];
+			//function isOverLapping(x1, y1, x2, y2, distance){
+			const isOverLapping = ball.isOverLappingBall(otherBall);
+			if(isOverLapping)
+				return false;
+		}//end i-for
+		return true;
+	}//end isLegalBall()
    componentDidMount(){
  	   this.updateWindowDimensions();
    	this.drawBackground();
@@ -311,20 +356,20 @@ class BallPen extends React.Component{
         25
       );
       window.addEventListener('resize', this.updateWindowDimensions);
-      document.body.addEventListener('keydown', this.handleKeydown);
-      document.body.addEventListener('keyup', this.handleKeyup);
+      document.body.addEventListener('keydown',	this.handleKeydown);
+      document.body.addEventListener('keyup',	this.handleKeyup);
    }
    componentWillUnmount(){
       clearInterval(this.rectangleTimerID);
       clearInterval(this.ballTimerID);
       window.removeEventListener('resize', this.updateWindowDimensions);
-      document.body.removeEventListener('keydown', this.handleKeydown);
-      document.body.removeEventListener('keyup', this.handleKeyup);
-		document.body.removeEventListener('mousemove', this.handleCanvasMouseMove);
-		document.body.removeEventListener('mouseup', this.handleCanvasMouseUp);
-		hireMeCanvas.removeEventListener('touchstart', this.handleCanvasMouseDown);
-		hireMeCanvas.removeEventListener('touchmove', this.handleCanvasMouseMove);
-		hireMeCanvas.removeEventListener('touchend', this.handleCanvasMouseUp);
+      document.body.removeEventListener('keydown',		this.handleKeydown);
+      document.body.removeEventListener('keyup',		this.handleKeyup);
+		hireMeCanvas.removeEventListener('mousemove',	this.handleCanvasMouseMove);
+		hireMeCanvas.removeEventListener('mouseup',		this.handleCanvasMouseUp);
+		hireMeCanvas.removeEventListener('touchstart',	this.handleCanvasMouseDown);
+		hireMeCanvas.removeEventListener('touchmove',	this.handleCanvasMouseMove);
+		hireMeCanvas.removeEventListener('touchend',		this.handleCanvasMouseUp);
    }
    componentDidUpdate() {
 		//Going to handle updates as we go to enhance efficiency;
@@ -387,11 +432,11 @@ class BallPen extends React.Component{
 				this.balls
 			);
 		}//end i-for
+
 		//Update other objects 
 		this.drawBackground();	//Redraw Background
 		this.drawBalls(ctx);
 		this.drawRectangle(ctx);	//Update rectangle;
-
 		return true;
 	}//end updateBalls()
    updateRectangle(){
