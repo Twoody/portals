@@ -313,7 +313,7 @@ var BallPen = function (_React$Component) {
 			if (this.balls.length !== 0) return true;
 
 			for (var i = 0; i < INIT_BALL_CNT; i++) {
-				var newBall = makeRandomBall(this.state.width, this.state.height, this.balls.length, MIN_RADIUS, MAX_RADIUS);
+				var newBall = makeRandomBall(this.state.width, this.state.height, this.balls.length, MIN_RADIUS, MAX_RADIUS, MAX_SPEED);
 				var cnt = 0;
 				while (this.isLegalBall(newBall) === false) {
 					cnt += 1;

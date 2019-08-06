@@ -312,6 +312,7 @@ class BallPen extends React.Component{
 				this.balls.length, 
 				MIN_RADIUS, 
 				MAX_RADIUS,
+				MAX_SPEED
 			);
 			let cnt = 0;
 			while(this.isLegalBall(newBall) === false){
