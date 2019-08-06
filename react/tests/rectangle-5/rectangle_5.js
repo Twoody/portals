@@ -95,10 +95,14 @@ var BallPen = function (_React$Component) {
 				clickedBall.accelerate(5, 20);
 				return true;
 			}
-			console.log('no ball clicked');
-
-			//TODO: Check if the coordinates are acceptable for a new ball;
-
+			var newBall = makeRandomBall(this.state.width, this.state.height, this.balls.length, MIN_RADIUS, MAX_RADIUS, MAX_SPEED);
+			newBall.xCord = xCanvasPos;
+			newBall.yCord = yCanvasPos;
+			if (this.isLegalBall(newBall)) {
+				console.log('making new ball' + newBall.ballID);
+				this.balls.push(newBall);
+				return true;
+			}
 			return false;
 		} //end handleCanvasClick
 
@@ -313,14 +317,13 @@ var BallPen = function (_React$Component) {
 				var cnt = 0;
 				while (this.isLegalBall(newBall) === false) {
 					cnt += 1;
-					newBall = makeRandomBall(this.state.width, this.state.height, this.balls.length, MIN_RADIUS, MAX_RADIUS);
+					newBall = makeRandomBall(this.state.width, this.state.height, this.balls.length, MIN_RADIUS, MAX_RADIUS, MAX_SPEED);
 					console.log('new ball attempt: ' + cnt);
 					if (cnt > 500) {
 						console.log('FAILED MAKING A WORKABLE BALL');
 						break;
 					}
 				} //end while
-				if (MAX_SPEED) newBall.maxSpeed = MAX_SPEED;else newBall.maxSpeed = newBall.radius / 2;
 				this.balls.push(newBall);
 			} //end i-for
 			return true;
@@ -337,7 +340,6 @@ var BallPen = function (_React$Component) {
 			if (this.movableRectangle.isOverLappingBall(ball)) return false;
 			for (var i = 0; i < this.balls.length; i++) {
 				var otherBall = this.balls[i];
-				//function isOverLapping(x1, y1, x2, y2, distance){
 				var _isOverLapping = ball.isOverLappingBall(otherBall);
 				if (_isOverLapping) return false;
 			} //end i-for

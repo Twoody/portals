@@ -79,10 +79,21 @@ class BallPen extends React.Component{
 			clickedBall.accelerate(5, 20);
 			return true;
 		}
-		console.log('no ball clicked');
-		
-		//TODO: Check if the coordinates are acceptable for a new ball;
-
+		let newBall = makeRandomBall(
+			this.state.width, 
+			this.state.height, 
+			this.balls.length, 
+			MIN_RADIUS, 
+			MAX_RADIUS, 
+			MAX_SPEED
+		);
+		newBall.xCord = xCanvasPos;
+		newBall.yCord = yCanvasPos;
+		if(this.isLegalBall(newBall)){
+			console.log('making new ball' + newBall.ballID);
+			this.balls.push(newBall);
+			return true;
+		}
 		return false;
 	}//end handleCanvasClick
 	handleCanvasMouseDown(event){
@@ -300,7 +311,7 @@ class BallPen extends React.Component{
 				this.state.height, 
 				this.balls.length, 
 				MIN_RADIUS, 
-				MAX_RADIUS, 
+				MAX_RADIUS,
 			);
 			let cnt = 0;
 			while(this.isLegalBall(newBall) === false){
@@ -311,6 +322,7 @@ class BallPen extends React.Component{
 					this.balls.length, 
 					MIN_RADIUS, 
 					MAX_RADIUS, 
+					MAX_SPEED
 				);
 				console.log('new ball attempt: ' + cnt);
 				if(cnt > 500){
@@ -318,10 +330,6 @@ class BallPen extends React.Component{
 					break;
 				}
 			}//end while
-			if(MAX_SPEED)
-				newBall.maxSpeed = MAX_SPEED;
-			else
-				newBall.maxSpeed = newBall.radius/2;
 			this.balls.push(newBall);
 		}//end i-for
 		return true;
@@ -335,9 +343,8 @@ class BallPen extends React.Component{
 		if(this.movableRectangle.isOverLappingBall(ball))
 			return false;
 		for(let i=0; i<this.balls.length; i++){
-			const otherBall = this.balls[i];
-			//function isOverLapping(x1, y1, x2, y2, distance){
-			const isOverLapping = ball.isOverLappingBall(otherBall);
+			const otherBall		= this.balls[i];
+			const isOverLapping	= ball.isOverLappingBall(otherBall);
 			if(isOverLapping)
 				return false;
 		}//end i-for
