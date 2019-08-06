@@ -166,14 +166,14 @@ class Ball{
 				continue;
 			const minDistance		= this.radius + otherBall.radius;
 			const isLeftOverLapping = isOverLapping(
-				this.xCord - this.dx, 
+				this.xCord - this.radius, 
 				this.yCord, 
 				otherBall.nextX, 
 				otherBall.nextY,
 				minDistance
 			);
 			const isRightOverLapping = isOverLapping(
-				this.xCord + this.dx, 
+				this.xCord + this.radius, 
 				this.yCord, 
 				otherBall.nextX, 
 				otherBall.nextY,
@@ -435,14 +435,7 @@ class Ball{
 		}
 		for(let i=0; i<otherBalls.length; i++){
 			let otherBall = this.balls[i];
-			const minDistance = this.radius + otherBall.radius;
-			const isOverLapping	= isOverLapping(
-				this.xCord,
-				this.yCord,
-				otherBall.xCord,
-				otherBall.yCord,
-				minDistance
-			);
+			const isOverLapping	= this.isOverLappingBall(otherBall);
 			if(isOverLapping)
 				this.shrink();
 		}//end i-for
@@ -473,6 +466,18 @@ class Ball{
 		return false;
 	
 	}
+	isOverLappingBall(otherBall){
+		const doesOverLap = isOverLapping(
+			this.xCord, 
+			this.yCord, 
+			otherBall.nextX, 
+			otherBall.nextY,
+			this.radius + otherBall.radius
+		);
+		if(doesOverLap === false)
+			return false;
+		return true;
+	}//end isOverLappingBall
 	label(ctx){
 		if(this.radius < 30)
 			return;

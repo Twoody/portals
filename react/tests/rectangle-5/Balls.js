@@ -165,8 +165,8 @@ var Ball = function () {
 				var otherBall = allBalls[i];
 				if (otherBall === this) continue;
 				var minDistance = this.radius + otherBall.radius;
-				var isLeftOverLapping = isOverLapping(this.xCord - this.dx, this.yCord, otherBall.nextX, otherBall.nextY, minDistance);
-				var isRightOverLapping = isOverLapping(this.xCord + this.dx, this.yCord, otherBall.nextX, otherBall.nextY, minDistance);
+				var isLeftOverLapping = isOverLapping(this.xCord - this.radius, this.yCord, otherBall.nextX, otherBall.nextY, minDistance);
+				var isRightOverLapping = isOverLapping(this.xCord + this.radius, this.yCord, otherBall.nextX, otherBall.nextY, minDistance);
 				if (isLeftOverLapping && isRightOverLapping) {
 					this.canGoDown = false;
 					this.canGoUp = false;
@@ -400,8 +400,7 @@ var Ball = function () {
 			}
 			for (var i = 0; i < otherBalls.length; i++) {
 				var otherBall = this.balls[i];
-				var minDistance = this.radius + otherBall.radius;
-				var _isOverLapping = _isOverLapping(this.xCord, this.yCord, otherBall.xCord, otherBall.yCord, minDistance);
+				var _isOverLapping = this.isOverLappingBall(otherBall);
 				if (_isOverLapping) this.shrink();
 			} //end i-for
 		} //end handleWindowResize()
@@ -434,6 +433,14 @@ var Ball = function () {
 			if (ballMaxRight >= maxWidth) return true;
 			return false;
 		}
+	}, {
+		key: 'isOverLappingBall',
+		value: function isOverLappingBall(otherBall) {
+			var doesOverLap = isOverLapping(this.xCord, this.yCord, otherBall.nextX, otherBall.nextY, this.radius + otherBall.radius);
+			if (doesOverLap === false) return false;
+			return true;
+		} //end isOverLappingBall
+
 	}, {
 		key: 'label',
 		value: function label(ctx) {
