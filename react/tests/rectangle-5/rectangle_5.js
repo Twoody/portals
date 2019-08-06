@@ -103,7 +103,9 @@ var BallPen = function (_React$Component) {
 			if (this.movableRectangle.isOverLappingBall(ball)) return false;
 			for (var i = 0; i < this.balls.length; i++) {
 				var otherBall = this.balls[i];
-				if (isOverLapping(ball.xCord, ball.yCord, otherBall.nextX, otherBall.nextY)) return false;
+				//function isOverLapping(x1, y1, x2, y2, distance){
+				var isOverLapping = ball.isOverLappingBall(otherBall);
+				if (isOverLapping) return false;
 			} //end i-for
 			return true;
 		} //end isLegalBall()

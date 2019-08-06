@@ -93,7 +93,9 @@ class BallPen extends React.Component{
 			return false;
 		for(let i=0; i<this.balls.length; i++){
 			const otherBall = this.balls[i];
-			if( isOverLapping(ball.xCord, ball.yCord, otherBall.nextX, otherBall.nextY) )
+			//function isOverLapping(x1, y1, x2, y2, distance){
+			const isOverLapping = ball.isOverLappingBall(otherBall);
+			if(isOverLapping)
 				return false;
 		}//end i-for
 		return true;
