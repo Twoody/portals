@@ -60,13 +60,17 @@ function initClickables(sWidth, sHeight) {
 			newBall = makeRandomClickableBall(sWidth, sHeight, clickable.__name, //ballID
 			minRadius, maxRadius, clickable.faUnicode, clickable.href, maxSpeed);
 			isLegal = isLegalBall(newBall, sWidth, sHeight, retBalls, rectangles);
+			console.log('clickable attemp: ' + cnt);
 			cnt += 1;
 			if (cnt === 50) {
 				console.log('UNABLE TO MAKE BALL ' + clickable.__name);
 				break;
 			}
 		} //end while
-		if (newBall && cnt !== 50) retBalls.push(newBall);
+		if (newBall && cnt !== 50) {
+			newBall.color = clickable.color;
+			retBalls.push(newBall);
+		}
 	} //end i-for
 	return retBalls;
 }
