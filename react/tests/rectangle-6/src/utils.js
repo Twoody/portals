@@ -39,6 +39,34 @@ function getRandomFloat(min, max){
 function isInRange(x, min, max){
 	return (x>=min && x<=max);
 }
+function isLegalBall(ball, sWidth, sHeight, otherBalls, rectangles){
+	/*Ball is legal if it: 
+		1. is in bounds
+		2. is not overlapping the rectangle
+		3. ball is not overallping any otherBall in this.balls;
+	*/
+	if(ball.xCord - ball.radius < 0)
+		return false;
+	if(ball.xCord + ball.radius > sWidth)
+		return false;
+	if(ball.yCord - ball.radius < 0)
+		return false;
+	if(ball.yCord + ball.radius > sHeight)
+		return false;
+	for(let i=0; i<rectangles; i++){
+		const rectangle = rectangles[i];
+		const rectangleBallConflict = rectangle.isOverLappingBall(ball);
+		if(rectangleBallConflict)
+			return false;
+	}//end i-for
+	for(let i=0; i<otherBalls; i++){
+		const otherBall		= otherBalls[i];
+		const isOverLapping	= ball.isOverLappingBall(otherBall);
+		if(isOverLapping)
+			return false;
+	}//end i-for
+	return true;
+}//end isLegalBall()
 function isOverLapping(x1, y1, x2, y2, distance){
 	/*	Will use distance formula to compute;
 		Input:
@@ -99,7 +127,16 @@ function makeRandomBall(sWidth, sHeight, ballID, minRadius=3, maxRadius=30, maxS
 		newBall.maxSpeed = randomRadius;
 	return newBall;
 }//end makeRandomBall
-function makeRandomClickableBall(sWidth, sHeight, ballID, minRadius=3, maxRadius=30, href, maxSpeed=null){
+function makeRandomClickableBall(
+	sWidth, 
+	sHeight, 
+	ballID, 
+	minRadius=3, 
+	maxRadius=30, 
+	unicode,
+	href, 
+	maxSpeed=null
+){
 	/*	Return false if random ball fails;
 		Else return random ball;
 		Input:
