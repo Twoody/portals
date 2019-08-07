@@ -48,12 +48,12 @@ function isLegalBall(ball, sWidth, sHeight, otherBalls, rectangles) {
 	if (ball.xCord + ball.radius > sWidth) return false;
 	if (ball.yCord - ball.radius < 0) return false;
 	if (ball.yCord + ball.radius > sHeight) return false;
-	for (var i = 0; i < rectangles; i++) {
+	for (var i = 0; i < rectangles.length; i++) {
 		var rectangle = rectangles[i];
 		var rectangleBallConflict = rectangle.isOverLappingBall(ball);
 		if (rectangleBallConflict) return false;
 	} //end i-for
-	for (var _i = 0; _i < otherBalls; _i++) {
+	for (var _i = 0; _i < otherBalls.length; _i++) {
 		var otherBall = otherBalls[_i];
 		var _isOverLapping = ball.isOverLappingBall(otherBall);
 		if (_isOverLapping) return false;

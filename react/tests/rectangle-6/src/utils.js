@@ -53,13 +53,13 @@ function isLegalBall(ball, sWidth, sHeight, otherBalls, rectangles){
 		return false;
 	if(ball.yCord + ball.radius > sHeight)
 		return false;
-	for(let i=0; i<rectangles; i++){
+	for(let i=0; i<rectangles.length; i++){
 		const rectangle = rectangles[i];
 		const rectangleBallConflict = rectangle.isOverLappingBall(ball);
 		if(rectangleBallConflict)
 			return false;
 	}//end i-for
-	for(let i=0; i<otherBalls; i++){
+	for(let i=0; i<otherBalls.length; i++){
 		const otherBall		= otherBalls[i];
 		const isOverLapping	= ball.isOverLappingBall(otherBall);
 		if(isOverLapping)
