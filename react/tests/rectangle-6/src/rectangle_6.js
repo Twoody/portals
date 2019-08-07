@@ -11,7 +11,7 @@ const BALL_FRICTION			= 0.05;
 const GRAVITY					= 0.45;
 const KINETIC_LOSS			= 0.15;
 const KINETIC_KEEP			= 0.85;
-let INIT_BALL_CNT				= 185;
+let INIT_BALL_CNT				= 1;
 
 class BallPen extends React.Component{
    constructor(props){
@@ -345,8 +345,9 @@ class BallPen extends React.Component{
 		);
 		for(let i=0; i<brandBalls.length; i++){
 			this.balls.push(brandBalls[i]);
+			this.setState({ballCnt: this.state.ballCnt +1});
 		}//end i-for
-		for(let i=0; i< INIT_BALL_CNT; i++){
+		for(let i=this.state.ballCnt; i< INIT_BALL_CNT; i++){
 			let cnt		= 0;
 			let isLegal = false;
 			let newBall	= null;

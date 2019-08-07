@@ -22,7 +22,7 @@ var BALL_FRICTION = 0.05;
 var GRAVITY = 0.45;
 var KINETIC_LOSS = 0.15;
 var KINETIC_KEEP = 0.85;
-var INIT_BALL_CNT = 185;
+var INIT_BALL_CNT = 1;
 
 var BallPen = function (_React$Component) {
 	_inherits(BallPen, _React$Component);
@@ -341,8 +341,9 @@ var BallPen = function (_React$Component) {
 			var brandBalls = initClickables(this.state.width, this.state.height, 30, 30, MAX_SPEED, [this.movableRectangle]);
 			for (var i = 0; i < brandBalls.length; i++) {
 				this.balls.push(brandBalls[i]);
+				this.setState({ ballCnt: this.state.ballCnt + 1 });
 			} //end i-for
-			for (var _i = 0; _i < INIT_BALL_CNT; _i++) {
+			for (var _i = this.state.ballCnt; _i < INIT_BALL_CNT; _i++) {
 				var cnt = 0;
 				var isLegal = false;
 				var newBall = null;
