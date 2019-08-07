@@ -3,7 +3,8 @@ Focus will then shift to adding multiple balls;
 Also need to make sure arrow movements align with rectangleDrag() and click;
 
 Next Step:
-	Bug Fixes;
+	New dir to work in bigger balls and make them clickable:
+		clickableBall()
 
 Status:
 	Working:
