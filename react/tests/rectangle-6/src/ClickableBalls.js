@@ -6,4 +6,14 @@ class ClickableBall extends Ball{
 	consoleHREF(){
 		console.log(this.href);
 	}
+	handleClick(){
+		/*WARNING: ReWrite of ./Balls.js and handleClick
+			Input:
+				None
+			Output:
+				Boolean if success;
+		*/
+		console.log('Opening ' + this.href);
+		return true;
+	}
 }

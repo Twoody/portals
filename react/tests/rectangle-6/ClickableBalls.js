@@ -20,9 +20,21 @@ var ClickableBall = function (_Ball) {
 
 
 	_createClass(ClickableBall, [{
-		key: "consoleHREF",
+		key: 'consoleHREF',
 		value: function consoleHREF() {
 			console.log(this.href);
+		}
+	}, {
+		key: 'handleClick',
+		value: function handleClick() {
+			/*WARNING: ReWrite of ./Balls.js and handleClick
+   	Input:
+   		None
+   	Output:
+   		Boolean if success;
+   */
+			console.log('Opening ' + this.href);
+			return true;
 		}
 	}]);
 
