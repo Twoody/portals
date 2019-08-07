@@ -105,9 +105,7 @@ var BallPen = function (_React$Component) {
 			var yCanvasPos = this.state.yClick - rect.top; //Y cord of user click
 			var clickedBall = this.didClickBall(xCanvasPos, yCanvasPos);
 			if (clickedBall !== null) {
-				console.log('accelerating ball' + clickedBall.ballID);
-				clickedBall.accelerate(5, 20);
-				return true;
+				return clickedBall.handleClick();;
 			}
 			//No ball was clicked; Is user trying to make a new ball?
 			var newBall = makeRandomBall(this.state.width, this.state.height, this.balls.length, MIN_RADIUS, MAX_RADIUS, MAX_SPEED);
