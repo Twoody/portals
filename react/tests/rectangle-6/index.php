@@ -47,6 +47,7 @@ require_once($PATHS['TEMPLATES_B']);
 
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"./Balls.js\"></script>";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"./ClickableBalls.js\"></script>";
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"./initClickables.js\"></script>";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"./Rectangle.js\"></script>";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"./utils.js\"></script>";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script type=\"text/babel\" src=\"".$react_js."\"></script>";
