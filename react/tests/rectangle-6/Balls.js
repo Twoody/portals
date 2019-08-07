@@ -204,6 +204,13 @@ var Ball = function () {
 		} //end handleBoundaries
 
 	}, {
+		key: 'handleClick',
+		value: function handleClick() {
+			console.log('accelerating ball' + this.ballID);
+			this.accelerate(5, 20);
+			return true;
+		}
+	}, {
 		key: 'handleMovement',
 		value: function handleMovement(friction) {
 			//Set directions for next movement based off of current collisions;

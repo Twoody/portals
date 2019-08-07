@@ -217,6 +217,11 @@ class Ball{
 		if(this.yCord + this.radius >= height)
 			this.canGoDown = false;
 	}//end handleBoundaries
+	handleClick(){
+		console.log('accelerating ball' + this.ballID);
+		this.accelerate(5, 20);
+		return true;
+	}
 	handleMovement(friction){
 		//Set directions for next movement based off of current collisions;
 
