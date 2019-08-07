@@ -103,7 +103,14 @@ class BallPen extends React.Component{
 		newBall.yCord = yCanvasPos;
 		newBall.nextX = xCanvasPos;
 		newBall.nextY = yCanvasPos;
-		if(this.isLegalBall(newBall) === true){
+		let isLegal	= isLegalBall(
+			newBall,
+			this.state.width,
+			this.state.height,
+			this.balls,
+			[this.movableRectangle]
+		);
+		if(isLegal === true){
 			this.setNewBallDirection(newBall);
 			console.log('making new ball' + newBall.ballID);
 			this.balls.push(newBall);
@@ -326,30 +333,24 @@ class BallPen extends React.Component{
 		this.movableRectangle = rectangle;
 	}//end updateMiddleRectangle()
 	initBalls(){
-		let attempt = makeRandomClickableBall(
+
+		
+		const brandBalls = initClickables( 
 			this.state.width, 
 			this.state.height, 
-			'Foo', 
 			30, 
-			30,
-			'foo',
-			MAX_SPEED
+			30, 
+			MAX_SPEED,
+			[this.movableRectangle],
 		);
-		attempt.consoleHREF();
-		console.log(attempt);
-		this.balls.push(attempt);
+		for(let i=0; i<brandBalls.length; i++){
+			this.balls.push(brandBalls[i]);
+		}//end i-for
 		for(let i=0; i< INIT_BALL_CNT; i++){
-			let newBall = makeRandomBall(
-				this.state.width, 
-				this.state.height, 
-				this.balls.length, 
-				MIN_RADIUS, 
-				MAX_RADIUS,
-				MAX_SPEED
-			);
-			let cnt = 0;
-			while(this.isLegalBall(newBall) === false){
-				cnt += 1;
+			let cnt		= 0;
+			let isLegal = false;
+			let newBall	= null;
+			while(isLegal === false){
 				newBall = makeRandomBall(
 					this.state.width, 
 					this.state.height,
@@ -358,13 +359,21 @@ class BallPen extends React.Component{
 					MAX_RADIUS, 
 					MAX_SPEED
 				);
+				isLegal = isLegalBall(
+					newBall,
+					this.state.width,
+					this.state.height,
+					this.balls,
+					[this.movableRectangle]
+				);
 				console.log('new ball attempt: ' + cnt);
-				if(cnt > 500){
+				if(cnt === 500){
 					console.log('FAILED MAKING A WORKABLE BALL');
 					break;
 				}
+				cnt += 1;
 			}//end while
-			if(cnt <= 500){
+			if(newBall && cnt !== 500){
 				this.setNewBallDirection(newBall);
 				this.balls.push(newBall);
 				this.setState({ballCnt: this.state.ballCnt +1});
@@ -372,32 +381,7 @@ class BallPen extends React.Component{
 		}//end i-for
 		return true;
 	}//end initBalls()
-	isLegalBall(ball){
-		/*Ball is legal if it: 
-			1. is in bounds
-			2. is not overlapping the rectangle
-			3. ball is not overallping any otherBall in this.balls;
-		*/
-		if(ball.xCord - ball.radius < 0)
-			return false;
-		if(ball.xCord + ball.radius > this.state.width)
-			return false;
-		if(ball.yCord - ball.radius < 0)
-			return false;
-		if(ball.yCord + ball.radius > this.state.height)
-			return false;
-		const rectangleBallConflict = this.movableRectangle.isOverLappingBall(ball);
-		if(rectangleBallConflict)
-			return false;
-		for(let i=0; i<this.balls.length; i++){
-			const otherBall		= this.balls[i];
-			const isOverLapping	= ball.isOverLappingBall(otherBall);
-			if(isOverLapping)
-				return false;
-		}//end i-for
-		return true;
-	}//end isLegalBall()
-   componentDidMount(){
+	componentDidMount(){
  	   this.updateWindowDimensions();
    	this.drawBackground();
 		this.initMiddleRectangle;
