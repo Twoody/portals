@@ -88,6 +88,7 @@ class Ball{
 		);
 		ctx.fillStyle = this.color;
 		ctx.fill();
+		ctx.closePath();
 	}//end draw()
 	handleBallCollisions(allBalls){
 		//Find out if NEXT coordinates overlap anything;
@@ -514,6 +515,7 @@ class Ball{
 	label(ctx){
 		if(this.radius < 30)
 			return;
+		ctx.beginPath();
 		if(!this.isGoingDown && !this.isGoingUp){
 			if(!this.isGoingRight && !this.isGoingLeft){
 				ctx.font      = "12px Arial";
@@ -572,6 +574,7 @@ class Ball{
 				ctx.fillText("Right: " + this.dx.toFixed(1), this.xCord - this.radius+13, this.yCord+22);
 			}
 		}
+		ctx.closePath();
 	}//end label()
 	move(sWidth, sHeight, wallFriction, rectangles, balls){
 		//Assume we can go any direction first; Change values on `handle`*;

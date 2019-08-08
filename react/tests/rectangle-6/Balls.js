@@ -93,6 +93,7 @@ var Ball = function () {
 			);
 			ctx.fillStyle = this.color;
 			ctx.fill();
+			ctx.closePath();
 		} //end draw()
 
 	}, {
@@ -478,6 +479,7 @@ var Ball = function () {
 		key: 'label',
 		value: function label(ctx) {
 			if (this.radius < 30) return;
+			ctx.beginPath();
 			if (!this.isGoingDown && !this.isGoingUp) {
 				if (!this.isGoingRight && !this.isGoingLeft) {
 					ctx.font = "12px Arial";
@@ -533,6 +535,7 @@ var Ball = function () {
 					ctx.fillText("Right: " + this.dx.toFixed(1), this.xCord - this.radius + 13, this.yCord + 22);
 				}
 			}
+			ctx.closePath();
 		} //end label()
 
 	}, {
