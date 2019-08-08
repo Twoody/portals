@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Hello!</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="/style.css">
+    
+    <!-- import the webpage's javascript file -->
+    <script src="./Balls.js"></script>
+    <script src="./Rectangle.js"></script>
+    <script src="./utils.js"></script>
+
+  </head>  
+  <body>
+  
+    <p>
+      This is a little ugly regarding me refractoring the code from react and babel
+      to make it comply with Glitch. <br/></br/>You can visit a better working demo at 
+      <a href="https://passtow.com"> my site</a>.
+    </p>  
+    <div id="slandted-1">
+      
+      <canvas id="hireMeCanvas" width="400" height="500" style="border:1px solid #000000">
+      </canvas>
+      
+    </div>
+
+    <script>
+      'use strict';
+      const CANVAS_ID         = "hireMeCanvas";
+      const MIN_RADIUS        = 1;
+      const MAX_RADIUS        = 3;
+      const WALL_FRICTION     = 0.075;
+      const BALL_FRICTION     = 0.05;
+      const GRAVITY           = 0.45;
+      const KINETIC_LOSS      = 0.15;
+      const KINETIC_KEEP      = 0.85;
+      const BACKGROUND_COLOR  = "black";
+      const MAX_SPEED         = MAX_RADIUS * 2;
+      const initBallCnt       = 85;
+      let balls               = [];
+      let middleRectangle     = null;
+      function initMiddleRectangle(){
+        const canvas   = document.getElementById(CANVAS_ID);
+        const middleCords = getMiddleOfCanvas(canvas.width, canvas.height);
+        const width       = 110;
+        const height      = 30;
+        const xLeft       = middleCords.x - width/2;
+        const yTop        = middleCords.y - height/2;
+        const rectangle   = new Rectangle({
+         rectID:  0,
+         color:   'white',
+         xLeft:   xLeft,
+         yTop:    yTop,
+         width:   width,
+         height:  height,
+        });
+        middleRectangle = rectangle;
+      }//end initMiddleRectangle()
+      
+      function initBalls(){
+         const canvas   = document.getElementById(CANVAS_ID);
+         for(let i=0; i<initBallCnt; i++){
+           //Make new balls;
+           //function makeRandomBall(existingBalls, rectangle, sWidth, sHeight){
+           let newBall = makeRandomBall(balls, middleRectangle, canvas.width, canvas.height);
+           let cnt     = 0;
+           while(newBall === false){
+              newBall = makeRandomBall(balls, middleRectangle, canvas.width, canvas.height);
+              cnt += 1;
+              if(cnt === 50)
+                 return false;
+           }//end while
+           balls.push(newBall);
+         }//end i-for
+
+      }//end initBalls()
+      function moveBalls(){
+        const canvas   = document.getElementById(CANVAS_ID);
+        const sWidth   = canvas.width;
+        const sHeight  = canvas.height;
+
+        for (let i=0; i<balls.length; i++){
+          let ball = balls[i];
+           //Assume we can go any direction first; Change values on `handle`*;
+          ball.canGoUp    = true;
+          ball.canGoDown  = true;
+          ball.canGoRight = true;
+          ball.canGoLeft  = true
+          
+          //Set wanted coordinates based off of previous movement;
+         if(ball.isGoingUp)
+            ball.nextY = ball.yCord - ball.dy;
+         else if(ball.isGoingDown)
+            ball.nextY = ball.yCord + ball.dy;
+         if(ball.isGoingLeft)
+            ball.nextX = ball.xCord - ball.dx;
+         else if(ball.isGoingRight)
+            ball.nextX = ball.xCord + ball.dx;
+          
+         ball.handleRectangleInteractions(middleRectangle, sWidth, sHeight);
+
+         //See if expected coordinates will prevent us from going certain directions;
+         ball.handleBoundaries(sWidth, sHeight, balls);
+         ball.handleWallCollisions(sWidth, sHeight, WALL_FRICTION);
+         ball.handleBallCollisions(balls);
+
+         ball.handleMovement(WALL_FRICTION);
+         ball.updateCoordinates();
+          
+        }//end i-for
+      }
+      function drawBackground(){
+        const canvas   = document.getElementById(CANVAS_ID);
+        let ctx        = canvas.getContext('2d');
+        ctx.beginPath();
+        ctx.fillStyle = BACKGROUND_COLOR;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.closePath();
+      }//end drawBackground()
+      function main(){
+        const canvas   = document.getElementById(CANVAS_ID);
+        let ctx        = canvas.getContext('2d');
+        drawBackground();
+        initMiddleRectangle();
+        middleRectangle.draw(ctx);
+        writeToScreen(
+            ctx,
+            "HIRE ME",
+            middleRectangle.xCenter - 50,
+            middleRectangle.yCenter + 7,
+            getRandomColor()
+         );
+        if(balls.length === 0){
+          //Make balls
+          initBalls();
+        }
+        
+        moveBalls();
+
+        for(let i=0; i<balls.length; i++){
+          balls[i].draw(ctx);
+        }//end i-for
+
+      }
+      setInterval(function(){main();}, 25);
+    </script>
+    
+    <!-- include the Glitch button to show what the webpage is about and
+          to make it easier for folks to view source and remix -->
+    <div class="glitchButton" style="position:fixed;top:20px;right:20px;"></div>
+    <script src="https://button.glitch.me/button.js"></script>
+  </body>
+</html>
+

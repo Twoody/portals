@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Hello!</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+    
+    <!-- import the webpage's javascript file -->
+    <script src="https://use.fontawesome.com/18fb4b0697.js"></script>
+  </head>  
+  <body>
+  	<p>
+		<i class="fa fa-book"></i>
+	</p>
+    <div id="slandted-1">
+      <canvas 
+			id="hireMeCanvas" 
+			width="200" 
+			height="200" 
+			style='border:1px solid #000000; font-weight: 900'>
+      </canvas>
+    </div>
+
+    <script>
+		'use strict';
+		const CANVAS_ID	= "hireMeCanvas";
+		const canvas		= document.getElementById(CANVAS_ID);
+		function writeToScreen(ctx, msg, x, y, color="black"){
+			ctx.beginPath();
+			ctx.font      = '900 25px "Font Awesome 5 Free"';
+			ctx.fillStyle = color;
+			ctx.fillText(msg, x, y);
+			ctx.closePath();
+		}  
+		function main(){
+			let ctx        = canvas.getContext('2d');
+			writeToScreen(
+				ctx,
+				"\uF02D",
+				canvas.width/2,
+				canvas.height/2,
+			 );
+		}//end main()
+		//setTimeout('', 1000);
+		console.log('init');
+		setInterval(function(){main();}, 25);
+    </script>
+    
+  </body>
+</html>
+
