@@ -10,14 +10,17 @@ class ClickableBall extends Ball{
 	}
 	handleClick(){
 		/*WARNING: ReWrite of ./Balls.js and handleClick
-			Open current balls link in new tab, apply focus;
+			Open current balls link in new tab, and TRY TO 
+			keep focus on the current window (not always a guarantee);
+			See: pop-under
 			Input:
 				None
 			Output:
 				Boolean if success;
 		*/
-		const tab = window.open(this.href, '_black');
-		tab.focus();
+		const tab = window.open(this.href, '_blank');
+		tab.blur();
+		window.focus();
 		return true;
 	}
 	label(ctx){
