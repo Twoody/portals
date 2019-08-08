@@ -16,7 +16,7 @@ var RECTANGLE_WIDTH = 110;
 var RECTANGLE_HEIGHT = 30;
 var RECTANGLE_FRICTION = 0.075;
 var MIN_RADIUS = 1;
-var MAX_RADIUS = 3;
+var MAX_RADIUS = 3.00;
 var MAX_SPEED = 5;
 var BALL_FRICTION = 0.05;
 var GRAVITY = 0.45;
@@ -568,6 +568,7 @@ var BallPen = function (_React$Component) {
 			var _this3 = this;
 
 			var penStyle = {
+				fontWeight: 400,
 				border: "1px solid #000000",
 				touchAction: "none"
 			};

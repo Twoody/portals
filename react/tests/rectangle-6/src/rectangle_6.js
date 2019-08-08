@@ -5,7 +5,7 @@ const RECTANGLE_WIDTH		= 110;
 const RECTANGLE_HEIGHT		= 30;
 const RECTANGLE_FRICTION	= 0.075;
 const MIN_RADIUS				= 1;
-const MAX_RADIUS				= 3;
+const MAX_RADIUS				= 3.00;
 const MAX_SPEED				= 5;
 const BALL_FRICTION			= 0.05;
 const GRAVITY					= 0.45;
@@ -594,9 +594,10 @@ class BallPen extends React.Component{
 	}//end decelerateBalls
 
    render(){
-      const penStyle		= {
-         border:   "1px solid #000000",
-			touchAction: "none",
+      const penStyle	= {
+			fontWeight:		400,
+         border:   		"1px solid #000000",
+			touchAction:	"none",
       };
 		const ballCntStyle	= {
 			textAlign: "right"
