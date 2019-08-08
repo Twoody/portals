@@ -3,12 +3,22 @@ Focus will then shift to adding multiple balls;
 Also need to make sure arrow movements align with rectangleDrag() and click;
 
 Next Step:
-	New dir to work in bigger balls and make them clickable:
-		clickableBall()
+	Fix some stuff with the rectangle;
+	Pull out ball methods and put in Balls.js:
+		accelerate, shrink, etc.
+	Work on making this a single page application with zoom and focus:
+		When a ball is clicked, take that ball out of the equation,
+		move ball to top left of screen, and expand whatever contents is has;
+		This will be an extensions of Balls() like ClickableBall() is;
+
 
 Status:
 	Working:
+		Balls with hrefs are opening new window;
 	Not Working:
-		Balls with href;
+		Rectangle and drag is happening with illegal movement:
+			Not moving, but accelerating balls;
+		Rectangle drag is not moving to a possible coordinate as much as it 
+			is just jumping there;
 	Bugs:
 		Ball is being squished for no reason by screen size changes;
