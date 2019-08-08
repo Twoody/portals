@@ -30,12 +30,14 @@ var ClickableBall = function (_Ball) {
 		key: 'handleClick',
 		value: function handleClick() {
 			/*WARNING: ReWrite of ./Balls.js and handleClick
+   	Open current balls link in new tab, apply focus;
    	Input:
    		None
    	Output:
    		Boolean if success;
    */
-			console.log('Opening ' + this.href);
+			var tab = window.open(this.href, '_black');
+			tab.focus();
 			return true;
 		}
 	}, {
