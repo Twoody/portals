@@ -8,7 +8,7 @@ function initClickables( sWidth, sHeight, minRadius=3, maxRadius=30, maxSpeed=nu
 		},
 		{
 			__name:		'android',
-			faUnicode: '\uf17b',
+			faUnicode: '\uF17B',
 			href:			'https://play.google.com/store/apps/details?id=com.beWoody.tanner.KISS_List',
 			color:		'#a4c639',
 		},
@@ -20,7 +20,7 @@ function initClickables( sWidth, sHeight, minRadius=3, maxRadius=30, maxSpeed=nu
 		},
 		{
 			__name:		'instagram',
-			faUnicode:	'\f16d',
+			faUnicode:	'\uf16d',
 			href:			'https://www.instagram.com/thatguywoody/',
 			color:		'#125688',
 		},
@@ -50,7 +50,7 @@ function initClickables( sWidth, sHeight, minRadius=3, maxRadius=30, maxSpeed=nu
 		},
 		{
 			__name:		'github',
-			faUnicode:	'\f09b',
+			faUnicode:	'\uf09b',
 			href:			'https://github.com/TWoody',
 			color:		'#f40083',
 		},

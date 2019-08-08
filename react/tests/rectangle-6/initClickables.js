@@ -21,7 +21,7 @@ function initClickables(sWidth, sHeight) {
 		color: '#fc4c02'
 	}, {
 		__name: 'instagram',
-		faUnicode: '\f16d',
+		faUnicode: '\uF16D',
 		href: 'https://www.instagram.com/thatguywoody/',
 		color: '#125688'
 	}, {
@@ -46,7 +46,7 @@ function initClickables(sWidth, sHeight) {
 		color: '#FF9900'
 	}, {
 		__name: 'github',
-		faUnicode: '\f09b',
+		faUnicode: '\uF09B',
 		href: 'https://github.com/TWoody',
 		color: '#f40083'
 	}];
