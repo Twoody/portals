@@ -31,7 +31,7 @@ function initClickables(sWidth, sHeight) {
 		color: '#3B5998'
 	}, {
 		__name: 'linkedIn',
-		faUnicode: '\uF2B8',
+		faUnicode: '\uF08C',
 		href: 'https://www.linkedin.com/in/tanner-woody-113208b7/',
 		color: '#007bb5'
 	}, {

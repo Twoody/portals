@@ -32,7 +32,7 @@ function initClickables( sWidth, sHeight, minRadius=3, maxRadius=30, maxSpeed=nu
 		},
 		{
 			__name:		'linkedIn',
-			faUnicode:	'\uf2b8',
+			faUnicode:	'\uf08c',
 			href:			'https://www.linkedin.com/in/tanner-woody-113208b7/',
 			color:		'#007bb5',
 		},
