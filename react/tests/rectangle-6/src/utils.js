@@ -133,7 +133,7 @@ function makeRandomClickableBall(
 	ballID, 
 	minRadius=3, 
 	maxRadius=30, 
-	unicode,
+	faUnicode,
 	href, 
 	maxSpeed=null
 ){
@@ -179,7 +179,8 @@ function makeRandomClickableBall(
 	}
 	else
 		newBall.maxSpeed = randomRadius;
-	newBall.href = href;
+	newBall.href		= href;
+	newBall.faUnicode = faUnicode;
 	return newBall;
 }//end makeRandomClickableBall
 

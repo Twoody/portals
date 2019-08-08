@@ -119,7 +119,7 @@ function makeRandomBall(sWidth, sHeight, ballID) {
 function makeRandomClickableBall(sWidth, sHeight, ballID) {
 	var minRadius = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 3;
 	var maxRadius = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 30;
-	var unicode = arguments[5];
+	var faUnicode = arguments[5];
 	var href = arguments[6];
 	var maxSpeed = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : null;
 
@@ -159,6 +159,7 @@ function makeRandomClickableBall(sWidth, sHeight, ballID) {
 		if (maxSpeed < randomRadius) newBall.maxSpeed = maxSpeed;else newBall.maxSpeed = Math.ceil(randomRadius); //set max speed to a legal int of radius;
 	} else newBall.maxSpeed = randomRadius;
 	newBall.href = href;
+	newBall.faUnicode = faUnicode;
 	return newBall;
 } //end makeRandomClickableBall
 
