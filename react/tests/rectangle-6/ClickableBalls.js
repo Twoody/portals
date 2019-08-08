@@ -15,6 +15,8 @@ var ClickableBall = function (_Ball) {
 		var _this = _possibleConstructorReturn(this, (ClickableBall.__proto__ || Object.getPrototypeOf(ClickableBall)).call(this, properties));
 
 		_this.href = properties.href;
+		_this.faUnicode = properties.faUnicode;
+
 		return _this;
 	} //end constructor()
 
@@ -36,6 +38,22 @@ var ClickableBall = function (_Ball) {
 			console.log('Opening ' + this.href);
 			return true;
 		}
+	}, {
+		key: 'label',
+		value: function label(ctx) {
+			/*	WARNING: Rewrite of Balls.js method;
+   */
+			if (this.radius < 30) return;
+			//console.log(this.faUnicode);
+			//ctx.font      = '400 12px "Font Awesome 5 Brands"';
+			//ctx.font      = '17px Arial';
+			ctx.beginPath();
+			ctx.font = '400 25px "Font Awesome 5 Brands"';
+			ctx.fillStyle = "white";
+			ctx.fillText(this.faUnicode, this.xCord - 10, this.yCord + 9); //Coords are left and down;
+			ctx.closePath();
+		} //end label()
+
 	}]);
 
 	return ClickableBall;
