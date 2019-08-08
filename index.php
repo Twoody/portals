@@ -32,18 +32,23 @@ make_imports($ROOT);
 $CONFIG	= get_config($ROOT);
 $PATHS	= get_paths($ROOT);
 $STRINGS	= get_config_strings($CONFIG);
-$react_div		= "<div id=\"rectangle-5\"></div>";
-$react_dir		= $ROOT. "/react/tests/rectangle-5";
-$react_js		= $react_dir. "/rectangle_5.js";
-$utils_js		= $react_dir. "/utils.js";
-$balls_js		= $react_dir. "/Balls.js";
-$rectangle_js	= $react_dir. "/Rectangle.js";
+$react_div				= "<div id=\"rectangle-6\"></div>";
+$react_dir				= $ROOT. "/react/tests/rectangle-6";
+$react_js				= $react_dir. "/rectangle_6.js";
+$utils_js				= $react_dir. "/utils.js";
+$balls_js				= $react_dir. "/Balls.js";
+$rectangle_js			= $react_dir. "/Rectangle.js";
+$clickables_init_js	= $react_dir. "/initClickables.js";
+$clickables_js			= $react_dir. "/ClickableBalls.js";
+
 require_once($PATHS['LIBPATH_DB_PAGES']);
 require_once($PATHS['TEMPLATES_B']);
 
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"".$utils_js."\"></script>";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"".$balls_js."\"></script>";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"".$rectangle_js."\"></script>";
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"$clickables_init_js\"></script>";
+$CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script src=\"$clickables_js\"></script>";
 $CONFIG['CUSTOM_SCRIPTS'] .= "\n\t<script type=\"text/babel\" src=\"".$react_js."\"></script>";
 
 /*
