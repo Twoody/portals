@@ -3,7 +3,13 @@ Focus will then shift to adding multiple balls;
 Also need to make sure arrow movements align with rectangleDrag() and click;
 
 Next Step:
-	Fix some stuff with the rectangle;
+	Fix some stuff with the rectangle:
+		Friction variable and friction control:
+			Right now our rectangle is acting like velcro...
+	Screen adjustements for height;
+	Making our clickable ball icons dynamic and appropriate if the ball gets smushed;
+	Go through and shrink balls if there is a collision that cannot be solved;
+
 	Work on changing the php template to better incorporate the canvas:
 		We are goign to want the canvas to take up the whole page eventually;
 		The begining steps to this are going to be getting rid of the footer
