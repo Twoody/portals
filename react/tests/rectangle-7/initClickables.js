@@ -60,7 +60,7 @@ function initClickables(sWidth, sHeight) {
 			newBall = makeRandomClickableBall(sWidth, sHeight, clickable.__name, //ballID
 			minRadius, maxRadius, clickable.faUnicode, clickable.href, maxSpeed);
 			isLegal = isLegalBall(newBall, sWidth, sHeight, retBalls, rectangles);
-			console.log('clickable attemp: ' + cnt);
+			//console.log('clickable attemp: ' + cnt);
 			cnt += 1;
 			if (cnt === 50) {
 				console.log('UNABLE TO MAKE BALL ' + clickable.__name);
