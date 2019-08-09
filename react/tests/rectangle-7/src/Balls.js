@@ -69,6 +69,8 @@ class Ball{
 		if(this.dy > this.maxSpeed)
 			this.dy = this.maxSpeed;
 		this.decelerate(0,0);	//Hack to check if zero;
+		//Should we be updating the next coords here?
+			//this.setNextCoordinates();
 	}
 	accelerateBySize(dx=true, dy=true, ratio=50){
 		const rate = this.radius/ratio;
@@ -78,6 +80,8 @@ class Ball{
 			this.accelerate(rate, 0);
 		else if(dy)
 			this.accelerate(0, rate);
+		//Should we be updating the next coords here?
+			//this.setNextCoordinates();
 	}
 	applyGravity(){
 		if(this.isGoingDown)
@@ -94,6 +98,8 @@ class Ball{
 			this.dx = 0;
 		if(this.dy <=0)
 			this.dy = 0;
+		//Should we be updating the next coords here?
+			//this.setNextCoordinates();
 	}//end decelerate()
 	destruct(){
 		//Destroy Ball
@@ -482,15 +488,21 @@ class Ball{
 			//No collision
 		}
 	}//End handleWallCollision
-	handleWindowResize(maxWidth, maxHeight, otherBalls){
-		let ballBottom	= this.yCord + this.radius;
-		let ballTop		= this.yCord - this.radius;
-		if(ballBottom > maxHeight){
+	handleWindowResize(maxWidth, maxHeight, otherBalls, rectangles){
+		if(this.yCord + this.radius > maxHeight){
 			this.yCord = maxHeight - this.radius;
 			this.accelerate(4, 10);
 			this.shrink();
 		}
-		if(ballTop <= 0){
+		if(this.yCord - this.radius <= 0){
+			this.shrink();
+		}
+		if(this.xCord + this.radius > maxWidth || this.xCord - this.radius < 0){
+			if(this.xCord + this.radius > maxWidth)
+				this.xCord = maxWidth - this.radius;
+			else
+				this.xCord = 0 + this.radius;
+			this.accelerate(10, 4);
 			this.shrink();
 		}
 		for(let i=0; i<otherBalls.length; i++){
@@ -501,6 +513,42 @@ class Ball{
 			if(isOverLapping)
 				this.shrink();
 		}//end i-for
+		for(let i=0; i<rectangles.length; i++){
+			const rectangle = rectangles[i];
+			if(rectangle.isOverLappingBall(this)){
+				//Need to find balls position relative to rectangle;
+				//nearestX and nearestY are places on our rectangle;
+				const nearestX = Math.max(
+					rectangle.xLeft,
+					Math.min(this.xCord, rectangle.xLeft+rectangle.width),
+				);
+				const nearestY = Math.max(
+					rectangle.yTop,
+					Math.min(this.xCord, rectangle.yTop+rectangle.height),
+				);
+				if(this.yCord + this.radius < nearestY){
+					//Ball is above rectangle;
+					//We need to adjust ball up;
+					this.yCord = nearestY + this.radius;
+				}
+				else if(this.yCord - this.radius < nearestY){
+					//Ball is below rectangle;
+					//We need to adjust ball down;
+					this.yCord = nearestY - this.radius;
+				}
+				if(this.xCord - this.radius > nearestX){
+					//Ball is right of rectangle and needs to be adjusted right;
+					this.xCord = nearestX + this.radius;
+				}
+				else if(this.xCord + this.radius < nearestX){
+					//Ball is left of rectangle and needs to be adjusted left;
+					this.xCord = nearestX - this.radius;
+				}
+				this.accelerate(6,6);
+				this.shrink();
+			}
+		}//end i-for
+		
 	}//end handleWindowResize()
 	hitBottom(maxHeight){
 		const ballMaxBottom = this.nextY + this.radius;
@@ -649,6 +697,7 @@ class Ball{
 	shrink(){
 		//Destroy Ball
 		this.radius	*= 0.9;
+		this.setNextCoordinates();
 	}
 	updateCoordinates(){
 		this.xCord = this.nextX;

@@ -70,6 +70,8 @@ var Ball = function () {
 			if (this.dx > this.maxSpeed) this.dx = this.maxSpeed;
 			if (this.dy > this.maxSpeed) this.dy = this.maxSpeed;
 			this.decelerate(0, 0); //Hack to check if zero;
+			//Should we be updating the next coords here?
+			//this.setNextCoordinates();
 		}
 	}, {
 		key: 'accelerateBySize',
@@ -80,6 +82,8 @@ var Ball = function () {
 
 			var rate = this.radius / ratio;
 			if (dx && dy) this.accelerate(rate, rate);else if (dx) this.accelerate(rate, 0);else if (dy) this.accelerate(0, rate);
+			//Should we be updating the next coords here?
+			//this.setNextCoordinates();
 		}
 	}, {
 		key: 'applyGravity',
@@ -93,6 +97,8 @@ var Ball = function () {
 			this.dy -= dyLoss;
 			if (this.dx <= 0) this.dx = 0;
 			if (this.dy <= 0) this.dy = 0;
+			//Should we be updating the next coords here?
+			//this.setNextCoordinates();
 		} //end decelerate()
 
 	}, {
@@ -445,15 +451,18 @@ var Ball = function () {
 
 	}, {
 		key: 'handleWindowResize',
-		value: function handleWindowResize(maxWidth, maxHeight, otherBalls) {
-			var ballBottom = this.yCord + this.radius;
-			var ballTop = this.yCord - this.radius;
-			if (ballBottom > maxHeight) {
+		value: function handleWindowResize(maxWidth, maxHeight, otherBalls, rectangles) {
+			if (this.yCord + this.radius > maxHeight) {
 				this.yCord = maxHeight - this.radius;
 				this.accelerate(4, 10);
 				this.shrink();
 			}
-			if (ballTop <= 0) {
+			if (this.yCord - this.radius <= 0) {
+				this.shrink();
+			}
+			if (this.xCord + this.radius > maxWidth || this.xCord - this.radius < 0) {
+				if (this.xCord + this.radius > maxWidth) this.xCord = maxWidth - this.radius;else this.xCord = 0 + this.radius;
+				this.accelerate(10, 4);
 				this.shrink();
 			}
 			for (var i = 0; i < otherBalls.length; i++) {
@@ -461,6 +470,33 @@ var Ball = function () {
 				if (otherBall.ballID === this.ballID) continue;
 				var _isOverLapping = this.isOverLappingBall(otherBall);
 				if (_isOverLapping) this.shrink();
+			} //end i-for
+			for (var _i = 0; _i < rectangles.length; _i++) {
+				var rectangle = rectangles[_i];
+				if (rectangle.isOverLappingBall(this)) {
+					//Need to find balls position relative to rectangle;
+					//nearestX and nearestY are places on our rectangle;
+					var nearestX = Math.max(rectangle.xLeft, Math.min(this.xCord, rectangle.xLeft + rectangle.width));
+					var nearestY = Math.max(rectangle.yTop, Math.min(this.xCord, rectangle.yTop + rectangle.height));
+					if (this.yCord + this.radius < nearestY) {
+						//Ball is above rectangle;
+						//We need to adjust ball up;
+						this.yCord = nearestY + this.radius;
+					} else if (this.yCord - this.radius < nearestY) {
+						//Ball is below rectangle;
+						//We need to adjust ball down;
+						this.yCord = nearestY - this.radius;
+					}
+					if (this.xCord - this.radius > nearestX) {
+						//Ball is right of rectangle and needs to be adjusted right;
+						this.xCord = nearestX + this.radius;
+					} else if (this.xCord + this.radius < nearestX) {
+						//Ball is left of rectangle and needs to be adjusted left;
+						this.xCord = nearestX - this.radius;
+					}
+					this.accelerate(6, 6);
+					this.shrink();
+				}
 			} //end i-for
 		} //end handleWindowResize()
 
@@ -608,6 +644,7 @@ var Ball = function () {
 		value: function shrink() {
 			//Destroy Ball
 			this.radius *= 0.9;
+			this.setNextCoordinates();
 		}
 	}, {
 		key: 'updateCoordinates',
