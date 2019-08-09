@@ -11,7 +11,7 @@ const BALL_FRICTION			= 0.05;
 const GRAVITY					= 0.45;
 const KINETIC_LOSS			= 0.15;
 const KINETIC_KEEP			= 0.85;
-let INIT_BALL_CNT				= 185;
+let INIT_BALL_CNT				= 285;
 
 class BallPen extends React.Component{
    constructor(props){
@@ -128,8 +128,6 @@ class BallPen extends React.Component{
 	handleToggleButton(event){
 		const target	= event.target;
 		const name		= target.name;
-		console.log(target);
-		console.log(name);
 		this.setState( state => ({
 			[name] : !this.state[name]
 		}));
