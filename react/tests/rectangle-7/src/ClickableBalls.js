@@ -26,16 +26,17 @@ class ClickableBall extends Ball{
 	label(ctx){
 		/*	WARNING: Rewrite of Balls.js method;
 		*/
-		if(this.radius < 30)
-			return;
-		//console.log(this.faUnicode);
-		//ctx.font      = '400 12px "Font Awesome 5 Brands"';
-		//ctx.font      = '17px Arial';
+		const fontSize = this.radius - 5;
+		const x			= this.xCord - (this.radius/3);
+		const y			= this.yCord + (this.radius/3);	//Somehow this work very well;
+		if(fontSize <0)
+			return false;
 		ctx.beginPath();
-		ctx.font			= '400 25px "Font Awesome 5 Brands"';
+		ctx.font			= '400 '+fontSize+'px "Font Awesome 5 Brands"';
 		ctx.fillStyle	= "white";
-		ctx.fillText(this.faUnicode, this.xCord-10, this.yCord+9);	//Coords are left and down;
+		ctx.fillText(this.faUnicode, x, y);	//Coords are left and down;
 		ctx.closePath();
+		return true;
 	}//end label()
 
 }
