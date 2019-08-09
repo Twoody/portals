@@ -208,50 +208,6 @@ class Ball{
 		}//end i-for
 		return true;
 	}//End handleBallCollision()
-	handleBoundaries(width, height, allBalls){
-		/*	Analyze current state of ball compared to:
-				1. Other balls
-				2. Screen
-				3. TODO: rectangles
-			If there is an overlap, shrink the ball and accelerate it;
-			Input:
-				width: int: Available width for ball to live in;
-				height: int: Availabe height for ball to live in;
-				allBalls: array: Balls to compare this ball to.
-			Output:
-				None
-		*/
-		for(let i=0; i<allBalls.length; i++){
-			let otherBall			= allBalls[i];
-			if(otherBall === this)
-				continue;
-			const minDistance		= this.radius + otherBall.radius;
-			const isLeftOverLapping = isOverLapping(
-				this.xCord - this.radius, 
-				this.yCord, 
-				otherBall.nextX, 
-				otherBall.nextY,
-				minDistance
-			);
-			const isRightOverLapping = isOverLapping(
-				this.xCord + this.radius, 
-				this.yCord, 
-				otherBall.nextX, 
-				otherBall.nextY,
-				minDistance
-			);
-			if(isLeftOverLapping && isRightOverLapping){
-				this.canGoDown = false;
-				this.canGoUp = false;
-			}
-		}//end i-for
-
-		//Screen
-		if(this.yCord - this.radius <=0)
-			this.canGoUp = false;
-		if(this.yCord + this.radius >= height)
-			this.canGoDown = false;
-	}//end handleBoundaries
 	handleClick(){
 		console.log('accelerating ball' + this.ballID);
 		this.accelerate(5, 20);
@@ -669,7 +625,6 @@ class Ball{
 				sHeight
 			);
 		}
-		this.handleBoundaries(sWidth, sHeight, balls);
 		this.handleWallCollisions(sWidth, sHeight, wallFriction);
 		this.handleBallCollisions(balls);
 		//Process final available movements; Update coords appropriately; Apply Gravity;
