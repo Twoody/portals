@@ -55,6 +55,7 @@ var BallPen = function (_React$Component) {
 		_this.handleCanvasMouseMove = _this.handleCanvasMouseMove.bind(_this);
 		_this.handleCanvasMouseUp = _this.handleCanvasMouseUp.bind(_this);
 		_this.handleInputChange = _this.handleInputChange.bind(_this);
+		_this.handleToggleButton = _this.handleToggleButton.bind(_this);
 		_this.resetBalls = _this.resetBalls.bind(_this);
 		return _this;
 	}
@@ -130,6 +131,19 @@ var BallPen = function (_React$Component) {
 			this.setState(_defineProperty({}, name, value));
 		} //end handleInputChange()
 
+	}, {
+		key: 'handleToggleButton',
+		value: function handleToggleButton(event) {
+			var _this2 = this;
+
+			var target = event.target;
+			var name = target.name;
+			console.log(target);
+			console.log(name);
+			this.setState(function (state) {
+				return _defineProperty({}, name, !_this2.state[name]);
+			});
+		}
 	}, {
 		key: 'handleCanvasMouseDown',
 		value: function handleCanvasMouseDown(event) {
@@ -334,7 +348,6 @@ var BallPen = function (_React$Component) {
 	}, {
 		key: 'initBalls',
 		value: function initBalls() {
-
 			var brandBalls = initClickables(this.state.width, this.state.height, 30, 30, MAX_SPEED, [this.movableRectangle]);
 			for (var i = 0; i < brandBalls.length; i++) {
 				this.balls.push(brandBalls[i]);
@@ -347,7 +360,7 @@ var BallPen = function (_React$Component) {
 				while (isLegal === false) {
 					newBall = makeRandomBall(this.state.width, this.state.height, this.balls.length, MIN_RADIUS, MAX_RADIUS, MAX_SPEED);
 					isLegal = isLegalBall(newBall, this.state.width, this.state.height, this.balls, [this.movableRectangle]);
-					console.log('new ball attempt: ' + cnt);
+					//			console.log('new ball attempt: ' + cnt);
 					if (cnt === 500) {
 						console.log('FAILED MAKING A WORKABLE BALL');
 						break;
@@ -366,16 +379,16 @@ var BallPen = function (_React$Component) {
 	}, {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
-			var _this2 = this;
+			var _this3 = this;
 
 			this.updateWindowDimensions();
 			this.drawBackground();
 			this.initMiddleRectangle;
 			this.rectangleTimerID = setInterval(function () {
-				return _this2.updateRectangle();
+				return _this3.updateRectangle();
 			}, 25);
 			this.ballTimerID = setInterval(function () {
-				return _this2.updateBalls();
+				return _this3.updateBalls();
 			}, 25);
 			window.addEventListener('resize', this.updateWindowDimensions);
 			document.body.addEventListener('keydown', this.handleKeydown);
@@ -403,13 +416,8 @@ var BallPen = function (_React$Component) {
 	}, {
 		key: 'updateWindowDimensions',
 		value: function updateWindowDimensions() {
-			var width = window.innerWidth;
+			var width = thickline0.offsetWidth; //Matching with bootstrap hack
 			var height = window.innerHeight;
-			if (width && width > 575) width -= 320; //Buffer for not x-small
-			else {
-					width -= 120; //Buffer for x-small
-					height = 500;
-				}
 			height -= 280; //Buffer...
 			if (height < 0) height = 0;
 			if (width < 0) width = 0;
@@ -529,7 +537,7 @@ var BallPen = function (_React$Component) {
 	}, {
 		key: 'render',
 		value: function render() {
-			var _this3 = this;
+			var _this4 = this;
 
 			var penStyle = {
 				fontWeight: 400,
@@ -538,6 +546,10 @@ var BallPen = function (_React$Component) {
 			};
 			var ballCntStyle = {
 				textAlign: "right"
+			};
+			var buttonStyle = {
+				color: "white",
+				backgroundColor: "black"
 			};
 			return React.createElement(
 				'div',
@@ -551,7 +563,7 @@ var BallPen = function (_React$Component) {
 				React.createElement('canvas', {
 					id: 'hireMeCanvas',
 					ref: function ref(canvas) {
-						return _this3.canvasRef = canvas;
+						return _this4.canvasRef = canvas;
 					},
 					width: this.state.width,
 					height: this.state.height,
@@ -572,42 +584,42 @@ var BallPen = function (_React$Component) {
 								'td',
 								null,
 								React.createElement(
-									'label',
-									null,
-									'Has Gravity:\xA0\xA0',
-									React.createElement('input', {
+									'button',
+									{
+										style: buttonStyle,
 										name: 'hasGravity',
-										type: 'checkbox',
-										checked: this.state.hasGravity,
-										onChange: this.handleInputChange })
+										onClick: this.handleToggleButton
+									},
+									'Turn Gravity ',
+									this.state.hasGravity ? "Off" : "On"
 								)
 							),
 							React.createElement(
 								'td',
 								null,
 								React.createElement(
-									'label',
-									null,
-									'Has Wall Friction:\xA0\xA0',
-									React.createElement('input', {
+									'button',
+									{
+										style: buttonStyle,
 										name: 'hasWallFriction',
-										type: 'checkbox',
-										checked: this.state.hasWallFriction,
-										onChange: this.handleInputChange })
+										onClick: this.handleToggleButton
+									},
+									this.state.hasWallFriction ? "Remove" : "Apply",
+									' Wall Friction'
 								)
 							),
 							React.createElement(
 								'td',
 								null,
 								React.createElement(
-									'label',
-									null,
-									'Has Ball Friction:\xA0\xA0',
-									React.createElement('input', {
+									'button',
+									{
+										style: buttonStyle,
 										name: 'hasBallFriction',
-										type: 'checkbox',
-										checked: this.state.hasBallFriction,
-										onChange: this.handleInputChange })
+										onClick: this.handleToggleButton
+									},
+									this.state.hasBallFriction ? "Remove" : "Apply",
+									' Ball Friction'
 								)
 							)
 						),
@@ -618,28 +630,14 @@ var BallPen = function (_React$Component) {
 								'td',
 								null,
 								React.createElement(
-									'label',
-									null,
-									'Has Kinetic Transfer:\xA0\xA0',
-									React.createElement('input', {
+									'button',
+									{
+										style: buttonStyle,
 										name: 'hasInertia',
-										type: 'checkbox',
-										checked: this.state.hasInertia,
-										onChange: this.handleInputChange })
-								)
-							),
-							React.createElement(
-								'td',
-								null,
-								React.createElement(
-									'label',
-									null,
-									'Leave Trails:\xA0\xA0',
-									React.createElement('input', {
-										name: 'isLeavingTrails',
-										type: 'checkbox',
-										checked: this.state.isLeavingTrails,
-										onChange: this.handleInputChange })
+										onClick: this.handleToggleButton
+									},
+									this.state.hasInertia ? "Remove" : "Apply",
+									' Energy Transfer'
 								)
 							),
 							React.createElement(
@@ -647,7 +645,21 @@ var BallPen = function (_React$Component) {
 								null,
 								React.createElement(
 									'button',
-									{ onClick: this.resetBalls },
+									{
+										style: buttonStyle,
+										name: 'isLeavingTrails',
+										onClick: this.handleToggleButton
+									},
+									this.state.isLeavingTrails ? "Remove" : "Keep",
+									' Trails'
+								)
+							),
+							React.createElement(
+								'td',
+								null,
+								React.createElement(
+									'button',
+									{ style: buttonStyle, onClick: this.resetBalls },
 									'Reset Balls'
 								)
 							)
@@ -660,8 +672,8 @@ var BallPen = function (_React$Component) {
 								null,
 								React.createElement(
 									'button',
-									{ onClick: function onClick(e) {
-											shrinkBalls(_this3.balls);
+									{ style: buttonStyle, onClick: function onClick(e) {
+											shrinkBalls(_this4.balls);
 										} },
 									'Shrink Some Balls'
 								)
@@ -671,8 +683,8 @@ var BallPen = function (_React$Component) {
 								null,
 								React.createElement(
 									'button',
-									{ onClick: function onClick(e) {
-											accelerateBalls(_this3.balls);
+									{ style: buttonStyle, onClick: function onClick(e) {
+											accelerateBalls(_this4.balls);
 										} },
 									'Accelerate Balls'
 								)
@@ -682,8 +694,8 @@ var BallPen = function (_React$Component) {
 								null,
 								React.createElement(
 									'button',
-									{ onClick: function onClick(e) {
-											decelerateBalls(_this3.balls);
+									{ style: buttonStyle, onClick: function onClick(e) {
+											decelerateBalls(_this4.balls);
 										} },
 									'Decelerate Balls'
 								)

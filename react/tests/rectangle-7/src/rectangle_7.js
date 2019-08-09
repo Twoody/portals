@@ -39,6 +39,7 @@ class BallPen extends React.Component{
 		this.handleCanvasMouseMove		= this.handleCanvasMouseMove.bind(this);
 		this.handleCanvasMouseUp		= this.handleCanvasMouseUp.bind(this);
 		this.handleInputChange			= this.handleInputChange.bind(this);
+		this.handleToggleButton			= this.handleToggleButton.bind(this);
 		this.resetBalls					= this.resetBalls.bind(this);
    }
 	didClickBall(xCanvasPos, yCanvasPos){
@@ -124,6 +125,15 @@ class BallPen extends React.Component{
 			[name]: value
 		});
 	}//end handleInputChange()
+	handleToggleButton(event){
+		const target	= event.target;
+		const name		= target.name;
+		console.log(target);
+		console.log(name);
+		this.setState( state => ({
+			[name] : !this.state[name]
+		}));
+	}
 	handleCanvasMouseDown(event){
 		/* Determine if click is long press or just a click;
 			Will call functions on mouseup and mousemove;
@@ -330,8 +340,6 @@ class BallPen extends React.Component{
 		this.movableRectangle = rectangle;
 	}//end updateMiddleRectangle()
 	initBalls(){
-
-		
 		const brandBalls = initClickables( 
 			this.state.width, 
 			this.state.height, 
@@ -364,7 +372,7 @@ class BallPen extends React.Component{
 					this.balls,
 					[this.movableRectangle]
 				);
-				console.log('new ball attempt: ' + cnt);
+	//			console.log('new ball attempt: ' + cnt);
 				if(cnt === 500){
 					console.log('FAILED MAKING A WORKABLE BALL');
 					break;
@@ -410,16 +418,9 @@ class BallPen extends React.Component{
    componentDidUpdate() {
 		//Going to handle updates as we go to enhance efficiency;
    }
-
-   updateWindowDimensions() {
-      let width		= window.innerWidth;
+   updateWindowDimensions(){
+      let width		= thickline0.offsetWidth;	//Matching with bootstrap hack
       let height		= window.innerHeight;
-      if (width && width >575)
-         width -= 320;   //Buffer for not x-small
-      else{
-         width -= 120;   //Buffer for x-small
-			height = 500;
-		}
       height   -= 280;   //Buffer...
       if (height < 0)
          height = 0;
@@ -572,6 +573,10 @@ class BallPen extends React.Component{
 		const ballCntStyle	= {
 			textAlign: "right"
 		};
+		const buttonStyle = {
+			color: "white",
+			backgroundColor: "black",
+		}
       return (
          <div>
 				<p style={ballCntStyle}>
@@ -590,76 +595,72 @@ class BallPen extends React.Component{
 					<tbody>
 					<tr>
 						<td>
-							<label>
-								Has Gravity:&nbsp;&nbsp;
-								<input
-									name="hasGravity"
-									type="checkbox"
-									checked={this.state.hasGravity}
-									onChange={this.handleInputChange} />
-							</label>
+							<button
+               			style={buttonStyle}
+								name="hasGravity"
+								onClick={this.handleToggleButton}
+							> 
+								Turn Gravity {this.state.hasGravity ? "Off" : "On"}
+							</button>
 						</td>
 						<td>
-							<label>
-								Has Wall Friction:&nbsp;&nbsp;
-								<input
-									name="hasWallFriction"
-									type="checkbox"
-									checked={this.state.hasWallFriction}
-									onChange={this.handleInputChange} />
-							</label>
+							<button
+               			style={buttonStyle}
+								name="hasWallFriction"
+								onClick={this.handleToggleButton}
+							> 
+								{this.state.hasWallFriction ? "Remove" : "Apply"} Wall Friction
+							</button>
+
 						</td>
 						<td>
-							<label>
-								Has Ball Friction:&nbsp;&nbsp;
-								<input
-									name="hasBallFriction"
-									type="checkbox"
-									checked={this.state.hasBallFriction}
-									onChange={this.handleInputChange} />
-							</label>
+							<button
+               			style={buttonStyle}
+								name="hasBallFriction"
+								onClick={this.handleToggleButton}
+							> 
+								{this.state.hasBallFriction ? "Remove" : "Apply"} Ball Friction
+							</button>
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<label>
-								Has Kinetic Transfer:&nbsp;&nbsp;
-								<input
-									name="hasInertia"
-									type="checkbox"
-									checked={this.state.hasInertia}
-									onChange={this.handleInputChange} />
-							</label>
+							<button
+               			style={buttonStyle}
+								name="hasInertia"
+								onClick={this.handleToggleButton}
+							> 
+								{this.state.hasInertia ? "Remove" : "Apply"} Energy Transfer
+							</button>
 						</td>
 						<td>
-							<label>
-								Leave Trails:&nbsp;&nbsp;
-								<input
-									name="isLeavingTrails"
-									type="checkbox"
-									checked={this.state.isLeavingTrails}
-									onChange={this.handleInputChange} />
-							</label>
+							<button
+               			style={buttonStyle}
+								name="isLeavingTrails"
+								onClick={this.handleToggleButton}
+							> 
+								{this.state.isLeavingTrails ? "Remove" : "Keep"} Trails
+							</button>
 						</td>
 						<td>
-							<button onClick={this.resetBalls}>
+							<button style={buttonStyle} onClick={this.resetBalls}>
 								Reset Balls
 							</button>
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<button onClick={e => { shrinkBalls(this.balls); } }>
+							<button style={buttonStyle} onClick={e => { shrinkBalls(this.balls); } }>
 								Shrink Some Balls
 							</button>
 						</td>
 						<td>
-							<button onClick={ e=> {accelerateBalls(this.balls); } }>
+							<button style={buttonStyle} onClick={ e=> {accelerateBalls(this.balls); } }>
 								Accelerate Balls
 							</button>
 						</td>
 						<td>
-							<button onClick={ e=> { decelerateBalls(this.balls); } }>
+							<button style={buttonStyle} onClick={ e=> { decelerateBalls(this.balls); } }>
 								Decelerate Balls
 							</button>
 						</td>
