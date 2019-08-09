@@ -17,6 +17,10 @@ Next Step:
 Status:
 	Working:
 		Balls with hrefs are opening new window;
+		Balls with new functions working;
+		Better width and height;
+		Toggle Buttons instead of checkboxes;
+
 	Not Working:
 		Rectangle and drag is happening with illegal movement:
 			Not moving, but accelerating balls;
