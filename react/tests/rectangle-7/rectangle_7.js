@@ -480,6 +480,7 @@ var BallPen = function (_React$Component) {
 
 			var canvas = this.canvasRef;
 			var ctx = canvas.getContext('2d');
+			if (this.state.hasWallFriction) this.movableRectangle.friction = WALL_FRICTION;else this.movableRectangle.friction = 0;
 			this.drawRectangle(ctx);
 		} //End updateRectangle()
 

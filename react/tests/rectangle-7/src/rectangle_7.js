@@ -509,6 +509,10 @@ class BallPen extends React.Component{
 
       const canvas	= this.canvasRef;
       const ctx		= canvas.getContext('2d');
+		if(this.state.hasWallFriction)
+			this.movableRectangle.friction = WALL_FRICTION;
+		else
+			this.movableRectangle.friction = 0;
 		this.drawRectangle(ctx);
 	}//End updateRectangle()
 	drawBalls(ctx){
