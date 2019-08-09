@@ -6,9 +6,9 @@ Next Step:
 	Fix some stuff with the rectangle:
 		Friction variable and friction control:
 			Right now our rectangle is acting like velcro...
-	Screen adjustements for height;
-	Making our clickable ball icons dynamic and appropriate if the ball gets smushed;
 	Go through and shrink balls if there is a collision that cannot be solved;
+
+	If clickable ball is not made, reiterate attempts with a smaller radius;
 
 	Work on changing the php template to better incorporate the canvas:
 		We are goign to want the canvas to take up the whole page eventually;
@@ -26,6 +26,10 @@ Status:
 		Balls with new functions working;
 		Better width and height;
 		Toggle Buttons instead of checkboxes;
+		Balls reset with clickables always;
+		Clickable ball icons dynamic and appropriate if the ball gets smushed;
+		Screen adjustements for height;
+		Screen adjustements for rectangle and ball smushing;
 
 	Not Working:
 		Rectangle and drag is happening with illegal movement:
