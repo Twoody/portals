@@ -82,8 +82,9 @@ function template_b($CONFIG=Null, $PATHS=Null){
 	$html .= "\n\t</div>";
 	$html .= $CONFIG['BODY'];
 	$html .= get_js($CONFIG);
-	if($CONFIG['DISPLAY_FOOTER'] && $CONFIG['DISPLAY_FOOTER'] === FALSE)
+	if($CONFIG['DISPLAY_FOOTER'] === null || $CONFIG['DISPLAY_FOOTER'] === TRUE){
 		$html .= get_footer($CONFIG);	//Icons and the such;
+	}
 	$html .= "\n</body>";
 	$html .= "\n</html>\n";
 	return $html;
