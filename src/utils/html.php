@@ -1197,18 +1197,19 @@ function make_blog_views($blog_id, $CONFIG){
 
 function make_page_views($page_path, $CONFIG){
 	//Make a container for page-views on a page;
-	$page_views	= process_page_views($page_path, $CONFIG) . " total views";
+	$page_views	= '<p>' . process_page_views($page_path, $CONFIG) . " total page views.</p>";
 	$col_page_views_arr	= Array(
-		'class'=>'pr-3 pl-3 m-0',
+		'class'=>'col-12 m-0 p-0 fit-screen',
+		'style'=>'text-align: right',
 		'content'=>$page_views,
 	);
 	$flex_page_views_arr	= Array(
-		'class'=>" d-flex pl-3 pr-3 m-0 justify-content-end",
+		'class'=>"row pl-3 pr-3 m-0",
 		'content'=>make_tag('div', $col_page_views_arr, $CONFIG),
 	);
 	$flex_page_views	= make_tag('div', $flex_page_views_arr, $CONFIG);
 	$container_page_views_arr	=  Array(
-		'class'=>" container pl-3 pr-3 m-0",
+		'class'=>" container-fluid pl-3 pr-3 m-0",
 		'content'=>$flex_page_views,
 	);
 	$container_page_views	= make_tag('div', $container_page_views_arr, $CONFIG);
