@@ -559,9 +559,23 @@ class BallPen extends React.Component{
 			}
 	}
 	resetBalls(event){
-		INIT_BALL_CNT	= 0;
 		this.balls		= [];
 		this.setState({ballCnt: 0});
+		//Even though we reset the balls, we are always going to force
+		//logos and hrefs on the user;
+		const brandBalls = initClickables( 
+			this.state.width, 
+			this.state.height, 
+			30, 
+			30, 
+			MAX_SPEED,
+			[this.movableRectangle],
+		);
+		for(let i=0; i<brandBalls.length; i++){
+			this.balls.push(brandBalls[i]);
+		}//end i-for
+		this.setState({ballCnt: this.balls.length});
+		return true;
 	}
 	
    render(){

@@ -530,9 +530,16 @@ var BallPen = function (_React$Component) {
 	}, {
 		key: 'resetBalls',
 		value: function resetBalls(event) {
-			INIT_BALL_CNT = 0;
 			this.balls = [];
 			this.setState({ ballCnt: 0 });
+			//Even though we reset the balls, we are always going to force
+			//logos and hrefs on the user;
+			var brandBalls = initClickables(this.state.width, this.state.height, 30, 30, MAX_SPEED, [this.movableRectangle]);
+			for (var i = 0; i < brandBalls.length; i++) {
+				this.balls.push(brandBalls[i]);
+			} //end i-for
+			this.setState({ ballCnt: this.balls.length });
+			return true;
 		}
 	}, {
 		key: 'render',
