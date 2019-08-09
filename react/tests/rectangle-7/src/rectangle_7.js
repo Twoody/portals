@@ -447,7 +447,8 @@ class BallPen extends React.Component{
 				this.balls[i].handleWindowResize(
 					this.state.width, 
 					this.state.height, 
-					this.balls
+					this.balls,
+					[this.movableRectangle],
 				);
 			}//end i-for
 			this.updateBalls();			//Update/draw Balls;

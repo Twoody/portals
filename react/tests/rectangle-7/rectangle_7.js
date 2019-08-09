@@ -435,7 +435,7 @@ var BallPen = function (_React$Component) {
 			}
 			if (this.balls) {
 				for (var i = 0; i < this.balls.length; i++) {
-					this.balls[i].handleWindowResize(this.state.width, this.state.height, this.balls);
+					this.balls[i].handleWindowResize(this.state.width, this.state.height, this.balls, [this.movableRectangle]);
 				} //end i-for
 				this.updateBalls(); //Update/draw Balls;
 			}
