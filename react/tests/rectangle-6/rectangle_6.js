@@ -56,9 +56,6 @@ var BallPen = function (_React$Component) {
 		_this.handleCanvasMouseUp = _this.handleCanvasMouseUp.bind(_this);
 		_this.handleInputChange = _this.handleInputChange.bind(_this);
 		_this.resetBalls = _this.resetBalls.bind(_this);
-		_this.shrinkBalls = _this.shrinkBalls.bind(_this);
-		_this.accelerateBalls = _this.accelerateBalls.bind(_this);
-		_this.decelerateBalls = _this.decelerateBalls.bind(_this);
 		return _this;
 	}
 
@@ -530,39 +527,6 @@ var BallPen = function (_React$Component) {
 			this.setState({ ballCnt: 0 });
 		}
 	}, {
-		key: 'shrinkBalls',
-		value: function shrinkBalls(event) {
-			for (var i = 0; i < this.balls.length; i++) {
-				var ball = this.balls[i];
-				if (Math.random() >= 0.5) ball.shrink();
-			} //end i-for
-		} //end shrinkBalls
-
-	}, {
-		key: 'accelerateBalls',
-		value: function accelerateBalls(event) {
-			for (var i = 0; i < this.balls.length; i++) {
-				var ball = this.balls[i];
-				if (ball.dx < 1) ball.dx += 3;
-				if (ball.dy < 1) ball.dy += 3;
-				var dxGain = getRandomFloat(0, 0.99) * ball.dx;
-				var dyGain = getRandomFloat(0, 0.99) * ball.dy;
-				ball.accelerate(dxGain, dyGain);
-			} //end i-for
-		} //end accelerateBalls
-
-	}, {
-		key: 'decelerateBalls',
-		value: function decelerateBalls(event) {
-			for (var i = 0; i < this.balls.length; i++) {
-				var ball = this.balls[i];
-				var dxLoss = getRandomFloat(0, 0.99) * ball.dx;
-				var dyLoss = getRandomFloat(0, 0.99) * ball.dy;
-				ball.decelerate(dxLoss, dyLoss);
-			} //end i-for
-		} //end decelerateBalls
-
-	}, {
 		key: 'render',
 		value: function render() {
 			var _this3 = this;
@@ -696,7 +660,9 @@ var BallPen = function (_React$Component) {
 								null,
 								React.createElement(
 									'button',
-									{ onClick: this.shrinkBalls },
+									{ onClick: function onClick(e) {
+											shrinkBalls(_this3.balls);
+										} },
 									'Shrink Some Balls'
 								)
 							),
@@ -705,7 +671,9 @@ var BallPen = function (_React$Component) {
 								null,
 								React.createElement(
 									'button',
-									{ onClick: this.accelerateBalls },
+									{ onClick: function onClick(e) {
+											accelerateBalls(_this3.balls);
+										} },
 									'Accelerate Balls'
 								)
 							),
@@ -714,7 +682,9 @@ var BallPen = function (_React$Component) {
 								null,
 								React.createElement(
 									'button',
-									{ onClick: this.decelerateBalls },
+									{ onClick: function onClick(e) {
+											decelerateBalls(_this3.balls);
+										} },
 									'Decelerate Balls'
 								)
 							)

@@ -1,3 +1,31 @@
+function shrinkBalls(balls){
+	for(let i=0; i<balls.length; i++){
+		let ball = balls[i];
+		if(Math.random() >=0.5)
+			ball.shrink();
+	}//end i-for
+}//end shrinkBalls
+function accelerateBalls(balls){
+	for(let i=0; i<balls.length; i++){
+		let ball = balls[i];
+		if(ball.dx < 1)
+			ball.dx += 3;
+		if(ball.dy < 1)
+			ball.dy += 3;
+		const dxGain = getRandomFloat(0, 0.99) * ball.dx;
+		const dyGain = getRandomFloat(0, 0.99) * ball.dy;
+		ball.accelerate( dxGain, dyGain );
+	}//end i-for
+}//end accelerateBalls
+function decelerateBalls(balls){
+	for(let i=0; i<balls.length; i++){
+		let ball = balls[i];
+		const dxLoss = getRandomFloat(0, 0.99) * ball.dx;
+		const dyLoss = getRandomFloat(0, 0.99) * ball.dy;
+		ball.decelerate( dxLoss, dyLoss );
+	}//end i-for
+}//end decelerateBalls
+
 class Ball{
 	'use strict';
 	constructor(properties){

@@ -40,9 +40,6 @@ class BallPen extends React.Component{
 		this.handleCanvasMouseUp		= this.handleCanvasMouseUp.bind(this);
 		this.handleInputChange			= this.handleInputChange.bind(this);
 		this.resetBalls					= this.resetBalls.bind(this);
-		this.shrinkBalls					= this.shrinkBalls.bind(this);
-		this.accelerateBalls				= this.accelerateBalls.bind(this);
-		this.decelerateBalls				= this.decelerateBalls.bind(this);
    }
 	didClickBall(xCanvasPos, yCanvasPos){
 		/*	Go through balls and see if clicked position is in ball or not;
@@ -565,34 +562,7 @@ class BallPen extends React.Component{
 		this.balls		= [];
 		this.setState({ballCnt: 0});
 	}
-	shrinkBalls(event){
-		for(let i=0; i<this.balls.length; i++){
-			let ball = this.balls[i];
-			if(Math.random() >=0.5)
-				ball.shrink();
-		}//end i-for
-	}//end shrinkBalls
-	accelerateBalls(event){
-		for(let i=0; i<this.balls.length; i++){
-			let ball = this.balls[i];
-			if(ball.dx < 1)
-				ball.dx += 3;
-			if(ball.dy < 1)
-				ball.dy += 3;
-			const dxGain = getRandomFloat(0, 0.99) * ball.dx;
-			const dyGain = getRandomFloat(0, 0.99) * ball.dy;
-			ball.accelerate( dxGain, dyGain );
-		}//end i-for
-	}//end accelerateBalls
-	decelerateBalls(event){
-		for(let i=0; i<this.balls.length; i++){
-			let ball = this.balls[i];
-			const dxLoss = getRandomFloat(0, 0.99) * ball.dx;
-			const dyLoss = getRandomFloat(0, 0.99) * ball.dy;
-			ball.decelerate( dxLoss, dyLoss );
-		}//end i-for
-	}//end decelerateBalls
-
+	
    render(){
       const penStyle	= {
 			fontWeight:		400,
@@ -679,17 +649,17 @@ class BallPen extends React.Component{
 					</tr>
 					<tr>
 						<td>
-							<button onClick={this.shrinkBalls}>
+							<button onClick={e => { shrinkBalls(this.balls); } }>
 								Shrink Some Balls
 							</button>
 						</td>
 						<td>
-							<button onClick={this.accelerateBalls}>
+							<button onClick={ e=> {accelerateBalls(this.balls); } }>
 								Accelerate Balls
 							</button>
 						</td>
 						<td>
-							<button onClick={this.decelerateBalls}>
+							<button onClick={ e=> { decelerateBalls(this.balls); } }>
 								Decelerate Balls
 							</button>
 						</td>

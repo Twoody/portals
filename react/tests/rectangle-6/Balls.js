@@ -2,6 +2,31 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function shrinkBalls(balls) {
+	for (var i = 0; i < balls.length; i++) {
+		var ball = balls[i];
+		if (Math.random() >= 0.5) ball.shrink();
+	} //end i-for
+} //end shrinkBalls
+function accelerateBalls(balls) {
+	for (var i = 0; i < balls.length; i++) {
+		var ball = balls[i];
+		if (ball.dx < 1) ball.dx += 3;
+		if (ball.dy < 1) ball.dy += 3;
+		var dxGain = getRandomFloat(0, 0.99) * ball.dx;
+		var dyGain = getRandomFloat(0, 0.99) * ball.dy;
+		ball.accelerate(dxGain, dyGain);
+	} //end i-for
+} //end accelerateBalls
+function decelerateBalls(balls) {
+	for (var i = 0; i < balls.length; i++) {
+		var ball = balls[i];
+		var dxLoss = getRandomFloat(0, 0.99) * ball.dx;
+		var dyLoss = getRandomFloat(0, 0.99) * ball.dy;
+		ball.decelerate(dxLoss, dyLoss);
+	} //end i-for
+} //end decelerateBalls
+
 var Ball = function () {
 	function Ball(properties) {
 		_classCallCheck(this, Ball);
