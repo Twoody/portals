@@ -22,7 +22,7 @@ var BALL_FRICTION = 0.05;
 var GRAVITY = 0.45;
 var KINETIC_LOSS = 0.15;
 var KINETIC_KEEP = 0.85;
-var INIT_BALL_CNT = 285;
+var INIT_BALL_CNT = 85;
 
 var BallPen = function (_React$Component) {
 	_inherits(BallPen, _React$Component);
