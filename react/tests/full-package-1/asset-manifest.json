@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/react/tests/full-package/static/css/main.2cce8147.chunk.css",
+    "main.js": "/react/tests/full-package/static/js/main.d1616d34.chunk.js",
+    "main.js.map": "/react/tests/full-package/static/js/main.d1616d34.chunk.js.map",
+    "runtime~main.js": "/react/tests/full-package/static/js/runtime~main.fdb06b7a.js",
+    "runtime~main.js.map": "/react/tests/full-package/static/js/runtime~main.fdb06b7a.js.map",
+    "static/js/2.b41502e9.chunk.js": "/react/tests/full-package/static/js/2.b41502e9.chunk.js",
+    "static/js/2.b41502e9.chunk.js.map": "/react/tests/full-package/static/js/2.b41502e9.chunk.js.map",
+    "index.html": "/react/tests/full-package/index.html",
+    "precache-manifest.42c7d5c44761faa406a1f6cc64146d03.js": "/react/tests/full-package/precache-manifest.42c7d5c44761faa406a1f6cc64146d03.js",
+    "service-worker.js": "/react/tests/full-package/service-worker.js",
+    "static/css/main.2cce8147.chunk.css.map": "/react/tests/full-package/static/css/main.2cce8147.chunk.css.map",
+    "static/media/logo.svg": "/react/tests/full-package/static/media/logo.5d5d9eef.svg"
+  }
+}
