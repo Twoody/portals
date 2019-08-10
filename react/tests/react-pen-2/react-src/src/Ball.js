@@ -1,3 +1,5 @@
+import {getRandomFloat, isOverLapping} from "./utils.js";
+
 export function shrinkBalls(balls){
 	//Each ball has a 50% chance of getting radius reduced;
 	for(let i=0; i<balls.length; i++){

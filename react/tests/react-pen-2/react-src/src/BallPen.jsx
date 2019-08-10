@@ -3,7 +3,7 @@ import { Ball, accelerateBalls, decelerateBalls, shrinkBalls } from "./Ball.js";
 import { Rectangle } from "./Rectangle.js";
 import { ClickableBall } from "./ClickableBall.js";
 import {initClickables} from "./initClickables.js";
-import * as utils from "./utils.js";
+import { getMiddleOfCanvas, getRandomColor, isLegalBall, isOverLapping, makeRandomBall, writeToScreen} from "./utils.js";
 
 const BACKGROUND_COLOR		= "black";
 const WALL_FRICTION			= 0.075;

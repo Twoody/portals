@@ -1,4 +1,4 @@
-import * as utils from "./utils.js";
+import {isOverLapping} from "./utils.js";
 
 export class Rectangle{
 	'use strict';
@@ -174,7 +174,7 @@ export class Rectangle{
 			return true;
 
 		//Corners
-		const areCornersTouching = utils.isOverLapping(
+		const areCornersTouching = isOverLapping(
 			ballDistanceX,
 			ballDistanceY,
 			this.width/2,

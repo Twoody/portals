@@ -1,3 +1,5 @@
+import { Ball } from "./Ball.js";
+
 export class ClickableBall extends Ball{
 	constructor(properties){
 		super(properties);
