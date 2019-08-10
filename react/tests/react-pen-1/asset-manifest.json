@@ -1,16 +1,15 @@
 {
   "files": {
-    "main.css": "/react/tests/react-pen-1/static/css/main.2cce8147.chunk.css",
-    "main.js": "/react/tests/react-pen-1/static/js/main.146f98f6.chunk.js",
-    "main.js.map": "/react/tests/react-pen-1/static/js/main.146f98f6.chunk.js.map",
+    "main.css": "/react/tests/react-pen-1/static/css/main.34de6062.chunk.css",
+    "main.js": "/react/tests/react-pen-1/static/js/main.8bec31da.chunk.js",
+    "main.js.map": "/react/tests/react-pen-1/static/js/main.8bec31da.chunk.js.map",
     "runtime~main.js": "/react/tests/react-pen-1/static/js/runtime~main.26c7f6d9.js",
     "runtime~main.js.map": "/react/tests/react-pen-1/static/js/runtime~main.26c7f6d9.js.map",
-    "static/js/2.c663118a.chunk.js": "/react/tests/react-pen-1/static/js/2.c663118a.chunk.js",
-    "static/js/2.c663118a.chunk.js.map": "/react/tests/react-pen-1/static/js/2.c663118a.chunk.js.map",
+    "static/js/2.abd850a0.chunk.js": "/react/tests/react-pen-1/static/js/2.abd850a0.chunk.js",
+    "static/js/2.abd850a0.chunk.js.map": "/react/tests/react-pen-1/static/js/2.abd850a0.chunk.js.map",
     "index.html": "/react/tests/react-pen-1/index.html",
-    "precache-manifest.688c9fb9e2c81e2dba533356cc253d9e.js": "/react/tests/react-pen-1/precache-manifest.688c9fb9e2c81e2dba533356cc253d9e.js",
+    "precache-manifest.3e3e62e85aa01d63936aa43ba51d2f92.js": "/react/tests/react-pen-1/precache-manifest.3e3e62e85aa01d63936aa43ba51d2f92.js",
     "service-worker.js": "/react/tests/react-pen-1/service-worker.js",
-    "static/css/main.2cce8147.chunk.css.map": "/react/tests/react-pen-1/static/css/main.2cce8147.chunk.css.map",
-    "static/media/logo.svg": "/react/tests/react-pen-1/static/media/logo.5d5d9eef.svg"
+    "static/css/main.34de6062.chunk.css.map": "/react/tests/react-pen-1/static/css/main.34de6062.chunk.css.map"
   }
 }

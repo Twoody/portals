@@ -1,4 +1,3 @@
-'use strict';
 export class Ball{
 	constructor(properties){
 		this.canvas	= properties.canvas;

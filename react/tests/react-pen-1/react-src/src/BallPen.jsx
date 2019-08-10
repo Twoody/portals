@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { Ball } from "./Ball.js";
 
 class BallPen extends React.Component{
