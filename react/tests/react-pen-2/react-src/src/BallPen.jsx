@@ -1,15 +1,13 @@
 import React from "react";
-import { Ball, accelerateBalls, decelerateBalls, shrinkBalls } from "./Ball.js";
-import { Rectangle } from "./Rectangle.js";
-import { ClickableBall } from "./ClickableBall.js";
-import {initClickables} from "./initClickables.js";
-import { getMiddleOfCanvas, getRandomColor, isLegalBall, isOverLapping, makeRandomBall, writeToScreen} from "./utils.js";
+import { accelerateBalls, decelerateBalls, shrinkBalls } from "./Ball";
+import { Rectangle } from "./Rectangle";
+import {initClickables} from "./initClickables";
+import { getMiddleOfCanvas, getRandomColor, isLegalBall, isOverLapping, makeRandomBall, writeToScreen} from "./utils";
 
 const BACKGROUND_COLOR		= "black";
-const WALL_FRICTION			= 0.075;
+const WALL_FRICTION			= 0.075;		//Also tied to rectangles' friction;
 const RECTANGLE_WIDTH		= 110;
 const RECTANGLE_HEIGHT		= 30;
-const RECTANGLE_FRICTION	= 0.075;
 const MIN_RADIUS				= 1;
 const MAX_RADIUS				= 3.00;
 const MAX_SPEED				= 5;
@@ -144,15 +142,15 @@ class BallPen extends React.Component{
 		*/
 		if(event.changedTouches && event.changedTouches.length){
 			//Touch event: Mobile + touch screen laptops;
-			hireMeCanvas.addEventListener( 'touchmove', 
+			document.addEventListener( 'touchmove', 
 				ev =>{
 					ev.preventDefault();
-					ev.stopImmediatePropagation;
+					ev.stopImmediatePropagation();
 				},
 				{passive:false}
 			);
-			hireMeCanvas.addEventListener( 'touchmove', this.handleCanvasMouseMove);
-			hireMeCanvas.addEventListener('touchend', this.handleCanvasMouseUp);
+			document.addEventListener( 'touchmove', this.handleCanvasMouseMove);
+			document.addEventListener('touchend', this.handleCanvasMouseUp);
 			this.setState({
 				clickTimer:	new Date(),	//Start timer
 				xClick:		Math.round(event.changedTouches[0].clientX),
@@ -160,8 +158,8 @@ class BallPen extends React.Component{
 			});
 		}
 		else if(event){
-			hireMeCanvas.addEventListener('mousemove', this.handleCanvasMouseMove);
-			hireMeCanvas.addEventListener('mouseup', this.handleCanvasMouseUp);
+			document.addEventListener('mousemove', this.handleCanvasMouseMove);
+			document.addEventListener('mouseup', this.handleCanvasMouseUp);
 			this.setState({
 				clickTimer:	new Date(),	//Start timer
 			});
@@ -174,9 +172,9 @@ class BallPen extends React.Component{
 		/* If elapsed time is less than half a second, user just clicked;
 			Else, user is long pressing and moving the rectangle;
 		*/
-		hireMeCanvas.removeEventListener('mousedown',	this.handleCanvasMouseDown);
-		hireMeCanvas.removeEventListener('mouseup',		this.handleCanvasMouseUp);
-		hireMeCanvas.removeEventListener('mousemove',	this.handleCanvasMouseMove);
+		document.removeEventListener('mousedown',	this.handleCanvasMouseDown);
+		document.removeEventListener('mouseup',		this.handleCanvasMouseUp);
+		document.removeEventListener('mousemove',	this.handleCanvasMouseMove);
 		const endTime		= new Date();	//End time of screen click;
 		const elapsedTime = endTime - this.state.clickTimer; //In Milliseconds;
 		if(elapsedTime < 250){
@@ -188,15 +186,6 @@ class BallPen extends React.Component{
 			this.handleCanvasClick();
 		}
 		else{
-			let isRectangleAtFinalDestination = false;
-	  		const canvas		= this.canvasRef;
-			const rect			= canvas.getBoundingClientRect();
-			const xMid			= this.movableRectangle.xCenter;
-			const yMid			= this.movableRectangle.yCenter;
-			const xCanvasPos	= this.state.xClick - rect.left;	//X cord of user click
-			const yCanvasPos	= this.state.yClick - rect.top;	//Y cord of user click
-			let safetyNet		= 0;
-
 			console.log("DRAGGING FINSIHED");
 		}
 		//Make clickTimer unassigned;
@@ -394,7 +383,7 @@ class BallPen extends React.Component{
 	componentDidMount(){
  	   this.updateWindowDimensions();
    	this.drawBackground();
-		this.initMiddleRectangle;
+		this.initMiddleRectangle();
       this.rectangleTimerID   = setInterval(
          ()=>this.updateRectangle(),
         25
@@ -413,17 +402,18 @@ class BallPen extends React.Component{
       window.removeEventListener('resize', this.updateWindowDimensions);
       document.body.removeEventListener('keydown',		this.handleKeydown);
       document.body.removeEventListener('keyup',		this.handleKeyup);
-		hireMeCanvas.removeEventListener('mousemove',	this.handleCanvasMouseMove);
-		hireMeCanvas.removeEventListener('mouseup',		this.handleCanvasMouseUp);
-		hireMeCanvas.removeEventListener('touchstart',	this.handleCanvasMouseDown);
-		hireMeCanvas.removeEventListener('touchmove',	this.handleCanvasMouseMove);
-		hireMeCanvas.removeEventListener('touchend',		this.handleCanvasMouseUp);
+		document.removeEventListener('mousemove',	this.handleCanvasMouseMove);
+		document.removeEventListener('mouseup',		this.handleCanvasMouseUp);
+		document.removeEventListener('touchstart',	this.handleCanvasMouseDown);
+		document.removeEventListener('touchmove',	this.handleCanvasMouseMove);
+		document.removeEventListener('touchend',		this.handleCanvasMouseUp);
    }
    componentDidUpdate() {
 		//Going to handle updates as we go to enhance efficiency;
    }
    updateWindowDimensions(){
-      let width		= thickline0.offsetWidth;	//Matching with bootstrap hack
+      let width		= window.innertWidth;	//Matching with bootstrap hack
+		console.log(width);
       let height		= window.innerHeight;
       height   -= 280;   //Buffer...
       if (height < 0)
@@ -589,6 +579,7 @@ class BallPen extends React.Component{
 	
    render(){
       const penStyle	= {
+			paddingRight: 35,
 			fontWeight:		400,
          border:   		"1px solid #000000",
 			touchAction:	"none",
@@ -605,9 +596,8 @@ class BallPen extends React.Component{
 				<p style={ballCntStyle}>
 					Ball Count: {this.state.ballCnt}
 				</p>
-            <canvas
+            <canvas ref={canvas => this.canvasRef = canvas}
 					id="hireMeCanvas"
-               ref={canvas => this.	canvasRef = canvas}
                width={this.state.width}
                height={this.state.height}
                style={penStyle}

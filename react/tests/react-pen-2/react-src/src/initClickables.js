@@ -1,3 +1,5 @@
+import { isLegalBall, makeRandomClickableBall } from "./utils";
+
 export function initClickables( 
 	sWidth,
 	sHeight, 
@@ -63,34 +65,34 @@ export function initClickables(
 		},
 	];
 	let retBalls = [];
-	for (let i=0; i<clickables.length; i++){
-		let clickable	= clickables[i];
-		let isLegal		=  false;
-		let cnt			= 0;
-		let newBall		= null;
-		while(isLegal === false){
-			newBall = makeRandomClickableBall(
-				sWidth, 
-				sHeight,
-				clickable.__name, //ballID
-				minRadius, 
-				maxRadius,
-				clickable.faUnicode, 
-				clickable.href,
-				maxSpeed
-			);
-			isLegal = isLegalBall(newBall, sWidth, sHeight, retBalls, rectangles);
-			//console.log('clickable attemp: ' + cnt);
-			cnt += 1;
-			if(cnt === 50){
-				console.log('UNABLE TO MAKE BALL ' + clickable.__name);
-				break;
-			}
-		}//end while
-		if(newBall && cnt !== 50){
-			newBall.color = clickable.color;
-			retBalls.push(newBall);
-		}
-	}//end i-for
+//	for (let i=0; i<clickables.length; i++){
+//		let clickable	= clickables[i];
+//		let isLegal		=  false;
+//		let cnt			= 0;
+//		let newBall		= null;
+//		while(isLegal === false){
+//			newBall = makeRandomClickableBall(
+//				sWidth, 
+//				sHeight,
+//				clickable.__name, //ballID
+//				minRadius, 
+//				maxRadius,
+//				clickable.faUnicode, 
+//				clickable.href,
+//				maxSpeed
+//			);
+//			isLegal = isLegalBall(newBall, sWidth, sHeight, retBalls, rectangles);
+//			//console.log('clickable attemp: ' + cnt);
+//			cnt += 1;
+//			if(cnt === 50){
+//				console.log('UNABLE TO MAKE BALL ' + clickable.__name);
+//				break;
+//			}
+//		}//end while
+//		if(newBall && cnt !== 50){
+//			newBall.color = clickable.color;
+//			retBalls.push(newBall);
+//		}
+//	}//end i-for
 	return retBalls;
 }

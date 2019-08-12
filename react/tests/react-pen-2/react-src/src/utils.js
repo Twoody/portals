@@ -1,8 +1,8 @@
-import { Ball } from "./Ball";
-import { ClickableBall } from "./ClickableBall";
+import { Ball } from "./Ball.js";
+import { ClickableBall } from "./ClickableBall.js";
 
 export function countDecimals(x){
-	if( (x%1) != 0 )
+	if( (x%1) !== 0 )
 		return x.toString().split(".")[1].length || 0;
 	return 0;
 }

@@ -1,15 +1,11 @@
 import { Ball } from "./Ball.js";
 
 export class ClickableBall extends Ball{
-	constructor(properties){
-		super(properties);
-		this.href	= properties.href;
-		this.faUnicode = properties.faUnicode;
-
+	constructor(props){
+		super(props);
+		this.href	= props.href;
+		this.faUnicode = props.faUnicode;
 	}//end constructor()
-	consoleHREF(){
-		console.log(this.href);
-	}
 	handleClick(){
 		/*WARNING: ReWrite of ./Balls.js and handleClick
 			Open current balls link in new tab, and TRY TO 
