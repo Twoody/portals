@@ -1,4 +1,5 @@
 import { Ball } from "./Ball.js";
+import { getRandomColor, getRandomFloat, getRandomInt } from "./utils.js";
 
 export class ClickableBall extends Ball{
 	constructor(props){
@@ -37,3 +38,59 @@ export class ClickableBall extends Ball{
 		return true;
 	}//end label()
 }
+export function makeRandomClickableBall(
+	sWidth, 
+	sHeight, 
+	ballID, 
+	minRadius=3, 
+	maxRadius=30, 
+	faUnicode,
+	href, 
+	maxSpeed=null
+){
+	/*	Return false if random ball fails;
+		Else return random ball;
+		Input:
+			screen width,
+			screen height,
+			ballID
+			mininum radius possible,
+			maximum radius possible,
+			maxSpeed possible -- no more than 2 times given radius;
+		Output:
+			Ball object;
+		@ ./src/Balls.js
+	*/
+	let randomRadius	= getRandomInt(minRadius, maxRadius);
+	randomRadius += getRandomInt(1,99) * 0.01;
+	const randomX	= getRandomInt(randomRadius, sWidth - randomRadius);
+	const randomY	= getRandomInt(randomRadius, sHeight - randomRadius);
+	let randomDX	= getRandomFloat(0, 0.151);	//Slow start
+	let randomDY	= getRandomFloat(0, 0.151);	//Slow start
+	if(maxSpeed !== null){
+		if(randomDX > maxSpeed)
+			randomDX = maxSpeed;
+		if(randomDY > maxSpeed)
+			randomDY = maxSpeed;
+	}
+	const newBall	= new ClickableBall({
+		ballID:	ballID,
+		color:	getRandomColor(),
+		xCord:	randomX,
+		yCord:	randomY,
+		radius:	randomRadius,
+		dx: 		randomDX,
+		dy:		randomDY,
+	});
+	if(maxSpeed !== null){
+		if(maxSpeed < randomRadius)
+			newBall.maxSpeed = maxSpeed;
+		else
+			newBall.maxSpeed = Math.ceil(randomRadius);	//set max speed to a legal int of radius;
+	}
+	else
+		newBall.maxSpeed = randomRadius;
+	newBall.href		= href;
+	newBall.faUnicode = faUnicode;
+	return newBall;
+}//end makeRandomClickableBall

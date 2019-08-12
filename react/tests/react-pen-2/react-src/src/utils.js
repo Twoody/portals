@@ -1,6 +1,3 @@
-import { Ball } from "./Ball.js";
-import { ClickableBall } from "./ClickableBall.js";
-
 export function countDecimals(x){
 	if( (x%1) !== 0 )
 		return x.toString().split(".")[1].length || 0;
@@ -42,34 +39,6 @@ export function getRandomFloat(min, max){
 export function isInRange(x, min, max){
 	return (x>=min && x<=max);
 }
-export function isLegalBall(ball, sWidth, sHeight, otherBalls, rectangles){
-	/*Ball is legal if it: 
-		1. is in bounds
-		2. is not overlapping the rectangle
-		3. ball is not overallping any otherBall in this.balls;
-	*/
-	if(ball.xCord - ball.radius < 0)
-		return false;
-	if(ball.xCord + ball.radius > sWidth)
-		return false;
-	if(ball.yCord - ball.radius < 0)
-		return false;
-	if(ball.yCord + ball.radius > sHeight)
-		return false;
-	for(let i=0; i<rectangles.length; i++){
-		const rectangle = rectangles[i];
-		const rectangleBallConflict = rectangle.isOverLappingBall(ball);
-		if(rectangleBallConflict)
-			return false;
-	}//end i-for
-	for(let i=0; i<otherBalls.length; i++){
-		const otherBall		= otherBalls[i];
-		const isOverLapping	= ball.isOverLappingBall(otherBall);
-		if(isOverLapping)
-			return false;
-	}//end i-for
-	return true;
-}//end isLegalBall()
 export function isOverLapping(x1, y1, x2, y2, distance){
 	/*	Will use distance formula to compute;
 		Input:
@@ -85,109 +54,6 @@ export function isOverLapping(x1, y1, x2, y2, distance){
 		return true;
 	return false
 }
-export function makeRandomBall(sWidth, sHeight, ballID, minRadius=3, maxRadius=30, maxSpeed=null){
-	/*	Return false if random ball fails;
-		Else return random ball;
-		Input:
-			screen width,
-			screen height,
-			ballID
-			mininum radius possible,
-			maximum radius possible,
-			maxSpeed possible -- no more than 2 times given radius;
-		Output:
-			Ball object;
-		@ ./src/Balls.js
-	*/
-	let randomRadius	= getRandomInt(minRadius, maxRadius);
-	randomRadius += getRandomInt(1,99) * 0.01;
-	const randomX	= getRandomInt(randomRadius, sWidth - randomRadius);
-	const randomY	= getRandomInt(randomRadius, sHeight - randomRadius);
-	let randomDX	= getRandomFloat(0, 0.151);	//Slow start
-	let randomDY	= getRandomFloat(0, 0.151);	//Slow start
-	if(maxSpeed !== null){
-		if(randomDX > maxSpeed)
-			randomDX = maxSpeed;
-		if(randomDY > maxSpeed)
-			randomDY = maxSpeed;
-	}
-	const newBall	= new Ball({
-		ballID:	ballID,
-		color:	getRandomColor(),
-		xCord:	randomX,
-		yCord:	randomY,
-		radius:	randomRadius,
-		dx: 		randomDX,
-		dy:		randomDY,
-	});
-	if(maxSpeed !== null){
-		if(maxSpeed < randomRadius)
-			newBall.maxSpeed = maxSpeed;
-		else
-			newBall.maxSpeed = Math.ceil(randomRadius);	//set max speed to a legal int of radius;
-	}
-	else
-		newBall.maxSpeed = randomRadius;
-	return newBall;
-}//end makeRandomBall
-export function makeRandomClickableBall(
-	sWidth, 
-	sHeight, 
-	ballID, 
-	minRadius=3, 
-	maxRadius=30, 
-	faUnicode,
-	href, 
-	maxSpeed=null
-){
-	/*	Return false if random ball fails;
-		Else return random ball;
-		Input:
-			screen width,
-			screen height,
-			ballID
-			mininum radius possible,
-			maximum radius possible,
-			maxSpeed possible -- no more than 2 times given radius;
-		Output:
-			Ball object;
-		@ ./src/Balls.js
-	*/
-	let randomRadius	= getRandomInt(minRadius, maxRadius);
-	randomRadius += getRandomInt(1,99) * 0.01;
-	const randomX	= getRandomInt(randomRadius, sWidth - randomRadius);
-	const randomY	= getRandomInt(randomRadius, sHeight - randomRadius);
-	let randomDX	= getRandomFloat(0, 0.151);	//Slow start
-	let randomDY	= getRandomFloat(0, 0.151);	//Slow start
-	if(maxSpeed !== null){
-		if(randomDX > maxSpeed)
-			randomDX = maxSpeed;
-		if(randomDY > maxSpeed)
-			randomDY = maxSpeed;
-	}
-	const newBall	= new ClickableBall({
-		ballID:	ballID,
-		color:	getRandomColor(),
-		xCord:	randomX,
-		yCord:	randomY,
-		radius:	randomRadius,
-		dx: 		randomDX,
-		dy:		randomDY,
-	});
-	if(maxSpeed !== null){
-		if(maxSpeed < randomRadius)
-			newBall.maxSpeed = maxSpeed;
-		else
-			newBall.maxSpeed = Math.ceil(randomRadius);	//set max speed to a legal int of radius;
-	}
-	else
-		newBall.maxSpeed = randomRadius;
-	newBall.href		= href;
-	newBall.faUnicode = faUnicode;
-	return newBall;
-}//end makeRandomClickableBall
-
-
 export function writeToScreen(ctx, msg, x, y, color="black"){
 	ctx.beginPath();
 	ctx.font      = "25px Arial";

@@ -1,38 +1,6 @@
-import { getRandomFloat, isOverLapping } from "./utils";
-
-export function shrinkBalls(balls){
-	//Each ball has a 50% chance of getting radius reduced;
-	for(let i=0; i<balls.length; i++){
-		let ball = balls[i];
-		if(Math.random() >=0.5)
-			ball.shrink();
-	}//end i-for
-}//end shrinkBalls
-export function accelerateBalls(balls){
-	//Accelerate each and every ball by a random percent;
-	for(let i=0; i<balls.length; i++){
-		let ball = balls[i];
-		if(ball.dx < 1)
-			ball.dx += 3;
-		if(ball.dy < 1)
-			ball.dy += 3;
-		const dxGain = getRandomFloat(0, 0.99) * ball.dx;
-		const dyGain = getRandomFloat(0, 0.99) * ball.dy;
-		ball.accelerate( dxGain, dyGain );
-	}//end i-for
-}//end accelerateBalls
-export function decelerateBalls(balls){
-	//Decelerate each and every ball by a random percent;
-	for(let i=0; i<balls.length; i++){
-		let ball = balls[i];
-		const dxLoss = getRandomFloat(0, 0.99) * ball.dx;
-		const dyLoss = getRandomFloat(0, 0.99) * ball.dy;
-		ball.decelerate( dxLoss, dyLoss );
-	}//end i-for
-}//end decelerateBalls
+import { getRandomColor, getRandomFloat, getRandomInt, isOverLapping } from "./utils.js";
 
 export class Ball{
-	'use strict';
 	constructor(properties){
 		this.type			= 'ball';
 		this.ballID			= properties.ballID;
@@ -664,3 +632,108 @@ export class Ball{
 		this.yCord = this.nextY;
 	}
 }//End Ball Class
+
+export function shrinkBalls(balls){
+	//Each ball has a 50% chance of getting radius reduced;
+	for(let i=0; i<balls.length; i++){
+		let ball = balls[i];
+		if(Math.random() >=0.5)
+			ball.shrink();
+	}//end i-for
+}//end shrinkBalls
+export function accelerateBalls(balls){
+	//Accelerate each and every ball by a random percent;
+	for(let i=0; i<balls.length; i++){
+		let ball = balls[i];
+		if(ball.dx < 1)
+			ball.dx += 3;
+		if(ball.dy < 1)
+			ball.dy += 3;
+		const dxGain = getRandomFloat(0, 0.99) * ball.dx;
+		const dyGain = getRandomFloat(0, 0.99) * ball.dy;
+		ball.accelerate( dxGain, dyGain );
+	}//end i-for
+}//end accelerateBalls
+export function decelerateBalls(balls){
+	//Decelerate each and every ball by a random percent;
+	for(let i=0; i<balls.length; i++){
+		let ball = balls[i];
+		const dxLoss = getRandomFloat(0, 0.99) * ball.dx;
+		const dyLoss = getRandomFloat(0, 0.99) * ball.dy;
+		ball.decelerate( dxLoss, dyLoss );
+	}//end i-for
+}//end decelerateBalls
+export function isLegalBall(ball, sWidth, sHeight, otherBalls, rectangles){
+	/*Ball is legal if it: 
+		1. is in bounds
+		2. is not overlapping the rectangle
+		3. ball is not overallping any otherBall in this.balls;
+	*/
+	if(ball.xCord - ball.radius < 0)
+		return false;
+	if(ball.xCord + ball.radius > sWidth)
+		return false;
+	if(ball.yCord - ball.radius < 0)
+		return false;
+	if(ball.yCord + ball.radius > sHeight)
+		return false;
+	for(let i=0; i<rectangles.length; i++){
+		const rectangle = rectangles[i];
+		const rectangleBallConflict = rectangle.isOverLappingBall(ball);
+		if(rectangleBallConflict)
+			return false;
+	}//end i-for
+	for(let i=0; i<otherBalls.length; i++){
+		const otherBall		= otherBalls[i];
+		const isOverLapping	= ball.isOverLappingBall(otherBall);
+		if(isOverLapping)
+			return false;
+	}//end i-for
+	return true;
+}//end isLegalBall()
+
+export function makeRandomBall(sWidth, sHeight, ballID, minRadius=3, maxRadius=30, maxSpeed=null){
+	/*	Return false if random ball fails;
+		Else return random ball;
+		Input:
+			screen width,
+			screen height,
+			ballID
+			mininum radius possible,
+			maximum radius possible,
+			maxSpeed possible -- no more than 2 times given radius;
+		Output:
+			Ball object;
+		@ ./src/Balls.js
+	*/
+	let randomRadius	= getRandomInt(minRadius, maxRadius);
+	randomRadius += getRandomInt(1,99) * 0.01;
+	const randomX	= getRandomInt(randomRadius, sWidth - randomRadius);
+	const randomY	= getRandomInt(randomRadius, sHeight - randomRadius);
+	let randomDX	= getRandomFloat(0, 0.151);	//Slow start
+	let randomDY	= getRandomFloat(0, 0.151);	//Slow start
+	if(maxSpeed !== null){
+		if(randomDX > maxSpeed)
+			randomDX = maxSpeed;
+		if(randomDY > maxSpeed)
+			randomDY = maxSpeed;
+	}
+	const newBall	= new Ball({
+		ballID:	ballID,
+		color:	getRandomColor(),
+		xCord:	randomX,
+		yCord:	randomY,
+		radius:	randomRadius,
+		dx: 		randomDX,
+		dy:		randomDY,
+	});
+	if(maxSpeed !== null){
+		if(maxSpeed < randomRadius)
+			newBall.maxSpeed = maxSpeed;
+		else
+			newBall.maxSpeed = Math.ceil(randomRadius);	//set max speed to a legal int of radius;
+	}
+	else
+		newBall.maxSpeed = randomRadius;
+	return newBall;
+}//end makeRandomBall

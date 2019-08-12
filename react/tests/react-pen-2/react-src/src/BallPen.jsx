@@ -1,8 +1,8 @@
 import React from "react";
-import { accelerateBalls, decelerateBalls, shrinkBalls } from "./Ball";
-import { Rectangle } from "./Rectangle";
-import {initClickables} from "./initClickables";
-import { getMiddleOfCanvas, getRandomColor, isLegalBall, isOverLapping, makeRandomBall, writeToScreen} from "./utils";
+import { accelerateBalls, decelerateBalls, isLegalBall, makeRandomBall, shrinkBalls } from "./Ball.js";
+import { Rectangle } from "./Rectangle.js";
+import {initClickables} from "./initClickables.js";
+import { getMiddleOfCanvas, getRandomColor, isOverLapping, writeToScreen} from "./utils.js";
 
 const BACKGROUND_COLOR		= "black";
 const WALL_FRICTION			= 0.075;		//Also tied to rectangles' friction;
