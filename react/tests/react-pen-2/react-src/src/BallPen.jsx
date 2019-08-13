@@ -1,7 +1,7 @@
 import React from "react";
 import { accelerateBalls, decelerateBalls, isLegalBall, makeRandomBall, shrinkBalls } from "./Ball.js";
 import { Rectangle } from "./Rectangle.js";
-import {initClickables} from "./initClickables.js";
+import { initClickables } from "./initClickables.js";
 import { getMiddleOfCanvas, getRandomColor, isOverLapping, writeToScreen} from "./utils.js";
 
 const BACKGROUND_COLOR		= "black";
@@ -15,7 +15,7 @@ const BALL_FRICTION			= 0.05;
 const GRAVITY					= 0.45;
 const KINETIC_LOSS			= 0.15;
 const KINETIC_KEEP			= 0.85;
-let INIT_BALL_CNT				= 85;
+const INIT_BALL_CNT			= 85;
 
 class BallPen extends React.Component{
    constructor(props){
@@ -72,8 +72,6 @@ class BallPen extends React.Component{
 	}//end didClickBall()
 	drawBackground(){
 		if(this.state.width === 0)
-			return false;
-		if(this.state.isLeavingTrails)
 			return false;
      	const canvas	= this.canvasRef;
      	let ctx			= canvas.getContext('2d');
@@ -315,6 +313,8 @@ class BallPen extends React.Component{
 		console.log('key up');
 	}//end handleKeyup()
 	initMiddleRectangle(){
+		if(this.state.width === 0)
+			return false;
 		//Initialize a middle rectangle;
 		//Rectangle is going to have draggable properties;
 		const middleCords	= getMiddleOfCanvas(this.state.width, this.state.height);
@@ -382,7 +382,7 @@ class BallPen extends React.Component{
 	}//end initBalls()
 	componentDidMount(){
  	   this.updateWindowDimensions();
-   	this.drawBackground();
+ //  	this.drawBackground();
 		this.initMiddleRectangle();
       this.rectangleTimerID   = setInterval(
          ()=>this.updateRectangle(),
@@ -412,10 +412,10 @@ class BallPen extends React.Component{
 		//Going to handle updates as we go to enhance efficiency;
    }
    updateWindowDimensions(){
-      let width		= window.innertWidth;	//Matching with bootstrap hack
-		console.log(width);
+      let width		= window.innerWidth;	//Matching with bootstrap hack
       let height		= window.innerHeight;
-      height   -= 280;   //Buffer...
+		width -= 50;
+      height   -= 180;   //Buffer...
       if (height < 0)
          height = 0;
 		if(width < 0)
@@ -492,7 +492,8 @@ class BallPen extends React.Component{
 		}//end i-for
 
 		//Update other objects 
-		this.drawBackground();	//Redraw Background
+		if(this.state.isLeavingTrails === false)
+			this.drawBackground();	//Redraw Background
 		this.drawBalls(ctx);
 		this.drawRectangle(ctx);	//Update rectangle;
 		return true;
@@ -527,36 +528,35 @@ class BallPen extends React.Component{
 			this.movableRectangle.yCenter + 7, 
 			getRandomColor()
 		);
-
-	}
+	}//end drawRectangle()
 	setNewBallDirection(ball){
-			const modGroup = this.balls.length %4;
-			if(modGroup === 0){
-				ball.isGoingDown	= true;
-				ball.isGoingUp		= false;
-				ball.isGoingRight	= true;
-				ball.isGoingLeft	= false;
-			}
-			else if(modGroup === 1){
-				ball.isGoingDown	= true;
-				ball.isGoingUp		= false;
-				ball.isGoingRight	= false;
-				ball.isGoingLeft	= true;
-			}
-			else if(modGroup === 2){
-				ball.isGoingDown	= false;
-				ball.isGoingUp		= true;
-				ball.isGoingRight	= false;
-				ball.isGoingLeft	= true;
-			}
+		const modGroup = this.balls.length %4;
+		if(modGroup === 0){
+			ball.isGoingDown	= true;
+			ball.isGoingUp		= false;
+			ball.isGoingRight	= true;
+			ball.isGoingLeft	= false;
+		}
+		else if(modGroup === 1){
+			ball.isGoingDown	= true;
+			ball.isGoingUp		= false;
+			ball.isGoingRight	= false;
+			ball.isGoingLeft	= true;
+		}
+		else if(modGroup === 2){
+			ball.isGoingDown	= false;
+			ball.isGoingUp		= true;
+			ball.isGoingRight	= false;
+			ball.isGoingLeft	= true;
+		}
 
-			else if(modGroup === 3){
-				ball.isGoingDown	= false;
-				ball.isGoingUp		= true;
-				ball.isGoingRight	= true;
-				ball.isGoingLeft	= false;
-			}
-	}
+		else if(modGroup === 3){
+			ball.isGoingDown	= false;
+			ball.isGoingUp		= true;
+			ball.isGoingRight	= true;
+			ball.isGoingLeft	= false;
+		}
+	}//end setNewBallDirection()
 	resetBalls(event){
 		this.balls		= [];
 		this.setState({ballCnt: 0});
@@ -575,11 +575,14 @@ class BallPen extends React.Component{
 		}//end i-for
 		this.setState({ballCnt: this.balls.length});
 		return true;
-	}
+	}//end resetBalls()
 	
    render(){
+		const	divStyle = {
+			paddingRight:	35,
+			paddingLeft:	35,
+		};
       const penStyle	= {
-			paddingRight: 35,
 			fontWeight:		400,
          border:   		"1px solid #000000",
 			touchAction:	"none",
@@ -592,8 +595,8 @@ class BallPen extends React.Component{
 			backgroundColor: "black",
 		}
       return (
-         <div>
-				<p style={ballCntStyle}>
+         <div style={divStyle}>
+				<p id="ballCnt" style={ballCntStyle}>
 					Ball Count: {this.state.ballCnt}
 				</p>
             <canvas ref={canvas => this.canvasRef = canvas}
