@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/react/tests/react-pen-3/static/css/main.5f494533.chunk.css",
+    "main.js": "/react/tests/react-pen-3/static/js/main.de32c44e.chunk.js",
+    "main.js.map": "/react/tests/react-pen-3/static/js/main.de32c44e.chunk.js.map",
+    "runtime~main.js": "/react/tests/react-pen-3/static/js/runtime~main.701092e7.js",
+    "runtime~main.js.map": "/react/tests/react-pen-3/static/js/runtime~main.701092e7.js.map",
+    "static/js/2.9b11ad00.chunk.js": "/react/tests/react-pen-3/static/js/2.9b11ad00.chunk.js",
+    "static/js/2.9b11ad00.chunk.js.map": "/react/tests/react-pen-3/static/js/2.9b11ad00.chunk.js.map",
+    "index.html": "/react/tests/react-pen-3/index.html",
+    "precache-manifest.d6a20133af86b3488ea4e0f9a56f0a94.js": "/react/tests/react-pen-3/precache-manifest.d6a20133af86b3488ea4e0f9a56f0a94.js",
+    "service-worker.js": "/react/tests/react-pen-3/service-worker.js",
+    "static/css/main.5f494533.chunk.css.map": "/react/tests/react-pen-3/static/css/main.5f494533.chunk.css.map"
+  }
+}
