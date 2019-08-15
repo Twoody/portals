@@ -79,6 +79,9 @@ export class Ball{
 		this.radius	= 0;
 	}
 	distanceTo(x, y){
+		//Try to avoid using this, as we do not want
+		//to take the sqrt routinely; If comparing, look at
+		// utils.js: isOverLapping() instead;
 		const xDiff 	= this.nextX - x;
 		const yDiff 	= this.nextY - y;
 		const distance	= Math.sqrt(xDiff**2 + yDiff**2);
@@ -104,11 +107,15 @@ export class Ball{
 				continue;
 			let otherBall			= allBalls[i];
 			const minDistance		= otherBall.radius + this.radius;
-			let nextDistance		= this.distanceTo(otherBall.nextX, otherBall.nextY);
-			let willOverlap		= nextDistance <= minDistance;
-			if( !willOverlap ){
+			let willOverlap		= isOverLapping(
+				this.nextX, 
+				this.nextY, 
+				otherBall.nextX, 
+				otherBall.nextY, 
+				minDistance
+			);
+			if( !willOverlap )
 				continue;
-			}
 
 			//Set the directions that this ball cannot go;
 			if(this.nextX > otherBall.nextX){
@@ -140,8 +147,14 @@ export class Ball{
 					this.nextY -= dyRatio;	//Step back up
 				else if(this.isGoingUp)
 					this.nextY += dyRatio;	//Step back down
-				nextDistance	= this.distanceTo(otherBall.nextX, otherBall.nextY);
-				willOverlap		= nextDistance < minDistance;
+				willOverlap		= isOverLapping(
+					this.nextX, 
+					this.nextY, 
+					otherBall.nextX, 
+					otherBall.nextY, 
+					minDistance
+				);
+
 				cnt += 1;
 				if(cnt === timeRatio){
 					//Problem not solved;
@@ -208,10 +221,12 @@ export class Ball{
 				this.isGoingDown = false;
 			}
 			else{
-				//Ball is just rolling and losing dx momentum;
 				this.isGoingUp		= false;
 				this.isGoingDown	= false;
-				this.decelerate(friction, 0);
+				if(this.canGoDown === false){
+					//Ball is just rolling and losing dx momentum;
+					this.decelerate(friction, 0);
+				}
 			}
 		}
 		else{
