@@ -637,6 +637,35 @@ export class Ball{
 		else if(this.isGoingRight)
 			this.nextX = this.xCord + this.dx;
 	}//end setNextCoordinates
+	setRandomDirection(){
+		const modGroup = getRandomInt(0,3);
+		if(modGroup === 0){
+			this.isGoingDown	= true;
+			this.isGoingUp		= false;
+			this.isGoingRight	= true;
+			this.isGoingLeft	= false;
+		}
+		else if(modGroup === 1){
+			this.isGoingDown	= true;
+			this.isGoingUp		= false;
+			this.isGoingRight	= false;
+			this.isGoingLeft	= true;
+		}
+		else if(modGroup === 2){
+			this.isGoingDown	= false;
+			this.isGoingUp		= true;
+			this.isGoingRight	= false;
+			this.isGoingLeft	= true;
+		}
+
+		else if(modGroup === 3){
+			this.isGoingDown	= false;
+			this.isGoingUp		= true;
+			this.isGoingRight	= true;
+			this.isGoingLeft	= false;
+		}
+	}//end setNewBallDirection()
+
 	shrink(){
 		//Destroy Ball
 		this.radius	*= 0.9;
