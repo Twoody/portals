@@ -5,19 +5,6 @@ import { World } from "./World.js"
 class BallPen extends React.Component{
    constructor(props){
       super(props);
-      this.state      = {
-         height:		0,
-         width:		0,
-			clickTimer:	0,
-			xClick:		0,
-			yClick:		0,
-			ballCnt:		0,
-			hasGravity:			false,
-			hasWallFriction:	false,
-			hasBallFriction:	false,
-			hasInertia:			false,
-			isLeavingTrails:	false,
-      };
 		this.movableRectangle			= null;
 		this.world							= new World(this.canvasRef);
 		this.balls							= [];
@@ -29,8 +16,21 @@ class BallPen extends React.Component{
 		this.handleCanvasMouseUp		= this.handleCanvasMouseUp.bind(this);
 		this.handleInputChange			= this.handleInputChange.bind(this);
 		this.handleToggleButton			= this.handleToggleButton.bind(this);
-   }
+      this.state      = {
+         height:		0,
+         width:		0,
+			clickTimer:	0,
+			xClick:		0,
+			yClick:		0,
+			hasGravity:			this.world.hasGravity		,
+			isLeavingTrails:	this.world.isLeavingTrails	,
+			hasWallFriction:	this.world.hasWallFriction	,
+			hasBallFriction:	this.world.hasBallFriction	,
+			hasInertia:			this.world.hasInertia		,
+			ballCnt:				this.world.initBallCnt		,
+      };
 
+   }//end constructor()
 	handleInputChange(event) {
 		const target	= event.target;
 		const value		= target.type === 'checkbox' ? target.checked : target.value;
@@ -43,22 +43,49 @@ class BallPen extends React.Component{
 	handleToggleButton(event){
 		const target	= event.target;
 		const name		= target.name;
+		this.world[name] = !this.world[name];
 		this.setState( state => ({
-			[name] : !this.state[name]
+			[name] : this.world[name]
 		}));
 		return true;
 	}
 	handleCanvasMouseDown(event){
+		if(event.changedTouches && event.changedTouches.length){
+			//Touch event: Mobile + touch screen laptops;
+			document.addEventListener('touchmove', 
+				ev =>{
+					ev.preventDefault();
+					ev.stopImmediatePropagation();
+				},
+				{passive:false}
+			);
+			document.addEventListener('touchmove',	this.handleCanvasMouseMove);
+			document.addEventListener('touchend',	this.handleCanvasMouseUp);
+
+		}//End if-touchscreen
+		else if(event){
+			document.addEventListener('mousemove', this.handleCanvasMouseMove);
+			document.addEventListener('mouseup', this.handleCanvasMouseUp);
+		}
 		this.world.handleCanvasMouseDown(event);
+
 	}//end handleCanvasMouseDown
 	handleCanvasMouseUp(event){
-		const canvas = this.canvasRef;
-		return this.world.handleCanvasMouseUp(event, canvas);
+		document.removeEventListener('mousedown',	this.handleCanvasMouseDown);
+		document.removeEventListener('mouseup',	this.handleCanvasMouseUp);
+		document.removeEventListener('mousemove',	this.handleCanvasMouseMove);
+		const canvas		= this.canvasRef;
+		const nextBallCnt	= this.world.handleCanvasMouseUp(event, canvas);
+		if(nextBallCnt !== -1){	//-1 implies drag
+      	this.setState({
+      	   ballCnt: nextBallCnt,
+      	});
+		}
+		return true;
 	}//end handleCanvasMouseUp()
 	handleCanvasMouseMove(event){
 		const canvas	= this.canvasRef;
-      const ctx		= canvas.getContext('2d');
-		return this.world.handleCanvasMouseMove(event, ctx);
+		return this.world.handleCanvasMouseMove(event, canvas);
 	}//end handleCanvasMouseMove()
 	handleKeydown(event){
 		if(!event || !event.key){
@@ -93,6 +120,8 @@ class BallPen extends React.Component{
 	}//end handleKeyup()
 	componentDidMount(){
       window.addEventListener('resize', this.updateWindowDimensions);
+      document.body.addEventListener('keydown',	this.handleKeydown);
+      document.body.addEventListener('keyup',	this.handleKeyup);
 		const canvas	= this.canvasRef;
       const ctx		= canvas.getContext('2d');
  	   this.updateWindowDimensions();
@@ -100,6 +129,13 @@ class BallPen extends React.Component{
    }
    componentWillUnmount(){
       window.removeEventListener('resize', this.updateWindowDimensions);
+      document.body.removeEventListener('keydown',		this.handleKeydown);
+      document.body.removeEventListener('keyup',		this.handleKeyup);
+		document.removeEventListener('mousemove',	this.handleCanvasMouseMove);
+		document.removeEventListener('mouseup',		this.handleCanvasMouseUp);
+		document.removeEventListener('touchstart',	this.handleCanvasMouseDown);
+		document.removeEventListener('touchmove',	this.handleCanvasMouseMove);
+		document.removeEventListener('touchend',		this.handleCanvasMouseUp);
 		this.world.handleUnmount();
 	}
    componentDidUpdate() {
