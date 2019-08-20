@@ -1,12 +1,11 @@
 import React from "react";
 import { accelerateBalls, decelerateBalls, shrinkBalls } from "./Ball.js";
-import { World } from "./World.js"
+import { Background } from "./Background.js"
 
 class BallPen extends React.Component{
    constructor(props){
       super(props);
-		this.movableRectangle			= null;
-		this.world							= new World(this.canvasRef);
+		this.world							= new Background(this.canvasRef);
 		this.balls							= [];
       this.updateWindowDimensions	= this.updateWindowDimensions.bind(this);
 		this.handleKeydown				= this.handleKeydown.bind(this);
@@ -68,7 +67,6 @@ class BallPen extends React.Component{
 			document.addEventListener('mouseup', this.handleCanvasMouseUp);
 		}
 		this.world.handleCanvasMouseDown(event);
-
 	}//end handleCanvasMouseDown
 	handleCanvasMouseUp(event){
 		document.removeEventListener('mousedown',	this.handleCanvasMouseDown);
@@ -92,32 +90,40 @@ class BallPen extends React.Component{
 			console.log("WARNING: KEYBOARD INPUT NOT UNDERSTOOD");
 			return false;
 		}
-		if(!this.movableRectangle){
+		if(!this.world.movableRectangle){
 			console.log("WARNING: Rectangle not initialized yet;");
 			return false;
 		}
-		let isReserved = false;
-		for(let i=0; i<this.world.reservedKeys; i++){
-			if (this.world.reservedKeys[i] === event.keyCode){
-				isReserved = true;
-				break;
-			}
-		}
-		const canvas	= this.canvasRef;
-      const ctx		= canvas.getContext('2d');
-		if( isReserved === false )
+		const canvas		= this.canvasRef;
+      const ctx			= canvas.getContext('2d');
+		const isReserved	= this.isKeyRegistered(event.keyCode);
+		if( isReserved === false ){
+			//console.log('keyboard input `' + event.keyCode + '` not registered');
 			return false;
-
+		}
 		event.preventDefault();
-		this.world.handleKeyDown(event.keyCode, ctx);
+		this.world.handleKeydown(event.keyCode, ctx);
 		return true;
 	}//end handleKeydown()
 	handleKeymove(){
 		return this.world.handleKeymove();
 	}//end handleKeymove()
-	handleKeyup(){
+	handleKeyup(event){
+		const isReserved	= this.isKeyRegistered(event.keyCode);
+		if( isReserved === false)
+			return false;
 		return this.world.handleKeyup();
 	}//end handleKeyup()
+	isKeyRegistered(keycode){
+		let isReserved = false;
+		for(let i=0; i<this.world.reservedKeys.length; i++){
+			if (this.world.reservedKeys[i] === keycode){
+				isReserved = true;
+				break;
+			}
+		}//end i-for
+		return isReserved;
+	}//end isKeyRegistered()
 	componentDidMount(){
       window.addEventListener('resize', this.updateWindowDimensions);
       document.body.addEventListener('keydown',	this.handleKeydown);
@@ -248,17 +254,26 @@ class BallPen extends React.Component{
 					</tr>
 					<tr>
 						<td>
-							<button style={buttonStyle} onClick={e => { shrinkBalls(this.world.balls); } }>
+							<button 
+								style={buttonStyle} 
+								onClick={e => { shrinkBalls(this.world.balls); } }
+							>
 								Shrink Some Balls
 							</button>
 						</td>
 						<td>
-							<button style={buttonStyle} onClick={ e=> {accelerateBalls(this.world.balls); } }>
+							<button 
+								style={buttonStyle} 
+								onClick={ e=> {accelerateBalls(this.world.balls); } }
+							>
 								Accelerate Balls
 							</button>
 						</td>
 						<td>
-							<button style={buttonStyle} onClick={ e=> { decelerateBalls(this.world.balls); } }>
+							<button 
+							style={buttonStyle} 
+							onClick={ e=> { decelerateBalls(this.world.balls); } }
+						>
 								Decelerate Balls
 							</button>
 						</td>
