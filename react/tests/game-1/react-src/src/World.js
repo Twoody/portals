@@ -17,7 +17,7 @@ export class World{
 		this.gravity				= props.gravity			|| 0.45;
 		this.kineticLoss			= props.kineticLoss		|| 0.15;
 		this.kineticKeep			= props.kineticKeep		|| 0.85;
-		this.initBallCnt			= props.initBallCnt		|| 85;
+		this.initBallCnt			= props.initBallCnt		|| 0;
 		this.width					= props.width				|| 0;
 		this.height					= props.height				|| 0;
 		this.reservedKeys			= [37, 38, 39, 40];
@@ -27,6 +27,7 @@ export class World{
 		this.hasWallFriction		= false;
 		this.hasBallFriction		= false;
 		this.hasInertia			= false;
+		this.hasBrandBalls		= props.hasBrandBalls	|| false;
 		this.balls					= [];
 		this.movableRectangle	= null;
 		this.clickTimer			= null;	//Set only during a click; Reset to null after;
@@ -185,8 +186,10 @@ export class World{
 		let speed			= 2;
 		let nextX 			= this.movableRectangle.xLeft;
 		let nextY 			= this.movableRectangle.yTop;
-		if(!this.reservedKeys.includes(keyCode))
+		if(!this.reservedKeys.includes(keyCode)){
+			console.log('could not find keycode `'+keyCode+'`');
 			return false;
+		}
 		this.movableRectangle.resetMovement();
 		//Figure out speed
 		if(this.isHeldDown){
@@ -303,18 +306,20 @@ export class World{
       return true;
 	}//end handleScreenResize()
 	initBalls(){
-		const brandBalls = initClickables( 
-			this.width, 
-			this.height, 
-			30, 
-			30, 
-			this.maxSpeed,
-			[this.movableRectangle],
-		);
-		for(let i=0; i<brandBalls.length; i++){
-			this.balls.push(brandBalls[i]);
-			this.ballCnt += 1;
-		}//end i-for
+		if(this.hasBrandBalls === true){
+			const brandBalls = initClickables( 
+				this.width, 
+				this.height, 
+				30, 
+				30, 
+				this.maxSpeed,
+				[this.movableRectangle],
+			);
+			for(let i=0; i<brandBalls.length; i++){
+				this.balls.push(brandBalls[i]);
+				this.ballCnt += 1;
+			}//end i-for
+		}
 		for(let i=this.ballCnt; i< this.initBallCnt; i++){
 			let cnt		= 0;
 			let isLegal = false;
