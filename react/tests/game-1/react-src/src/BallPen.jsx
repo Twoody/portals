@@ -258,7 +258,7 @@ class BallPen extends React.Component{
 							</button>
 						</td>
 						<td>
-							<button style={buttonStyle} onClick={ e=> { decelerateBalls(this.balls); } }>
+							<button style={buttonStyle} onClick={ e=> { decelerateBalls(this.world.balls); } }>
 								Decelerate Balls
 							</button>
 						</td>
