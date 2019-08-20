@@ -6,7 +6,6 @@ import { getMiddleOfCanvas, getRandomColor, isOverLapping, writeToScreen} from "
 export class World{
 	constructor( props={} ){
 		// Defaults
-		console.log('new world');
 		this.backgroundColor		= props.backgroundColor	|| "black";
 		this.wallFriction			= props.wallFriction		|| 0.075;
 		this.rectangleWidth		= props.rectangleWidth	|| 160;
@@ -99,9 +98,9 @@ export class World{
 			this.width, 
 			this.height, 
 			this.balls.length, 
-			this.world.minRadius, 
-			this.world.maxRadius, 
-			this.world.maxSpeed
+			this.minRadius, 
+			this.maxRadius, 
+			this.maxSpeed
 		);
 		newBall.xCord = xCanvasPos;
 		newBall.yCord = yCanvasPos;
@@ -126,57 +125,43 @@ export class World{
 		/* If elapsed time is less than half a second, user just clicked;
 			Else, user is long pressing and moving the rectangle;
 		*/
-		console.log('fries: ' + this.clickTimer);
-		document.removeEventListener('mousedown',	this.handleCanvasMouseDown);
-		document.removeEventListener('mouseup',	this.handleCanvasMouseUp);
-		document.removeEventListener('mousemove',	this.handleCanvasMouseMove);
 		const endTime					= new Date();	//End time of screen click;
 		const elapsedTime				= endTime - this.clickTimer; //In Milliseconds;
 		const acceptableClickTime	= 250;
+		this.clickTimer				= null;
 		if(elapsedTime < acceptableClickTime){
 			//User just clicked screen
 			this.xClick	= event.clientX;
 			this.yClick	= event.clientY;
 			this.handleCanvasClick(canvas);
+			return this.ballCnt;
 		}
 		else{
 			console.log("DRAGGING FINSIHED");
+			return -1;
 		}
-		//Make clickTimer unassigned;
-		this.clickTimer	= null;
-		return true;
 	}//end handleCanvasMouseUp()
 	handleCanvasMouseDown(event){
 		/* Determine if click is long press or just a click;
 			Will call functions on mouseup and mousemove;
 		*/
+		this.clickTimer	= new Date(); //Start timer
 		if(event.changedTouches && event.changedTouches.length){
 			//Touch event: Mobile + touch screen laptops;
-			document.addEventListener('touchmove', 
-				ev =>{
-					ev.preventDefault();
-					ev.stopImmediatePropagation();
-				},
-				{passive:false}
-			);
-			document.addEventListener('touchmove',	this.handleCanvasMouseMove);
-			document.addEventListener('touchend',	this.handleCanvasMouseUp);
-			this.clickTimer	= new Date();
 			this.xClick	= Math.round(event.changedTouches[0].clientX);
 			this.yClick	= Math.round(event.changedTouches[0].clientY);
 		}
 		else if(event){
-			document.addEventListener('mousemove', this.handleCanvasMouseMove);
-			document.addEventListener('mouseup', this.handleCanvasMouseUp);
-			this.clickTimer	= new Date(); //Start timer
-			console.log('meat: ' + this.clickTimer);
+			this.xClick	= event.clientX;
+			this.yClick	= event.clientY;
 		}
 		else
 			console.log('input not understood');
 		return true;
 	}//end handleCanvasMouseDown()
-	handleCanvasMouseMove(event, ctx){
+	handleCanvasMouseMove(event, canvas){
 		//TODO: Get movement of mouse and move rectangle accordingly;
+      const ctx	= canvas.getContext('2d');
 		if(!this.movableRectangle){
 			console.log("WARNING: Rectangle not initialized yet;");
 			return false;
@@ -190,7 +175,7 @@ export class World{
 			this.xClick	= event.clientX;
 			this.yClick	= event.clientY;
 		}
-		const isLegalDrag = this.handleRectangleDrag();
+		const isLegalDrag = this.handleRectangleDrag(canvas);
 		if(isLegalDrag)
 			this.updateRectangle(ctx);
 		return true;
@@ -269,22 +254,12 @@ export class World{
 			()=>this.updateBalls(ctx),
 			25
 		);
-      document.body.addEventListener('keydown',	this.handleKeydown);
-      document.body.addEventListener('keyup',	this.handleKeyup);
 	}//end handleMount()
 	handleUnmount(){
 	   clearInterval(this.rectangleTimerID);
       clearInterval(this.ballTimerID);
-      document.body.removeEventListener('keydown',		this.handleKeydown);
-      document.body.removeEventListener('keyup',		this.handleKeyup);
-		document.removeEventListener('mousemove',	this.handleCanvasMouseMove);
-		document.removeEventListener('mouseup',		this.handleCanvasMouseUp);
-		document.removeEventListener('touchstart',	this.handleCanvasMouseDown);
-		document.removeEventListener('touchmove',	this.handleCanvasMouseMove);
-		document.removeEventListener('touchend',		this.handleCanvasMouseUp);
 	}
-	handleRectangleDrag(){
-	  	const canvas		= this.canvasRef;
+	handleRectangleDrag(canvas){
 		const rect			= canvas.getBoundingClientRect();
 		const clientX		= this.xClick - rect.left;
 		const clientY		= this.yClick - rect.top;
