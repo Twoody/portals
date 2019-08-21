@@ -87,11 +87,11 @@ class BallPen extends React.Component{
 	}//end handleCanvasMouseMove()
 	handleKeydown(event){
 		if(!event || !event.key){
-			console.log("WARNING: KEYBOARD INPUT NOT UNDERSTOOD");
+			console.log("WARNING 33: KEYBOARD INPUT NOT UNDERSTOOD");
 			return false;
 		}
-		if(!this.world.movableRectangle){
-			console.log("WARNING: Rectangle not initialized yet;");
+		if(this.world.rectangles.length === 0){
+			console.log("WARNING 33: Rectangle not initialized yet;");
 			return false;
 		}
 		const canvas		= this.canvasRef;

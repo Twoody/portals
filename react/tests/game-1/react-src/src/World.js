@@ -31,7 +31,6 @@ export class World{
 		this.hasMovableRect		= props.hasMovableRect	|| false;
 		this.balls					= [];
 		this.rectangles			= [];
-		this.movableRectangle	= null;
 		this.clickTimer			= null;	//Set only during a click; Reset to null after;
 	}
 	didClickBall(xCanvasPos, yCanvasPos){
@@ -79,14 +78,17 @@ export class World{
 		}//end i-for
 	}//end drawBalls()
 	drawRectangle(ctx){
-		this.movableRectangle.draw(ctx);
-		writeToScreen(
-			ctx, 
-			"RECTANGLE", 
-			this.movableRectangle.xCenter -80, 
-			this.movableRectangle.yCenter + 7, 
-			getRandomColor()
-		);
+		for( let i=0; i<this.rectangles.length; i++){
+			let rectangle = this.rectangles[i];
+			rectangle.draw(ctx);
+			writeToScreen(
+				ctx, 
+				"RECTANGLE", 
+				rectangle.xCenter -80, 
+				rectangle.yCenter + 7, 
+				getRandomColor()
+			);
+		}//end i-for
 	}//end drawRectangle()
 	handleCanvasClick(canvas){
 		const rect			= canvas.getBoundingClientRect();
@@ -165,10 +167,10 @@ export class World{
 	handleCanvasMouseMove(event, canvas){
 		//TODO: Get movement of mouse and move rectangle accordingly;
       const ctx	= canvas.getContext('2d');
-		if( this.hasMovableRect === false)
+		if( this.hasMovableRect === false )
 			return true;
-		if(!this.movableRectangle){
-			console.log("WARNING: Rectangle not initialized yet;");
+		if(this.rectangles.length === 0){
+			console.log("WARNING 22: Rectangle not initialized yet;");
 			return false;
 		}
 		if(event.changedTouches && event.changedTouches.length){
@@ -189,63 +191,67 @@ export class World{
 	handleKeydown(keyCode, ctx){
 		if( this.hasMovableRect === false)
 			return true;
-		let speed			= 2;
-		let nextX 			= this.movableRectangle.xLeft;
-		let nextY 			= this.movableRectangle.yTop;
 		if(!this.reservedKeys.includes(keyCode)){
 			console.log('could not find keycode `'+keyCode+'`');
 			return false;
 		}
-		this.movableRectangle.resetMovement();
-		//Figure out speed
-		if(this.isHeldDown){
-			const currTime			= new Date();
-			const elapsedTime		= currTime - this.timePressed;
-			speed += elapsedTime/100;
-			if(speed > this.movableRectangle.width)
-				speed = this.movableRectangle.width/2 - 0.01; //Buffer
-		}
-		else{
-			this.isHeldDown	= true;
-			this.timePressed	= new Date();
-		}
-		if(keyCode === 37){
-			nextX -= speed;
-			this.movableRectangle.isGoingLeft = true;
-		}
-		if(keyCode === 38){
-			nextY -= speed;
-			this.movableRectangle.isGoingUp = true;
-		}
-		if(keyCode === 39){
-			nextX += speed;
-			this.movableRectangle.isGoingRight = true;
-		}
-		if(keyCode === 40){
-			nextY += speed;
-			this.movableRectangle.isGoingDown = true;
-		}
+		//TODO: Move below to a move rectangle function of sorts;
+		for( let i=0; i<this.rectangles.length; i++){
+			let rectangle	= this.rectangles[i];
+			let speed		= 2;
+			let nextX 		= rectangle.xLeft;
+			let nextY 		= rectangle.yTop;
+			rectangle.resetMovement();
+			//Figure out speed
+			if(this.isHeldDown){
+				const currTime			= new Date();
+				const elapsedTime		= currTime - this.timePressed;
+				speed += elapsedTime/100;
+				if(speed > rectangle.width)
+					speed = rectangle.width/2 - 0.01; //Buffer
+			}
+			else{
+				this.isHeldDown	= true;
+				this.timePressed	= new Date();
+			}
+			if(keyCode === 37){
+				nextX -= speed;
+				rectangle.isGoingLeft = true;
+			}
+			if(keyCode === 38){
+				nextY -= speed;
+				rectangle.isGoingUp = true;
+			}
+			if(keyCode === 39){
+				nextX += speed;
+				rectangle.isGoingRight = true;
+			}
+			if(keyCode === 40){
+				nextY += speed;
+				rectangle.isGoingDown = true;
+			}
 
-		const isMovable = this.movableRectangle.isLegalMovement(
-			nextX,
-			nextY,
-			this.balls
-		);
-		if(isMovable === false){
-			this.movableRectangle.nextX = this.movableRectangle.xLeft;
-			this.movableRectangle.nextY = this.movableRectangle.yTop;
-			this.movableRectangle.resetMovement();
-			return false;
-		}
-		else{
-			this.movableRectangle.nextX = nextX;
-			this.movableRectangle.nextY = nextY;
-			this.movableRectangle.handleMove(
-				this.width, 
-				this.height,
+			const isMovable = rectangle.isLegalMovement(
+				nextX,
+				nextY,
 				this.balls
 			);
-      	this.updateRectangle(ctx);
+			if(isMovable === false){
+				rectangle.nextX = rectangle.xLeft;
+				rectangle.nextY = rectangle.yTop;
+				rectangle.resetMovement();
+				return false;
+			}
+			else{
+				rectangle.nextX = nextX;
+				rectangle.nextY = nextY;
+				rectangle.handleMove(
+					this.width, 
+					this.height,
+					this.balls
+				);
+      		this.updateRectangle(ctx);
+			}
 		}
 	}//end handleKeydown()
 	handleKeyup(){
@@ -254,7 +260,7 @@ export class World{
 		console.log('key up');
 	}//end handleKeyup()
 	handleMount(ctx){
-		if( this.hasMovableRect === true){
+		if( this.hasMovableRect === true ){
 			this.initMiddleRectangle();				//TODO: Move to initRectangles()
 			this.rectangleTimerID   = setInterval(
 				()=>this.updateRectangle(ctx),
@@ -274,14 +280,17 @@ export class World{
 		const rect			= canvas.getBoundingClientRect();
 		const clientX		= this.xClick - rect.left;
 		const clientY		= this.yClick - rect.top;
-		const isDragging	= this.movableRectangle.processDrag(clientX, clientY, this.balls);
-		if(!isDragging)
-			return false;
-		this.movableRectangle.handleMove(
-			this.width, 
-			this.height,
-			this.balls
-		);
+		for( let i=0; i<this.rectangles.length; i++){
+			let rectangle		= this.rectangles[i];
+			const isDragging	= rectangle.processDrag(clientX, clientY, this.balls);
+			if(!isDragging)
+				continue;	
+			rectangle.handleMove(
+				this.width, 
+				this.height,
+				this.balls
+			);
+		}//end i-for
 		return true;
 	}//end handleRectangleDrag();
 	handleScreenResize(width, height, ctx){
@@ -290,14 +299,17 @@ export class World{
 		const drewBG = this.drawBackground(ctx);			//Update/draw Background
 		if(drewBG === false)
 			console.log('big error');
-		if(this.movableRectangle && this.hasMovableRectangle === true){
+		if(this.rectangles.length && this.hasMovableRect === true){
 			//Following hack to see if current coordinates are 
 			//	colliding with wall or not;
-			this.movableRectangle.handleMove(
-				this.width, 
-				this.height,
-				[]
-			);
+			for( let i=0; i<this.rectangles.length; i++){
+				let rectangle		= this.rectangles[i];
+				rectangle.handleMove(
+					this.width, 
+					this.height,
+					[]
+				);
+			}
       	this.updateRectangle(ctx);		//Update/draw Rectangle
 		}
 		if(this.balls){
@@ -378,7 +390,7 @@ export class World{
 			width:	width,
 			height:	height,
 		});
-		this.movableRectangle = rectangle;
+		this.rectangles.push(rectangle);
 	}//end initMiddleRectangle()
 /*
 TODO: Fill this out later...
@@ -405,7 +417,7 @@ TODO: Fill this out later...
 	updateBalls(ctx){
 		if(this.width === 0)
 			return false;
-		if(!this.movableRectangle && this.hasMovableRectangle === true)
+		if(this.rectangles.length === 0 && this.hasMovableRect === true)
 			return false;
 		if(this.balls.length === 0 && this.initBallCnt !== 0)
 			this.initBalls();
@@ -452,14 +464,16 @@ TODO: Fill this out later...
 	}//end updateBalls()
 	updateRectangle(ctx){
 		if(this.width === 0)
-			return;
-		if(!this.movableRectangle)
+			return false;
+		if(this.rectangles.length === 0 && this.hasMovableRect === true)
 			this.initMiddleRectangle();
-
-		if(this.hasWallFriction)
-			this.movableRectangle.friction = this.wallFriction;
-		else
-			this.movableRectangle.friction = 0;
+		for( let i=0; i<this.rectangles.length; i++){
+			let rectangle = this.rectangles[i];
+			if(this.hasWallFriction)
+				rectangle.friction = this.wallFriction;
+			else
+				rectangle.friction = 0;
+		}//end i-for
 		this.drawRectangle(ctx);
 	}//End updateRectangle()
 }
