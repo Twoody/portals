@@ -9,8 +9,9 @@ export class Background extends World{
 			HUD will have ball cnt;
 	*/
 	constructor(props={}){
-		props.hasBrandedBalls	= true;
-		props.initBallCnt			= 85;
+		props.hasBrandBalls	= false;
+		props.hasMovableRect	= true;
+		props.initBallCnt		= 85;
 		super(props);
 	}
 }//end Background Class
