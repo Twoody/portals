@@ -28,7 +28,9 @@ export class World{
 		this.hasBallFriction		= false;
 		this.hasInertia			= false;
 		this.hasBrandBalls		= props.hasBrandBalls	|| false;
+		this.hasMovableRect		= props.hasMovableRect	|| false;
 		this.balls					= [];
+		this.rectangles			= [];
 		this.movableRectangle	= null;
 		this.clickTimer			= null;	//Set only during a click; Reset to null after;
 	}
@@ -112,7 +114,7 @@ export class World{
 			this.width,
 			this.height,
 			this.balls,
-			[this.movableRectangle]
+			this.rectangles
 		);
 		if(isLegal === false)
 			return false;
@@ -163,6 +165,8 @@ export class World{
 	handleCanvasMouseMove(event, canvas){
 		//TODO: Get movement of mouse and move rectangle accordingly;
       const ctx	= canvas.getContext('2d');
+		if( this.hasMovableRect === false)
+			return true;
 		if(!this.movableRectangle){
 			console.log("WARNING: Rectangle not initialized yet;");
 			return false;
@@ -183,6 +187,8 @@ export class World{
 	}//end handleCanvasMouseMove()
 
 	handleKeydown(keyCode, ctx){
+		if( this.hasMovableRect === false)
+			return true;
 		let speed			= 2;
 		let nextX 			= this.movableRectangle.xLeft;
 		let nextY 			= this.movableRectangle.yTop;
@@ -248,11 +254,13 @@ export class World{
 		console.log('key up');
 	}//end handleKeyup()
 	handleMount(ctx){
-		this.initMiddleRectangle();				//TODO: Move to initRectangles()
-		this.rectangleTimerID   = setInterval(
-			()=>this.updateRectangle(ctx),
-			25
-		);
+		if( this.hasMovableRect === true){
+			this.initMiddleRectangle();				//TODO: Move to initRectangles()
+			this.rectangleTimerID   = setInterval(
+				()=>this.updateRectangle(ctx),
+				25
+			);
+		}
 		this.ballTimerID   = setInterval(
 			()=>this.updateBalls(ctx),
 			25
@@ -282,7 +290,7 @@ export class World{
 		const drewBG = this.drawBackground(ctx);			//Update/draw Background
 		if(drewBG === false)
 			console.log('big error');
-		if(this.movableRectangle){
+		if(this.movableRectangle && this.hasMovableRectangle === true){
 			//Following hack to see if current coordinates are 
 			//	colliding with wall or not;
 			this.movableRectangle.handleMove(
@@ -298,7 +306,7 @@ export class World{
 					this.width, 
 					this.height, 
 					this.balls,
-					[this.movableRectangle],
+					this.rectangles,
 				);
 			}//end i-for
 			this.updateBalls(ctx);			//Update/draw Balls;
@@ -313,7 +321,7 @@ export class World{
 				30, 
 				30, 
 				this.maxSpeed,
-				[this.movableRectangle],
+				this.rectangles,
 			);
 			for(let i=0; i<brandBalls.length; i++){
 				this.balls.push(brandBalls[i]);
@@ -338,7 +346,7 @@ export class World{
 					this.width,
 					this.height,
 					this.balls,
-					[this.movableRectangle]
+					this.rectangles
 				);
 				if(cnt === 500){
 					console.log('FAILED MAKING A WORKABLE BALL');
@@ -355,8 +363,6 @@ export class World{
 		return true;
 	}//end initBalls()
 	initMiddleRectangle(){
-		if(this.width === 0)
-			return false;
 		//Initialize a middle rectangle;
 		//Rectangle is going to have draggable properties;
 		const middleCords	= getMiddleOfCanvas(this.width, this.height);
@@ -399,7 +405,7 @@ TODO: Fill this out later...
 	updateBalls(ctx){
 		if(this.width === 0)
 			return false;
-		if(!this.movableRectangle)
+		if(!this.movableRectangle && this.hasMovableRectangle === true)
 			return false;
 		if(this.balls.length === 0 && this.initBallCnt !== 0)
 			this.initBalls();
@@ -430,7 +436,7 @@ TODO: Fill this out later...
 				this.width,
 				this.height,
 				this.friction,
-				[this.movableRectangle],
+				this.rectangles,
 				this.balls
 			);
 		}//end i-for
@@ -439,7 +445,9 @@ TODO: Fill this out later...
 		if(this.isLeavingTrails === false)
 			this.drawBackground(ctx);	//Redraw Background
 		this.drawBalls(ctx);
-		this.drawRectangle(ctx);	//Update rectangle;
+		if(this.rectangles.length > 0){
+			this.drawRectangle(ctx);	//Update rectangle;
+		}
 		return true;
 	}//end updateBalls()
 	updateRectangle(ctx){
