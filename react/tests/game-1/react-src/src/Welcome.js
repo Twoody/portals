@@ -6,7 +6,10 @@ export class Welcome extends World{
 		Add the other levels to a clickable interface for
 		our game to choose from;
 	*/
-	constructor(props){
+	constructor(props={}){
+		props.hasBrandBalls	= false;
+		props.hasMovableRect	= false;
+		props.initBallCnt		= 85;
 		super(props);
 	}
 }//end Welcome Class
