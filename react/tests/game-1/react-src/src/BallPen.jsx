@@ -1,11 +1,13 @@
 import React from "react";
 import { accelerateBalls, decelerateBalls, shrinkBalls } from "./Ball.js";
 import { Background } from "./Background.js"
+import { Welcome } from "./Welcome.js"
 
 class BallPen extends React.Component{
    constructor(props){
       super(props);
-		this.world							= new Background(this.canvasRef);
+		this.world							= new Background();
+		this.world							= new Welcome();
 		this.balls							= [];
       this.updateWindowDimensions	= this.updateWindowDimensions.bind(this);
 		this.handleKeydown				= this.handleKeydown.bind(this);
