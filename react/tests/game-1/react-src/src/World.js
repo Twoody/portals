@@ -29,7 +29,7 @@ export class World{
 		this.hasInertia			= false;
 		this.hasBrandBalls		= props.hasBrandBalls	|| false;
 		this.hasMovableRect		= props.hasMovableRect	|| false;
-		this.balls					= [];
+		this.balls					= props.balls				|| [];
 		this.rectangles			= [];
 		this.clickTimer			= null;	//Set only during a click; Reset to null after;
 	}
@@ -261,7 +261,7 @@ export class World{
 	}//end handleKeyup()
 	handleMount(ctx){
 		if( this.hasMovableRect === true ){
-			this.initMiddleRectangle();				//TODO: Move to initRectangles()
+			this.initRectangles();				//TODO: Move to initRectangles()
 			this.rectangleTimerID   = setInterval(
 				()=>this.updateRectangle(ctx),
 				25
@@ -374,7 +374,7 @@ export class World{
 		}//end i-for
 		return true;
 	}//end initBalls()
-	initMiddleRectangle(){
+	initRectangles(){
 		//Initialize a middle rectangle;
 		//Rectangle is going to have draggable properties;
 		const middleCords	= getMiddleOfCanvas(this.width, this.height);
@@ -391,7 +391,7 @@ export class World{
 			height:	height,
 		});
 		this.rectangles.push(rectangle);
-	}//end initMiddleRectangle()
+	}//end initRectangles()
 /*
 TODO: Fill this out later...
 	resetBalls(event){
@@ -419,8 +419,9 @@ TODO: Fill this out later...
 			return false;
 		if(this.rectangles.length === 0 && this.hasMovableRect === true)
 			return false;
-		if(this.balls.length === 0 && this.initBallCnt !== 0)
+		if(this.balls.length === 0 && this.initBallCnt !== 0){
 			this.initBalls();
+		}
 		for(let i=0; i<this.balls.length; i++){
 			let ball = this.balls[i];
 			if(this.hasGravity === false)
@@ -466,7 +467,7 @@ TODO: Fill this out later...
 		if(this.width === 0)
 			return false;
 		if(this.rectangles.length === 0 && this.hasMovableRect === true)
-			this.initMiddleRectangle();
+			this.initRectangles();
 		for( let i=0; i<this.rectangles.length; i++){
 			let rectangle = this.rectangles[i];
 			if(this.hasWallFriction)
