@@ -1,6 +1,6 @@
 import { World } from "./World.js";
 import { Ball } from "./Ball.js";
-import { accelerateBalls} from "./Ball.js";
+import { writeToScreen } from "./utils.js";
 
 export class Level1 extends World{
 	/*
@@ -43,17 +43,21 @@ export class Level1 extends World{
 		newBall.maxSpeed = radius * 0.66;
 		this.balls.push(newBall);
 		this.initBallCnt = 1;
+		this.ballCnt = 1;
 		return true;
 	}
 	updateBalls(ctx){
 		for (let i=0; i<this.balls.length; i++){
 			let ball = this.balls[i];
 			if(ball.hitBottom(this.height)){
-				this.balls.splice(i, 1);
-				this.didInit = false;
+				//this.balls.splice(i, 1);
+				//this.ballCnt -= 1;
 			}
 		}
+		if(this.balls.length === 0)
+			this.didInit = false;
 		super.updateBalls(ctx);
+		this.labelBallCnt(ctx);
 	}
 	updateRectangle(ctx){
 		//Update the ball with the rectangle while we did not init;
@@ -78,6 +82,11 @@ export class Level1 extends World{
 			}
 			*/
 		}
+	}
+	labelBallCnt(ctx){
+		//TODO: Probably put in a white background, too...
+		const msg = "BALLS: " + this.ballCnt;
+		writeToScreen(ctx, msg, this.width-80, 15, "orange", "15px Arial");
 	}
 
 }//end Level1 Class
