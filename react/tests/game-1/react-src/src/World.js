@@ -186,7 +186,7 @@ export class World{
 		}
 		const isLegalDrag = this.handleRectangleDrag(canvas);
 		if(isLegalDrag)
-			this.updateRectangle(ctx);
+			this.updateRectangles(ctx);
 		return true;
 	}//end handleCanvasMouseMove()
 
@@ -254,7 +254,7 @@ export class World{
 					this.height,
 					this.balls
 				);
-      		this.updateRectangle(ctx);
+      		this.updateRectangles(ctx);
 			}
 		}
 	}//end handleKeydown()
@@ -267,7 +267,7 @@ export class World{
 		if( this.hasMovableRect === true ){
 			this.initRectangles();				//TODO: Move to initRectangles()
 			this.rectangleTimerID   = setInterval(
-				()=>this.updateRectangle(ctx),
+				()=>this.updateRectangles(ctx),
 				25
 			);
 		}
@@ -314,7 +314,7 @@ export class World{
 					[]
 				);
 			}
-      	this.updateRectangle(ctx);		//Update/draw Rectangle
+      	this.updateRectangles(ctx);		//Update/draw Rectangle
 		}
 		if(this.balls){
 			for(let i=0; i<this.balls.length; i++){
@@ -470,7 +470,7 @@ TODO: Fill this out later...
 		}
 		return true;
 	}//end updateBalls()
-	updateRectangle(ctx){
+	updateRectangles(ctx){
 		if(this.width === 0)
 			return false;
 		if(this.rectangles.length === 0 && this.hasMovableRect === true)
@@ -483,5 +483,5 @@ TODO: Fill this out later...
 				rectangle.friction = 0;
 		}//end i-for
 		this.drawRectangle(ctx);
-	}//End updateRectangle()
+	}//End updateRectangles()
 }
