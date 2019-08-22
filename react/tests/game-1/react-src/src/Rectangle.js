@@ -3,21 +3,24 @@ import {isOverLapping} from "./utils.js";
 export class Rectangle{
 	'use strict';
 	constructor(properties){
-		this.type			= 'rectangle';
-		this.rectID			= properties.rectID;
-		this.color			= properties.color;
-		this.width			= properties.width;
-		this.height			= properties.height;
-		this.xLeft			= properties.xLeft;
-		this.yTop			= properties.yTop;
-		this.xRight			= this.xLeft + this.width;
-		this.yBottom		= this.yTop + this.height;
-		this.xCenter		= Math.abs(this.xRight	- this.width/2);
-		this.yCenter		= Math.abs(this.yBottom - this.height/2);
-		this.nextX			= this.xLeft;
-		this.nextY			= this.yTop;
-		this.gravity		= 0;
-		this.friction		= 0.05;
+		this.type				= 'rectangle';
+		this.rectID				= properties.rectID;
+		this.color				= properties.color;
+		this.width				= properties.width;
+		this.height				= properties.height;
+		this.xLeft				= properties.xLeft;
+		this.yTop				= properties.yTop;
+		this.xRight				= this.xLeft + this.width;
+		this.yBottom			= this.yTop + this.height;
+		this.xCenter			= Math.abs(this.xRight	- this.width/2);
+		this.yCenter			= Math.abs(this.yBottom - this.height/2);
+		this.nextX				= this.xLeft;
+		this.nextY				= this.yTop;
+		this.gravity			= 0;
+		this.friction			= 0.05;
+		this.isLabeled			= false;
+		this.isDraggable		= false;
+		this.isDestructible	= true;
 	}
 	draw(ctx){
 		ctx.beginPath();
@@ -33,9 +36,12 @@ export class Rectangle{
 	}//end draw()
 	handleMove(sWidth, sHeight, entities=[]){
 		//Handle rectangle movement:
+		if(this.isDraggable === false)
+			return false;
 		this.handleWallInteractions(sWidth, sHeight);
 		this.handleEntityInteractions(sWidth, sHeight, entities);
 		this.updateCoordinates();
+		return true;
 	}//end handleMove
 	handleBallInteractions(sWidth, sHeight, ball){
 		/*	Find out what way rectangle is moving;
