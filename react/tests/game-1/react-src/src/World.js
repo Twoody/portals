@@ -2,6 +2,7 @@ import { isLegalBall, makeRandomBall } from "./Ball.js";
 import { Rectangle } from "./Rectangle.js";
 import { initClickables } from "./initClickables.js";
 import { getMiddleOfCanvas, getRandomColor, isOverLapping, writeToScreen} from "./utils.js";
+import { HUD } from "./HUD.js";
 
 export class World{
 	constructor( props={} ){
@@ -32,6 +33,7 @@ export class World{
 		this.hasBrandBalls		= props.hasBrandBalls	|| false;
 		this.hasMovableRect		= props.hasMovableRect	|| false;
 		this.balls					= props.balls				|| [];
+		this.HUD						= new HUD();
 		this.rectangles			= [];
 		this.clickTimer			= null;	//Set only during a click; Reset to null after;
 	}
@@ -470,6 +472,9 @@ TODO: Fill this out later...
 		if(this.rectangles.length > 0){
 			this.drawRectangle(ctx);	//Update rectangle;
 		}
+		this.HUD.updateDisplay(this.width, this.ballCnt, this.rectangles.length-1);
+		this.HUD.labelBallCnt(ctx);
+		this.HUD.labelBrickCnt(ctx);
 		return true;
 	}//end updateBalls()
 	updateRectangles(ctx){
