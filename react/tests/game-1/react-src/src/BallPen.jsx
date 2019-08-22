@@ -76,7 +76,7 @@ class BallPen extends React.Component{
 		document.removeEventListener('mouseup',	this.handleCanvasMouseUp);
 		document.removeEventListener('mousemove',	this.handleCanvasMouseMove);
 		const canvas		= this.canvasRef;
-		const nextBallCnt	= this.world.handleCanvasMouseUp(event, canvas);
+		this.world.handleCanvasMouseUp(event, canvas);
 		return true;
 	}//end handleCanvasMouseUp()
 	handleCanvasMouseMove(event){
