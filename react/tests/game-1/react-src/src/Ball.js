@@ -336,6 +336,7 @@ export class Ball{
 
 		//There is a collision;
 		//Set the directions that this ball cannot go;
+		rectangle.hitCount += 1;
 		if(this.nextX > rectangle.xCenter){
 			//Current ball is right of rectangle
 			this.canGoLeft = false;
