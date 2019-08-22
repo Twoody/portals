@@ -176,9 +176,9 @@ export function moveSVG(svgString, x,y ){
 	//console.log(ret)
 	return ret;
 }
-export function writeToScreen(ctx, msg, x, y, color="black"){
+export function writeToScreen(ctx, msg, x, y, color="black", font="25px Arial"){
 	ctx.beginPath();
-	ctx.font      = "25px Arial";
+	ctx.font      = font;
 	ctx.fillStyle = color;
 	ctx.fillText(msg, x, y);
 	ctx.closePath();
