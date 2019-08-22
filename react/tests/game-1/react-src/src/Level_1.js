@@ -17,6 +17,7 @@ export class Level1 extends World{
 		props.hasMovableRect	= true;
 		props.initBallCnt		= 1;
 		super(props);
+		this.isGameGoing		= true;
 		this.hasGravity		= false;
 		this.hasWallFriction = true;
 		this.hasIneritia		= true;
@@ -24,7 +25,8 @@ export class Level1 extends World{
 		this.brickWidth		= 40;
 		this.brickHeight		= 10;
 		this.didInit			= false;	//Init is when we hit spacebar
-		this.reservedKeys.push(32); 	//Adding spacebar eventcode; Will remove with didInit;
+		this.reservedKeys.push(32); 	//Adding spacebar eventcode;
+									 			//	Will remove with didInit;
 	}
 	initBalls(){
 		//WWARNING: Rewriting World.initBalls()
@@ -67,28 +69,41 @@ export class Level1 extends World{
 		super.updateBalls(ctx);
 		this.labelBallCnt(ctx);
 	}
-	updateRectangle(ctx){
+	updateRectangles(ctx){
 		//Update the ball with the rectangle while we did not init;
-		super.updateRectangle(ctx);
-		if(this.didInit === false){
+		super.updateRectangles(ctx);
+		if(this.didInit === false || this.isGameGoing === false){
 			this.balls = [];
 			this.initBalls();
+			return true;
 		}
-	}
+		let rLen	= this.rectangles.length;
+		let cnt	= 0;
+		while(cnt < rLen){
+			let rectangle = this.rectangles[cnt]
+			if(rectangle.isDestructing()){
+				this.rectangles.splice(cnt, 1);
+				rLen -= 1;
+			}
+			else
+				cnt += 1;
+		}//end while
+		if(this.rectangles.length === 1){
+			this.isGameGoing	= false;
+			this.didInit		= false;
+			console.log('game over');
+			this.makeDestructibleRects();
+		}
+	}//end updateRectangles()
 	handleKeydown(keycode, ctx){
 		super.handleKeydown(keycode, ctx);
 		if( this.didInit === false && keycode === 32){
-			this.didInit = true;
+			this.didInit		= true;
+			this.isGameGoing	= true;
 			for( let i=0; i< this.balls.length; i++){
 				let ball = this.balls[i];
 				ball.accelerate(10,10);
 			}
-			/*
-			const spaceKeyIndex = this.reservedKeys.indexOf(32);
-			if(spaceKeyIndex > -1){
-				this.reservedKeys.splice(spaceKeyIndex, 1);
-			}
-			*/
 		}
 	}
 	labelBallCnt(ctx){
