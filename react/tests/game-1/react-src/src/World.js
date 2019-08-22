@@ -198,7 +198,7 @@ export class World{
 		//TODO: Move below to a move rectangle function of sorts;
 		for( let i=0; i<this.rectangles.length; i++){
 			let rectangle	= this.rectangles[i];
-			let speed		= 2;
+			let speed		= 15;
 			let nextX 		= rectangle.xLeft;
 			let nextY 		= rectangle.yTop;
 			rectangle.resetMovement();
@@ -206,7 +206,7 @@ export class World{
 			if(this.isHeldDown){
 				const currTime			= new Date();
 				const elapsedTime		= currTime - this.timePressed;
-				speed += elapsedTime/100;
+				speed += elapsedTime/20;
 				if(speed > rectangle.width)
 					speed = rectangle.width/2 - 0.01; //Buffer
 			}
