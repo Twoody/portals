@@ -81,13 +81,15 @@ export class World{
 		for( let i=0; i<this.rectangles.length; i++){
 			let rectangle = this.rectangles[i];
 			rectangle.draw(ctx);
-			writeToScreen(
-				ctx, 
-				"RECTANGLE", 
-				rectangle.xCenter -80, 
-				rectangle.yCenter + 7, 
-				getRandomColor()
-			);
+			if(rectangle.isLabeled === true){
+				writeToScreen(
+					ctx, 
+					"RECTANGLE", 
+					rectangle.xCenter -80, 
+					rectangle.yCenter + 7, 
+					getRandomColor()
+				);
+			}
 		}//end i-for
 	}//end drawRectangle()
 	handleCanvasClick(canvas){
@@ -201,6 +203,8 @@ export class World{
 			let speed		= 15;
 			let nextX 		= rectangle.xLeft;
 			let nextY 		= rectangle.yTop;
+			if(rectangle.isDraggable === false)
+				continue;
 			rectangle.resetMovement();
 			//Figure out speed
 			if(this.isHeldDown){
@@ -390,6 +394,9 @@ export class World{
 			width:	width,
 			height:	height,
 		});
+		rectangle.isDestructible	= false;
+		rectangle.isLabeled			= true;
+		rectangle.isDraggable		= true;
 		this.rectangles.push(rectangle);
 	}//end initRectangles()
 /*
