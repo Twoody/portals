@@ -157,7 +157,10 @@ class BallPen extends React.Component{
       	this.setState({
          	isGameGoing: this.world.isGameGoing, 
       	});
-			console.log('should change state');
+			//console.log('should change state')
+			this.componentWillUnmount();
+			this.world = new Background();
+			this.componentDidMount();
 		}
 		else
 			console.log(this.world.isGameGoing + " " + this.state.isGameGoing)

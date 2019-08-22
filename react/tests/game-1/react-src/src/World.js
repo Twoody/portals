@@ -27,6 +27,8 @@ export class World{
 		this.hasWallFriction		= false;
 		this.hasBallFriction		= false;
 		this.hasInertia			= false;
+		this.didInit				= false;
+		this.isGameGoing			= false;
 		this.hasBrandBalls		= props.hasBrandBalls	|| false;
 		this.hasMovableRect		= props.hasMovableRect	|| false;
 		this.balls					= props.balls				|| [];
