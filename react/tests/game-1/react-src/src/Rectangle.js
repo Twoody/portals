@@ -21,6 +21,7 @@ export class Rectangle{
 		this.isLabeled			= false;
 		this.isDraggable		= false;
 		this.isDestructible	= true;
+		this.hitCount			= 0;
 	}
 	draw(ctx){
 		ctx.beginPath();
@@ -158,6 +159,13 @@ export class Rectangle{
 		if(this.nextY + this.height > sHeight)
 			this.nextY = sHeight - this.height;
 		return true;
+	}//end handleWallInteractions()
+	isDestructing(){
+		if(this.isDestructible === false)
+			return false;
+		if(this.hitCount > 0)
+			return true;
+		return false;
 	}
 	isOverLappingBall(ball){
 		/* Is rectangle intersecting/overlapping ball;
@@ -190,7 +198,7 @@ export class Rectangle{
 		if(areCornersTouching)
 			return true;
 		return false;
-	}
+	}//end isOverLappingBall()
 	isInBounds(width, height){
 		//Determine if rectangle fits the screen width and screen height;
 		if(this.xLeft < 0)
