@@ -1,7 +1,7 @@
 import { World } from "./World.js";
 import { Ball } from "./Ball.js";
 import { Rectangle } from "./Rectangle.js";
-import { getMiddleOfCanvas, writeToScreen } from "./utils.js";
+import { getMiddleOfCanvas } from "./utils.js";
 
 export class Level1 extends World{
 	/*
@@ -67,7 +67,7 @@ export class Level1 extends World{
 		if(this.balls.length === 0)
 			this.didInit = false;
 		super.updateBalls(ctx);
-		this.labelBallCnt(ctx);
+	//	this.labelBallCnt(ctx);
 	}
 	updateRectangles(ctx){
 		//Update the ball with the rectangle while we did not init;
@@ -105,11 +105,6 @@ export class Level1 extends World{
 				ball.accelerate(10,10);
 			}
 		}
-	}
-	labelBallCnt(ctx){
-		//TODO: Probably put in a white background, too...
-		const msg = "BALLS: " + this.ballCnt;
-		writeToScreen(ctx, msg, this.width-80, 15, "orange", "15px Arial");
 	}
 	makeDestructibleRects(){
 		const middleCords	= getMiddleOfCanvas(this.width, this.height);
