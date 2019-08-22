@@ -1,6 +1,7 @@
 import { World } from "./World.js";
 import { Ball } from "./Ball.js";
-import { writeToScreen } from "./utils.js";
+import { Rectangle } from "./Rectangle.js";
+import { getMiddleOfCanvas, writeToScreen } from "./utils.js";
 
 export class Level1 extends World{
 	/*
@@ -9,6 +10,7 @@ export class Level1 extends World{
 		Build the world with one destructable rectangle;
 		Add keycode `space` to accelerate the ball from
 			our movable rectangle;
+		IFF ball hits bottom and no more balls, reset game;
 	*/
 	constructor(props={}){
 		props.hasBrandBalls	= false;
@@ -19,6 +21,8 @@ export class Level1 extends World{
 		this.hasWallFriction = true;
 		this.hasIneritia		= true;
 		this.hasBallFriction	= true;
+		this.brickWidth		= 40;
+		this.brickHeight		= 10;
 		this.didInit			= false;	//Init is when we hit spacebar
 		this.reservedKeys.push(32); 	//Adding spacebar eventcode; Will remove with didInit;
 	}
@@ -46,12 +50,16 @@ export class Level1 extends World{
 		this.ballCnt = 1;
 		return true;
 	}
+	initRectangles(ctx){
+		super.initRectangles(ctx);
+		this.makeDestructibleRects();
+	}
 	updateBalls(ctx){
 		for (let i=0; i<this.balls.length; i++){
 			let ball = this.balls[i];
 			if(ball.hitBottom(this.height)){
-				//this.balls.splice(i, 1);
-				//this.ballCnt -= 1;
+				this.balls.splice(i, 1);
+				this.ballCnt -= 1;
 			}
 		}
 		if(this.balls.length === 0)
@@ -88,6 +96,24 @@ export class Level1 extends World{
 		const msg = "BALLS: " + this.ballCnt;
 		writeToScreen(ctx, msg, this.width-80, 15, "orange", "15px Arial");
 	}
+	makeDestructibleRects(){
+		const middleCords	= getMiddleOfCanvas(this.width, this.height);
+		const width			= this.brickWidth;
+		const height		= this.brickHeight;
+		const xLeft			= middleCords.x - width/2;
+		const yTop			= middleCords.y - height/2 - 100;
+		const rectangle	= new Rectangle({
+			rectID:	this.rectangles.length,
+			color:	'white',
+			xLeft:	xLeft,
+			yTop:		yTop,
+			width:	width,
+			height:	height,
+		});
+		rectangle.isDestructible	= true;
+		rectangle.isDraggable		= false;
+		this.rectangles.push(rectangle);
 
+	}
 }//end Level1 Class
 
