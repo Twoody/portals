@@ -30,7 +30,6 @@ class BallPen extends React.Component{
 			hasWallFriction:	this.world.hasWallFriction	,
 			hasBallFriction:	this.world.hasBallFriction	,
 			hasInertia:			this.world.hasInertia		,
-			ballCnt:				this.world.initBallCnt		,
       };
 
    }//end constructor()
@@ -78,11 +77,6 @@ class BallPen extends React.Component{
 		document.removeEventListener('mousemove',	this.handleCanvasMouseMove);
 		const canvas		= this.canvasRef;
 		const nextBallCnt	= this.world.handleCanvasMouseUp(event, canvas);
-		if(nextBallCnt !== -1){	//-1 implies drag
-      	this.setState({
-      	   ballCnt: nextBallCnt,
-      	});
-		}
 		return true;
 	}//end handleCanvasMouseUp()
 	handleCanvasMouseMove(event){
@@ -179,18 +173,12 @@ class BallPen extends React.Component{
          border:   		"1px solid #000000",
 			touchAction:	"none",
       };
-		const ballCntStyle	= {
-			textAlign: "right"
-		};
 		const buttonStyle = {
 			color: "white",
 			backgroundColor: "black",
 		}
       return (
          <div style={divStyle}>
-				<p id="ballCnt" style={ballCntStyle}>
-					Ball Count: {this.state.ballCnt}
-				</p>
             <canvas ref={canvas => this.canvasRef = canvas}
 					id="hireMeCanvas"
                width={this.state.width}
