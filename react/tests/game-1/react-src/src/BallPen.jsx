@@ -30,6 +30,7 @@ class BallPen extends React.Component{
 			hasWallFriction:	this.world.hasWallFriction	,
 			hasBallFriction:	this.world.hasBallFriction	,
 			hasInertia:			this.world.hasInertia		,
+			isGameGoing:		this.world.isGameGoing,
       };
 
    }//end constructor()
@@ -130,6 +131,10 @@ class BallPen extends React.Component{
       const ctx		= canvas.getContext('2d');
  	   this.updateWindowDimensions();
 		this.world.handleMount(ctx);
+		this.statusID	= setInterval(
+			()=>this.updateGameStatus(),
+			25
+		);
    }
    componentWillUnmount(){
       window.removeEventListener('resize', this.updateWindowDimensions);
@@ -145,6 +150,18 @@ class BallPen extends React.Component{
    componentDidUpdate() {
 		//Going to handle updates as we go to enhance efficiency;
    }
+	updateGameStatus(){
+		if(this.world.isGameGoing !== null
+			&& this.world.isGameGoing !== this.state.isGameGoing
+		){
+      	this.setState({
+         	isGameGoing: this.world.isGameGoing, 
+      	});
+			console.log('should change state');
+		}
+		else
+			console.log(this.world.isGameGoing + " " + this.state.isGameGoing)
+	}//end updateGameStatus
    updateWindowDimensions(){
       let width		= window.innerWidth;	//Matching with bootstrap hack
       let height		= window.innerHeight;
