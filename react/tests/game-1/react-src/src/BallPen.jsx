@@ -3,6 +3,7 @@ import { accelerateBalls, decelerateBalls, shrinkBalls } from "./Ball.js";
 import { Background } from "./Background.js"
 import { Welcome } from "./Welcome.js"
 import { Level1 } from "./Level_1.js"
+import { Level2 } from "./Level_2.js"
 
 class BallPen extends React.Component{
    constructor(props){
@@ -164,7 +165,8 @@ class BallPen extends React.Component{
       	});
 			//console.log('should change state')
 			this.currentLevel += 1;
-			this.updateWorld( this.currentLevel);
+			if(this.world.isGameGoing === false)
+				this.updateWorld( this.currentLevel);
 		}
 	}//end updateGameStatus
 	updateWorld( nextWorld ){
@@ -172,6 +174,8 @@ class BallPen extends React.Component{
 		if(nextWorld === 1)
 			this.world = new Level1({score:this.score});
 		else if(nextWorld === 2)
+			this.world = new Level2({score:this.score});
+		else if(nextWorld === 3)
 			this.world = new Background({score:this.score})
 		else{
 			this.world			= new Welcome();
