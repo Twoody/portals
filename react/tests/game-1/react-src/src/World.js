@@ -33,6 +33,7 @@ export class World{
 		this.hasBrandBalls		= props.hasBrandBalls	|| false;
 		this.hasMovableRect		= props.hasMovableRect	|| false;
 		this.balls					= props.balls				|| [];
+		this.score					= props.score				|| 0;
 		this.HUD						= new HUD();
 		this.rectangles			= [];
 		this.clickTimer			= null;	//Set only during a click; Reset to null after;
@@ -144,8 +145,9 @@ export class World{
 			//User just clicked screen
 			this.xClick	= event.clientX;
 			this.yClick	= event.clientY;
-			this.handleCanvasClick(canvas);
-			return this.ballCnt;
+			const eMsg	= this.handleCanvasClick(canvas);
+			//return this.ballCnt;
+			return eMsg;
 		}
 		else{
 			console.log("DRAGGING FINSIHED");
@@ -290,6 +292,8 @@ export class World{
 		const clientY		= this.yClick - rect.top;
 		for( let i=0; i<this.rectangles.length; i++){
 			let rectangle		= this.rectangles[i];
+			if(rectangle.isDraggable === false)
+				continue;
 			const isDragging	= rectangle.processDrag(clientX, clientY, this.balls);
 			if(!isDragging)
 				continue;	
@@ -472,9 +476,17 @@ TODO: Fill this out later...
 		if(this.rectangles.length > 0){
 			this.drawRectangle(ctx);	//Update rectangle;
 		}
-		this.HUD.updateDisplay(this.width, this.ballCnt, this.rectangles.length-1);
-		this.HUD.labelBallCnt(ctx);
-		this.HUD.labelBrickCnt(ctx);
+		this.HUD.updateDisplay(
+			this.width, 
+			this.ballCnt, 
+			this.rectangles.length-1,
+			this.score,
+		);
+		if( this.isDisplayingHud === true ){
+			this.HUD.labelBallCnt(ctx);
+			this.HUD.labelBrickCnt(ctx);
+			this.HUD.labelScore(ctx);
+		}
 		return true;
 	}//end updateBalls()
 	updateRectangles(ctx){
