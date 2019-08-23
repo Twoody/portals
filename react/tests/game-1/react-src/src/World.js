@@ -131,7 +131,7 @@ export class World{
 		console.log('making new ball' + newBall.ballID);
 		this.balls.push(newBall);
 		this.ballCnt += 1;
-		return true;
+		return 0;
 	}//end handleCanvasClick
 	handleCanvasMouseUp(event, canvas){
 		/* If elapsed time is less than half a second, user just clicked;
