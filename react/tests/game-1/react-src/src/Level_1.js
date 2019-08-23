@@ -27,6 +27,7 @@ export class Level1 extends World{
 		this.didInit			= false;	//Init is when we hit spacebar
 		this.reservedKeys.push(32); 	//Adding spacebar eventcode;
 									 			//	Will remove with didInit;
+		this.isDisplayingHud	= true;
 	}
 	initBalls(){
 		//WWARNING: Rewriting World.initBalls()
@@ -84,6 +85,8 @@ export class Level1 extends World{
 			if(rectangle.isDestructing()){
 				this.rectangles.splice(cnt, 1);
 				rLen -= 1;
+				this.score += 100;
+				console.log(this.score);
 			}
 			else
 				cnt += 1;
@@ -92,7 +95,7 @@ export class Level1 extends World{
 			this.isGameGoing	= false;
 			this.didInit		= false;
 			console.log('game over');
-			this.makeDestructibleRects();
+			//this.makeDestructibleRects();
 		}
 	}//end updateRectangles()
 	handleKeydown(keycode, ctx){
