@@ -13,6 +13,7 @@ export class Background extends World{
 		props.hasMovableRect	= true;
 		props.initBallCnt		= 85;
 		super(props);
+		this.isDisplayingHud	= true;
 	}
 }//end Background Class
 
