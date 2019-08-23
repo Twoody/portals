@@ -15,7 +15,7 @@ export class HUD{
 		this.fontColor			= "orange";
 		this.font				= "13px Arial";
 	}//end constructor
-	updateDisplay(sWidth, ballCount, brickCount){
+	updateDisplay(sWidth, ballCount, brickCount, score){
 		this.ballMsg		= this.ballTemplate + ballCount;
 		this.brickMsg		= this.brickTemplate + brickCount;
 		let lDiff			= null;
@@ -42,7 +42,8 @@ export class HUD{
 		this.w = 10 * (maxLength - 1);
 		this.x = sWidth - this.w + 16;
 		this.y = 15;
-		this.bottom = this.y*2 + 2
+		this.bottom = this.y*2 + 4;
+		this.score = score;
 	}//end updateDisplay();
 	labelBallCnt(ctx){
 		ctx.beginPath();
@@ -63,11 +64,25 @@ export class HUD{
 			this.x,
 			this.y,
 			this.w,
-			this.y + 2
+			this.y + 4
 		);
 		ctx.fillStyle = this.background;
 		ctx.fill();
 		ctx.closePath();
-		writeToScreen(ctx, this.brickMsg, this.x, this.y*2, this.fontColor, this.font);
+		writeToScreen(ctx, this.brickMsg, this.x, this.bottom-4, this.fontColor, this.font);
+	}
+	labelScore(ctx){
+		ctx.beginPath();
+		ctx.rect(
+			0,
+			0,
+			this.w,
+			this.bottom
+		);
+		ctx.fillStyle = this.background;
+		ctx.fill();
+		ctx.closePath();
+		writeToScreen(ctx, "SCORE:", 2, this.y, this.fontColor, this.font);
+		writeToScreen(ctx, this.score+"", 2, this.bottom-4, this.fontColor, this.font);
 	}
 }//end HUD class
