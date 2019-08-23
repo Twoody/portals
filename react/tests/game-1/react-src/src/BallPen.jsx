@@ -7,9 +7,9 @@ import { Level1 } from "./Level_1.js"
 class BallPen extends React.Component{
    constructor(props){
       super(props);
-		this.world							= new Background();
+		this.score							= 0;
+		this.currentLevel					= 0;
 		this.world							= new Welcome();
-		this.world							= new Level1();
 		this.balls							= [];
       this.updateWindowDimensions	= this.updateWindowDimensions.bind(this);
 		this.handleKeydown				= this.handleKeydown.bind(this);
@@ -77,7 +77,11 @@ class BallPen extends React.Component{
 		document.removeEventListener('mouseup',	this.handleCanvasMouseUp);
 		document.removeEventListener('mousemove',	this.handleCanvasMouseMove);
 		const canvas		= this.canvasRef;
-		this.world.handleCanvasMouseUp(event, canvas);
+		const eMsg			= parseInt(this.world.handleCanvasMouseUp(event, canvas));
+		if (this.state.isGameGoing === false && eMsg > 0){
+			console.log('update world:update world:  ' + eMsg);
+			this.updateWorld( eMsg );
+		}
 		return true;
 	}//end handleCanvasMouseUp()
 	handleCanvasMouseMove(event){
@@ -151,6 +155,7 @@ class BallPen extends React.Component{
 		//Going to handle updates as we go to enhance efficiency;
    }
 	updateGameStatus(){
+		this.score = this.world.score;
 		if(this.world.isGameGoing !== null
 			&& this.world.isGameGoing !== this.state.isGameGoing
 		){
@@ -158,13 +163,22 @@ class BallPen extends React.Component{
          	isGameGoing: this.world.isGameGoing, 
       	});
 			//console.log('should change state')
-			this.componentWillUnmount();
-			this.world = new Background();
-			this.componentDidMount();
+			this.currentLevel += 1;
+			this.updateWorld( this.currentLevel);
 		}
-		else
-			console.log(this.world.isGameGoing + " " + this.state.isGameGoing)
 	}//end updateGameStatus
+	updateWorld( nextWorld ){
+		this.componentWillUnmount();
+		if(nextWorld === 1)
+			this.world = new Level1({score:this.score});
+		else if(nextWorld === 2)
+			this.world = new Background({score:this.score})
+		else{
+			this.world			= new Welcome();
+			this.currentLevel	= 0;
+		}
+		this.componentDidMount();
+	}
    updateWindowDimensions(){
       let width		= window.innerWidth;	//Matching with bootstrap hack
       let height		= window.innerHeight;
