@@ -23,6 +23,13 @@ export class Rectangle{
 		this.isDestructible	= true;
 		this.hitCount			= 0;
 	}
+	contains(x, y){
+		if (this.xLeft <= x && x <= this.xLeft + this.width){
+			if(this.yTop <= y && y <= this.yTop + this.height)
+				return true;
+		}
+		return false;
+	}
 	draw(ctx){
 		ctx.beginPath();
 		ctx.rect(
