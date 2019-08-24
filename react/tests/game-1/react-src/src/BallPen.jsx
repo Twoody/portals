@@ -81,7 +81,7 @@ class BallPen extends React.Component{
 		const canvas		= this.canvasRef;
 		const eMsg			= parseInt(this.world.handleCanvasMouseUp(event, canvas));
 		if (this.state.isGameGoing === false && eMsg > 0){
-			console.log('update world:update world:  ' + eMsg);
+			console.log('update world:  ' + eMsg);
 			this.updateWorld( eMsg );
 		}
 		return true;
@@ -164,22 +164,24 @@ class BallPen extends React.Component{
       	this.setState({
          	isGameGoing: this.world.isGameGoing, 
       	});
-			//console.log('should change state')
-			this.currentLevel += 1;
-			if(this.world.isGameGoing === false)
+			if(this.world.isGameGoing === false){
+				this.currentLevel += 1;
 				this.updateWorld( this.currentLevel);
+			}
 		}
 	}//end updateGameStatus
 	updateWorld( nextWorld ){
 		this.componentWillUnmount();
+		console.log(nextWorld);
 		if(nextWorld === 1)
 			this.world = new Level1({score:this.score});
 		else if(nextWorld === 2)
 			this.world = new Level2({score:this.score});
-//		else if(nextWorld === 3)
-//			this.world = new Level3({score:this.score})
-		else if(nextWorld === 4)
-			this.world = new Background({score:this.score})
+		else if(nextWorld === 3){
+			this.world = new Level3({score:this.score})
+		}
+		//else if(nextWorld === 4)
+		//	this.world = new Background({score:this.score})
 		else{
 			this.world			= new Welcome();
 			this.currentLevel	= 0;

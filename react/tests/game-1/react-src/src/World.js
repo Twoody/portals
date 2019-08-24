@@ -111,8 +111,8 @@ export class World{
 			this.width, 
 			this.height, 
 			this.balls.length, 
-			this.minRadius, 
-			this.maxRadius, 
+			20,	//this.minRadius, 
+			20,	//this.maxRadius, 
 			this.maxSpeed
 		);
 		newBall.xCord = xCanvasPos;
@@ -129,6 +129,7 @@ export class World{
 		if(isLegal === false)
 			return false;
 		newBall.setRandomDirection();
+		newBall.accelerate(10,10);
 		console.log('making new ball' + newBall.ballID);
 		this.balls.push(newBall);
 		this.ballCnt += 1;

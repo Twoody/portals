@@ -74,10 +74,10 @@ export class Level extends World{
 		while(cnt < rLen){
 			let rectangle = this.rectangles[cnt]
 			if(rectangle.isDestructing()){
+				//Update Score
 				this.rectangles.splice(cnt, 1);
 				rLen -= 1;
 				this.score += 100;
-				console.log(this.score);
 			}
 			else
 				cnt += 1;
