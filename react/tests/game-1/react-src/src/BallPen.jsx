@@ -2,8 +2,9 @@ import React from "react";
 import { accelerateBalls, decelerateBalls, shrinkBalls } from "./Ball.js";
 import { Background } from "./Background.js"
 import { Welcome } from "./Welcome.js"
-import { Level1 } from "./Level_1.js"
-import { Level2 } from "./Level_2.js"
+import { Level1 } from "./Level1.js"
+import { Level2 } from "./Level2.js"
+import { Level3 } from "./Level3.js"
 
 class BallPen extends React.Component{
    constructor(props){
@@ -11,6 +12,8 @@ class BallPen extends React.Component{
 		this.score							= 0;
 		this.currentLevel					= 0;
 		this.world							= new Welcome();
+		this.currentLevel					= 3;
+		this.world							= new Level3();
 		this.balls							= [];
       this.updateWindowDimensions	= this.updateWindowDimensions.bind(this);
 		this.handleKeydown				= this.handleKeydown.bind(this);
@@ -175,7 +178,9 @@ class BallPen extends React.Component{
 			this.world = new Level1({score:this.score});
 		else if(nextWorld === 2)
 			this.world = new Level2({score:this.score});
-		else if(nextWorld === 3)
+//		else if(nextWorld === 3)
+//			this.world = new Level3({score:this.score})
+		else if(nextWorld === 4)
 			this.world = new Background({score:this.score})
 		else{
 			this.world			= new Welcome();
