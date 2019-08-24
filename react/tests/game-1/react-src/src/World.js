@@ -87,6 +87,7 @@ export class World{
 			let rectangle = this.rectangles[i];
 			rectangle.draw(ctx);
 			if(rectangle.isLabeled === true){
+				//TODO: Config optiosn for below;
 				writeToScreen(
 					ctx, 
 					"RECTANGLE", 

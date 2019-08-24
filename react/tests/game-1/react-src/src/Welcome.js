@@ -1,6 +1,5 @@
 import { World } from "./World.js";
 import { Rectangle } from "./Rectangle.js";
-import { Level1 } from "./Level_1.js"
 import { getMiddleOfCanvas, writeToScreen } from "./utils.js";
 
 export class Welcome extends World{
@@ -24,7 +23,7 @@ export class Welcome extends World{
 		this.fHeight			= this.vBuffer * (this.choices+1) + this.rHeight*this.choices;
 		this.fColor				= "white";
 		this.buttonColor		= "grey";
-		this.gitHref				= "https://github.com/Twoody/portals/tree/features/react/tests/game-1";
+		this.gitHref			= "https://github.com/Twoody/portals/tree/features/react/tests/game-1";
 	}
 	updateBalls(ctx){
 		super.updateBalls(ctx);
@@ -58,13 +57,11 @@ export class Welcome extends World{
 		ctx.fillStyle = this.fColor;
 		ctx.fill();
 		ctx.closePath();										//End framing
-
 	}//end drawFrame()
 	drawLabels(ctx, middleCords){
 		//All buffers relative to font and NOT dynamic;
 		for (let i=0; i<this.choiceRects.length; i++){
 			const rect		= this.choiceRects[i];
-			const mLen		= rect.msg.length;
 			const hBuffer	= 5;
 			const vBuffer	= 7;
 			writeToScreen(
@@ -75,8 +72,7 @@ export class Welcome extends World{
 				"orange", 
 				"15px Arial"
 			);
-	
-		}
+		}//end i-for
 	}//end drawLabels()
 	initChoiceRects(){
 		const middleCords	= getMiddleOfCanvas(this.width, this.height);

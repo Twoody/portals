@@ -12,8 +12,6 @@ class BallPen extends React.Component{
 		this.score							= 0;
 		this.currentLevel					= 0;
 		this.world							= new Welcome();
-		this.currentLevel					= 3;
-		this.world							= new Level3();
 		this.balls							= [];
       this.updateWindowDimensions	= this.updateWindowDimensions.bind(this);
 		this.handleKeydown				= this.handleKeydown.bind(this);
