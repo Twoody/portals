@@ -32,7 +32,8 @@ class BallPen extends React.Component{
 			hasWallFriction:	this.world.hasWallFriction	,
 			hasBallFriction:	this.world.hasBallFriction	,
 			hasInertia:			this.world.hasInertia		,
-			isGameGoing:		this.world.isGameGoing,
+			//isGameGoing:		this.world.isGameGoing,
+			isGameGoing:		false,
       };
 
    }//end constructor()
@@ -81,7 +82,7 @@ class BallPen extends React.Component{
 		const canvas		= this.canvasRef;
 		const eMsg			= parseInt(this.world.handleCanvasMouseUp(event, canvas));
 		if (this.state.isGameGoing === false && eMsg > 0){
-			console.log('update world:  ' + eMsg);
+			this.currentLevel += 1;
 			this.updateWorld( eMsg );
 		}
 		return true;
@@ -157,6 +158,7 @@ class BallPen extends React.Component{
 		//Going to handle updates as we go to enhance efficiency;
    }
 	updateGameStatus(){
+		//For a linear game
 		this.score = this.world.score;
 		if(this.world.isGameGoing !== null
 			&& this.world.isGameGoing !== this.state.isGameGoing
@@ -164,15 +166,14 @@ class BallPen extends React.Component{
       	this.setState({
          	isGameGoing: this.world.isGameGoing, 
       	});
-			if(this.world.isGameGoing === false){
+			if( this.world.isGameGoing === false ){
 				this.currentLevel += 1;
-				this.updateWorld( this.currentLevel);
+				this.updateWorld( this.currentLevel );
 			}
 		}
 	}//end updateGameStatus
 	updateWorld( nextWorld ){
 		this.componentWillUnmount();
-		console.log(nextWorld);
 		if(nextWorld === 1)
 			this.world = new Level1({score:this.score});
 		else if(nextWorld === 2)
