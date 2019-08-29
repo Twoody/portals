@@ -93,9 +93,19 @@ if(isset($_GET['anInt'])){
   <input type="submit" value="Submit">
 </form>
 
-<p>Note that the form itself is not visible.</p>
+<p>
+	Hi Brandon, thanks again for the interview today. I got the problem sketched out via php
+	and thought you would like to be able to submit the data, too.
+	The file can be viewed at:
+	<a href ="https://github.com/Twoody/portals/blob/master/precoa/intToText.php"
+		target="_blank">
+	 the git repo for this page.
+	<a/>
+</p>
 
-<p>Also note that the default width of a text input field is 20 characters.</p>
 
+<img src="./whiteboard.jpg"
+	style="width:500px;height:600px;"
+/>
 </body>
 </html>
