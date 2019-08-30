@@ -86,7 +86,6 @@ export class Level extends World{
 			this.isGameGoing	= false;
 			this.didInit		= false;
 			console.log('game over');
-			//this.makeDestructibleRects();
 		}
 	}//end updateRectangles()
 	handleKeydown(keycode, ctx){
@@ -102,5 +101,6 @@ export class Level extends World{
 	}
 	makeDestructibleRects(){
 		//Should be over written by child classes;
+		//No general config yet;
 	}
 }//End class
