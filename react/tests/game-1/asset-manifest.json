@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "example.com/react/tests/game-1/static/css/main.5f494533.chunk.css",
-    "main.js": "example.com/react/tests/game-1/static/js/main.3dcb448e.chunk.js",
-    "main.js.map": "example.com/react/tests/game-1/static/js/main.3dcb448e.chunk.js.map",
-    "runtime~main.js": "example.com/react/tests/game-1/static/js/runtime~main.7bbf6769.js",
-    "runtime~main.js.map": "example.com/react/tests/game-1/static/js/runtime~main.7bbf6769.js.map",
-    "static/js/2.d3de0f0a.chunk.js": "example.com/react/tests/game-1/static/js/2.d3de0f0a.chunk.js",
-    "static/js/2.d3de0f0a.chunk.js.map": "example.com/react/tests/game-1/static/js/2.d3de0f0a.chunk.js.map",
-    "index.html": "example.com/react/tests/game-1/index.html",
-    "precache-manifest.4428d3d8ef7e8ba4f407be24698617ce.js": "example.com/react/tests/game-1/precache-manifest.4428d3d8ef7e8ba4f407be24698617ce.js",
-    "service-worker.js": "example.com/react/tests/game-1/service-worker.js",
-    "static/css/main.5f494533.chunk.css.map": "example.com/react/tests/game-1/static/css/main.5f494533.chunk.css.map"
+    "main.css": "/react/tests/game-1/static/css/main.5f494533.chunk.css",
+    "main.js": "/react/tests/game-1/static/js/main.344419ff.chunk.js",
+    "main.js.map": "/react/tests/game-1/static/js/main.344419ff.chunk.js.map",
+    "runtime~main.js": "/react/tests/game-1/static/js/runtime~main.417f16c2.js",
+    "runtime~main.js.map": "/react/tests/game-1/static/js/runtime~main.417f16c2.js.map",
+    "static/js/2.d3de0f0a.chunk.js": "/react/tests/game-1/static/js/2.d3de0f0a.chunk.js",
+    "static/js/2.d3de0f0a.chunk.js.map": "/react/tests/game-1/static/js/2.d3de0f0a.chunk.js.map",
+    "index.html": "/react/tests/game-1/index.html",
+    "precache-manifest.e1dbd5e5b048fab2068df7ff1f03c9d1.js": "/react/tests/game-1/precache-manifest.e1dbd5e5b048fab2068df7ff1f03c9d1.js",
+    "service-worker.js": "/react/tests/game-1/service-worker.js",
+    "static/css/main.5f494533.chunk.css.map": "/react/tests/game-1/static/css/main.5f494533.chunk.css.map"
   }
 }
