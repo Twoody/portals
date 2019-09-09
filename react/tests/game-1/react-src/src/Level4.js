@@ -46,9 +46,12 @@ export class Level4 extends Level{
 		const xLeft			= middleCords.x - width/2;
 		const yTop			= middleCords.y - height/2 - 100;
 		const hPadding		= this.brickWidth + 1;
-		const vPadding		= this.brickHeigt + 1
-		for (let i=1; i < 3; i++){
-			let rectangle	= new Rectangle({
+		const vPadding		= this.brickHeight + 1
+		const hPossibleRects	= Math.floor(this.width / (this.brickWidth + hPadding)) - 1;
+      let rectangle     = null;
+		for (let i=1; i < hPossibleRects; i++){
+        //Same Row
+			rectangle	= new Rectangle({
 				rectID:	this.rectangles.length,
 				color:	'grey',
 				xLeft:	xLeft + (hPadding * i),
@@ -70,7 +73,43 @@ export class Level4 extends Level{
 			rectangle.isDestructible	= false;
 			rectangle.isDraggable		= false;
 			this.rectangles.push(rectangle);
-		}
+
+         //Bottom Row;
+			rectangle	= new Rectangle({
+				rectID:	this.rectangles.length,
+				color:	'grey',
+				xLeft:	xLeft + (hPadding * i),
+				yTop:		yTop + vPadding,
+				width:	width,
+				height:	height,
+			});
+			rectangle.isDestructible	= false;
+			rectangle.isDraggable		= false;
+			this.rectangles.push(rectangle);
+			rectangle	= new Rectangle({
+				rectID:	this.rectangles.length,
+				color:	'grey',
+				xLeft:	xLeft - (hPadding * i),
+				yTop:		yTop + vPadding,
+				width:	width,
+				height:	height,
+			});
+			rectangle.isDestructible	= false;
+			rectangle.isDraggable		= false;
+			this.rectangles.push(rectangle);
+		}//end i-for
+      //Add one more to cover hole below destructible brick;
+		rectangle	= new Rectangle({
+			rectID:	this.rectangles.length,
+			color:	'grey',
+			xLeft:	xLeft,
+			yTop:		yTop + vPadding,
+			width:	width,
+			height:	height,
+		});
+		rectangle.isDestructible	= false;
+		rectangle.isDraggable		= false;
+		this.rectangles.push(rectangle);
 	}
 }//end Level4 Class
 
