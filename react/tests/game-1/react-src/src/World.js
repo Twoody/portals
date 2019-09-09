@@ -481,7 +481,7 @@ TODO: Fill this out later...
 		this.HUD.updateDisplay(
 			this.width, 
 			this.ballCnt, 
-			this.rectangles.length-1,
+			this.destructibles,
 			this.score,
 		);
 		if( this.isDisplayingHud === true ){

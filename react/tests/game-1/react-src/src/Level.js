@@ -15,6 +15,7 @@ export class Level extends World{
 		this.hasBallFriction	= true;
 		this.brickWidth		= 40;
 		this.brickHeight		= 10;
+		this.destructibles	= 0;
 		this.didInit			= false;	//Init is when we hit spacebar
 		this.reservedKeys.push(32); 	//Adding spacebar eventcode;
 									 			//	Will remove with didInit;
@@ -78,11 +79,12 @@ export class Level extends World{
 				this.rectangles.splice(cnt, 1);
 				rLen -= 1;
 				this.score += 100;
+            this.destructibles -= 1;
 			}
 			else
 				cnt += 1;
 		}//end while
-		if(this.rectangles.length === 1){
+		if(this.destructibles === 0){
 			this.isGameGoing	= false;
 			this.didInit		= false;
 			console.log('game over');

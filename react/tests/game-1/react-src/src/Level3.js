@@ -33,6 +33,7 @@ export class Level3 extends Level{
 					width:	this.brickWidth,
 					height:	this.brickHeight,
 				});
+            this.destructibles         += 1;
 				rectangle.isDestructible	= true;
 				rectangle.isDraggable		= false;
 				this.rectangles.push(rectangle);
@@ -49,7 +50,6 @@ export class Level3 extends Level{
 			this.height,
 			[]
 		);
-
 		return this.rectangles.length-1;
 	}
 }//end Level3 Class

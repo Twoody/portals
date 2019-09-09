@@ -29,6 +29,7 @@ export class Level2 extends Level{
 				width:	this.brickWidth,
 				height:	this.brickHeight,
 			});
+         this.destructibles         += 1;
 			rectangle.isDestructible	= true;
 			rectangle.isDraggable		= false;
 			this.rectangles.push(rectangle);
