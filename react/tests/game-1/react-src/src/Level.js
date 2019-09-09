@@ -80,6 +80,8 @@ export class Level extends World{
 				rLen -= 1;
 				this.score += 100;
             this.destructibles -= 1;
+            if( rectangle.isPowerUp === true )
+              this.dropPowerUp( rectangle.xCenter, rectangle.yCenter );
 			}
 			else
 				cnt += 1;
@@ -93,6 +95,7 @@ export class Level extends World{
 	handleKeydown(keycode, ctx){
 		super.handleKeydown(keycode, ctx);
 		if( this.didInit === false && keycode === 32){
+         //Handle spacebar: If game not started, start game;
 			this.didInit		= true;
 			this.isGameGoing	= true;
 			for( let i=0; i< this.balls.length; i++){
@@ -105,4 +108,8 @@ export class Level extends World{
 		//Should be over written by child classes;
 		//No general config yet;
 	}
+   dropPowerUp(x, y){
+     console.log("X: " + x + "; Y: " + y);
+     return true;
+   }
 }//End class

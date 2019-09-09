@@ -6,13 +6,14 @@ import { Level1 } from "./Level1.js"
 import { Level2 } from "./Level2.js"
 import { Level3 } from "./Level3.js"
 import { Level4 } from "./Level4.js"
+import { Level5 } from "./Level5.js"
 
 class BallPen extends React.Component{
    constructor(props){
       super(props);
 		this.score							= 0;
-		this.currentLevel					= 4;
-		this.world							= new Level4();
+		this.currentLevel					= 5;
+		this.world							= new Level5();
 		this.balls							= [];
       this.updateWindowDimensions	= this.updateWindowDimensions.bind(this);
 		this.handleKeydown				= this.handleKeydown.bind(this);
@@ -179,11 +180,12 @@ class BallPen extends React.Component{
 			this.world = new Level1({score:this.score});
 		else if(nextWorld === 2)
 			this.world = new Level2({score:this.score});
-		else if(nextWorld === 3){
+		else if(nextWorld === 3)
 			this.world = new Level3({score:this.score})
-		}
 		else if(nextWorld === 4)
 			this.world = new Level4({score:this.score})
+		else if(nextWorld === 5)
+			this.world = new Level5({score:this.score})
 		//else if(nextWorld === 4)
 		//	this.world = new Background({score:this.score})
 		else{
