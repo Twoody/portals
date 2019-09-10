@@ -105,6 +105,10 @@ export class Ball{
 		for(let i=0; i<allBalls.length; i++){
 			if(this.ballID === allBalls[i].ballID)
 				continue;
+      if( this.isInteractive === false )
+        continue;
+      if( allBalls[i].isInteractive === false )
+        continue;
 			let otherBall			= allBalls[i];
 			const minDistance		= otherBall.radius + this.radius;
 			let willOverlap		= isOverLapping(
