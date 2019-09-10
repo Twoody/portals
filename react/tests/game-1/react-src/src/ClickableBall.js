@@ -4,9 +4,21 @@ import { getRandomColor, getRandomFloat, getRandomInt } from "./utils.js";
 export class ClickableBall extends Ball{
 	constructor(props){
 		super(props);
-		this.href	= props.href;
-		this.faUnicode = props.faUnicode;
+		this.href       = props.href;
+		this.faUnicode  = props.faUnicode;
 	}//end constructor()
+  getFont(){
+    const fontSize   = this.fontSize   || ( this.radius - 5 );
+    const fontWeight = this.fontWeight || "400";
+    const fontFamily = this.fontFamily || "\"Font Awesome 5 Brands\"";
+    let font         = "";
+    if(fontSize < 0)
+      return font;
+    font += fontWeight + " " + fontSize + "px " + fontFamily;
+    console.log(font);
+    return font;
+  }//end getFont()
+
 	handleClick(){
 		/*WARNING: ReWrite of ./Balls.js and handleClick
 			Open current balls link in new tab, and TRY TO 
@@ -21,21 +33,17 @@ export class ClickableBall extends Ball{
 		tab.blur();
 		window.focus();
 		return true;
-	}
-
-	label(ctx){
+	}//end handleClick()
+  label(ctx){
 		/*	WARNING: Rewrite of Balls.js method;
 		*/
-		const fontSize = this.radius - 5;
 		const x			= this.xCord - (this.radius/3);
 		const y			= this.yCord + (this.radius/3);	//Somehow this work very well;
-		if(fontSize <0)
-			return false;
-		ctx.beginPath();
 
+		ctx.beginPath();
 		//WARNING: Just pulling in css via ./public/index.html css link
 		//TODO: Fix this up and import just the icons we neeed;
-		ctx.font			= '400 '+fontSize+'px "Font Awesome 5 Brands"';
+    ctx.font      = this.getFont();
 		ctx.fillStyle	= "white";
 		ctx.fillText(this.faUnicode, x, y);	//Coords are left and down;
 
@@ -85,7 +93,7 @@ export function makeRandomClickableBall(
 		yCord:	randomY,
 		radius:	randomRadius,
 		dx: 		randomDX,
-		dy:		randomDY,
+		dy:		  randomDY,
 	});
 	if(maxSpeed !== null){
 		if(maxSpeed < randomRadius)
@@ -95,7 +103,7 @@ export function makeRandomClickableBall(
 	}
 	else
 		newBall.maxSpeed = randomRadius;
-	newBall.href		= href;
-	newBall.faUnicode = faUnicode;
+	newBall.href		   = href;
+	newBall.faUnicode  = faUnicode;
 	return newBall;
 }//end makeRandomClickableBall
