@@ -1,5 +1,6 @@
 import { World } from "./World.js";
 import { Ball } from "./Ball.js";
+import { ClickableBall } from "./ClickableBall.js";
 
 
 export class Level extends World{
@@ -108,8 +109,26 @@ export class Level extends World{
 		//Should be over written by child classes;
 		//No general config yet;
 	}
-   dropPowerUp(x, y){
-     console.log("X: " + x + "; Y: " + y);
-     return true;
-   }
-}//End class
+  dropPowerUp(x, y){
+    const radius  = 1;
+    const newBall	= new ClickableBall({
+     	ballID:  this.balls.length,
+     	color:   "black",
+     	xCord:   x,
+     	yCord:   y + this.brickHeight,
+     	radius:  radius,
+     	dx:      0,
+     	dy:      0.1,
+     });
+    newBall.href          = "";
+    newBall.faUnicode     = "\uf135";
+    newBall.fontFamily    = "\"Font Awesome 5 Free\"";
+    newBall.fontWeight    = "900";
+    newBall.fontSize      = 15;
+    newBall.isInteractive = false;
+      newBall.maxSpeed  = radius * 0.66;
+    this.balls.push(newBall);
+      this.ballCnt += 1;
+    return true;
+  }
+}//End class Level
