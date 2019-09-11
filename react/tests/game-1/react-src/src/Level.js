@@ -51,16 +51,30 @@ export class Level extends World{
 		this.makeDestructibleRects();
 	}
 	updateBalls(ctx){
-		for (let i=0; i<this.balls.length; i++){
-			let ball = this.balls[i];
-			if(ball.hitBottom(this.height)){
-				this.balls.splice(i, 1);
-				this.ballCnt -= 1;
-			}
-		}
-		if(this.balls.length === 0)
-			this.didInit = false;
-		super.updateBalls(ctx);
+    let bLen = this.balls.length;
+    let i    = 0;
+    while (i<bLen){
+      let ball = this.balls[i];
+      if(ball.hitBottom(this.height)){
+        this.balls.splice(i, 1);
+        this.ballCnt -= 1;
+        bLen -=1;
+      }
+      else if(ball.isDestructing){
+        //console.log('blow up ball');
+        this.balls.splice(i, 1);
+        this.ballCnt -= 1;
+        bLen -= 1;
+      }
+      else
+        i++;
+    }//end while
+    for (let i=0; i<this.balls.length; i++){
+    }
+      if(this.balls.length === 0)
+        this.didInit = false;
+      super.updateBalls(ctx);
+
 	//	this.labelBallCnt(ctx);
 	}
 	updateRectangles(ctx){
@@ -82,7 +96,7 @@ export class Level extends World{
 				this.score += 100;
             this.destructibles -= 1;
             if( rectangle.isPowerUp === true )
-              this.dropPowerUp( rectangle.xCenter, rectangle.yCenter );
+              this.dropPowerUp( rectangle.xCenter, rectangle.yCenter + 2 );
 			}
 			else
 				cnt += 1;
@@ -115,7 +129,7 @@ export class Level extends World{
      	ballID:  this.balls.length,
      	color:   "black",
      	xCord:   x,
-     	yCord:   y + this.brickHeight,
+     	yCord:   y,
      	radius:  radius,
      	dx:      0,
      	dy:      0.1,
@@ -126,9 +140,10 @@ export class Level extends World{
     newBall.fontWeight    = "900";
     newBall.fontSize      = 15;
     newBall.isInteractive = false;
-      newBall.maxSpeed  = radius * 0.66;
+    newBall.isPowerUp     = true;
+    newBall.maxSpeed      = radius * 0.66;
     this.balls.push(newBall);
-      this.ballCnt += 1;
+    this.ballCnt += 1;
     return true;
   }
 }//End class Level

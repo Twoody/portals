@@ -407,6 +407,7 @@ export class World{
 		rectangle.isDestructible	= false;
 		rectangle.isLabeled			= true;
 		rectangle.isDraggable		= true;
+      rectangle.isPaddle         = true;
 		this.rectangles.push(rectangle);
 	}//end initRectangles()
 /*

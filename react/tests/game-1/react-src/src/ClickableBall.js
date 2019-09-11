@@ -2,11 +2,13 @@ import { Ball } from "./Ball.js";
 import { getRandomColor, getRandomFloat, getRandomInt } from "./utils.js";
 
 export class ClickableBall extends Ball{
-	constructor(props){
-		super(props);
-		this.href       = props.href;
-		this.faUnicode  = props.faUnicode;
-	}//end constructor()
+  constructor(props){
+    super(props);
+    this.href          = props.href;
+    this.faUnicode     = props.faUnicode;
+    this.isDestructing = false;
+  }//end constructor()
+
   getFont(){
     const fontSize   = this.fontSize   || ( this.radius - 5 );
     const fontWeight = this.fontWeight || "400";
@@ -15,10 +17,16 @@ export class ClickableBall extends Ball{
     if(fontSize < 0)
       return font;
     font += fontWeight + " " + fontSize + "px " + fontFamily;
-    console.log(font);
     return font;
   }//end getFont()
 
+  handleRectangleInteractions(rectangle, screenWidth, screenHeight){
+    if( rectangle.isPaddle ){
+      if( rectangle.isOverLappingBall(this) )
+        this.isDestructing = true;
+    }
+    super.handleRectangleInteractions(rectangle, screenWidth, screenHeight);
+  }
 	handleClick(){
 		/*WARNING: ReWrite of ./Balls.js and handleClick
 			Open current balls link in new tab, and TRY TO 
