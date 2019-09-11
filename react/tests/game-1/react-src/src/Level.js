@@ -61,7 +61,9 @@ export class Level extends World{
         bLen -=1;
       }
       else if(ball.isDestructing){
-        //console.log('blow up ball');
+        if( ball.isPowerUp ){
+          this.applyPowerUp( ball.powerUpType );
+        }
         this.balls.splice(i, 1);
         this.ballCnt -= 1;
         bLen -= 1;
@@ -96,7 +98,11 @@ export class Level extends World{
 				this.score += 100;
             this.destructibles -= 1;
             if( rectangle.isPowerUp === true )
-              this.dropPowerUp( rectangle.xCenter, rectangle.yCenter + 2 );
+              this.dropPowerUp( 
+               rectangle.xCenter, 
+               rectangle.yCenter+2, 
+               rectangle.powerUpType 
+              );
 			}
 			else
 				cnt += 1;
@@ -118,12 +124,29 @@ export class Level extends World{
 				ball.accelerate(10,10);
 			}
 		}
-	}
+      else if( keycode === 32 ){
+         //Utilize spacebar to init powerup
+         //Only powerup right now are rockets;
+         if( this.rocketCount > 0 ){
+            //SHOOT ROCKETS  
+         }
+      }
+	}//end handleKeydown
 	makeDestructibleRects(){
 		//Should be over written by child classes;
 		//No general config yet;
 	}
-  dropPowerUp(x, y){
+  applyPowerUp( powerUp ){
+    if( powerUp === "rocket" ){
+      console.log('applying power up: ' +powerUp+'');
+      this.rocketCount += 3;
+      return true;
+    }
+    else
+      console.log('power up `'+powerUp+'` not found');
+    return false;
+  }
+  dropPowerUp(x, y, powerUpType){
     const radius  = 1;
     const newBall	= new ClickableBall({
      	ballID:  this.balls.length,
@@ -141,6 +164,7 @@ export class Level extends World{
     newBall.fontSize      = 15;
     newBall.isInteractive = false;
     newBall.isPowerUp     = true;
+    newBall.powerUpType   = powerUpType;
     newBall.maxSpeed      = radius * 0.66;
     this.balls.push(newBall);
     this.ballCnt += 1;
