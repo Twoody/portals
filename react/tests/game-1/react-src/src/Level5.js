@@ -48,6 +48,7 @@ export class Level5 extends Level{
 		rectangle.isDestructible	= true;
 		rectangle.isDraggable		= false;
       rectangle.isPowerUp        = true;
+      rectangle.powerUpType      = "rocket";
 		this.rectangles.push(rectangle);
 
 		this.makeIndestructibleRects();;
