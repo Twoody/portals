@@ -17,6 +17,8 @@ export class Level extends World{
 		this.brickWidth		= 40;
 		this.brickHeight		= 10;
 		this.destructibles	= 0;
+      this.rocketCount     = 0;
+      this.rockets         = [];
 		this.didInit			= false;	//Init is when we hit spacebar
 		this.reservedKeys.push(32); 	//Adding spacebar eventcode;
 									 			//	Will remove with didInit;
@@ -129,7 +131,12 @@ export class Level extends World{
          //Only powerup right now are rockets;
          if( this.rocketCount > 0 ){
             //SHOOT ROCKETS  
+            console.log('shooting rocket');
+            
+            this.rocketCount -= 1;
          }
+         else
+           console.log('no rockets to shoot');
       }
 	}//end handleKeydown
 	makeDestructibleRects(){
