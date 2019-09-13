@@ -11,10 +11,10 @@ import { Level5 } from "./Level5.js"
 class BallPen extends React.Component{
    constructor(props){
       super(props);
-    this.score        = 0;
-    this.currentLevel = 5;
-    this.world        = new Level5();
-    this.balls        = [];
+    this.score                  = 0;
+    this.currentLevel           = 5;
+    this.world                  = new Level5();
+    this.balls                  = [];
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     this.handleKeydown          = this.handleKeydown.bind(this);
     this.handleKeyup            = this.handleKeyup.bind(this);
@@ -23,17 +23,17 @@ class BallPen extends React.Component{
     this.handleCanvasMouseUp    = this.handleCanvasMouseUp.bind(this);
     this.handleInputChange      = this.handleInputChange.bind(this);
     this.handleToggleButton     = this.handleToggleButton.bind(this);
-    this.state      = {
-      height:    0,
-      width:    0,
-      clickTimer:  0,
-      xClick:    0,
-      yClick:    0,
-      hasGravity:      this.world.hasGravity    ,
-      isLeavingTrails: this.world.isLeavingTrails  ,
-      hasWallFriction: this.world.hasWallFriction  ,
-      hasBallFriction: this.world.hasBallFriction  ,
-      hasInertia:      this.world.hasInertia    ,
+    this.state = {
+      height:          0,
+      width:           0,
+      clickTimer:      0,
+      xClick:          0,
+      yClick:          0,
+      hasGravity:      this.world.hasGravity      ,
+      isLeavingTrails: this.world.isLeavingTrails ,
+      hasWallFriction: this.world.hasWallFriction ,
+      hasBallFriction: this.world.hasBallFriction ,
+      hasInertia:      this.world.hasInertia      ,
       isGameGoing:     false,
       //isGameGoing:     this.world.isGameGoing,
     };
