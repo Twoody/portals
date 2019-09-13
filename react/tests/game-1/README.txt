@@ -1,5 +1,5 @@
 Where we currently are at:
-	Going to make HUD.js better with:
+  Going to make HUD.js better with:
     Integration into screen height;
     Full span with lives;
     Full span with rocket and powerup/paddle type;
