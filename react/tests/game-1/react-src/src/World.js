@@ -111,8 +111,8 @@ export class World{
       this.width, 
       this.height, 
       this.balls.length, 
-      20,  //this.minRadius, 
-      20,  //this.maxRadius, 
+      6,  //this.minRadius, 
+      6,  //this.maxRadius, 
       this.maxSpeed
     );
     newBall.xCord = xCanvasPos;
