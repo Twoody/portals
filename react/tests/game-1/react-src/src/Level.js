@@ -1,28 +1,28 @@
 import { World } from "./World.js";
 import { Ball } from "./Ball.js";
 import { ClickableBall } from "./ClickableBall.js";
+import { Rocket } from "./Rocket.js";
 
 
 export class Level extends World{
 	constructor(props={}){
-		props.hasBrandBalls	= false;
-		props.hasMovableRect	= true;
-		props.initBallCnt		= 1;
+		props.hasBrandBalls  = false;
+		props.hasMovableRect = true;
+		props.initBallCnt    = 1;
 		super(props);
-		this.isGameGoing		= true;
-		this.hasGravity		= false;
+		this.isDisplayingHud = true;
+		this.isGameGoing     = true;
+		this.hasGravity      = false;
 		this.hasWallFriction = true;
-		this.hasIneritia		= true;
-		this.hasBallFriction	= true;
-		this.brickWidth		= 40;
-		this.brickHeight		= 10;
-		this.destructibles	= 0;
-      this.rocketCount     = 0;
-      this.rockets         = [];
-		this.didInit			= false;	//Init is when we hit spacebar
+		this.hasIneritia     = true;
+		this.hasBallFriction = true;
+		this.brickWidth      = 40;
+		this.brickHeight     = 10;
+		this.destructibles   = 0;
+    this.rocketCount     = 0;
+    this.rockets         = [];
+		this.didInit         = false;	//Init is when we hit spacebar
 		this.reservedKeys.push(32); 	//Adding spacebar eventcode;
-									 			//	Will remove with didInit;
-		this.isDisplayingHud	= true;
 	}
 	initBalls(){
 		//WWARNING: Rewriting World.initBalls()
@@ -95,17 +95,26 @@ export class Level extends World{
 			let rectangle = this.rectangles[cnt]
 			if(rectangle.isDestructing()){
 				//Update Score
-				this.rectangles.splice(cnt, 1);
 				rLen -= 1;
 				this.score += 100;
-            this.destructibles -= 1;
-            if( rectangle.isPowerUp === true )
-              this.dropPowerUp( 
-               rectangle.xCenter, 
-               rectangle.yCenter+2, 
-               rectangle.powerUpType 
-              );
+        this.destructibles -= 1;
+				this.rectangles.splice(cnt, 1);     //Remove destroyed rectangle
+        if( rectangle.isPowerUp === true ){
+          this.dropPowerUp( 
+           rectangle.xCenter, 
+           rectangle.yCenter+2, 
+           rectangle.powerUpType 
+          );
+        }
 			}
+      else if( rectangle.isDestructible === false && rectangle.isBlowingUp ){
+        //Indestruicle rectangles cannot be subtracted from this.destructibles,
+        //  as we start the game with only destructibles in mind;
+				rLen -= 1;
+        this.score += 1000;
+				this.rectangles.splice(cnt, 1);   //Remove rectangle hit by rocket
+        //console.log('removing rectangle ' + cnt);
+      }
 			else
 				cnt += 1;
 		}//end while
@@ -130,13 +139,23 @@ export class Level extends World{
          //Utilize spacebar to init powerup
          //Only powerup right now are rockets;
          if( this.rocketCount > 0 ){
-            //SHOOT ROCKETS  
-            console.log('shooting rocket');
-            
+            //SHOOT ROCKETS 
             this.rocketCount -= 1;
+            //console.log('shooting rocket');
+            const r = new Rocket({
+              ballID: this.balls.length,
+              xCord:  this.rectangles[0].xCenter,
+              yCord:  this.rectangles[0].yTop + 1,
+              radius: 1,
+              dx: 0,
+              dy: 3,
+              color: 'black',
+            });
+            this.balls.push( r );
          }
-         else
-           console.log('no rockets to shoot');
+         else{
+           //console.log('no rockets to shoot');
+         }
       }
 	}//end handleKeydown
 	makeDestructibleRects(){
@@ -145,12 +164,12 @@ export class Level extends World{
 	}
   applyPowerUp( powerUp ){
     if( powerUp === "rocket" ){
-      console.log('applying power up: ' +powerUp+'');
-      this.rocketCount += 3;
+      //console.log('applying power up: ' +powerUp+'');
+      this.rocketCount += 33;
       return true;
     }
     else
-      console.log('power up `'+powerUp+'` not found');
+      //console.log('power up `'+powerUp+'` not found');
     return false;
   }
   dropPowerUp(x, y, powerUpType){
