@@ -4,7 +4,7 @@ export class Rocket extends Ball{
   constructor(props){
     super(props);
     this.faUnicode     = "\uf102";
-    this.fontFamily    = "Font Awesome 5 Free";
+    this.fontFamily    = "\"Font Awesome 5 Free\"";
     this.fontWeight    = "900";
     this.fontSize      = "15px";
     this.font          = this.fontWeight + " " + this.fontSize + " " + this.fontFamily;
