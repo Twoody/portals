@@ -1,5 +1,13 @@
 Where we currently are at:
-	f
+	Going to make HUD.js better with:
+    Integration into screen height;
+    Full span with lives;
+    Full span with rocket and powerup/paddle type;
+    Full span with home button
+    full span with pause button
+    full span with menu;
+  Need to slow down the balls movement;
+  Need to reduce the length of the rectangle;
 
 NEEDS DONE:
 	Welcome screen;
@@ -7,15 +15,11 @@ NEEDS DONE:
 	Improved HUD for lifes;
 	Life count;
 	Game over screen;
-	new game button,
-	back button,
-	pause screen/button/functionality;
-	scoreboard;
-	HUD scoreboard;
 	Powerups (duplicate balls)
-	Powerups (shoot lasers)
 	Powerups (shotgun clicks)
 	Powerups (speed boost clicks)
-	User functionality to remember where you might have left off;
 	Back Button in HUD;
 	HOME button in HUD;
+	pause screen/button/functionality;
+	back button,
+	User functionality to remember where you might have left off;
