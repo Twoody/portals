@@ -130,7 +130,7 @@ export class World{
 			return false;
 		newBall.setRandomDirection();
 		newBall.accelerate(10,10);
-		console.log('making new ball' + newBall.ballID);
+		//console.log('making new ball' + newBall.ballID);
 		this.balls.push(newBall);
 		this.ballCnt += 1;
 		return 0;
@@ -152,7 +152,7 @@ export class World{
 			return eMsg;
 		}
 		else{
-			console.log("DRAGGING FINSIHED");
+			//console.log("DRAGGING FINSIHED");
 			return -1;
 		}
 	}//end handleCanvasMouseUp()
@@ -269,7 +269,7 @@ export class World{
 	handleKeyup(){
 		this.isHeldDown	= false;
 		this.timePressed	= null;
-		console.log('key up');
+		//console.log('key up');
 	}//end handleKeyup()
 	handleMount(ctx){
 		if( this.hasMovableRect === true ){
