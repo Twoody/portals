@@ -32,7 +32,7 @@ export class Level extends World{
 		if(!this.width || this.width === 0)
 			return false;
 		const rect		= this.rectangles[0];
-		const radius	= 20;
+		const radius	= 6;
 		const newBall	= new Ball({
 			ballID:	0,
 			color:	"yellow",
@@ -40,14 +40,14 @@ export class Level extends World{
 			yCord:	rect.yTop - radius-0.001, //Buffer
 			radius:	radius,
 			dx: 		0,
-			dy:		0,
+			dy:		  0,
 		});
 		newBall.maxSpeed = radius * 0.66;
 		this.balls.push(newBall);
 		this.initBallCnt = 1;
 		this.ballCnt = 1;
 		return true;
-	}
+	}//end initBalls()
 	initRectangles(ctx){
 		super.initRectangles(ctx);
 		this.makeDestructibleRects();
@@ -78,8 +78,6 @@ export class Level extends World{
       if(this.balls.length === 0)
         this.didInit = false;
       super.updateBalls(ctx);
-
-	//	this.labelBallCnt(ctx);
 	}
 	updateRectangles(ctx){
 		//Update the ball with the rectangle while we did not init;
@@ -142,6 +140,7 @@ export class Level extends World{
             //SHOOT ROCKETS 
             this.rocketCount -= 1;
             //console.log('shooting rocket');
+            this.ballCnt += 1;
             const r = new Rocket({
               ballID: this.balls.length,
               xCord:  this.rectangles[0].xCenter,
