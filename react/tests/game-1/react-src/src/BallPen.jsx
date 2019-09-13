@@ -12,8 +12,8 @@ class BallPen extends React.Component{
    constructor(props){
       super(props);
     this.score                  = 0;
-    this.currentLevel           = 5;
-    this.world                  = new Level5();
+    this.currentLevel           = 0;
+    this.world                  = new Welcome();
     this.balls                  = [];
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     this.handleKeydown          = this.handleKeydown.bind(this);
