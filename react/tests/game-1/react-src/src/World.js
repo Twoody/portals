@@ -23,6 +23,8 @@ export class World{
     this.height           = props.height          || 0;
     this.reservedKeys     = [37, 38, 39, 40];
     this.ballCnt          = 0;
+    this.lives            = 3;
+    this.rocketCount      = 0;
     this.hasGravity       = false;
     this.isLeavingTrails  = false;
     this.hasWallFriction  = false;
@@ -489,6 +491,7 @@ TODO: Fill this out later...
       this.HUD.labelBallCnt(ctx);
       this.HUD.labelBrickCnt(ctx);
       this.HUD.labelScore(ctx);
+      this.HUD.labelLivesAndRockets(ctx, this.lives, this.rocketCount);
     }
     return true;
   }//end updateBalls()
