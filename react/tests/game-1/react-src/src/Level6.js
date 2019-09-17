@@ -2,7 +2,7 @@ import { Level } from "./Level.js";
 import { Rectangle } from "./Rectangle.js";
 import { getMiddleOfCanvas } from "./utils.js";
 
-export class Level5 extends Level{
+export class Level6 extends Level{
 	/*
 		Try to build a world with a single ball;
 		Build the world with on movable rectangle;
@@ -156,5 +156,5 @@ export class Level5 extends Level{
 		this.rectangles.push(rectangle);
 
 	}
-}//end Level5 Class
+}//end Level6 Class
 
