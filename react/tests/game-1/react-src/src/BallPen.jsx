@@ -7,6 +7,7 @@ import { Level2 } from "./Level2.js"
 import { Level3 } from "./Level3.js"
 import { Level4 } from "./Level4.js"
 import { Level5 } from "./Level5.js"
+import { Level6 } from "./Level6.js"
 
 class BallPen extends React.Component{
    constructor(props){
@@ -186,6 +187,8 @@ class BallPen extends React.Component{
       this.world = new Level4({score:this.score})
     else if(nextWorld === 5)
       this.world = new Level5({score:this.score})
+    else if(nextWorld === 6)
+      this.world = new Level6({score:this.score})
     //else if(nextWorld === 4)
     //  this.world = new Background({score:this.score})
     else{
