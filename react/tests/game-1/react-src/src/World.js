@@ -496,6 +496,7 @@ TODO: Fill this out later...
       this.score,
     );
     if( this.isDisplayingHud === true ){
+      this.HUD.layBackdrop(ctx);
       this.HUD.labelBallCnt(ctx);
       this.HUD.labelBrickCnt(ctx);
       this.HUD.labelScore(ctx);

@@ -111,7 +111,18 @@ export class HUD{
         "orange", 
         "900 15px \"Font Awesome 5 Free\"",
       );
-
-
   }//end labelLives()
+  layBackdrop(ctx){
+    ctx.beginPath();
+    ctx.rect(
+      0,
+      0,
+      this.sw,    //Screen Width
+      this.bottom //length
+    );
+    ctx.fillStyle = "yellow";
+    ctx.fill();
+    ctx.closePath();
+    return true;
+  }
 }//end HUD class
