@@ -390,11 +390,11 @@ export class Ball{
       this.nextX = this.xCord;
     }
   }//end handleRectangleInteractions()
-  handleWallCollisions(maxWidth, maxHeight, friction){
+  handleWallCollisions(minWidth, maxWidth, minHeight, maxHeight, friction){
     const willOverlapBottom = this.hitBottom(maxHeight);
-    const willOverlapTop    = this.hitTop(0);
+    const willOverlapTop    = this.hitTop(minHeight);
     const willOverlapRight  = this.hitRight(maxWidth);
-    const willOverlapLeft   = this.hitLeft(0);
+    const willOverlapLeft   = this.hitLeft(minWidth);
     if(willOverlapTop && willOverlapBottom){
       //The screen is now to small for our ball;
       //This is now handles with  window resize;
@@ -410,7 +410,7 @@ export class Ball{
     else if(willOverlapTop){
       this.decelerate(0, friction);
       this.canGoUp = false;
-      this.nextY = 0 + this.radius;
+      this.nextY = minHeight + this.radius;
     }
     else{
       //No collision
@@ -431,12 +431,12 @@ export class Ball{
     }
     else if(willOverlapLeft){
       this.canGoLeft = false;
-      this.nextX     = 0 + this.radius;
+      this.nextX     = minWidth + this.radius;
     }
     else{
       //No collision
     }
-  }//End handleWallCollision
+  }//End handleWallCollisions
   handleWindowResize(maxWidth, maxHeight, otherBalls, rectangles){
     if(this.yCord + this.radius > maxHeight){
       this.yCord = maxHeight - this.radius;
@@ -601,7 +601,7 @@ export class Ball{
     }
     ctx.closePath();
   }//end label()
-  move(sWidth, sHeight, wallFriction, rectangles, balls){
+  move(minWidth, sWidth, minHeight, sHeight, wallFriction, rectangles, balls){
     //Assume we can go any direction first; Change values on `handle`*;
     //Reset canGo* properties for this iteration;
     this.resetSurroundings();
@@ -618,7 +618,7 @@ export class Ball{
         sHeight
       );
     }
-    this.handleWallCollisions(sWidth, sHeight, wallFriction);
+    this.handleWallCollisions(minWidth, sWidth, minHeight, sHeight, wallFriction);
     this.handleBallCollisions(balls);
     //Process final available movements; Update coords appropriately; Apply Gravity;
     this.handleMovement(wallFriction);

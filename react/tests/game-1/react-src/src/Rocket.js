@@ -32,11 +32,11 @@ export class Rocket extends Ball{
 		ctx.closePath();
 		return true;
 	}//end label()
-	move(sWidth, sHeight, wallFriction, rectangles, balls){
+	move(minWidth, sWidth, minHeight, sHeight, wallFriction, rectangles, balls){
     //WARNING: Major rewrite without calling super.move()
     this.nextX           = this.xCord
     this.nextY           = this.yCord - 3;
-		const willOverlapTop = this.hitTop(0);
+		const willOverlapTop = this.hitTop(minHeight);
     if( willOverlapTop ){
       //If rocket goes to top of screen, rocket dissapears;
       this.isDestructing = true;

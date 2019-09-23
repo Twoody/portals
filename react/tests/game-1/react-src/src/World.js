@@ -22,9 +22,11 @@ export class World{
     this.width            = props.width           || 0;
     this.height           = props.height          || 0;
     this.reservedKeys     = [37, 38, 39, 40];
+    this.minWidth         = 0;
+    this.minHeight        = 0;
     this.ballCnt          = 0;
-    this.lives            = 3;
     this.rocketCount      = 0;
+    this.lives            = 3;
     this.hasGravity       = false;
     this.isLeavingTrails  = false;
     this.hasWallFriction  = false;
@@ -464,9 +466,15 @@ TODO: Fill this out later...
         this.friction = 0;
       else
         this.friction = this.wallFriction;
+      if(this.isDisplayingHud){
+        this.minHeight = this.HUD.bottom;
+ //       this.minWidth  = this.width ;
+      }
 
       ball.move(
+        this.minWidth,
         this.width,
+        this.minHeight,
         this.height,
         this.friction,
         this.rectangles,
