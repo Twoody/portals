@@ -250,7 +250,7 @@ class BallPen extends React.Component{
               > 
                 Turn Gravity {this.state.hasGravity ? "Off" : "On"}
               </button>
-            </td>s
+            </td>
             <td>
               <button
                 style={buttonStyle}
