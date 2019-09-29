@@ -23,12 +23,12 @@ export class Level6 extends Level{
     const vPadding    = this.brickHeight + 1
     let rectangle     = null;
     rectangle = new Rectangle({
-      rectID:  this.rectangles.length,
+      rectID: this.rectangles.length,
       color:  'white',
-      xLeft:   xLeft,
-      yTop:    yTop,
-      width:   width,
-      height:  height,
+      xLeft:  xLeft,
+      yTop:   yTop,
+      width:  width,
+      height: height,
     });
     this.destructibles       += 1;
     rectangle.isDestructible = true;
@@ -37,12 +37,12 @@ export class Level6 extends Level{
 
       //Add one more to cover hole below destructible brick;
     rectangle = new Rectangle({
-      rectID:  this.rectangles.length,
-      color:   'red',
-      xLeft:   xLeft,
-      yTop:    yTop + vPadding*2,
-      width:   width,
-      height:  height,
+      rectID: this.rectangles.length,
+      color:  'red',
+      xLeft:  xLeft,
+      yTop:   yTop + vPadding*2,
+      width:  width,
+      height: height,
     });
     this.destructibles       += 1;
     rectangle.isDestructible = true;
@@ -73,12 +73,12 @@ export class Level6 extends Level{
     for (let i=1; i < hPossibleRects; i++){
         //Same Row
       rectangle  = new Rectangle({
-        rectID:  this.rectangles.length,
+        rectID: this.rectangles.length,
         color:  'grey',
-        xLeft:   xLeft + (hPadding * i),
-        yTop:    yTop,
-        width:   width,
-        height:  height,
+        xLeft:  xLeft + (hPadding * i),
+        yTop:   yTop,
+        width:  width,
+        height: height,
       });
       rectangle.isDestructible = false;
       rectangle.isDraggable    = false;
@@ -104,16 +104,16 @@ export class Level6 extends Level{
         width:  width,
         height: height,
       });
-      rectangle.isDestructible  = false;
-      rectangle.isDraggable     = false;
+      rectangle.isDestructible = false;
+      rectangle.isDraggable    = false;
       this.rectangles.push(rectangle);
       rectangle  = new Rectangle({
-        rectID:  this.rectangles.length,
-        color:   'grey',
-        xLeft:   xLeft - (hPadding * i),
-        yTop:    yTop + vPadding,
-        width:   width,
-        height:  height,
+        rectID: this.rectangles.length,
+        color:  'grey',
+        xLeft:  xLeft - (hPadding * i),
+        yTop:   yTop + vPadding,
+        width:  width,
+        height: height,
       });
       rectangle.isDestructible = false;
       rectangle.isDraggable    = false;
@@ -128,8 +128,8 @@ export class Level6 extends Level{
         width:  width,
         height: height,
       });
-      rectangle.isDestructible  = false;
-      rectangle.isDraggable     = false;
+      rectangle.isDestructible = false;
+      rectangle.isDraggable    = false;
       this.rectangles.push(rectangle);
       rectangle  = new Rectangle({
         rectID: this.rectangles.length,
@@ -139,8 +139,8 @@ export class Level6 extends Level{
         width:  width,
         height: height,
       });
-      rectangle.isDestructible  = false;
-      rectangle.isDraggable     = false;
+      rectangle.isDestructible = false;
+      rectangle.isDraggable    = false;
       this.rectangles.push(rectangle);
     }//end i-for
     rectangle  = new Rectangle({
