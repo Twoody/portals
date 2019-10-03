@@ -501,6 +501,7 @@ TODO: Fill this out later...
       this.HUD.labelBrickCnt(ctx);
       this.HUD.labelScore(ctx);
       this.HUD.labelLivesAndRockets(ctx, this.lives, this.rocketCount);
+      this.HUD.labelPause(ctx);
     }
     return true;
   }//end updateBalls()
