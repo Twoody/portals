@@ -9,6 +9,8 @@ export class HUD{
     this.ballMsg       = null;
     this.brickMsg      = null;
     this.bottom        = null;
+    this.RALWidth      = 30; //(R)ectangle (a)nd (l)ives width;
+    this.pauseWidth    = 10;
     this.h             = 13;
     this.ballTemplate  = "BALLS: ";
     this.brickTemplate = "BRICKS: ";
@@ -79,12 +81,14 @@ export class HUD{
     writeToScreen(ctx, this.score+"", 2, this.bottom-4, this.fontColor, this.font);
   }//end labelScore()
   labelLivesAndRockets(ctx, lives, rockets){
+    /*
+    * Hearts and Missiles located in middle of screen
+    */
     const hBuffer = 5;
     const vBuffer = 10;
-    const width   = 30; //Width specific to this box only;
-    const x       = this.sw/2 - width;
+    const x       = this.sw/2 - this.RALWidth;
     const y       = 0;
-    const rw      = width*2; //Rectangle width;
+    const rw      = this.RALWidth*2; //Rectangle width;
     ctx.beginPath();
     ctx.rect(
       x,
@@ -96,22 +100,47 @@ export class HUD{
     ctx.fill();
     ctx.closePath();
     writeToScreen(
-        ctx, 
-        lives + " " + "\uf004",
-        x + hBuffer, 
-        14,               //vertical buffer
-        "orange", 
-        "900 15px \"Font Awesome 5 Free\"",
-      );
+      ctx, 
+      lives + " " + "\uf004",
+      x + hBuffer, 
+      14,               //vertical buffer
+      "orange", 
+      "900 15px \"Font Awesome 5 Free\"",
+    );
     writeToScreen(
-        ctx, 
-        rockets + " " + "\uf102",
-        x + hBuffer, 
-        this.bottom - 4,                //vertical buffer
-        "orange", 
-        "900 15px \"Font Awesome 5 Free\"",
-      );
-  }//end labelLives()
+      ctx, 
+      rockets + " " + "\uf102",
+      x + hBuffer, 
+      this.bottom - 4,                //vertical buffer
+      "orange", 
+      "900 15px \"Font Awesome 5 Free\"",
+    );
+  }//end labelLivesAndRockets()
+  labelPause(ctx){
+    const hBuffer = 5;
+    const vBuffer = 10;
+    const x       = this.sw/2 - this.rocketWidth - this.pauseWidth;
+    const y       = 0;
+    ctx.beginPath();
+    ctx.rect(
+      x,
+      y,
+      this.pauseWidth,
+      this.bottom //length
+    );
+    ctx.fillStyle = this.background;
+    ctx.fill();
+    ctx.closePath();
+
+    writeToScreen(
+      ctx, 
+      "8" + " " + "\uf102",
+      x + hBuffer, 
+      this.bottom - 4,                //vertical buffer
+      "orange", 
+      "900 15px \"Font Awesome 5 Free\"",
+    );
+  }//end labelPause()
   layBackdrop(ctx){
     ctx.beginPath();
     ctx.rect(
@@ -124,5 +153,5 @@ export class HUD{
     ctx.fill();
     ctx.closePath();
     return true;
-  }
+  }//end layBackdrop()
 }//end HUD class
