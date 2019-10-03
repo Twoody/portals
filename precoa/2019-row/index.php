@@ -11,89 +11,66 @@
       $ROOT/../dbs/precoa.db
       $ROOT/../dbs/inits/20191001_rowing.sql
   */
-
-  $db            = "./../../../dbs/precoa.db";
-  $table         = "rowing_2019";
-  $conn          = new SQLite3($db);
-  $html          = "";
-  $select_men    = "SELECT * FROM " . $table . " WHERE gender='m'";
-  $select_women  = "SELECT * FROM " . $table . " WHERE gender='w'";
-  $select_other  = "SELECT * FROM " . $table . " WHERE gender='o'";
- 
-  $women = $conn->query( $select_women );
-  $table = "<table>";
-
-  $table .= "<colgroup>";
-  $table .= "<col style='background-color:pink'>";
-  $table .= "<col style='background-color:pink'>";
-  $table .= "<col style='background-color:blue'>";
-  $table .= "</colgroup>";
-
-  $table .= "<tr>";
-  $table .= "<th>First Name</th>";
-  $table .= "<th>Last Name</th>";
-  $table .= "<th>Score</th>";
-  $table .= "</tr>";
-
-  while($woman	= $women->fetchArray( SQLITE3_ASSOC)){
-    $fname = $woman['fname'];
-    $lname = $woman['lname'];
-    $score = $woman['score'];
-    $table .= "<tr>";
-
-    $table .= "<td>";
-    $table .= $fname;
-    $table .= "</td>";
-    $table .= "<td>";
-    $table .= $lname;
-    $table .= "</td>";
-    $table .= "<td>";
-    $table .= $score;
-    $table .= "</td>";
-    $table .= "</tr>";
-  }//end while
-  $table .= "</table>";
-  $html .= "<h2>Women Leaderboard</h2>";
-  $html .= $table;
-//END WOMAN
-
-  $men = $conn->query( $select_men );
-  $table = "<table>";
-
-  $table .= "<colgroup>";
-  $table .= "<col style='background-color:pink'>";
-  $table .= "<col style='background-color:pink'>";
-  $table .= "<col style='background-color:blue'>";
-  $table .= "</colgroup>";
-
-  $table .= "<tr>";
-  $table .= "<th>First Name</th>";
-  $table .= "<th>Last Name</th>";
-  $table .= "<th>Score</th>";
-  $table .= "</tr>";
-
-  while($man	= $men->fetchArray( SQLITE3_ASSOC)){
-    $fname = $man['fname'];
-    $lname = $man['lname'];
-    $score = $man['score'];
-    $table .= "<tr>";
-
-    $table .= "<td>";
-    $table .= $fname;
-    $table .= "</td>";
-    $table .= "<td>";
-    $table .= $lname;
-    $table .= "</td>";
-    $table .= "<td>";
-    $table .= $score;
-    $table .= "</td>";
-    $table .= "</tr>";
-  }//end while
-  $table .= "</table>";
-  $html .= "<h2>Men Leaderboard</h2>";
-  $html .= $table;
-  echo $html;
-
 //END MAN
-
 ?>
+
+<html>
+<head>
+  <style>
+    body{
+      height: 100%;
+      margin: 0;
+    }
+    .bg {
+      background-image: url(health-fair-2019-04.png);
+      height: 100%;
+      /* Center and scale the image nicely */
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg">
+    <canvas id="mainCanvas" >
+    </canvas>
+  </div>
+  <script>
+    function initCanvas(){
+      let canvas    = document.getElementById("mainCanvas");
+      canvas.width  = document.body.clientWidth; //document.width is obsolete
+      canvas.height = document.body.clientHeight; //document.height is obsolete
+      return canvas;
+    }//end initCanvas()
+    function getImage(){
+      let bgi = new Image();
+      bgi.src = "./health-fair-2019-04.png";
+      return bgi;
+    }//end getBackgroundImage
+
+    let canvas  = initCanvas();
+    let ctx     = canvas.getContext('2d');
+    console.log(canvas.width);
+    console.log(canvas.height);
+    //Minimal ratio set at 11H to 7W
+		ctx.beginPath();
+
+    //Below digits are assuming a 650x415 screen;
+    //TODO: figure out math to accurately overlay
+    //      Note that the current digits are the no-go zone;
+		ctx.rect(
+		  250,              //this.xLeft,
+			140,              //this.yTop, 
+			140,               //this.width,
+			canvas.height     //this.height, 
+		);
+		ctx.fillStyle = "black";
+		ctx.fill();
+		ctx.closePath();
+
+
+
+  </script>
+</body>
+</html>
