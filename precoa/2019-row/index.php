@@ -37,6 +37,19 @@
     </canvas>
   </div>
   <script>
+    function getWidthRatio(){
+      const testScreenWidth = 650;
+      const testWomenWidth  = 250;
+      const ratio = testScreenWidth/testWomenWidth;;
+      return ratio;
+    }
+    function getHeightRatio(){
+      const testScreenHeight = 425;
+      const testWomenHeight  = document.body.clientHeight;
+      const ratio = testScreenHeight/testWomenHeight;;
+      return ratio;
+    }
+
     function initCanvas(){
       let canvas    = document.getElementById("mainCanvas");
       canvas.width  = document.body.clientWidth; //document.width is obsolete
@@ -54,21 +67,45 @@
     console.log(canvas.width);
     console.log(canvas.height);
     //Minimal ratio set at 11H to 7W
-		ctx.beginPath();
 
-    //Below digits are assuming a 650x415 screen;
-    //TODO: figure out math to accurately overlay
-    //      Note that the current digits are the no-go zone;
+//    //Below digits are assuming a 650x425 screen;
+//    //TODO: figure out math to accurately overlay
+//    //      Note that the current digits are the no-go zone;
+//		ctx.beginPath();
+//		ctx.rect(
+//		  250,              //this.xLeft,
+//			140,              //this.yTop, 
+//			140,               //this.width,
+//			canvas.height     //this.height, 
+//		);
+//		ctx.fillStyle = "black";
+//		ctx.fill();
+//		ctx.closePath();
+
+  //Womens leaderboard
+		ctx.beginPath();
 		ctx.rect(
-		  250,              //this.xLeft,
+		  0,              //this.xLeft,
 			140,              //this.yTop, 
-			140,               //this.width,
+			250,               //this.width,
 			canvas.height     //this.height, 
 		);
 		ctx.fillStyle = "black";
 		ctx.fill();
 		ctx.closePath();
 
+  //Mens leaderboard
+  	ctx.beginPath();
+		ctx.rect(
+		  250+140,              //this.xLeft,
+			140,              //this.yTop, 
+			250,               //this.width,
+			canvas.height     //this.height, 
+		);
+		ctx.fillStyle = "black";
+		ctx.fill();
+		ctx.closePath();
+  
 
 
   </script>
