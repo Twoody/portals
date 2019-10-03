@@ -63,8 +63,8 @@ if( isset( $_GET['score'] ) ){
 
 
   <input type="submit" value="Submit">
+</form>
 </body>
 </html>
-</form>
 
 
