@@ -10,13 +10,20 @@
     Resources:
       $ROOT/../dbs/precoa.db
       $ROOT/../dbs/inits/20191001_rowing.sql
+      ./Brandon_bld.otf
+      ./health-fair-2019-04.png
   */
-//END MAN
 ?>
 
 <html>
 <head>
   <style>
+    @font-face {
+      font-family: "Brandon Grotesque";
+      font-weight: bold;
+      src: url("Brandon_bld.otf") format("opentype");
+    }
+
     body{
       height: 100%;
       margin: 0;
@@ -29,85 +36,69 @@
       background-repeat: no-repeat;
       background-size: cover;
     }
+    .women {
+      position: absolute;
+      top: 37%;
+      left: 13%;
+      transform: translate(-50%, -50%);
+    }
+    .men {
+      position: absolute;
+      top: 37%;
+      left: 74%;
+      transform: translate(-50%, -50%);
+    }
+    .leaderboard-text{
+      font-family: "Brandon Grotesque";
+      font-weight: 900;
+      font-size: 30px;
+    }
   </style>
 </head>
 <body>
   <div class="bg">
-    <canvas id="mainCanvas" >
-    </canvas>
+    <div class="women leaderboard-text">
+<?php
+  $html          = "";
+  $db            = "./../../../dbs/precoa.db";
+  $table         = "rowing_2019";
+  $conn          = new SQLite3($db);
+  $select_gender = "SELECT * FROM " . $table . " WHERE gender = :gender";
+  $statement = $conn->prepare($select_gender);
+  $statement->bindValue(':gender', "f");
+
+  $women = $statement->execute();
+  while($woman	= $women->fetchArray( SQLITE3_ASSOC )){
+    $fname = $woman['fname'];
+    $lname = $woman['lname'];
+    $score = $woman['score'];
+    $html .= $fname . " " . $lname .": " . $score . "<br/>";
+    echo $html;
+  }//end while
+  echo $html;
+  $conn->close();
+?>
+    </div>
+    <div class="men leaderboard-text">
+<?php
+  $html      = "";
+  $conn      = new SQLite3($db);
+  $statement = $conn->prepare($select_gender);
+  $statement->bindValue(':gender', "m");
+  $men = $statement->execute();
+  while($man	= $men->fetchArray( SQLITE3_ASSOC )){
+    $fname = $man['fname'];
+    $lname = $man['lname'];
+    $score = $man['score'];
+    $html  .= $fname . " " . $lname ." - " . $score . "<br/>";
+  }//end while
+  echo $html;
+  $conn->close();
+?>
+
+    </div>
   </div>
   <script>
-    function getWidthRatio(){
-      const testScreenWidth = 650;
-      const testWomenWidth  = 250;
-      const ratio = testScreenWidth/testWomenWidth;;
-      return ratio;
-    }
-    function getHeightRatio(){
-      const testScreenHeight = 425;
-      const testWomenHeight  = document.body.clientHeight;
-      const ratio = testScreenHeight/testWomenHeight;;
-      return ratio;
-    }
-
-    function initCanvas(){
-      let canvas    = document.getElementById("mainCanvas");
-      canvas.width  = document.body.clientWidth; //document.width is obsolete
-      canvas.height = document.body.clientHeight; //document.height is obsolete
-      return canvas;
-    }//end initCanvas()
-    function getImage(){
-      let bgi = new Image();
-      bgi.src = "./health-fair-2019-04.png";
-      return bgi;
-    }//end getBackgroundImage
-
-    let canvas  = initCanvas();
-    let ctx     = canvas.getContext('2d');
-    console.log(canvas.width);
-    console.log(canvas.height);
-    //Minimal ratio set at 11H to 7W
-
-//    //Below digits are assuming a 650x425 screen;
-//    //TODO: figure out math to accurately overlay
-//    //      Note that the current digits are the no-go zone;
-//		ctx.beginPath();
-//		ctx.rect(
-//		  250,              //this.xLeft,
-//			140,              //this.yTop, 
-//			140,               //this.width,
-//			canvas.height     //this.height, 
-//		);
-//		ctx.fillStyle = "black";
-//		ctx.fill();
-//		ctx.closePath();
-
-  //Womens leaderboard
-		ctx.beginPath();
-		ctx.rect(
-		  0,              //this.xLeft,
-			140,              //this.yTop, 
-			250,               //this.width,
-			canvas.height     //this.height, 
-		);
-		ctx.fillStyle = "black";
-		ctx.fill();
-		ctx.closePath();
-
-  //Mens leaderboard
-  	ctx.beginPath();
-		ctx.rect(
-		  250+140,              //this.xLeft,
-			140,              //this.yTop, 
-			250,               //this.width,
-			canvas.height     //this.height, 
-		);
-		ctx.fillStyle = "black";
-		ctx.fill();
-		ctx.closePath();
-  
-
-
   </script>
 </body>
 </html>
