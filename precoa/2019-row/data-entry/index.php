@@ -55,12 +55,11 @@ if( isset( $_GET['score'] ) ){
   <br/>
 
   <label for="male">Male</label>
-  <input type="radio" name="gender" id="male" value="m"><br>
+  <input type="radio" name="gender" id="male" value="m">
+  <br/>
   <label for="female">Female</label>
-  <input type="radio" name="gender" id="female" value="f"><br>
-  <label for="other">Other</label>
-  <input type="radio" name="gender" id="other" value="o"><br><br>
-
+  <input type="radio" name="gender" id="female" value="f">
+  <br/>
 
   <input type="submit" value="Submit">
 </form>
