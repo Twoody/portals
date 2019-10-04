@@ -39,7 +39,7 @@
     .women {
       position: absolute;
       top: 37%;
-      left: 13%;
+      left: 18%;
       transform: translate(-50%, -50%);
     }
     .men {
@@ -72,7 +72,7 @@
     $fname = $woman['fname'];
     $lname = $woman['lname'];
     $score = $woman['score'];
-    $html .= $fname . " " . $lname .": " . $score . "<br/>";
+    $html .= $fname . " " . $lname ." - " . $score . "<br/>";
     echo $html;
   }//end while
   echo $html;
