@@ -38,15 +38,13 @@
     }
     .women {
       position: absolute;
-      top: 37%;
-      left: 18%;
-      transform: translate(-50%, -50%);
+      top: 34%;
+      left: 7%;
     }
     .men {
       position: absolute;
-      top: 37%;
-      left: 74%;
-      transform: translate(-50%, -50%);
+      top: 34%;
+      left: 64%;
     }
     .leaderboard-text{
       font-family: "Brandon Grotesque";
@@ -68,12 +66,13 @@
   $statement->bindValue(':gender', "f");
 
   $women = $statement->execute();
+  $i     = 1;
   while($woman	= $women->fetchArray( SQLITE3_ASSOC )){
     $fname = $woman['fname'];
     $lname = $woman['lname'];
     $score = $woman['score'];
-    $html .= $fname . " " . $lname ." - " . $score . "<br/>";
-    echo $html;
+    $html  .= $i . ". " . $fname . " " . $lname ." - " . $score . "<br/>";
+    $i++;
   }//end while
   echo $html;
   $conn->close();
@@ -86,11 +85,13 @@
   $statement = $conn->prepare($select_gender);
   $statement->bindValue(':gender', "m");
   $men = $statement->execute();
+  $i   = 1;
   while($man	= $men->fetchArray( SQLITE3_ASSOC )){
     $fname = $man['fname'];
     $lname = $man['lname'];
     $score = $man['score'];
-    $html  .= $fname . " " . $lname ." - " . $score . "<br/>";
+    $html  .= $i . ". " . $fname . " " . $lname ." - " . $score . "<br/>";
+    $i++;
   }//end while
   echo $html;
   $conn->close();
