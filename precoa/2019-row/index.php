@@ -44,7 +44,7 @@
     .men {
       position: absolute;
       top: 34%;
-      left: 64%;
+      left: 62%;
     }
     .leaderboard-text{
       font-family: "Brandon Grotesque";
