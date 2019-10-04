@@ -63,7 +63,7 @@
   $db            = "./../../../dbs/precoa.db";
   $table         = "rowing_2019";
   $conn          = new SQLite3($db);
-  $select_gender = "SELECT * FROM " . $table . " WHERE gender = :gender";
+  $select_gender = "SELECT * FROM " . $table . " WHERE gender = :gender ORDER BY score_ms ASC";
   $statement = $conn->prepare($select_gender);
   $statement->bindValue(':gender', "f");
 
