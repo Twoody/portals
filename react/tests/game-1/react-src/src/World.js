@@ -103,12 +103,18 @@ export class World{
     }//end i-for
   }//end drawRectangle()
   handleCanvasClick(canvas){
-    const rect      = canvas.getBoundingClientRect();
-    const xCanvasPos  = this.xClick - rect.left;    //X cord of user click
-    const yCanvasPos  = this.yClick - rect.top;    //Y cord of user click
-    const clickedBall = this.didClickBall(xCanvasPos, yCanvasPos);
+    const rect        = canvas.getBoundingClientRect();
+    const xCanvasPos  = this.xClick - rect.left;      // X cord of user click
+    const yCanvasPos  = this.yClick - rect.top;       // Y cord of user click
+    const clickedBall = this.didClickBall(xCanvasPos, yCanvasPos); // Ball obj or null
+    const clickedHUD  = this.HUD.didClick(xCanvasPos, yCanvasPos); // Enum of what was clicked
     if(clickedBall !== null){
       return clickedBall.handleClick();;
+    }
+    if(clickedHUD > 0){
+      if (clickedHUD === 1)
+        this.pauseWorld();
+        return true;
     }
     //No ball was clicked; Is user trying to make a new ball?
     let newBall = makeRandomBall(
@@ -436,6 +442,11 @@ TODO: Fill this out later...
     return true;
   }//end resetBalls()
 */
+  pauseWorld(){
+    //TODO: Probably just make this a variable and check the setIntervals dependant on the value?
+    console.log('warning: pauseWorld() not completed;')
+    return true;
+  }
   updateBalls(ctx){
     if(this.width === 0)
       return false;

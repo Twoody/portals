@@ -1,4 +1,4 @@
-import { writeToScreen } from "./utils.js";
+import { isOverLapping, writeToScreen } from "./utils.js";
 
 export class HUD{
   constructor( props={} ){
@@ -53,6 +53,20 @@ export class HUD{
     this.xLeft_pause = this.sw/2 - (this.RALWidth) - this.middleWidthBuffer -this.pauseWidth;
     this.yTop_pause  = this.bottom/2+5;
   }//end updateDisplay();
+  didClick(xClick, yClick){
+    //TODO: Return 1 if click within pause button
+    const clickedPause  = isOverLapping(
+      xClick, 
+      yClick, 
+      this.xLeft_pause + this.pauseWidth/2,
+      this.yTop_pause,
+      this.pauseWidth/2
+    );
+    if(clickedPause){
+      return 1;
+    }
+    return 0; 
+  }
   labelBallCnt(ctx){
     ctx.beginPath();
     ctx.rect(
