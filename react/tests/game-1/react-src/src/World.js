@@ -34,6 +34,7 @@ export class World{
     this.hasInertia       = false;
     this.didInit          = false;
     this.isGameGoing      = false;
+    this.isPaused         = false;
     this.hasBrandBalls    = props.hasBrandBalls   || false;
     this.hasMovableRect   = props.hasMovableRect  || false;
     this.balls            = props.balls           || [];
@@ -113,7 +114,7 @@ export class World{
     }
     if(clickedHUD > 0){
       if (clickedHUD === 1)
-        this.pauseWorld();
+        this.isPaused = !this.isPaused;
         return true;
     }
     //No ball was clicked; Is user trying to make a new ball?
@@ -347,7 +348,7 @@ export class World{
       }//end i-for
       this.updateBalls(ctx);      //Update/draw Balls;
     }
-      return true;
+    return true;
   }//end handleScreenResize()
   initBalls(){
     if(this.hasBrandBalls === true){
@@ -442,12 +443,9 @@ TODO: Fill this out later...
     return true;
   }//end resetBalls()
 */
-  pauseWorld(){
-    //TODO: Probably just make this a variable and check the setIntervals dependant on the value?
-    console.log('warning: pauseWorld() not completed;')
-    return true;
-  }
   updateBalls(ctx){
+    if(this.isPaused === true)
+      return true;
     if(this.width === 0)
       return false;
     if(this.rectangles.length === 0 && this.hasMovableRect === true)
@@ -517,6 +515,8 @@ TODO: Fill this out later...
     return true;
   }//end updateBalls()
   updateRectangles(ctx){
+    if(this.isPaused === true)
+      return true;
     if(this.width === 0)
       return false;
     if(this.rectangles.length === 0 && this.hasMovableRect === true)
