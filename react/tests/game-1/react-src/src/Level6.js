@@ -15,12 +15,14 @@ export class Level6 extends Level{
     super(props);
   }
   makeDestructibleRects(){
-    const middleCords = getMiddleOfCanvas(this.width, this.height);
-    const width       = this.brickWidth;
-    const height      = this.brickHeight;
-    const xLeft       = middleCords.x - width/2;
-    const yTop        = middleCords.y - height/2 - 100;
-    const vPadding    = this.brickHeight + 1
+    const middleCords    = getMiddleOfCanvas(this.width, this.height);
+    const width          = this.brickWidth;
+    const height         = this.brickHeight;
+    const xLeft          = middleCords.x - width/2;
+    const yTop           = middleCords.y - height/2 - 100;
+    const vPadding       = this.brickHeight + 1
+    const hPadding       = this.brickWidth + 1;
+    const hPossibleRects = Math.floor(this.width / (this.brickWidth + hPadding)) - 1;
     let rectangle     = null;
     rectangle = new Rectangle({
       rectID: this.rectangles.length,
@@ -35,7 +37,7 @@ export class Level6 extends Level{
     rectangle.isDraggable    = false;
     this.rectangles.push(rectangle)
 
-      //Add one more to cover hole below destructible brick;
+    //Add one more to cover hole below destructible brick;
     rectangle = new Rectangle({
       rectID: this.rectangles.length,
       color:  'red',
@@ -51,7 +53,35 @@ export class Level6 extends Level{
     rectangle.powerUpType    = "rocket";
     this.rectangles.push(rectangle);
 
-    this.makeIndestructibleRects();;
+    for (let i=2; i < hPossibleRects; i+=2){
+      if( i%2 === 0 ){
+        rectangle  = new Rectangle({
+          rectID: this.rectangles.length,
+          color:  'white',
+          xLeft:  xLeft + (hPadding * i),
+          yTop:   yTop,
+          width:  width,
+          height: height,
+        });
+        rectangle.isDestructible = true;
+        rectangle.isDraggable    = false;
+        this.rectangles.push(rectangle);
+        this.destructibles       += 1;
+        rectangle  = new Rectangle({
+          rectID: this.rectangles.length,
+          color:  'white',
+          xLeft:  xLeft - (hPadding * i),
+          yTop:   yTop,
+          width:  width,
+          height: height,
+        });
+        rectangle.isDestructible = true;
+        rectangle.isDraggable    = false;
+        this.rectangles.push(rectangle);
+        this.destructibles       += 1;
+      }
+    }//end i-for
+    this.makeIndestructibleRects();
   }
   makeIndestructibleRects(){
     /*
@@ -71,12 +101,37 @@ export class Level6 extends Level{
     const hPossibleRects = Math.floor(this.width / (this.brickWidth + hPadding)) - 1;
     let rectangle        = null;
     for (let i=1; i < hPossibleRects; i++){
-        //Same Row
+      //Same Row
+      if( i%2 === 1 ){
+        rectangle  = new Rectangle({
+          rectID: this.rectangles.length,
+          color:  'grey',
+          xLeft:  xLeft + (hPadding * i),
+          yTop:   yTop,
+          width:  width,
+          height: height,
+        });
+        rectangle.isDestructible = false;
+        rectangle.isDraggable    = false;
+        this.rectangles.push(rectangle);
+        rectangle  = new Rectangle({
+          rectID: this.rectangles.length,
+          color:  'grey',
+          xLeft:  xLeft - (hPadding * i),
+          yTop:   yTop,
+          width:  width,
+          height: height,
+        });
+        rectangle.isDestructible = false;
+        rectangle.isDraggable    = false;
+        this.rectangles.push(rectangle);
+      }
+      //Stairs
       rectangle  = new Rectangle({
         rectID: this.rectangles.length,
         color:  'grey',
         xLeft:  xLeft + (hPadding * i),
-        yTop:   yTop,
+        yTop:   yTop + (vPadding * i),
         width:  width,
         height: height,
       });
@@ -87,20 +142,44 @@ export class Level6 extends Level{
         rectID: this.rectangles.length,
         color:  'grey',
         xLeft:  xLeft - (hPadding * i),
-        yTop:   yTop,
+        yTop:   yTop + (vPadding*i),
         width:  width,
         height: height,
       });
       rectangle.isDestructible = false;
       rectangle.isDraggable    = false;
       this.rectangles.push(rectangle);
+      
+      //2nd Layer across
+      rectangle  = new Rectangle({
+        rectID: this.rectangles.length,
+        color:  'grey',
+        xLeft:  xLeft + (hPadding * i),
+        yTop:   yTop + (vPadding * 4),
+        width:  width,
+        height: height,
+      });
+      rectangle.isDestructible = false;
+      rectangle.isDraggable    = false;
+      this.rectangles.push(rectangle);
+      rectangle  = new Rectangle({
+        rectID: this.rectangles.length,
+        color:  'grey',
+        xLeft:  xLeft - (hPadding * i),
+        yTop:   yTop + (vPadding*4),
+        width:  width,
+        height: height,
+      });
+      rectangle.isDestructible = false;
+      rectangle.isDraggable    = false;
+      this.rectangles.push(rectangle);       
 
-      //Middle "full" Row;
+      //3rd Layer across
       rectangle  = new Rectangle({
         rectID: this.rectangles.length,
         color:  'grey',
         xLeft:  xLeft + (hPadding * i),
-        yTop:   yTop + vPadding,
+        yTop:   yTop + (vPadding * 8),
         width:  width,
         height: height,
       });
@@ -111,37 +190,14 @@ export class Level6 extends Level{
         rectID: this.rectangles.length,
         color:  'grey',
         xLeft:  xLeft - (hPadding * i),
-        yTop:   yTop + vPadding,
+        yTop:   yTop + (vPadding*8),
         width:  width,
         height: height,
       });
       rectangle.isDestructible = false;
       rectangle.isDraggable    = false;
-      this.rectangles.push(rectangle);
+      this.rectangles.push(rectangle);       
 
-      //Bottom Row w/ gap;
-      rectangle  = new Rectangle({
-        rectID: this.rectangles.length,
-        color:  'grey',
-        xLeft:  xLeft + (hPadding * i),
-        yTop:   yTop + vPadding*2,
-        width:  width,
-        height: height,
-      });
-      rectangle.isDestructible = false;
-      rectangle.isDraggable    = false;
-      this.rectangles.push(rectangle);
-      rectangle  = new Rectangle({
-        rectID: this.rectangles.length,
-        color:  'grey',
-        xLeft:  xLeft - (hPadding * i),
-        yTop:   yTop + vPadding*2,
-        width:  width,
-        height: height,
-      });
-      rectangle.isDestructible = false;
-      rectangle.isDraggable    = false;
-      this.rectangles.push(rectangle);
     }//end i-for
     rectangle  = new Rectangle({
       rectID: this.rectangles.length,
@@ -154,6 +210,6 @@ export class Level6 extends Level{
     rectangle.isDestructible = false;
     rectangle.isDraggable    = false;
     this.rectangles.push(rectangle);
-  }
+  }//end makeIndestructibleRects()
 }//end Level6 Class
 
