@@ -13,9 +13,9 @@ export class Level extends World{
 		this.isDisplayingHud = true;
 		this.isGameGoing     = true;
 		this.hasGravity      = false;
-		this.hasWallFriction = true;
+		this.hasWallFriction = false;
 		this.hasIneritia     = true;
-		this.hasBallFriction = true;
+		this.hasBallFriction = false;
 		this.brickWidth      = 40;
 		this.brickHeight     = 10;
 		this.destructibles   = 0;
@@ -24,7 +24,7 @@ export class Level extends World{
 		this.reservedKeys.push(32); 	//Adding spacebar eventcode;
 	}
 	initBalls(){
-		//WWARNING: Rewriting World.initBalls()
+		//WARNING: Rewriting World.initBalls()
 		//This init should only have one ball:
 		//	Ball should be centered around our movableRect, which is
 		//	defaulted as always being made first and at rectangles[0]
